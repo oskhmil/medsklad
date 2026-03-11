@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>МедСклад — Пошук залишків</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:     #0b0e18;
+    --card:   #13172a;
+    --card2:  #1c2035;
+    --border: #252b44;
+    --accent: #4f8ef7;
+    --green:  #34d399;
+    --warn:   #f59e0b;
+    --danger: #f87171;
+    --text:   #e2e8f7;
+    --muted:  #6b7a99;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+  #app { max-width: 700px; margin: 0 auto; }
+
+  #header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 16px 12px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: linear-gradient(135deg, #4f8ef7, #38bdf8);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .logo-title { font-size: 16px; font-weight: 700; color: #fff; }
+  .logo-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .header-btns { margin-left: auto; display: flex; gap: 6px; }
+  .hbtn {
+    background: none; border: 1px solid var(--border);
+    border-radius: 8px; color: var(--muted);
+    cursor: pointer; padding: 5px 10px; font-size: 12px;
+    white-space: nowrap;
+  }
+  .hbtn.primary { border-color: var(--accent); color: var(--accent); }
+  .search-wrap { position: relative; }
+  #search-input {
+    width: 100%; background: var(--bg);
+    border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 11px 42px 11px 16px; color: var(--text);
+    font-size: 15px; outline: none; transition: border-color .2s;
+  }
+  #search-input:focus { border-color: var(--accent); }
+  .search-ico {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted); pointer-events: none; font-size: 16px;
+  }
+  #search-wrap { display: none; }
+
+  #body { padding: 16px 16px 0; }
+
+  /* loader / start screen */
+  #start-screen { text-align: center; padding: 60px 20px; }
+  .start-ico { font-size: 56px; margin-bottom: 18px; }
+  .start-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .start-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+  .big-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 14px; border: none;
+    background: linear-gradient(135deg, #4f8ef7, #38bdf8);
+    color: #fff; font-size: 16px; font-weight: 700;
+    cursor: pointer; margin-bottom: 14px; width: 100%;
+    justify-content: center;
+  }
+  .or-divider {
+    text-align: center; color: var(--muted); font-size: 12px;
+    margin: 10px 0; position: relative;
+  }
+  .or-divider::before, .or-divider::after {
+    content: ""; position: absolute; top: 50%;
+    width: 40%; height: 1px; background: var(--border);
+  }
+  .or-divider::before { left: 0; }
+  .or-divider::after { right: 0; }
+  .upload-zone {
+    border: 2px dashed var(--border); border-radius: 14px;
+    padding: 20px; text-align: center; cursor: pointer;
+    background: var(--card); transition: all .2s; font-size: 13px; color: var(--muted);
+  }
+  .upload-zone.over { border-color: var(--accent); background: rgba(79,142,247,.05); }
+
+  #loader {
+    display: none; text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .loader-ico { font-size: 44px; margin-bottom: 14px; }
+
+  /* home */
+  #home-screen { display: none; }
+  .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .stat-card {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 8px; text-align: center;
+  }
+  .stat-num { font-size: 22px; font-weight: 800; color: var(--accent); }
+  .stat-num.cyan { color: #38bdf8; }
+  .stat-num.danger { color: var(--danger); }
+  .stat-num.warn { color: var(--warn); }
+  .stat-num.green { color: var(--green); }
+  .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  .section-lbl {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 8px;
+  }
+  .chip-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .chip {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 5px 10px; font-size: 12px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .chip-name { font-weight: 600; }
+  .chip-cnt { color: var(--muted); font-size: 11px; }
+  .hint-box {
+    padding: 14px 16px; background: var(--card);
+    border-radius: 12px; border: 1px solid var(--border);
+    font-size: 13px; color: var(--muted);
+  }
+  .last-updated {
+    text-align: center; font-size: 11px; color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* results */
+  #results-screen { display: none; }
+  .results-header {
+    display: flex; align-items: center;
+    justify-content: space-between; margin-bottom: 10px;
+  }
+  .result-count {
+    font-size: 11px; color: var(--muted); font-weight: 600;
+    background: var(--card2); border-radius: 20px; padding: 2px 10px;
+  }
+  .filter-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 6px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: none;
+    color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .filter-btn.active {
+    border-color: var(--accent); background: rgba(79,142,247,.15); color: var(--accent);
+  }
+  .result-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 10px; overflow: hidden;
+  }
+  .result-card.expired { border-color: rgba(248,113,113,.35); }
+  .card-head {
+    padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+  }
+  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; flex: 1; }
+  .dept-tag {
+    background: rgba(56,189,248,.13); color: #38bdf8;
+    border-radius: 8px; padding: 3px 8px; font-size: 11px; font-weight: 600;
+    white-space: nowrap; flex-shrink: 0; max-width: 150px;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-body { padding: 10px 14px 12px; }
+  .data-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 5px 0; border-bottom: 1px solid rgba(37,43,68,.4); gap: 8px;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-lbl { font-size: 12px; color: var(--muted); flex-shrink: 0; }
+  .data-val { font-size: 13px; font-weight: 600; text-align: right; }
+  .badge { display: inline-block; border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 600; }
+  .badge-green { background: rgba(52,211,153,.15); color: var(--green); }
+  .badge-warn  { background: rgba(245,158,11,.15);  color: var(--warn); }
+  .badge-danger{ background: rgba(248,113,113,.15); color: var(--danger); }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-ico { font-size: 44px; margin-bottom: 12px; }
+  .empty-title { font-size: 15px; font-weight: 600; }
+  .empty-sub { font-size: 13px; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="header">
+    <div class="top-row">
+      <div class="logo-icon">💊</div>
+      <div>
+        <div class="logo-title">МедСклад</div>
+        <div class="logo-sub">Пошук по відомості залишків</div>
+      </div>
+      <div class="header-btns" id="header-btns" style="display:none">
+        <button class="hbtn primary" onclick="loadFromDrive(true)">🔄 Оновити</button>
+        <button class="hbtn" onclick="showManualUpload()">📂</button>
+      </div>
+    </div>
+    <div id="search-wrap">
+      <div class="search-wrap">
+        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="onSearch(this.value)">
+        <span class="search-ico">🔍</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="body">
+    <!-- Start -->
+    <div id="start-screen">
+      <div class="start-ico">💊</div>
+      <div class="start-title">МедСклад</div>
+      <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
+      <button class="big-btn" onclick="loadFromDrive(false)">
+        ☁️ Завантажити актуальні дані
+      </button>
+      <div class="or-divider">або завантажити файл вручну</div>
+      <div class="upload-zone" id="upload-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault(); this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
+        <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
+        📂 Натисніть або перетягніть .xlsx файл
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader">
+      <div class="loader-ico">⏳</div>
+      <div style="font-size:15px" id="loader-text">Завантажуємо дані...</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Зачекайте кілька секунд</div>
+    </div>
+
+    <!-- Home -->
+    <div id="home-screen">
+      <div class="last-updated" id="last-updated"></div>
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-num" id="stat-total">0</div>
+          <div class="stat-lbl">Рядків у файлі</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num cyan" id="stat-depts">0</div>
+          <div class="stat-lbl">Відділень</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num green" id="stat-expired">0</div>
+          <div class="stat-lbl">Прострочено</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num green" id="stat-soon">0</div>
+          <div class="stat-lbl">&lt;90 днів</div>
+        </div>
+      </div>
+      <div class="section-lbl">Відділення у файлі</div>
+      <div class="chip-wrap" id="dept-chips"></div>
+      <div class="hint-box">💡 Введіть назву препарату у рядок пошуку вгорі</div>
+    </div>
+
+    <!-- Results -->
+    <div id="results-screen">
+      <div class="results-header">
+        <div class="section-lbl">Результати</div>
+        <span class="result-count" id="result-count">0 записів</span>
+      </div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="setFilter('all',this)">Всі</button>
+        <button class="filter-btn" onclick="setFilter('expired',this)">⛔ Прострочені</button>
+        <button class="filter-btn" onclick="setFilter('soon',this)">⚠️ Скоро</button>
+      </div>
+      <div id="results-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let allItems = [];
+let currentQuery = "";
+let currentFilter = "all";
+let lastLoaded = null;
+
+const GDRIVE_ID  = "1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8";
+const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/" + GDRIVE_ID + "/export?format=xlsx";
+
+// ── load from Drive ─────────────────────────────────────────────────────────
+async function loadFromDrive(isRefresh) {
+  show("loader");
+  document.getElementById("loader-text").textContent = isRefresh
+    ? "Оновлюємо дані з Google Диску..." : "Завантажуємо дані з Google Диску...";
+  try {
+    const resp = await fetch(GDRIVE_URL);
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const buf = await resp.arrayBuffer();
+    allItems = parseWorkbook(buf);
+    lastLoaded = new Date();
+    currentQuery = "";
+    document.getElementById("search-input").value = "";
+    renderHome();
+    show("home");
+  } catch(err) {
+    alert("Не вдалось завантажити файл з Google Диску.\nПеревірте інтернет.\n\n" + err.message);
+    show("start");
+  }
+}
+
+// ── manual upload ───────────────────────────────────────────────────────────
+function showManualUpload() {
+  document.getElementById("file-input").click();
+}
+
+function handleFile(file) {
+  if (!file) return;
+  show("loader");
+  document.getElementById("loader-text").textContent = "Читаємо файл...";
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      allItems = parseWorkbook(e.target.result);
+      lastLoaded = new Date();
+      currentQuery = "";
+      document.getElementById("search-input").value = "";
+      renderHome();
+      show("home");
+    } catch(err) {
+      alert("Помилка читання файлу: " + err.message);
+      show("start");
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── parse ────────────────────────────────────────────────────────────────────
+const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
+
+function isDeptHeader(a, e, rVal, uVal) {
+  if (!a || e) return false;
+  if (rVal !== "" && rVal != null) return false;
+  if (uVal !== "" && uVal != null) return false;
+  const trimmed = a.trim();
+  if (trimmed.length < 3) return false;
+  if (/^\d/.test(trimmed)) return false;
+  const lc = trimmed.toLowerCase();
+  if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
+  return true;
+}
+
+function parseWorkbook(arrayBuffer) {
+  const wb = XLSX.read(arrayBuffer, { type: "array", cellDates: false });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+  const items = [];
+  let currentDept = "—";
+  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
+  for (let i = 0; i < raw.length; i++) {
+    const row = raw[i];
+    const a    = String(row[col.A] ?? "").trim();
+    const e    = String(row[col.E] ?? "").trim();
+    const rVal = row[col.R];
+    const uVal = row[col.U];
+    if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
+    if (!e || e.toLowerCase() === "номенклатура") continue;
+    const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
+    const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
+    items.push({
+      dept:   currentDept,
+      name:   e,
+      series: String(row[col.N] || "").trim() || null,
+      expiry: String(row[col.O] || "").trim() || null,
+      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
+      unit:   String(row[col.Q] || "").trim() || null,
+      qty,
+    });
+  }
+  return items;
+}
+
+// ── date ─────────────────────────────────────────────────────────────────────
+function parseDate(val) {
+  if (!val) return null;
+  const p = val.match(/(\d{2})\.(\d{2})\.(\d{4})/);
+  if (p) return new Date(+p[3], +p[2]-1, +p[1]);
+  const d = new Date(val);
+  return isNaN(d) ? null : d;
+}
+function fmtDate(val) {
+  const d = parseDate(val);
+  if (!d) return val || "—";
+  return d.toLocaleDateString("uk-UA", { day:"2-digit", month:"2-digit", year:"numeric" });
+}
+function expiryStatus(val) {
+  const d = parseDate(val);
+  if (!d) return "ok";
+  if (d < new Date()) return "expired";
+  return Math.round((d - new Date()) / 86400000) <= 90 ? "soon" : "ok";
+}
+function badgeClass(st) {
+  return "badge " + (st==="expired"?"badge-danger":st==="soon"?"badge-warn":"badge-green");
+}
+function daysColor(st) {
+  return st==="expired"?"var(--danger)":st==="soon"?"var(--warn)":"var(--green)";
+}
+function statusLabel(st, days) {
+  if (st==="expired") return "⛔ Прострочено";
+  if (st==="soon")    return "⚠️ " + days + " дн.";
+  return "✓ " + days + " дн.";
+}
+
+// ── ui ────────────────────────────────────────────────────────────────────────
+function show(screen) {
+  document.getElementById("start-screen").style.display    = screen==="start"   ? "block" : "none";
+  document.getElementById("loader").style.display          = screen==="loader"  ? "block" : "none";
+  document.getElementById("home-screen").style.display     = screen==="home"    ? "block" : "none";
+  document.getElementById("results-screen").style.display  = screen==="results" ? "block" : "none";
+  const showHeader = screen==="home" || screen==="results";
+  document.getElementById("search-wrap").style.display     = showHeader ? "block" : "none";
+  document.getElementById("header-btns").style.display     = showHeader ? "flex"  : "none";
+}
+
+function renderHome() {
+  const deptMap = {};
+  let expired = 0, soon = 0;
+  allItems.forEach(it => {
+    deptMap[it.dept] = (deptMap[it.dept]||0) + 1;
+    const st = expiryStatus(it.expiry);
+    if (st==="expired") expired++;
+    if (st==="soon")    soon++;
+  });
+  document.getElementById("stat-total").textContent = allItems.length.toLocaleString();
+  document.getElementById("stat-depts").textContent = Object.keys(deptMap).length;
+  const expEl = document.getElementById("stat-expired");
+  expEl.textContent = expired;
+  expEl.className = "stat-num " + (expired>0?"danger":"green");
+  const soonEl = document.getElementById("stat-soon");
+  soonEl.textContent = soon;
+  soonEl.className = "stat-num " + (soon>0?"warn":"green");
+  document.getElementById("dept-chips").innerHTML = Object.entries(deptMap)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([d,c])=>`<div class="chip"><span style="color:#38bdf8">🏥</span><span class="chip-name">${esc(d)}</span><span class="chip-cnt">${c}</span></div>`)
+    .join("");
+  if (lastLoaded) {
+    document.getElementById("last-updated").textContent =
+      "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  }
+}
+
+function onSearch(val) {
+  currentQuery = val.trim();
+  if (!currentQuery) { show("home"); return; }
+  show("results");
+  renderResults();
+}
+
+function setFilter(val, btn) {
+  currentFilter = val;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderResults();
+}
+
+function renderResults() {
+  const q = currentQuery.toLowerCase();
+  let res = allItems.filter(it=>it.name.toLowerCase().includes(q));
+  if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
+  if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
+  document.getElementById("result-count").textContent = res.length + " записів";
+  const list = document.getElementById("results-list");
+  if (!res.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
+    return;
+  }
+  list.innerHTML = res.map(item => {
+    const st = expiryStatus(item.expiry);
+    return `<div class="result-card${st==="expired"?" expired":""}">
+      <div class="card-head">
+        <div class="drug-name">${esc(item.name)}</div>
+        <div class="dept-tag" title="${esc(item.dept)}">🏥 ${esc(item.dept)}</div>
+      </div>
+      <div class="card-body">
+        ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+        ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+        ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+        ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function esc(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+</script>
+</body>
+</html>
