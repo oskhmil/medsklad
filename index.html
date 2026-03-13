@@ -53,12 +53,13 @@
   .hbtn.primary { border-color: var(--accent); color: var(--accent); }
   .search-wrap { position: relative; }
   #search-input {
-    width: 100%; background: var(--bg);
-    border: 1.5px solid var(--border); border-radius: 12px;
-    padding: 11px 42px 11px 16px; color: var(--text);
-    font-size: 15px; outline: none; transition: border-color .2s;
+    width: 100%; background: #2a3050;
+    border: 1.5px solid #4f8ef7; border-radius: 12px;
+    padding: 11px 42px 11px 16px; color: #fff;
+    font-size: 15px; outline: none; transition: all .2s;
   }
-  #search-input:focus { border-color: var(--accent); }
+  #search-input::placeholder { color: #8899bb; }
+  #search-input:focus { border-color: #38bdf8; background: #2f3860; }
   .search-ico {
     position: absolute; right: 14px; top: 50%;
     transform: translateY(-50%);
@@ -210,6 +211,10 @@
         <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="onSearch(this.value)">
         <span class="search-ico">🔍</span>
       </div>
+      <div style="display:flex;gap:6px;margin-top:8px;">
+        <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
+      </div>
     </div>
   </div>
 
@@ -287,6 +292,7 @@ let allItems = [];
 let currentQuery = "";
 let currentFilter = "all";
 let lastLoaded = null;
+let searchMode = 'name';
 
 const GDRIVE_ID  = "1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8";
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/" + GDRIVE_ID + "/export?format=xlsx";
@@ -452,6 +458,15 @@ function renderHome() {
   }
 }
 
+function setSearchMode(mode, btn) {
+  searchMode = mode;
+  document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const ph = mode === 'series' ? 'Введіть серію...' : 'Введіть назву препарату...';
+  document.getElementById("search-input").placeholder = ph;
+  if (currentQuery) renderResults();
+}
+
 function onSearch(val) {
   currentQuery = val.trim();
   if (!currentQuery) { show("home"); return; }
@@ -468,7 +483,10 @@ function setFilter(val, btn) {
 
 function renderResults() {
   const q = currentQuery.toLowerCase();
-  let res = allItems.filter(it=>it.name.toLowerCase().includes(q));
+  let res = allItems.filter(it=>{
+    if (searchMode === 'series') return it.series && it.series.toLowerCase().includes(q);
+    return it.name.toLowerCase().includes(q);
+  });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
   document.getElementById("result-count").textContent = res.length + " записів";
