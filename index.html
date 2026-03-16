@@ -189,6 +189,31 @@
   .empty-ico { font-size: 44px; margin-bottom: 12px; }
   .empty-title { font-size: 15px; font-weight: 600; }
   .empty-sub { font-size: 13px; margin-top: 6px; }
+
+  .dept-suggestions {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 12px; margin-top: 6px; overflow: hidden;
+    max-height: 220px; overflow-y: auto;
+  }
+  .dept-suggestion-item {
+    padding: 10px 14px; cursor: pointer; font-size: 13px;
+    border-bottom: 1px solid var(--border); transition: background .15s;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .dept-suggestion-item:last-child { border-bottom: none; }
+  .dept-suggestion-item:hover { background: rgba(79,142,247,.1); }
+  .dept-suggestion-item.selected { background: rgba(79,142,247,.2); color: var(--accent); }
+  .selected-depts {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  }
+  .selected-dept-chip {
+    background: rgba(79,142,247,.2); color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 20px;
+    padding: 4px 10px; font-size: 12px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .selected-dept-chip span { color: var(--muted); font-size: 14px; }
+
 </style>
 </head>
 <body>
@@ -207,12 +232,17 @@
     </div>
     <div id="search-wrap">
       <div class="search-wrap">
-        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="debouncedSearch(this.value)">
+        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : debouncedSearch(this.value)">
         <span class="search-ico">🔍</span>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;">
         <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
         <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
+        <button class="filter-btn" id="mode-dept" onclick="setSearchMode('dept',this)" style="font-size:11px;padding:4px 10px;">За відділенням</button>
+      </div>
+      <div id="dept-search-wrap" style="display:none">
+        <div class="selected-depts" id="selected-depts"></div>
+        <div class="dept-suggestions" id="dept-suggestions" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -529,14 +559,64 @@ function renderHome() {
   }
 }
 
+
+let selectedDepts = [];
+
 function setSearchMode(mode, btn) {
   searchMode = mode;
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  const ph = mode === 'series' ? 'Введіть серію...' : 'Введіть назву препарату...';
+  const ph = mode === 'series' ? 'Введіть серію...' : mode === 'dept' ? 'Введіть назву відділення...' : 'Введіть назву препарату...';
   document.getElementById("search-input").placeholder = ph;
-  if (currentQuery) renderResults();
+  document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
+  document.getElementById("search-input").value = "";
+  currentQuery = "";
+  if (mode === 'dept') {
+    renderSelectedDepts();
+    if (selectedDepts.length > 0) { show("results"); renderResults(); }
+    else show("home");
+  } else {
+    selectedDepts = [];
+    if (currentQuery) renderResults();
+  }
 }
+
+function onDeptInput(val) {
+  const q = val.toLowerCase().trim();
+  const suggestEl = document.getElementById("dept-suggestions");
+  if (!q) { suggestEl.style.display = "none"; return; }
+  const allDepts = [...new Set(allItems.map(i=>i.dept))].filter(d=>d.toLowerCase().includes(q));
+  if (!allDepts.length) { suggestEl.style.display = "none"; return; }
+  suggestEl.style.display = "block";
+  suggestEl.innerHTML = allDepts.slice(0,20).map(d => {
+    const isSel = selectedDepts.includes(d);
+    return `<div class="dept-suggestion-item${isSel?' selected':''}" onclick="toggleDept('${esc(d)}')">
+      <span>${esc(d)}</span>
+      <span style="color:var(--muted);font-size:11px">${isSel?'✓ вибрано':''}</span>
+    </div>`;
+  }).join("");
+}
+
+function toggleDept(dept) {
+  const idx = selectedDepts.indexOf(dept);
+  if (idx === -1) selectedDepts.push(dept);
+  else selectedDepts.splice(idx, 1);
+  renderSelectedDepts();
+  // refresh suggestions
+  onDeptInput(document.getElementById("search-input").value);
+  if (selectedDepts.length > 0) { show("results"); renderResults(); }
+  else show("home");
+}
+
+function renderSelectedDepts() {
+  const el = document.getElementById("selected-depts");
+  el.innerHTML = selectedDepts.map(d =>
+    `<div class="selected-dept-chip" onclick="toggleDept('${esc(d)}')">
+      ${esc(d)} <span>✕</span>
+    </div>`
+  ).join("");
+}
+
 
 let _searchTimer = null;
 function debouncedSearch(val) {
@@ -561,6 +641,7 @@ function setFilter(val, btn) {
 function renderResults() {
   const q = currentQuery.toLowerCase();
   let res = allItems.filter(it=>{
+    if (searchMode === 'dept') return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && it.series.toLowerCase().includes(q);
     return it.name.toLowerCase().includes(q);
   });
