@@ -208,7 +208,7 @@
     </div>
     <div id="search-wrap">
       <div class="search-wrap">
-        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="onSearch(this.value)">
+        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="debouncedSearch(this.value)">
         <span class="search-ico">🔍</span>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;">
@@ -294,8 +294,7 @@ let currentFilter = "all";
 let lastLoaded = null;
 let searchMode = 'name';
 
-const GDRIVE_ID  = "1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8";
-const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/" + GDRIVE_ID + "/export?format=xlsx";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvvSb6EqLNuaU-BiMeubNNpxOfwxET8eVyTYNWMTgrqcfOWvQ5g6leWZYdQBYccw3qMg/exec";
 
 // ── load from Drive ─────────────────────────────────────────────────────────
 async function loadFromDrive(isRefresh) {
@@ -303,10 +302,10 @@ async function loadFromDrive(isRefresh) {
   document.getElementById("loader-text").textContent = isRefresh
     ? "Оновлюємо дані з Google Диску..." : "Завантажуємо дані з Google Диску...";
   try {
-    const resp = await fetch(GDRIVE_URL);
+    const resp = await fetch(APPS_SCRIPT_URL);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
-    const buf = await resp.arrayBuffer();
-    allItems = parseWorkbook(buf);
+    const data = await resp.json();
+    allItems = parseJSON(data);
     lastLoaded = new Date();
     currentQuery = "";
     document.getElementById("search-input").value = "";
@@ -357,6 +356,37 @@ function isDeptHeader(a, e, rVal, uVal) {
   const lc = trimmed.toLowerCase();
   if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
   return true;
+}
+
+
+function parseJSON(raw) {
+  const items = [];
+  let currentDept = "—";
+  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
+  const SKIP = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
+  for (let i = 0; i < raw.length; i++) {
+    const row = raw[i];
+    const a    = String(row[col.A] ?? "").trim();
+    const e    = String(row[col.E] ?? "").trim();
+    const rVal = row[col.R];
+    const uVal = row[col.U];
+    if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
+    if (!e || e.toLowerCase() === "номенклатура") continue;
+    const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
+    const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
+    const ser = String(row[col.N] || "").trim();
+    const exp = String(row[col.O] || "").trim();
+    items.push({
+      dept:   currentDept,
+      name:   e,
+      series: ser || null,
+      expiry: exp || null,
+      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
+      unit:   String(row[col.Q] || "").trim() || null,
+      qty,
+    });
+  }
+  return items;
 }
 
 function parseWorkbook(arrayBuffer) {
@@ -465,6 +495,12 @@ function setSearchMode(mode, btn) {
   const ph = mode === 'series' ? 'Введіть серію...' : 'Введіть назву препарату...';
   document.getElementById("search-input").placeholder = ph;
   if (currentQuery) renderResults();
+}
+
+let _searchTimer = null;
+function debouncedSearch(val) {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => onSearch(val), 300);
 }
 
 function onSearch(val) {
