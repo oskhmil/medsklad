@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0113)file:///C:/Users/%D0%9E%D1%81%D1%82%D0%B0%D0%BF/Downloads/%D0%9C%D0%B5%D0%B4%D0%A1%D0%BA%D0%BB%D0%B0%D0%B4_5.html -->
-<html lang="uk"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Залишки по ТМО</title>
-<script src="./index_files/xlsx.full.min.js.Без названия"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -211,8 +211,8 @@
         <span class="search-ico">🔍</span>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;">
-        <button class="filter-btn active" id="mode-name" onclick="setSearchMode(&#39;name&#39;,this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
-        <button class="filter-btn" id="mode-series" onclick="setSearchMode(&#39;series&#39;,this)" style="font-size:11px;padding:4px 10px;">За серією</button>
+        <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
       </div>
     </div>
   </div>
@@ -227,7 +227,11 @@
         ☁️ Завантажити актуальні дані
       </button>
       <div class="or-divider">або завантажити файл вручну</div>
-      <div class="upload-zone" id="upload-zone" onclick="document.getElementById(&#39;file-input&#39;).click()" ondragover="event.preventDefault(); this.classList.add(&#39;over&#39;)" ondragleave="this.classList.remove(&#39;over&#39;)" ondrop="event.preventDefault(); this.classList.remove(&#39;over&#39;); handleFile(event.dataTransfer.files[0])">
+      <div class="upload-zone" id="upload-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault(); this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
         <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
         📂 Натисніть або перетягніть .xlsx файл
       </div>
@@ -273,9 +277,9 @@
         <span class="result-count" id="result-count">0 записів</span>
       </div>
       <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter(&#39;all&#39;,this)">Всі</button>
-        <button class="filter-btn" onclick="setFilter(&#39;expired&#39;,this)">⛔ Прострочені</button>
-        <button class="filter-btn" onclick="setFilter(&#39;soon&#39;,this)">⚠️ Скоро</button>
+        <button class="filter-btn active" onclick="setFilter('all',this)">Всі</button>
+        <button class="filter-btn" onclick="setFilter('expired',this)">⛔ Прострочені</button>
+        <button class="filter-btn" onclick="setFilter('soon',this)">⚠️ Скоро</button>
       </div>
       <div id="results-list"></div>
     </div>
@@ -589,6 +593,5 @@ function esc(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
