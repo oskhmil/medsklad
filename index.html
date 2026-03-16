@@ -286,11 +286,11 @@
           <div class="stat-num cyan" id="stat-depts">0</div>
           <div class="stat-lbl">Відділень</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" onclick="quickFilter('expired')" style="cursor:pointer">
           <div class="stat-num green" id="stat-expired">0</div>
           <div class="stat-lbl">Прострочено</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card" onclick="quickFilter('soon')" style="cursor:pointer">
           <div class="stat-num green" id="stat-soon">0</div>
           <div class="stat-lbl">&lt;90 днів</div>
         </div>
@@ -624,6 +624,23 @@ function debouncedSearch(val) {
   _searchTimer = setTimeout(() => onSearch(val), 300);
 }
 
+function quickFilter(type) {
+  searchMode = 'name';
+  document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("mode-name").classList.add("active");
+  currentQuery = "*";
+  currentFilter = type;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  // set correct filter button active
+  const filterBtns = document.querySelectorAll(".filter-row .filter-btn");
+  filterBtns.forEach(b => {
+    if ((type==='expired' && b.textContent.includes('Прострочені')) ||
+        (type==='soon' && b.textContent.includes('Скоро'))) b.classList.add("active");
+  });
+  show("results");
+  renderResults();
+}
+
 function onSearch(val) {
   currentQuery = val.trim();
   if (!currentQuery) { show("home"); return; }
@@ -643,6 +660,7 @@ function renderResults() {
   let res = allItems.filter(it=>{
     if (searchMode === 'dept') return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && it.series.toLowerCase().includes(q);
+    if (currentQuery === '*') return true;
     return it.name.toLowerCase().includes(q);
   });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
