@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="uk">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0113)file:///C:/Users/%D0%9E%D1%81%D1%82%D0%B0%D0%BF/Downloads/%D0%9C%D0%B5%D0%B4%D0%A1%D0%BA%D0%BB%D0%B0%D0%B4_4.html -->
+<html lang="uk"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>МедСклад — Пошук залишків</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<title>Залишки по ТМО</title>
+<script src="./Залишки по ТМО_files/xlsx.full.min.js.Без названия"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -165,14 +165,13 @@
   .result-card.expired { border-color: rgba(248,113,113,.35); }
   .card-head {
     padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
   }
-  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; flex: 1; }
+  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 6px; }
   .dept-tag {
+    display: inline-block;
     background: rgba(56,189,248,.13); color: #38bdf8;
     border-radius: 8px; padding: 3px 8px; font-size: 11px; font-weight: 600;
-    white-space: nowrap; flex-shrink: 0; max-width: 150px;
-    overflow: hidden; text-overflow: ellipsis;
+    white-space: normal; word-break: break-word;
   }
   .card-body { padding: 10px 14px 12px; }
   .data-row {
@@ -198,8 +197,8 @@
     <div class="top-row">
       <div class="logo-icon">💊</div>
       <div>
-        <div class="logo-title">МедСклад</div>
-        <div class="logo-sub">Пошук по відомості залишків</div>
+        <div class="logo-title">Залишки по ТМО</div>
+        <div class="logo-sub">Пошук по відомості залишків ТМО</div>
       </div>
       <div class="header-btns" id="header-btns" style="display:none">
         <button class="hbtn primary" onclick="loadFromDrive(true)">🔄 Оновити</button>
@@ -212,8 +211,8 @@
         <span class="search-ico">🔍</span>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;">
-        <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
-        <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
+        <button class="filter-btn active" id="mode-name" onclick="setSearchMode(&#39;name&#39;,this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="mode-series" onclick="setSearchMode(&#39;series&#39;,this)" style="font-size:11px;padding:4px 10px;">За серією</button>
       </div>
     </div>
   </div>
@@ -222,17 +221,13 @@
     <!-- Start -->
     <div id="start-screen">
       <div class="start-ico">💊</div>
-      <div class="start-title">МедСклад</div>
+      <div class="start-title">Залишки по ТМО</div>
       <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
       <button class="big-btn" onclick="loadFromDrive(false)">
         ☁️ Завантажити актуальні дані
       </button>
       <div class="or-divider">або завантажити файл вручну</div>
-      <div class="upload-zone" id="upload-zone"
-        onclick="document.getElementById('file-input').click()"
-        ondragover="event.preventDefault(); this.classList.add('over')"
-        ondragleave="this.classList.remove('over')"
-        ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById(&#39;file-input&#39;).click()" ondragover="event.preventDefault(); this.classList.add(&#39;over&#39;)" ondragleave="this.classList.remove(&#39;over&#39;)" ondrop="event.preventDefault(); this.classList.remove(&#39;over&#39;); handleFile(event.dataTransfer.files[0])">
         <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
         📂 Натисніть або перетягніть .xlsx файл
       </div>
@@ -278,9 +273,9 @@
         <span class="result-count" id="result-count">0 записів</span>
       </div>
       <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter('all',this)">Всі</button>
-        <button class="filter-btn" onclick="setFilter('expired',this)">⛔ Прострочені</button>
-        <button class="filter-btn" onclick="setFilter('soon',this)">⚠️ Скоро</button>
+        <button class="filter-btn active" onclick="setFilter(&#39;all&#39;,this)">Всі</button>
+        <button class="filter-btn" onclick="setFilter(&#39;expired&#39;,this)">⛔ Прострочені</button>
+        <button class="filter-btn" onclick="setFilter(&#39;soon&#39;,this)">⚠️ Скоро</button>
       </div>
       <div id="results-list"></div>
     </div>
@@ -294,26 +289,68 @@ let currentFilter = "all";
 let lastLoaded = null;
 let searchMode = 'name';
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvvSb6EqLNuaU-BiMeubNNpxOfwxET8eVyTYNWMTgrqcfOWvQ5g6leWZYdQBYccw3qMg/exec";
+const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
 
 // ── load from Drive ─────────────────────────────────────────────────────────
+const CACHE_KEY = "medsklad_cache";
+const CACHE_TIME_KEY = "medsklad_cache_time";
+
+function saveCache(items) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(items));
+    localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+  } catch(e) {}
+}
+
+function loadCache() {
+  try {
+    const data = localStorage.getItem(CACHE_KEY);
+    const time = localStorage.getItem(CACHE_TIME_KEY);
+    if (data && time) return { items: JSON.parse(data), time: new Date(parseInt(time)) };
+  } catch(e) {}
+  return null;
+}
+
 async function loadFromDrive(isRefresh) {
+  // Try cache first (unless manual refresh)
+  if (!isRefresh) {
+    const cache = loadCache();
+    if (cache) {
+      allItems = cache.items;
+      lastLoaded = cache.time;
+      currentQuery = "";
+      document.getElementById("search-input").value = "";
+      renderHome();
+      show("home");
+      // Silently refresh in background
+      fetchAndUpdate(false);
+      return;
+    }
+  }
   show("loader");
   document.getElementById("loader-text").textContent = isRefresh
     ? "Оновлюємо дані з Google Диску..." : "Завантажуємо дані з Google Диску...";
+  await fetchAndUpdate(true);
+}
+
+async function fetchAndUpdate(showLoader) {
   try {
-    const resp = await fetch(APPS_SCRIPT_URL);
+    const resp = await fetch(GDRIVE_URL);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
-    const data = await resp.json();
-    allItems = parseJSON(data);
+    const buf = await resp.arrayBuffer();
+    const newItems = parseWorkbook(buf);
+    allItems = newItems;
     lastLoaded = new Date();
+    saveCache(newItems);
     currentQuery = "";
     document.getElementById("search-input").value = "";
     renderHome();
     show("home");
   } catch(err) {
-    alert("Не вдалось завантажити файл з Google Диску.\nПеревірте інтернет.\n\n" + err.message);
-    show("start");
+    if (showLoader) {
+      alert("Не вдалось завантажити файл з Google Диску.\nПеревірте інтернет.\n\n" + err.message);
+      show("start");
+    }
   }
 }
 
@@ -536,7 +573,7 @@ function renderResults() {
     return `<div class="result-card${st==="expired"?" expired":""}">
       <div class="card-head">
         <div class="drug-name">${esc(item.name)}</div>
-        <div class="dept-tag" title="${esc(item.dept)}">🏥 ${esc(item.dept)}</div>
+        <div class="dept-tag">🏥 ${esc(item.dept)}</div>
       </div>
       <div class="card-body">
         ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
@@ -552,5 +589,6 @@ function esc(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
