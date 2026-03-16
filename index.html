@@ -214,15 +214,20 @@
   }
   .selected-dept-chip span { color: var(--muted); font-size: 14px; }
 
+
+  @keyframes shine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
 </style>
 </head>
 <body>
 <div id="app">
   <div id="header">
     <div class="top-row">
-      <div class="logo-icon">💊</div>
+      <div class="logo-icon" onclick="goHome()" style="cursor:pointer">💊</div>
       <div>
-        <div class="logo-title">Залишки по ТМО</div>
+        <div class="logo-title" onclick="goHome()" style="cursor:pointer">Залишки по ТМО</div>
         <div class="logo-sub">Пошук по відомості залишків ТМО</div>
       </div>
       <div class="header-btns" id="header-btns" style="display:none">
@@ -295,8 +300,14 @@
           <div class="stat-lbl">&lt;90 днів</div>
         </div>
       </div>
-      <div class="section-lbl">Відділення у файлі</div>
-      <div class="chip-wrap" id="dept-chips"></div>
+      <div class="section-lbl" onclick="toggleDepts()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+        <span>Відділення у файлі</span>
+        <span id="depts-toggle-ico" style="font-size:14px">▼</span>
+      </div>
+      <div class="chip-wrap" id="dept-chips" style="display:none"></div>
+      <div id="dev-credit" style="text-align:center;padding:18px 0 4px;">
+        <span style="font-size:13px;font-weight:700;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.05em;">Developed by Ostap Khmil</span>
+      </div>
       <div class="hint-box">💡 Введіть назву препарату у рядок пошуку вгорі</div>
     </div>
 
@@ -622,6 +633,26 @@ let _searchTimer = null;
 function debouncedSearch(val) {
   clearTimeout(_searchTimer);
   _searchTimer = setTimeout(() => onSearch(val), 300);
+}
+
+function goHome() {
+  currentQuery = "";
+  currentFilter = "all";
+  searchMode = "name";
+  selectedDepts = [];
+  document.getElementById("search-input").value = "";
+  document.getElementById("dept-search-wrap").style.display = "none";
+  document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("mode-name").classList.add("active");
+  show("home");
+}
+
+let deptsVisible = false;
+function toggleDepts() {
+  deptsVisible = !deptsVisible;
+  document.getElementById("dept-chips").style.display = deptsVisible ? "flex" : "none";
+  document.getElementById("dev-credit").style.display = deptsVisible ? "none" : "block";
+  document.getElementById("depts-toggle-ico").textContent = deptsVisible ? "▲" : "▼";
 }
 
 function quickFilter(type) {
