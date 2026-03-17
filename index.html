@@ -431,8 +431,6 @@ const SKIP_HEADERS = ["артикул","параметри","відомість 
 
 function isDeptHeader(a, e, rVal, uVal) {
   if (!a || e) return false;
-  if (rVal !== "" && rVal != null) return false;
-  if (uVal !== "" && uVal != null) return false;
   const trimmed = a.trim();
   if (trimmed.length < 3) return false;
   if (/^\d/.test(trimmed)) return false;
