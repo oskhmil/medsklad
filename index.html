@@ -424,8 +424,6 @@ function handleFile(file) {
 // ── parse ────────────────────────────────────────────────────────────────────
 const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
 
-// Виправлено: відкидаємо жорстку перевірку колонок R та U, 
-// щоб не пропускати заголовки відділень з початковими залишками (виправлення від Клода).
 function isDeptHeader(a, e, rVal, uVal) {
   if (!a || e) return false;
   const trimmed = a.trim();
@@ -433,7 +431,7 @@ function isDeptHeader(a, e, rVal, uVal) {
   if (/^\d/.test(trimmed)) return false;
   const lc = trimmed.toLowerCase();
   if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
-  return true; 
+  return true;
 }
 
 function parseWorkbook(arrayBuffer) {
@@ -500,4 +498,199 @@ function statusLabel(st, days) {
 // ── ui ────────────────────────────────────────────────────────────────────────
 function show(screen) {
   document.getElementById("start-screen").style.display    = screen==="start"   ? "block" : "none";
-  document.getElementById("loader").style.display          = screen==="loader"  ? "
+  document.getElementById("loader").style.display          = screen==="loader"  ? "block" : "none";
+  document.getElementById("home-screen").style.display     = screen==="home"    ? "block" : "none";
+  document.getElementById("results-screen").style.display  = screen==="results" ? "block" : "none";
+  const showHeader = screen==="home" || screen==="results";
+  document.getElementById("search-wrap").style.display     = showHeader ? "block" : "none";
+  document.getElementById("header-btns").style.display     = showHeader ? "flex"  : "none";
+}
+
+function renderHome() {
+  const deptMap = {};
+  let expired = 0, soon = 0;
+  allItems.forEach(it => {
+    deptMap[it.dept] = (deptMap[it.dept]||0) + 1;
+    const st = expiryStatus(it.expiry);
+    if (st==="expired") expired++;
+    if (st==="soon")    soon++;
+  });
+  document.getElementById("stat-total").textContent = allItems.length.toLocaleString();
+  document.getElementById("stat-depts").textContent = Object.keys(deptMap).length;
+  const expEl = document.getElementById("stat-expired");
+  expEl.textContent = expired;
+  expEl.className = "stat-num " + (expired>0?"danger":"green");
+  const soonEl = document.getElementById("stat-soon");
+  soonEl.textContent = soon;
+  soonEl.className = "stat-num " + (soon>0?"warn":"green");
+  document.getElementById("dept-chips").innerHTML = Object.entries(deptMap)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([d,c])=>`<div class="chip"><span style="color:#38bdf8">🏥</span><span class="chip-name">${esc(d)}</span><span class="chip-cnt">${c}</span></div>`)
+    .join("");
+  if (lastLoaded) {
+    document.getElementById("last-updated").textContent =
+      "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  }
+}
+
+let selectedDepts = [];
+
+function setSearchMode(mode, btn) {
+  searchMode = mode;
+  document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const ph = mode === 'series' ? 'Введіть серію...' : mode === 'dept' ? 'Введіть назву відділення...' : 'Введіть назву препарату...';
+  document.getElementById("search-input").placeholder = ph;
+  document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
+  document.getElementById("search-input").value = "";
+  currentQuery = "";
+  if (mode === 'dept') {
+    renderSelectedDepts();
+    if (selectedDepts.length > 0) { show("results"); renderResults(); }
+    else show("home");
+  } else {
+    selectedDepts = [];
+    if (currentQuery) renderResults();
+  }
+}
+
+function normalize(str) {
+  return String(str || "").toLowerCase().replace(/["'’`ʼ]/g, "'").trim();
+}
+
+function safeStr(s) {
+  return String(s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;").replace(/`/g,"\\`");
+}
+
+function onDeptInput(val) {
+  const q = normalize(val);
+  const suggestEl = document.getElementById("dept-suggestions");
+  if (!q) { suggestEl.style.display = "none"; return; }
+  
+  const allDepts = [...new Set(allItems.map(i=>i.dept))].filter(d=>normalize(d).includes(q));
+  
+  if (!allDepts.length) { suggestEl.style.display = "none"; return; }
+  suggestEl.style.display = "block";
+  suggestEl.innerHTML = allDepts.slice(0,20).map(d => {
+    const isSel = selectedDepts.includes(d);
+    return `<div class="dept-suggestion-item${isSel?' selected':''}" onclick="toggleDept('${safeStr(d)}')">
+      <span>${esc(d)}</span>
+      <span style="color:var(--muted);font-size:11px">${isSel?'✓ вибрано':''}</span>
+    </div>`;
+  }).join("");
+}
+
+function toggleDept(dept) {
+  const idx = selectedDepts.indexOf(dept);
+  if (idx === -1) selectedDepts.push(dept);
+  else selectedDepts.splice(idx, 1);
+  renderSelectedDepts();
+  onDeptInput(document.getElementById("search-input").value);
+  if (selectedDepts.length > 0) { show("results"); renderResults(); }
+  else show("home");
+}
+
+function renderSelectedDepts() {
+  const el = document.getElementById("selected-depts");
+  el.innerHTML = selectedDepts.map(d =>
+    `<div class="selected-dept-chip" onclick="toggleDept('${safeStr(d)}')">
+      ${esc(d)} <span>✕</span>
+    </div>`
+  ).join("");
+}
+
+let _searchTimer = null;
+function debouncedSearch(val) {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => onSearch(val), 300);
+}
+
+function goHome() {
+  currentQuery = "";
+  currentFilter = "all";
+  searchMode = "name";
+  selectedDepts = [];
+  document.getElementById("search-input").value = "";
+  document.getElementById("dept-search-wrap").style.display = "none";
+  document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("mode-name").classList.add("active");
+  show("home");
+}
+
+let deptsVisible = false;
+function toggleDepts() {
+  deptsVisible = !deptsVisible;
+  document.getElementById("dept-chips").style.display = deptsVisible ? "flex" : "none";
+  document.getElementById("dev-credit").style.display = deptsVisible ? "none" : "block";
+  document.getElementById("depts-toggle-ico").textContent = deptsVisible ? "▲" : "▼";
+}
+
+function quickFilter(type) {
+  searchMode = 'name';
+  document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("mode-name").classList.add("active");
+  currentQuery = "*";
+  currentFilter = type;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  const filterBtns = document.querySelectorAll(".filter-row .filter-btn");
+  filterBtns.forEach(b => {
+    if ((type==='expired' && b.textContent.includes('Прострочені')) ||
+        (type==='soon' && b.textContent.includes('Скоро'))) b.classList.add("active");
+  });
+  show("results");
+  renderResults();
+}
+
+function onSearch(val) {
+  currentQuery = val.trim();
+  if (!currentQuery) { show("home"); return; }
+  show("results");
+  renderResults();
+}
+
+function setFilter(val, btn) {
+  currentFilter = val;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderResults();
+}
+
+function renderResults() {
+  const q = normalize(currentQuery);
+  let res = allItems.filter(it=>{
+    if (searchMode === 'dept') return selectedDepts.includes(it.dept);
+    if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
+    if (currentQuery === '*') return true;
+    return normalize(it.name).includes(q);
+  });
+  if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
+  if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
+  document.getElementById("result-count").textContent = res.length + " записів";
+  const list = document.getElementById("results-list");
+  if (!res.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
+    return;
+  }
+  list.innerHTML = res.map(item => {
+    const st = expiryStatus(item.expiry);
+    return `<div class="result-card${st==="expired"?" expired":""}">
+      <div class="card-head">
+        <div class="drug-name">${esc(item.name)}</div>
+        <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+      </div>
+      <div class="card-body">
+        ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+        ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+        ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+        ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function esc(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+</script>
+</body>
+</html>
