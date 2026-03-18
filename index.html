@@ -331,6 +331,8 @@ let currentQuery = "";
 let currentFilter = "all";
 let lastLoaded = null;
 let searchMode = 'name';
+let selectedDepts = [];
+let currentDeptSuggestions = []; // Масив для безпечного збереження списку відділень
 
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
 
@@ -443,7 +445,6 @@ function parseWorkbook(arrayBuffer) {
   const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
-    // Вичищаємо всі приховані переноси рядків з Excel (замінюємо на звичайний пробіл)
     const a    = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
     const e    = String(row[col.E] ?? "").trim().replace(/\s+/g, ' ');
     const rVal = row[col.R];
@@ -534,8 +535,6 @@ function renderHome() {
   }
 }
 
-let selectedDepts = [];
-
 function setSearchMode(mode, btn) {
   searchMode = mode;
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
@@ -559,29 +558,45 @@ function normalize(str) {
   return String(str || "").toLowerCase().replace(/["'’`ʼ]/g, "'").trim();
 }
 
-// Використовуємо надійний спосіб data-атрибутів для кліків (захист від апострофів)
 function onDeptInput(val) {
   const q = normalize(val);
   const suggestEl = document.getElementById("dept-suggestions");
   if (!q) { suggestEl.style.display = "none"; return; }
   
   const allDepts = [...new Set(allItems.map(i=>i.dept))].filter(d=>normalize(d).includes(q));
+  currentDeptSuggestions = allDepts.slice(0, 20); // Зберігаємо в глобальний масив
   
-  if (!allDepts.length) { suggestEl.style.display = "none"; return; }
+  if (!currentDeptSuggestions.length) { suggestEl.style.display = "none"; return; }
   suggestEl.style.display = "block";
-  suggestEl.innerHTML = allDepts.slice(0,20).map(d => {
+  
+  // Тепер ми передаємо лише індекс (цифру) у функцію кліку
+  suggestEl.innerHTML = currentDeptSuggestions.map((d, index) => {
     const isSel = selectedDepts.includes(d);
-    return `<div class="dept-suggestion-item${isSel?' selected':''}" data-dept="${esc(d)}" onclick="toggleDept(this.getAttribute('data-dept'))">
+    return `<div class="dept-suggestion-item${isSel?' selected':''}" onclick="toggleDeptByIndex(${index})">
       <span>${esc(d)}</span>
       <span style="color:var(--muted);font-size:11px">${isSel?'✓ вибрано':''}</span>
     </div>`;
   }).join("");
 }
 
-function toggleDept(dept) {
+// Нова функція, яка приймає цифру, а не текст
+function toggleDeptByIndex(index) {
+  const dept = currentDeptSuggestions[index];
+  if (!dept) return;
+  
   const idx = selectedDepts.indexOf(dept);
   if (idx === -1) selectedDepts.push(dept);
   else selectedDepts.splice(idx, 1);
+  
+  renderSelectedDepts();
+  onDeptInput(document.getElementById("search-input").value);
+  
+  if (selectedDepts.length > 0) { show("results"); renderResults(); }
+  else show("home");
+}
+
+function removeDept(index) {
+  selectedDepts.splice(index, 1);
   renderSelectedDepts();
   onDeptInput(document.getElementById("search-input").value);
   if (selectedDepts.length > 0) { show("results"); renderResults(); }
@@ -590,8 +605,9 @@ function toggleDept(dept) {
 
 function renderSelectedDepts() {
   const el = document.getElementById("selected-depts");
-  el.innerHTML = selectedDepts.map(d =>
-    `<div class="selected-dept-chip" data-dept="${esc(d)}" onclick="toggleDept(this.getAttribute('data-dept'))">
+  // І тут ми теж використовуємо порядковий номер замість тексту
+  el.innerHTML = selectedDepts.map((d, i) =>
+    `<div class="selected-dept-chip" onclick="removeDept(${i})">
       ${esc(d)} <span>✕</span>
     </div>`
   ).join("");
