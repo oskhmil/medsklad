@@ -453,22 +453,22 @@ function parseJSON(raw) {
     const a    = String(row[col.A] ?? "").trim();
     const mnn  = String(row[col.MNN] ?? "").trim();
     const e    = String(row[col.E] ?? "").trim();
-    const rVal = row[col.R];
-    const uVal = row[col.U];
+    const rVal = row[col.S];
+    const uVal = row[col.V];
     if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
     if (!e || e.toLowerCase() === "номенклатура") continue;
     const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
     const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
-    const ser = String(row[col.N] || "").trim();
-    const exp = String(row[col.O] || "").trim();
+    const ser = String(row[col.O] || "").trim();
+    const exp = String(row[col.P] || "").trim();
     items.push({
       dept:   currentDept,
       name:   e,
       mnn:    String(row[col.MNN] || "").trim() || null,
       series: ser || null,
       expiry: exp || null,
-      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
-      unit:   String(row[col.Q] || "").trim() || null,
+      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
+      unit:   String(row[col.R] || "").trim() || null,
       qty,
     });
   }
@@ -487,8 +487,8 @@ function parseWorkbook(arrayBuffer) {
     const a    = String(row[col.A] ?? "").trim();
     const mnn  = String(row[col.MNN] ?? "").trim();
     const e    = String(row[col.E] ?? "").trim();
-    const rVal = row[col.R];
-    const uVal = row[col.U];
+    const rVal = row[col.S];
+    const uVal = row[col.V];
     if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
     if (!e || e.toLowerCase() === "номенклатура") continue;
     const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
@@ -499,8 +499,8 @@ function parseWorkbook(arrayBuffer) {
       mnn:    mnn || null,
       series: String(row[col.N] || "").trim() || null,
       expiry: String(row[col.O] || "").trim() || null,
-      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
-      unit:   String(row[col.Q] || "").trim() || null,
+      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
+      unit:   String(row[col.R] || "").trim() || null,
       qty,
     });
   }
