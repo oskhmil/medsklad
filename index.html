@@ -430,7 +430,7 @@ function handleFile(file) {
 }
 
 // ── parse ────────────────────────────────────────────────────────────────────
-const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
+const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний","склад"];
 
 function isDeptHeader(a, e, rVal, uVal) {
   if (!a || e) return false;
@@ -446,11 +446,12 @@ function isDeptHeader(a, e, rVal, uVal) {
 function parseJSON(raw) {
   const items = [];
   let currentDept = "—";
-  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
+  const col = { A:0, MNN:4, E:7, N:13, O:14, P:15, Q:16, R:17, U:20 };
   const SKIP = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
+    const mnn  = String(row[col.MNN] ?? "").trim();
     const e    = String(row[col.E] ?? "").trim();
     const rVal = row[col.R];
     const uVal = row[col.U];
@@ -463,6 +464,7 @@ function parseJSON(raw) {
     items.push({
       dept:   currentDept,
       name:   e,
+      mnn:    String(row[col.MNN] || "").trim() || null,
       series: ser || null,
       expiry: exp || null,
       days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
@@ -479,10 +481,11 @@ function parseWorkbook(arrayBuffer) {
   const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
   const items = [];
   let currentDept = "—";
-  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
+  const col = { A:0, MNN:4, E:7, N:13, O:14, P:15, Q:16, R:17, U:20 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
+    const mnn  = String(row[col.MNN] ?? "").trim();
     const e    = String(row[col.E] ?? "").trim();
     const rVal = row[col.R];
     const uVal = row[col.U];
@@ -493,6 +496,7 @@ function parseWorkbook(arrayBuffer) {
     items.push({
       dept:   currentDept,
       name:   e,
+      mnn:    mnn || null,
       series: String(row[col.N] || "").trim() || null,
       expiry: String(row[col.O] || "").trim() || null,
       days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
@@ -694,7 +698,7 @@ function renderResults() {
     if (searchMode === 'dept') return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && it.series.toLowerCase().includes(q);
     if (currentQuery === '*') return true;
-    return it.name.toLowerCase().includes(q);
+    return it.name.toLowerCase().includes(q) || (it.mnn && it.mnn.toLowerCase().includes(q));
   });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
