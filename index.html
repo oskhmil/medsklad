@@ -384,7 +384,7 @@ async function loadFromDrive(isRefresh) {
 
 async function fetchAndUpdate(showLoader) {
   try {
-    const resp = await fetch(GDRIVE_URL);
+    const resp = await fetch(APPS_SCRIPT_URL);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const buf = await resp.arrayBuffer();
     const newItems = parseWorkbook(buf);
