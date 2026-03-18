@@ -447,14 +447,13 @@ function parseJSON(raw) {
   const items = [];
   let currentDept = "—";
   // A=0, MNN=4, NAME=7, SERIES=14, EXPIRY=15, DAYS=16, UNIT=17, QTY_START=18, QTY_END=21
-  const col = { A:0, MNN:4, E:7, O:14, P:15, Q:16, R:17, S:18, V:21 };
+  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
-    const mnn  = String(row[col.MNN] ?? "").trim();
     const e    = String(row[col.E] ?? "").trim();
-    const rVal = row[col.S];
-    const uVal = row[col.V];
+    const rVal = row[col.R];
+    const uVal = row[col.U];
     if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
     if (!e || e.toLowerCase() === "номенклатура") continue;
     if (e.toLowerCase().includes("номенклатура аптеки")) continue;
@@ -463,11 +462,10 @@ function parseJSON(raw) {
     items.push({
       dept:   currentDept,
       name:   e,
-      mnn:    mnn || null,
-      series: String(row[col.O] || "").trim() || null,
-      expiry: String(row[col.P] || "").trim() || null,
-      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
-      unit:   String(row[col.R] || "").trim() || null,
+      series: String(row[col.N] || "").trim() || null,
+      expiry: String(row[col.O] || "").trim() || null,
+      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
+      unit:   String(row[col.Q] || "").trim() || null,
       qty,
     });
   }
@@ -481,16 +479,16 @@ function parseWorkbook(arrayBuffer) {
   console.log("parseWorkbook: total rows =", raw.length);
   console.log("row 9:", JSON.stringify(raw[8]));
   console.log("row 15:", JSON.stringify(raw[14]));
+  console.log("col.E index:", 7, "row15[7]:", raw[14] ? raw[14][7] : 'N/A');
   const items = [];
   let currentDept = "—";
-  const col = { A:0, MNN:4, E:7, O:14, P:15, Q:16, R:17, S:18, V:21 };
+  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
-    const mnn  = String(row[col.MNN] ?? "").trim();
     const e    = String(row[col.E] ?? "").trim();
-    const rVal = row[col.S];
-    const uVal = row[col.V];
+    const rVal = row[col.R];
+    const uVal = row[col.U];
     if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
     if (!e || e.toLowerCase() === "номенклатура") continue;
     if (e.toLowerCase().includes("номенклатура аптеки")) continue;
@@ -499,14 +497,14 @@ function parseWorkbook(arrayBuffer) {
     items.push({
       dept:   currentDept,
       name:   e,
-      mnn:    mnn || null,
-      series: String(row[col.O] || "").trim() || null,
-      expiry: String(row[col.P] || "").trim() || null,
-      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
-      unit:   String(row[col.R] || "").trim() || null,
+      series: String(row[col.N] || "").trim() || null,
+      expiry: String(row[col.O] || "").trim() || null,
+      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
+      unit:   String(row[col.Q] || "").trim() || null,
       qty,
     });
   }
+  console.log("parseWorkbook: items found =", items.length);
   return items;
 }
 
