@@ -480,7 +480,7 @@ function parseWorkbook(arrayBuffer) {
   const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
   const items = [];
   let currentDept = "—";
-  const col = { A:0, MNN:4, E:7, N:13, O:14, P:15, Q:16, R:17, U:20 };
+  const col = { A:0, MNN:4, E:7, O:14, P:15, Q:16, R:17, S:18, V:21 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
