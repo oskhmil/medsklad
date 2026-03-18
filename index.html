@@ -443,11 +443,12 @@ function parseWorkbook(arrayBuffer) {
   const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
-    const a    = String(row[col.A] ?? "").trim();
-    const e    = String(row[col.E] ?? "").trim();
+    // Вичищаємо всі приховані переноси рядків з Excel (замінюємо на звичайний пробіл)
+    const a    = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
+    const e    = String(row[col.E] ?? "").trim().replace(/\s+/g, ' ');
     const rVal = row[col.R];
     const uVal = row[col.U];
-    if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a.trim(); }
+    if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a; }
     if (!e || e.toLowerCase() === "номенклатура") continue;
     const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
     const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
@@ -558,10 +559,7 @@ function normalize(str) {
   return String(str || "").toLowerCase().replace(/["'’`ʼ]/g, "'").trim();
 }
 
-function safeStr(s) {
-  return String(s||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,"&quot;").replace(/`/g,"\\`");
-}
-
+// Використовуємо надійний спосіб data-атрибутів для кліків (захист від апострофів)
 function onDeptInput(val) {
   const q = normalize(val);
   const suggestEl = document.getElementById("dept-suggestions");
@@ -573,7 +571,7 @@ function onDeptInput(val) {
   suggestEl.style.display = "block";
   suggestEl.innerHTML = allDepts.slice(0,20).map(d => {
     const isSel = selectedDepts.includes(d);
-    return `<div class="dept-suggestion-item${isSel?' selected':''}" onclick="toggleDept('${safeStr(d)}')">
+    return `<div class="dept-suggestion-item${isSel?' selected':''}" data-dept="${esc(d)}" onclick="toggleDept(this.getAttribute('data-dept'))">
       <span>${esc(d)}</span>
       <span style="color:var(--muted);font-size:11px">${isSel?'✓ вибрано':''}</span>
     </div>`;
@@ -593,7 +591,7 @@ function toggleDept(dept) {
 function renderSelectedDepts() {
   const el = document.getElementById("selected-depts");
   el.innerHTML = selectedDepts.map(d =>
-    `<div class="selected-dept-chip" onclick="toggleDept('${safeStr(d)}')">
+    `<div class="selected-dept-chip" data-dept="${esc(d)}" onclick="toggleDept(this.getAttribute('data-dept'))">
       ${esc(d)} <span>✕</span>
     </div>`
   ).join("");
