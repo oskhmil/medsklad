@@ -338,7 +338,7 @@ let currentFilter = "all";
 let lastLoaded = null;
 let searchMode = 'name';
 
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvvSb6EqLNuaU-BiMeubNNpxOfwxET8eVyTYNWMTgrqcfOWvQ5g6leWZYdQBYccw3qMg/exec";
+const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
 
 // ── load from Drive ─────────────────────────────────────────────────────────
 const CACHE_KEY = "medsklad_cache";
@@ -384,11 +384,10 @@ async function loadFromDrive(isRefresh) {
 
 async function fetchAndUpdate(showLoader) {
   try {
-    const resp = await fetch(APPS_SCRIPT_URL, {redirect: 'follow'});
+    const resp = await fetch(GDRIVE_URL);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
-    let data = await resp.json();
-    if (!Array.isArray(data)) data = JSON.parse(data);
-    const newItems = parseJSON(data);
+    const buf = await resp.arrayBuffer();
+    const newItems = parseWorkbook(buf);
     allItems = newItems;
     lastLoaded = new Date();
     saveCache(newItems);
