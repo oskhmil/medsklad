@@ -446,8 +446,8 @@ function isDeptHeader(a, e, rVal, uVal) {
 function parseJSON(raw) {
   const items = [];
   let currentDept = "—";
-  const col = { A:0, MNN:4, E:7, N:13, O:14, P:15, Q:16, R:17, U:20 };
-  const SKIP = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
+  // A=0, MNN=4, NAME=7, SERIES=14, EXPIRY=15, DAYS=16, UNIT=17, QTY_START=18, QTY_END=21
+  const col = { A:0, MNN:4, E:7, O:14, P:15, Q:16, R:17, S:18, V:21 };
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
@@ -460,14 +460,12 @@ function parseJSON(raw) {
     if (e.toLowerCase().includes("номенклатура аптеки")) continue;
     const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
     const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
-    const ser = String(row[col.O] || "").trim();
-    const exp = String(row[col.P] || "").trim();
     items.push({
       dept:   currentDept,
       name:   e,
-      mnn:    String(row[col.MNN] || "").trim() || null,
-      series: ser || null,
-      expiry: exp || null,
+      mnn:    mnn || null,
+      series: String(row[col.O] || "").trim() || null,
+      expiry: String(row[col.P] || "").trim() || null,
       days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
       unit:   String(row[col.R] || "").trim() || null,
       qty,
