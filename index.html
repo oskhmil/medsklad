@@ -384,7 +384,7 @@ async function loadFromDrive(isRefresh) {
 
 async function fetchAndUpdate(showLoader) {
   try {
-    const resp = await fetch(APPS_SCRIPT_URL);
+    const resp = await fetch(APPS_SCRIPT_URL, {redirect: 'follow'});
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     let data = await resp.json();
     if (!Array.isArray(data)) data = JSON.parse(data);
