@@ -448,6 +448,9 @@ function parseJSON(raw) {
   let currentDept = "—";
   // A=0, MNN=4, NAME=7, SERIES=14, EXPIRY=15, DAYS=16, UNIT=17, QTY_START=18, QTY_END=21
   const col = { A:0, MNN:4, E:7, O:14, P:15, Q:16, R:17, S:18, V:21 };
+  console.log("parseJSON: total rows =", raw.length, "first row =", JSON.stringify(raw[0]));
+  console.log("row 9 (header):", JSON.stringify(raw[8]));
+  console.log("row 10 (first data):", JSON.stringify(raw[9]));
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
@@ -481,6 +484,9 @@ function parseWorkbook(arrayBuffer) {
   const items = [];
   let currentDept = "—";
   const col = { A:0, MNN:4, E:7, N:13, O:14, P:15, Q:16, R:17, U:20 };
+  console.log("parseJSON: total rows =", raw.length, "first row =", JSON.stringify(raw[0]));
+  console.log("row 9 (header):", JSON.stringify(raw[8]));
+  console.log("row 10 (first data):", JSON.stringify(raw[9]));
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a    = String(row[col.A] ?? "").trim();
