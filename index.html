@@ -430,7 +430,7 @@ function handleFile(file) {
 }
 
 // ── parse ────────────────────────────────────────────────────────────────────
-const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний","склад"];
+const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний","склад","разом"];
 
 function isDeptHeader(a, e, rVal, uVal) {
   if (!a || e) return false;
@@ -478,6 +478,9 @@ function parseWorkbook(arrayBuffer) {
   const wb = XLSX.read(arrayBuffer, { type: "array", cellDates: false });
   const ws = wb.Sheets[wb.SheetNames[0]];
   const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+  console.log("parseWorkbook: total rows =", raw.length);
+  console.log("row 9:", JSON.stringify(raw[8]));
+  console.log("row 15:", JSON.stringify(raw[14]));
   const items = [];
   let currentDept = "—";
   const col = { A:0, MNN:4, E:7, O:14, P:15, Q:16, R:17, S:18, V:21 };
