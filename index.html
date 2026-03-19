@@ -687,6 +687,7 @@ function quickFilter(type) {
 function onSearch(val) {
   currentQuery = val.trim();
   if (!currentQuery) { show("home"); return; }
+  if (currentQuery.length < 2) return;
   show("results");
   renderResults();
 }
@@ -698,24 +699,38 @@ function setFilter(val, btn) {
   renderResults();
 }
 
+let displayLimit = 50;
+
+function multiWordMatch(text, words) {
+  const t = normalize(text);
+  return words.every(w => t.includes(w));
+}
+
 function renderResults() {
   const q = normalize(currentQuery);
+  const words = q.split(/\s+/).filter(w => w.length > 0);
   let res = allItems.filter(it => {
     if (searchMode === 'dept')   return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
-    if (searchMode === 'mnn')    return it.mnn && normalize(it.mnn).includes(q);
+    if (searchMode === 'mnn')    return it.mnn && multiWordMatch(it.mnn, words);
     if (currentQuery === '*')    return true;
-    return normalize(it.name).includes(q);
+    return multiWordMatch(it.name, words);
   });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
+  displayLimit = 50;
+  renderResultsList(res);
+}
+
+function renderResultsList(res) {
   document.getElementById("result-count").textContent = res.length + " записів";
   const list = document.getElementById("results-list");
   if (!res.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
     return;
   }
-  list.innerHTML = res.map(item => {
+  const visible = res.slice(0, displayLimit);
+  let html = visible.map(item => {
     const st = expiryStatus(item.expiry);
     return `<div class="result-card${st==="expired"?" expired":""}">
       <div class="card-head">
@@ -731,6 +746,16 @@ function renderResults() {
       </div>
     </div>`;
   }).join("");
+  if (res.length > displayLimit) {
+    html += `<button class="big-btn" style="margin-top:10px;font-size:14px;padding:12px;" onclick="showMore()">Показати ще (${res.length - displayLimit} залишилось)</button>`;
+  }
+  list.innerHTML = html;
+  window._lastResults = res;
+}
+
+function showMore() {
+  displayLimit += 50;
+  if (window._lastResults) renderResultsList(window._lastResults);
 }
 
 function esc(s) {
