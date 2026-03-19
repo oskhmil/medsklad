@@ -71,7 +71,6 @@
 
   #body { padding: 16px 16px 0; }
 
-  /* loader / start screen */
   #start-screen { text-align: center; padding: 60px 20px; }
   .start-ico { font-size: 56px; margin-bottom: 18px; }
   .start-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
@@ -106,7 +105,6 @@
   }
   .loader-ico { font-size: 44px; margin-bottom: 14px; }
 
-  /* home */
   #home-screen { display: none; }
   .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; }
   .stat-card {
@@ -141,7 +139,6 @@
     margin-bottom: 14px;
   }
 
-  /* results */
   #results-screen { display: none; }
   .results-header {
     display: flex; align-items: center;
@@ -168,7 +165,11 @@
   .card-head {
     padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
   }
-  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 6px; }
+  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+  .mnn-name {
+    font-size: 12px; color: #a78bfa; font-style: italic; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
   .dept-tag {
     display: inline-block;
     background: rgba(56,189,248,.13); color: #38bdf8;
@@ -241,8 +242,9 @@
         <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : debouncedSearch(this.value)">
         <span class="search-ico">🔍</span>
       </div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
         <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="mode-mnn" onclick="setSearchMode('mnn',this)" style="font-size:11px;padding:4px 10px;">За МНН</button>
         <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
         <button class="filter-btn" id="mode-dept" onclick="setSearchMode('dept',this)" style="font-size:11px;padding:4px 10px;">За відділенням</button>
       </div>
@@ -332,11 +334,11 @@ let currentFilter = "all";
 let lastLoaded = null;
 let searchMode = 'name';
 let selectedDepts = [];
-let currentDeptSuggestions = []; // Масив для безпечного збереження списку відділень
+let currentDeptSuggestions = [];
 
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
 
-// ── load from Drive ─────────────────────────────────────────────────────────
+// ── cache ────────────────────────────────────────────────────────────────────
 const CACHE_KEY = "medsklad_cache";
 const CACHE_TIME_KEY = "medsklad_cache_time";
 
@@ -356,6 +358,7 @@ function loadCache() {
   return null;
 }
 
+// ── load from Drive ─────────────────────────────────────────────────────────
 async function loadFromDrive(isRefresh) {
   if (!isRefresh) {
     const cache = loadCache();
@@ -426,12 +429,15 @@ function handleFile(file) {
 // ── parse ────────────────────────────────────────────────────────────────────
 const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
 
-function isDeptHeader(a, e, rVal, uVal) {
-  if (!a || e) return false;
-  const trimmed = a.trim();
-  if (trimmed.length < 3) return false;
-  if (/^\d/.test(trimmed)) return false;
-  const lc = trimmed.toLowerCase();
+function isDeptHeader(row, col) {
+  const a = String(row[col.A] ?? "").trim();
+  const h = String(row[col.H] ?? "").trim();
+  if (!a || a.length < 3) return false;
+  // Data rows always have col H (drug/item name); dept headers don't
+  if (h) return false;
+  // Article codes start with a digit
+  if (/^\d/.test(a)) return false;
+  const lc = a.toLowerCase();
   if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
   return true;
 }
@@ -442,31 +448,51 @@ function parseWorkbook(arrayBuffer) {
   const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
   const items = [];
   let currentDept = "—";
-  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
+
+  // ── Column mapping (new format with MNN) ──
+  // A(0)  = Артикул
+  // E(4)  = Номенклатура.МНН
+  // H(7)  = Номенклатура (drug/item name)
+  // N(13) = Характеристика
+  // O(14) = Серія
+  // P(15) = Придатний до (expiry date)
+  // Q(16) = Придатний (днів)
+  // R(17) = Од. вим.
+  // S(18) = Початковий залишок
+  // V(21) = Кінцевий залишок
+  const col = { A:0, E:4, H:7, N:13, O:14, P:15, Q:16, R:17, S:18, V:21 };
+
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
-    const a    = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
-    const e    = String(row[col.E] ?? "").trim().replace(/\s+/g, ' ');
-    const rVal = row[col.R];
-    const uVal = row[col.U];
-    if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a; }
-    if (!e || e.toLowerCase() === "номенклатура") continue;
-    const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
+    const a = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
+    const h = String(row[col.H] ?? "").trim().replace(/\s+/g, ' ');
+
+    // Detect department header rows
+    if (isDeptHeader(row, col)) { currentDept = a; }
+
+    // Skip rows without a drug/item name in column H
+    if (!h || h.toLowerCase() === "номенклатура") continue;
+
+    const mnn = String(row[col.E] ?? "").trim() || null;
+    // Prefer final balance (V), fall back to initial (S)
+    const qtyRaw = (row[col.V] !== "" && row[col.V] != null) ? row[col.V] : row[col.S];
     const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
+
     items.push({
       dept:   currentDept,
-      name:   e,
-      series: String(row[col.N] || "").trim() || null,
-      expiry: String(row[col.O] || "").trim() || null,
-      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
-      unit:   String(row[col.Q] || "").trim() || null,
+      name:   h,
+      mnn:    mnn,
+      series: String(row[col.O] || "").trim() || null,
+      expiry: String(row[col.P] || "").trim() || null,
+      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
+      unit:   String(row[col.R] || "").trim() || null,
       qty,
     });
   }
   return items;
 }
 
-// ── date ─────────────────────────────────────────────────────────────────────
+// ── date helpers ─────────────────────────────────────────────────────────────
 function parseDate(val) {
   if (!val) return null;
   const p = val.match(/(\d{2})\.(\d{2})\.(\d{4})/);
@@ -539,8 +565,13 @@ function setSearchMode(mode, btn) {
   searchMode = mode;
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  const ph = mode === 'series' ? 'Введіть серію...' : mode === 'dept' ? 'Введіть назву відділення...' : 'Введіть назву препарату...';
-  document.getElementById("search-input").placeholder = ph;
+  const placeholders = {
+    name:   'Введіть назву препарату...',
+    mnn:    'Введіть МНН (латиницею)...',
+    series: 'Введіть серію...',
+    dept:   'Введіть назву відділення...'
+  };
+  document.getElementById("search-input").placeholder = placeholders[mode] || placeholders.name;
   document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
   document.getElementById("search-input").value = "";
   currentQuery = "";
@@ -550,26 +581,25 @@ function setSearchMode(mode, btn) {
     else show("home");
   } else {
     selectedDepts = [];
-    if (currentQuery) renderResults();
+    show("home");
   }
 }
 
 function normalize(str) {
-  return String(str || "").toLowerCase().replace(/["'’`ʼ]/g, "'").trim();
+  return String(str || "").toLowerCase().replace(/["''`ʼ]/g, "'").trim();
 }
 
 function onDeptInput(val) {
   const q = normalize(val);
   const suggestEl = document.getElementById("dept-suggestions");
   if (!q) { suggestEl.style.display = "none"; return; }
-  
+
   const allDepts = [...new Set(allItems.map(i=>i.dept))].filter(d=>normalize(d).includes(q));
-  currentDeptSuggestions = allDepts.slice(0, 20); // Зберігаємо в глобальний масив
-  
+  currentDeptSuggestions = allDepts.slice(0, 20);
+
   if (!currentDeptSuggestions.length) { suggestEl.style.display = "none"; return; }
   suggestEl.style.display = "block";
-  
-  // Тепер ми передаємо лише індекс (цифру) у функцію кліку
+
   suggestEl.innerHTML = currentDeptSuggestions.map((d, index) => {
     const isSel = selectedDepts.includes(d);
     return `<div class="dept-suggestion-item${isSel?' selected':''}" onclick="toggleDeptByIndex(${index})">
@@ -579,18 +609,17 @@ function onDeptInput(val) {
   }).join("");
 }
 
-// Нова функція, яка приймає цифру, а не текст
 function toggleDeptByIndex(index) {
   const dept = currentDeptSuggestions[index];
   if (!dept) return;
-  
+
   const idx = selectedDepts.indexOf(dept);
   if (idx === -1) selectedDepts.push(dept);
   else selectedDepts.splice(idx, 1);
-  
+
   renderSelectedDepts();
   onDeptInput(document.getElementById("search-input").value);
-  
+
   if (selectedDepts.length > 0) { show("results"); renderResults(); }
   else show("home");
 }
@@ -605,7 +634,6 @@ function removeDept(index) {
 
 function renderSelectedDepts() {
   const el = document.getElementById("selected-depts");
-  // І тут ми теж використовуємо порядковий номер замість тексту
   el.innerHTML = selectedDepts.map((d, i) =>
     `<div class="selected-dept-chip" onclick="removeDept(${i})">
       ${esc(d)} <span>✕</span>
@@ -625,6 +653,7 @@ function goHome() {
   searchMode = "name";
   selectedDepts = [];
   document.getElementById("search-input").value = "";
+  document.getElementById("search-input").placeholder = "Введіть назву препарату...";
   document.getElementById("dept-search-wrap").style.display = "none";
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
@@ -645,7 +674,7 @@ function quickFilter(type) {
   document.getElementById("mode-name").classList.add("active");
   currentQuery = "*";
   currentFilter = type;
-  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".filter-row .filter-btn").forEach(b=>b.classList.remove("active"));
   const filterBtns = document.querySelectorAll(".filter-row .filter-btn");
   filterBtns.forEach(b => {
     if ((type==='expired' && b.textContent.includes('Прострочені')) ||
@@ -664,17 +693,18 @@ function onSearch(val) {
 
 function setFilter(val, btn) {
   currentFilter = val;
-  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".filter-row .filter-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   renderResults();
 }
 
 function renderResults() {
   const q = normalize(currentQuery);
-  let res = allItems.filter(it=>{
-    if (searchMode === 'dept') return selectedDepts.includes(it.dept);
+  let res = allItems.filter(it => {
+    if (searchMode === 'dept')   return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
-    if (currentQuery === '*') return true;
+    if (searchMode === 'mnn')    return it.mnn && normalize(it.mnn).includes(q);
+    if (currentQuery === '*')    return true;
     return normalize(it.name).includes(q);
   });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
@@ -690,6 +720,7 @@ function renderResults() {
     return `<div class="result-card${st==="expired"?" expired":""}">
       <div class="card-head">
         <div class="drug-name">${esc(item.name)}</div>
+        ${item.mnn ? `<div class="mnn-name">🧬 ${esc(item.mnn)}</div>` : ''}
         <div class="dept-tag">🏥 ${esc(item.dept)}</div>
       </div>
       <div class="card-body">
