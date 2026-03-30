@@ -106,9 +106,14 @@
   .loader-ico { font-size: 44px; margin-bottom: 14px; }
 
   #home-screen { display: none; }
-  .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
   .stat-card {
-    flex: 1; background: var(--card); border: 1px solid var(--border);
+    background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 12px 8px; text-align: center;
   }
   .stat-num { font-size: 22px; font-weight: 800; color: var(--accent); }
