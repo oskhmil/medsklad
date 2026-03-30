@@ -221,6 +221,34 @@
     0% { background-position: 0% center; }
     100% { background-position: 200% center; }
   }
+
+  .new-item-accordion {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 8px; overflow: hidden;
+  }
+  .new-item-header {
+    padding: 12px 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .15s;
+  }
+  .new-item-header:hover { background: rgba(79,142,247,.07); }
+  .new-item-title {
+    font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+  }
+  .new-item-badge {
+    background: rgba(52,211,153,.15); color: var(--green);
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600;
+  }
+  .new-item-arrow {
+    color: var(--muted); font-size: 14px; transition: transform .2s;
+  }
+  .new-item-arrow.open { transform: rotate(180deg); }
+  .new-item-details {
+    display: none; border-top: 1px solid var(--border);
+    padding: 8px 10px;
+  }
+  .new-item-details.open { display: block; }
+  .new-item-details .result-card { margin-bottom: 6px; }
 </style>
 </head>
 <body>
@@ -300,6 +328,10 @@
           <div class="stat-num green" id="stat-soon">0</div>
           <div class="stat-lbl">&lt;90 днів</div>
         </div>
+        <div class="stat-card" onclick="showNewItems()" style="cursor:pointer">
+          <div class="stat-num green" id="stat-new">0</div>
+          <div class="stat-lbl">🆕 Нове</div>
+        </div>
       </div>
       <div class="section-lbl" onclick="toggleDepts()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
         <span>Відділення у файлі</span>
@@ -323,6 +355,15 @@
         <button class="filter-btn" onclick="setFilter('soon',this)">⚠️ Скоро</button>
       </div>
       <div id="results-list"></div>
+    </div>
+
+    <div id="new-items-screen" style="display:none">
+      <div class="results-header">
+        <div class="section-lbl">🆕 Нові позиції</div>
+        <span class="result-count" id="new-items-count">0</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;" id="new-items-info"></div>
+      <div id="new-items-list"></div>
     </div>
   </div>
 </div>
@@ -365,6 +406,7 @@ async function loadFromDrive(isRefresh) {
     if (cache) {
       allItems = cache.items;
       lastLoaded = cache.time;
+      newItemNames = loadNewNames();
       currentQuery = "";
       document.getElementById("search-input").value = "";
       renderHome();
@@ -385,9 +427,24 @@ async function fetchAndUpdate(showLoader) {
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const buf = await resp.arrayBuffer();
     const newItems = parseWorkbook(buf);
+
     allItems = newItems;
     lastLoaded = new Date();
     saveCache(newItems);
+
+    // Compare with last confirmed snapshot (updated only on "Переглянуто")
+    const prevSnapshot = loadSnapshot();
+    if (prevSnapshot) {
+      const prevSet = new Set(prevSnapshot.names);
+      const currentNames = getUniqueNames(newItems);
+      newItemNames = currentNames.filter(n => !prevSet.has(n));
+    } else {
+      // First run — save initial snapshot
+      saveSnapshot(getUniqueNames(newItems));
+      newItemNames = [];
+    }
+    saveNewNames(newItemNames);
+
     currentQuery = "";
     document.getElementById("search-input").value = "";
     renderHome();
@@ -412,8 +469,23 @@ function handleFile(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      allItems = parseWorkbook(e.target.result);
+      const newItems = parseWorkbook(e.target.result);
+
+      allItems = newItems;
       lastLoaded = new Date();
+
+      // Compare with last confirmed snapshot
+      const prevSnapshot = loadSnapshot();
+      if (prevSnapshot) {
+        const prevSet = new Set(prevSnapshot.names);
+        const currentNames = getUniqueNames(newItems);
+        newItemNames = currentNames.filter(n => !prevSet.has(n));
+      } else {
+        saveSnapshot(getUniqueNames(newItems));
+        newItemNames = [];
+      }
+      saveNewNames(newItemNames);
+
       currentQuery = "";
       document.getElementById("search-input").value = "";
       renderHome();
@@ -525,13 +597,14 @@ function statusLabel(st, days) {
 
 // ── ui ────────────────────────────────────────────────────────────────────────
 function show(screen) {
-  document.getElementById("start-screen").style.display    = screen==="start"   ? "block" : "none";
-  document.getElementById("loader").style.display          = screen==="loader"  ? "block" : "none";
-  document.getElementById("home-screen").style.display     = screen==="home"    ? "block" : "none";
-  document.getElementById("results-screen").style.display  = screen==="results" ? "block" : "none";
-  const showHeader = screen==="home" || screen==="results";
-  document.getElementById("search-wrap").style.display     = showHeader ? "block" : "none";
-  document.getElementById("header-btns").style.display     = showHeader ? "flex"  : "none";
+  document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
+  document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
+  document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
+  document.getElementById("results-screen").style.display    = screen==="results"  ? "block" : "none";
+  document.getElementById("new-items-screen").style.display  = screen==="newitems" ? "block" : "none";
+  const showHeader = screen==="home" || screen==="results" || screen==="newitems";
+  document.getElementById("search-wrap").style.display       = showHeader ? "block" : "none";
+  document.getElementById("header-btns").style.display       = showHeader ? "flex"  : "none";
 }
 
 function renderHome() {
@@ -559,6 +632,7 @@ function renderHome() {
     document.getElementById("last-updated").textContent =
       "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
   }
+  updateNewStat();
 }
 
 function setSearchMode(mode, btn) {
@@ -760,6 +834,150 @@ function showMore() {
 
 function esc(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── new items (snapshot comparison) ─────────────────────────────────────────
+const SNAPSHOT_KEY = "medsklad_snapshot";
+const SNAPSHOT_TIME_KEY = "medsklad_snapshot_time";
+const NEW_NAMES_KEY = "medsklad_new_names";
+let newItemNames = [];
+
+function getUniqueNames(items) {
+  return [...new Set(items.map(it => normalize(it.name)))];
+}
+
+function loadSnapshot() {
+  try {
+    const data = localStorage.getItem(SNAPSHOT_KEY);
+    const time = localStorage.getItem(SNAPSHOT_TIME_KEY);
+    if (data && time) return { names: JSON.parse(data), time: new Date(parseInt(time)) };
+  } catch(e) {}
+  return null;
+}
+
+function saveSnapshot(names) {
+  try {
+    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(names));
+    localStorage.setItem(SNAPSHOT_TIME_KEY, Date.now().toString());
+  } catch(e) {}
+}
+
+function saveNewNames(names) {
+  try { localStorage.setItem(NEW_NAMES_KEY, JSON.stringify(names)); } catch(e) {}
+}
+
+function loadNewNames() {
+  try {
+    const data = localStorage.getItem(NEW_NAMES_KEY);
+    if (data) return JSON.parse(data);
+  } catch(e) {}
+  return [];
+}
+
+function computeNewItems() {
+  const prev = loadSnapshot();
+  const currentNames = getUniqueNames(allItems);
+
+  if (!prev) {
+    saveSnapshot(currentNames);
+    newItemNames = [];
+    saveNewNames(newItemNames);
+    return;
+  }
+
+  const prevSet = new Set(prev.names);
+  newItemNames = currentNames.filter(n => !prevSet.has(n));
+  // Don't overwrite snapshot here — only update when user explicitly refreshes
+}
+
+function updateNewStat() {
+  const el = document.getElementById("stat-new");
+  el.textContent = newItemNames.length;
+  el.className = "stat-num " + (newItemNames.length > 0 ? "accent" : "green");
+  if (newItemNames.length > 0) el.style.color = "#a78bfa";
+  else el.style.color = "";
+}
+
+function showNewItems() {
+  if (!newItemNames.length) {
+    show("newitems");
+    const snap = loadSnapshot();
+    const info = snap ? "Порівняно з попереднім завантаженням від " +
+      snap.time.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "";
+    document.getElementById("new-items-info").textContent = info;
+    document.getElementById("new-items-count").textContent = "0 позицій";
+    document.getElementById("new-items-list").innerHTML =
+      `<div class="empty-state"><div class="empty-ico">✅</div><div class="empty-title">Нових позицій немає</div><div class="empty-sub">Порівняно з попереднім оновленням</div></div>`;
+    return;
+  }
+
+  show("newitems");
+  document.getElementById("new-items-count").textContent = newItemNames.length + " позицій";
+
+  const snap = loadSnapshot();
+  const info = snap ? "Нові назви порівняно з попереднім завантаженням" : "";
+  document.getElementById("new-items-info").textContent = info;
+
+  // Build accordion: for each new name, find all items with that name
+  const html = newItemNames.map((normName, idx) => {
+    // Find original (non-normalized) name from items
+    const matchingItems = allItems.filter(it => normalize(it.name) === normName);
+    const displayName = matchingItems.length > 0 ? matchingItems[0].name : normName;
+    const mnn = matchingItems.find(it => it.mnn)?.mnn || null;
+    const deptCount = new Set(matchingItems.map(it => it.dept)).size;
+
+    const detailCards = matchingItems.map(item => {
+      const st = expiryStatus(item.expiry);
+      return `<div class="result-card${st==="expired"?" expired":""}">
+        <div class="card-head">
+          <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+        </div>
+        <div class="card-body">
+          ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+          ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+          ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+          ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="new-item-accordion">
+      <div class="new-item-header" onclick="toggleNewItem(${idx})">
+        <div class="new-item-title">
+          <span>${esc(displayName)}</span>
+          ${mnn ? `<span style="color:#a78bfa;font-size:11px;font-style:italic">${esc(mnn)}</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="new-item-badge">${deptCount} відд.</span>
+          <span class="new-item-arrow" id="new-arrow-${idx}">▼</span>
+        </div>
+      </div>
+      <div class="new-item-details" id="new-details-${idx}">
+        ${detailCards}
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("new-items-list").innerHTML = html +
+    `<button class="big-btn" style="margin-top:14px;font-size:14px;padding:12px;background:linear-gradient(135deg,#34d399,#10b981);" onclick="markNewAsReviewed()">✅ Переглянуто</button>`;
+}
+
+function markNewAsReviewed() {
+  // Save current names as new snapshot — next comparison starts from here
+  const currentNames = getUniqueNames(allItems);
+  saveSnapshot(currentNames);
+  newItemNames = [];
+  saveNewNames(newItemNames);
+  updateNewStat();
+  show("home");
+}
+
+function toggleNewItem(idx) {
+  const details = document.getElementById("new-details-" + idx);
+  const arrow = document.getElementById("new-arrow-" + idx);
+  const isOpen = details.classList.contains("open");
+  details.classList.toggle("open");
+  arrow.classList.toggle("open");
 }
 </script>
 </body>
