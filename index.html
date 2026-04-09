@@ -861,26 +861,7 @@ function renderResultsList(res) {
     const totalQty = items.reduce((sum, it) => sum + (it.qty || 0), 0);
     const unit = items.find(it => it.unit)?.unit || "";
 
-    // If only 1 item in group — show as regular card, no accordion
-    if (items.length === 1) {
-      const item = items[0];
-      const st = expiryStatus(item.expiry);
-      return `<div class="result-card${st==="expired"?" expired":""}">
-        <div class="card-head">
-          <div class="drug-name">${esc(item.name)}</div>
-          ${item.mnn ? `<div class="mnn-name">🧬 ${esc(item.mnn)}</div>` : ''}
-          <div class="dept-tag">🏥 ${esc(item.dept)}</div>
-        </div>
-        <div class="card-body">
-          ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
-          ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
-          ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
-          ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
-        </div>
-      </div>`;
-    }
-
-    // Multiple items — show summary accordion
+    // Always show summary accordion
     const detailCards = items.map(item => {
       const st = expiryStatus(item.expiry);
       return `<div class="result-card${st==="expired"?" expired":""}">
