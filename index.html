@@ -254,6 +254,37 @@
   }
   .new-item-details.open { display: block; }
   .new-item-details .result-card { margin-bottom: 6px; }
+
+  .summary-accordion {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 10px; overflow: hidden;
+  }
+  .summary-header {
+    padding: 12px 14px; cursor: pointer;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    transition: background .15s; gap: 8px;
+  }
+  .summary-header:hover { background: rgba(79,142,247,.07); }
+  .summary-info { flex: 1; min-width: 0; }
+  .summary-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+  .summary-mnn { font-size: 12px; color: #a78bfa; font-style: italic; margin-bottom: 6px; }
+  .summary-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .summary-tag {
+    display: inline-block; border-radius: 6px; padding: 2px 8px;
+    font-size: 11px; font-weight: 600;
+  }
+  .summary-tag.qty { background: rgba(79,142,247,.15); color: var(--accent); }
+  .summary-tag.depts { background: rgba(56,189,248,.13); color: #38bdf8; }
+  .summary-arrow {
+    color: var(--muted); font-size: 14px; transition: transform .2s;
+    flex-shrink: 0; margin-top: 4px;
+  }
+  .summary-arrow.open { transform: rotate(180deg); }
+  .summary-details {
+    display: none; border-top: 1px solid var(--border); padding: 8px 10px;
+  }
+  .summary-details.open { display: block; }
+  .summary-details .result-card { margin-bottom: 6px; }
 </style>
 </head>
 <body>
@@ -808,28 +839,93 @@ function renderResultsList(res) {
     list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
     return;
   }
-  const visible = res.slice(0, displayLimit);
-  let html = visible.map(item => {
-    const st = expiryStatus(item.expiry);
-    return `<div class="result-card${st==="expired"?" expired":""}">
-      <div class="card-head">
-        <div class="drug-name">${esc(item.name)}</div>
-        ${item.mnn ? `<div class="mnn-name">🧬 ${esc(item.mnn)}</div>` : ''}
-        <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+
+  // Group by normalized drug name
+  const groups = {};
+  const groupOrder = [];
+  res.forEach(item => {
+    const key = normalize(item.name);
+    if (!groups[key]) {
+      groups[key] = [];
+      groupOrder.push(key);
+    }
+    groups[key].push(item);
+  });
+
+  const visibleGroups = groupOrder.slice(0, displayLimit);
+  let html = visibleGroups.map((key, gIdx) => {
+    const items = groups[key];
+    const displayName = items[0].name;
+    const mnn = items.find(it => it.mnn)?.mnn || null;
+    const deptCount = new Set(items.map(it => it.dept)).size;
+    const totalQty = items.reduce((sum, it) => sum + (it.qty || 0), 0);
+    const unit = items.find(it => it.unit)?.unit || "";
+
+    // If only 1 item in group — show as regular card, no accordion
+    if (items.length === 1) {
+      const item = items[0];
+      const st = expiryStatus(item.expiry);
+      return `<div class="result-card${st==="expired"?" expired":""}">
+        <div class="card-head">
+          <div class="drug-name">${esc(item.name)}</div>
+          ${item.mnn ? `<div class="mnn-name">🧬 ${esc(item.mnn)}</div>` : ''}
+          <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+        </div>
+        <div class="card-body">
+          ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+          ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+          ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+          ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+        </div>
+      </div>`;
+    }
+
+    // Multiple items — show summary accordion
+    const detailCards = items.map(item => {
+      const st = expiryStatus(item.expiry);
+      return `<div class="result-card${st==="expired"?" expired":""}">
+        <div class="card-head">
+          <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+        </div>
+        <div class="card-body">
+          ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+          ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+          ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+          ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="summary-accordion">
+      <div class="summary-header" onclick="toggleSummary(${gIdx})">
+        <div class="summary-info">
+          <div class="summary-name">${esc(displayName)}</div>
+          ${mnn ? `<div class="summary-mnn">🧬 ${esc(mnn)}</div>` : ''}
+          <div class="summary-stats">
+            <span class="summary-tag qty">Всього: ${totalQty} ${esc(unit)}</span>
+            <span class="summary-tag depts">🏥 ${deptCount} відд.</span>
+          </div>
+        </div>
+        <span class="summary-arrow" id="sum-arrow-${gIdx}">▼</span>
       </div>
-      <div class="card-body">
-        ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
-        ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
-        ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
-        ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+      <div class="summary-details" id="sum-details-${gIdx}">
+        ${detailCards}
       </div>
     </div>`;
   }).join("");
-  if (res.length > displayLimit) {
-    html += `<button class="big-btn" style="margin-top:10px;font-size:14px;padding:12px;" onclick="showMore()">Показати ще (${res.length - displayLimit} залишилось)</button>`;
+
+  if (groupOrder.length > displayLimit) {
+    html += `<button class="big-btn" style="margin-top:10px;font-size:14px;padding:12px;" onclick="showMore()">Показати ще (${groupOrder.length - displayLimit} назв залишилось)</button>`;
   }
   list.innerHTML = html;
   window._lastResults = res;
+}
+
+function toggleSummary(idx) {
+  const details = document.getElementById("sum-details-" + idx);
+  const arrow = document.getElementById("sum-arrow-" + idx);
+  details.classList.toggle("open");
+  arrow.classList.toggle("open");
 }
 
 function showMore() {
