@@ -71,7 +71,6 @@
 
   #body { padding: 16px 16px 0; }
 
-  /* loader / start screen */
   #start-screen { text-align: center; padding: 60px 20px; }
   .start-ico { font-size: 56px; margin-bottom: 18px; }
   .start-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
@@ -101,73 +100,20 @@
   }
   .upload-zone.over { border-color: var(--accent); background: rgba(79,142,247,.05); }
 
-  /* section selector (new root screen) */
-  #section-screen { display: none; padding: 20px 4px; }
-  .section-hero { text-align: center; margin-bottom: 28px; }
-  .section-hero-ico { font-size: 48px; margin-bottom: 10px; }
-  .section-hero-title {
-    font-size: 22px; font-weight: 800; margin-bottom: 6px;
-    background: linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);
-    background-size: 200% auto;
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
-  }
-  .section-hero-sub { font-size: 13px; color: var(--muted); }
-  .section-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
-  .section-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 22px 16px;
-    cursor: pointer;
-    transition: transform .15s ease, border-color .15s ease, background .15s ease;
-    text-align: center;
-    display: flex; flex-direction: column; align-items: center;
-    min-height: 180px; justify-content: center;
-  }
-  .section-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-    background: var(--card2);
-  }
-  .section-card:active { transform: translateY(0); }
-  .section-card-ico {
-    width: 60px; height: 60px; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px; margin-bottom: 12px;
-    background: linear-gradient(135deg, #4f8ef7, #38bdf8);
-  }
-  .section-card.analytics .section-card-ico {
-    background: linear-gradient(135deg, #a78bfa, #f472b6);
-  }
-  .section-card-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .section-card-sub { font-size: 11px; color: var(--muted); line-height: 1.35; }
-  .section-card-badge {
-    margin-top: 8px;
-    font-size: 10px; font-weight: 600; letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--warn);
-    background: rgba(245,158,11,.12);
-    border: 1px solid rgba(245,158,11,.3);
-    border-radius: 20px; padding: 2px 8px;
-  }
-  @media (max-width: 420px) {
-    .section-grid { grid-template-columns: 1fr; }
-    .section-card { min-height: 140px; padding: 18px 16px; }
-  }
-
   #loader {
     display: none; text-align: center; padding: 60px 20px; color: var(--muted);
   }
   .loader-ico { font-size: 44px; margin-bottom: 14px; }
 
-  /* home */
   #home-screen { display: none; }
-  .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
   .stat-card {
-    flex: 1; background: var(--card); border: 1px solid var(--border);
+    background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 12px 8px; text-align: center;
   }
   .stat-num { font-size: 22px; font-weight: 800; color: var(--accent); }
@@ -198,7 +144,6 @@
     margin-bottom: 14px;
   }
 
-  /* results */
   #results-screen { display: none; }
   .results-header {
     display: flex; align-items: center;
@@ -225,7 +170,11 @@
   .card-head {
     padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
   }
-  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 6px; }
+  .drug-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+  .mnn-name {
+    font-size: 12px; color: #a78bfa; font-style: italic; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 4px;
+  }
   .dept-tag {
     display: inline-block;
     background: rgba(56,189,248,.13); color: #38bdf8;
@@ -273,37 +222,78 @@
   }
   .selected-dept-chip span { color: var(--muted); font-size: 14px; }
 
-  /* analytics stub screen */
-  #analytics-screen { display: none; }
-  .analytics-stub {
-    text-align: center; padding: 60px 20px;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; margin-top: 10px;
-  }
-  .analytics-stub-ico { font-size: 56px; margin-bottom: 16px; }
-  .analytics-stub-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .analytics-stub-sub { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 420px; margin: 0 auto; }
-  .back-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: none; border: 1px solid var(--border); border-radius: 10px;
-    color: var(--muted); font-size: 13px; padding: 8px 14px; cursor: pointer;
-    margin-bottom: 14px;
-  }
-  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
-
   @keyframes shine {
     0% { background-position: 0% center; }
     100% { background-position: 200% center; }
   }
+
+  .new-item-accordion {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 8px; overflow: hidden;
+  }
+  .new-item-header {
+    padding: 12px 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background .15s;
+  }
+  .new-item-header:hover { background: rgba(79,142,247,.07); }
+  .new-item-title {
+    font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+  }
+  .new-item-badge {
+    background: rgba(52,211,153,.15); color: var(--green);
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600;
+  }
+  .new-item-arrow {
+    color: var(--muted); font-size: 14px; transition: transform .2s;
+  }
+  .new-item-arrow.open { transform: rotate(180deg); }
+  .new-item-details {
+    display: none; border-top: 1px solid var(--border);
+    padding: 8px 10px;
+  }
+  .new-item-details.open { display: block; }
+  .new-item-details .result-card { margin-bottom: 6px; }
+
+  .summary-accordion {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 10px; overflow: hidden;
+  }
+  .summary-header {
+    padding: 12px 14px; cursor: pointer;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    transition: background .15s; gap: 8px;
+  }
+  .summary-header:hover { background: rgba(79,142,247,.07); }
+  .summary-info { flex: 1; min-width: 0; }
+  .summary-name { font-size: 14px; font-weight: 700; line-height: 1.35; margin-bottom: 4px; }
+  .summary-mnn { font-size: 12px; color: #a78bfa; font-style: italic; margin-bottom: 6px; }
+  .summary-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+  .summary-tag {
+    display: inline-block; border-radius: 6px; padding: 2px 8px;
+    font-size: 11px; font-weight: 600;
+  }
+  .summary-tag.qty { background: rgba(79,142,247,.15); color: var(--accent); }
+  .summary-tag.depts { background: rgba(56,189,248,.13); color: #38bdf8; }
+  .summary-arrow {
+    color: var(--muted); font-size: 14px; transition: transform .2s;
+    flex-shrink: 0; margin-top: 4px;
+  }
+  .summary-arrow.open { transform: rotate(180deg); }
+  .summary-details {
+    display: none; border-top: 1px solid var(--border); padding: 8px 10px;
+  }
+  .summary-details.open { display: block; }
+  .summary-details .result-card { margin-bottom: 6px; }
 </style>
 </head>
 <body>
 <div id="app">
   <div id="header">
     <div class="top-row">
-      <div class="logo-icon" onclick="goToSections()" style="cursor:pointer">💊</div>
+      <div class="logo-icon" onclick="goHome()" style="cursor:pointer">💊</div>
       <div>
-        <div class="logo-title" onclick="goToSections()" style="cursor:pointer">Liki.on!</div>
+        <div class="logo-title" onclick="goHome()" style="cursor:pointer">Liki.on!</div>
         <div class="logo-sub">Пошук по відомості залишків ТМО</div>
       </div>
       <div class="header-btns" id="header-btns" style="display:none">
@@ -316,8 +306,9 @@
         <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : debouncedSearch(this.value)">
         <span class="search-ico">🔍</span>
       </div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
         <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="mode-mnn" onclick="setSearchMode('mnn',this)" style="font-size:11px;padding:4px 10px;">За МНН</button>
         <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
         <button class="filter-btn" id="mode-dept" onclick="setSearchMode('dept',this)" style="font-size:11px;padding:4px 10px;">За відділенням</button>
       </div>
@@ -329,58 +320,22 @@
   </div>
 
   <div id="body">
-    <!-- NEW: Section selector -->
-    <div id="section-screen">
-      <div class="section-hero">
-        <div class="section-hero-ico">💊</div>
-        <div class="section-hero-title">Liki.on!</div>
-        <div class="section-hero-sub">Оберіть розділ</div>
-      </div>
-      <div class="section-grid">
-        <div class="section-card" onclick="openStock()">
-          <div class="section-card-ico">📦</div>
-          <div class="section-card-title">Залишки ТМО</div>
-          <div class="section-card-sub">Пошук препаратів<br>по відомості залишків</div>
-        </div>
-        <div class="section-card analytics" onclick="openAnalytics()">
-          <div class="section-card-ico">📊</div>
-          <div class="section-card-title">Аналітика відділень</div>
-          <div class="section-card-sub">Статистика та зведення<br>по відділеннях</div>
-          <div class="section-card-badge">Незабаром</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Analytics stub screen -->
-    <div id="analytics-screen">
-      <button class="back-btn" onclick="goToSections()">← До розділів</button>
-      <div class="analytics-stub">
-        <div class="analytics-stub-ico">📊</div>
-        <div class="analytics-stub-title">Аналітика відділень</div>
-        <div class="analytics-stub-sub">Розділ у розробці. Тут з'явиться статистика по відділеннях: кількість позицій, прострочені залишки, топ-препарати та зведені графіки.</div>
-      </div>
-    </div>
-
-    <!-- Stock entry screen (was the original start-screen) -->
-    <div id="start-screen" style="display:none">
-      <button class="back-btn" onclick="goToSections()">← До розділів</button>
-      <div style="text-align:center">
-        <div class="start-ico">📦</div>
-        <div class="start-title">Залишки ТМО</div>
-        <div style="font-size:15px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;margin-bottom:6px;">Developed by Ostap Khmil</div>
-        <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
-        <button class="big-btn" onclick="loadFromDrive(false)">
-          ☁️ Завантажити актуальні дані
-        </button>
-        <div class="or-divider">або завантажити файл вручну</div>
-        <div class="upload-zone" id="upload-zone"
-          onclick="document.getElementById('file-input').click()"
-          ondragover="event.preventDefault(); this.classList.add('over')"
-          ondragleave="this.classList.remove('over')"
-          ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
-          <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
-          📂 Натисніть або перетягніть .xlsx файл
-        </div>
+    <div id="start-screen">
+      <div class="start-ico">💊</div>
+      <div class="start-title">Liki.on!</div>
+      <div style="font-size:15px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;margin-bottom:6px;">Developed by Ostap Khmil</div>
+      <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
+      <button class="big-btn" onclick="loadFromDrive(false)">
+        ☁️ Завантажити актуальні дані
+      </button>
+      <div class="or-divider">або завантажити файл вручну</div>
+      <div class="upload-zone" id="upload-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault(); this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
+        <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
+        📂 Натисніть або перетягніть .xlsx файл
       </div>
     </div>
 
@@ -409,6 +364,10 @@
           <div class="stat-num green" id="stat-soon">0</div>
           <div class="stat-lbl">&lt;90 днів</div>
         </div>
+        <div class="stat-card" onclick="showNewItems()" style="cursor:pointer">
+          <div class="stat-num green" id="stat-new">0</div>
+          <div class="stat-lbl">🆕 Нове</div>
+        </div>
       </div>
       <div class="section-lbl" onclick="toggleDepts()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
         <span>Відділення у файлі</span>
@@ -433,6 +392,15 @@
       </div>
       <div id="results-list"></div>
     </div>
+
+    <div id="new-items-screen" style="display:none">
+      <div class="results-header">
+        <div class="section-lbl">🆕 Нові позиції</div>
+        <span class="result-count" id="new-items-count">0</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;" id="new-items-info"></div>
+      <div id="new-items-list"></div>
+    </div>
   </div>
 </div>
 
@@ -443,11 +411,11 @@ let currentFilter = "all";
 let lastLoaded = null;
 let searchMode = 'name';
 let selectedDepts = [];
-let currentDeptSuggestions = []; // Масив для безпечного збереження списку відділень
+let currentDeptSuggestions = [];
 
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
 
-// ── load from Drive ─────────────────────────────────────────────────────────
+// ── cache ────────────────────────────────────────────────────────────────────
 const CACHE_KEY = "medsklad_cache";
 const CACHE_TIME_KEY = "medsklad_cache_time";
 
@@ -467,12 +435,14 @@ function loadCache() {
   return null;
 }
 
+// ── load from Drive ─────────────────────────────────────────────────────────
 async function loadFromDrive(isRefresh) {
   if (!isRefresh) {
     const cache = loadCache();
     if (cache) {
       allItems = cache.items;
       lastLoaded = cache.time;
+      newItemNames = loadNewNames();
       currentQuery = "";
       document.getElementById("search-input").value = "";
       renderHome();
@@ -493,9 +463,24 @@ async function fetchAndUpdate(showLoader) {
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const buf = await resp.arrayBuffer();
     const newItems = parseWorkbook(buf);
+
     allItems = newItems;
     lastLoaded = new Date();
     saveCache(newItems);
+
+    // Compare with last confirmed snapshot (updated only on "Переглянуто")
+    const prevSnapshot = loadSnapshot();
+    if (prevSnapshot) {
+      const prevSet = new Set(prevSnapshot.names);
+      const currentNames = getUniqueNames(newItems);
+      newItemNames = currentNames.filter(n => !prevSet.has(n));
+    } else {
+      // First run — save initial snapshot
+      saveSnapshot(getUniqueNames(newItems));
+      newItemNames = [];
+    }
+    saveNewNames(newItemNames);
+
     currentQuery = "";
     document.getElementById("search-input").value = "";
     renderHome();
@@ -520,8 +505,23 @@ function handleFile(file) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      allItems = parseWorkbook(e.target.result);
+      const newItems = parseWorkbook(e.target.result);
+
+      allItems = newItems;
       lastLoaded = new Date();
+
+      // Compare with last confirmed snapshot
+      const prevSnapshot = loadSnapshot();
+      if (prevSnapshot) {
+        const prevSet = new Set(prevSnapshot.names);
+        const currentNames = getUniqueNames(newItems);
+        newItemNames = currentNames.filter(n => !prevSet.has(n));
+      } else {
+        saveSnapshot(getUniqueNames(newItems));
+        newItemNames = [];
+      }
+      saveNewNames(newItemNames);
+
       currentQuery = "";
       document.getElementById("search-input").value = "";
       renderHome();
@@ -537,12 +537,15 @@ function handleFile(file) {
 // ── parse ────────────────────────────────────────────────────────────────────
 const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
 
-function isDeptHeader(a, e, rVal, uVal) {
-  if (!a || e) return false;
-  const trimmed = a.trim();
-  if (trimmed.length < 3) return false;
-  if (/^\d/.test(trimmed)) return false;
-  const lc = trimmed.toLowerCase();
+function isDeptHeader(row, col) {
+  const a = String(row[col.A] ?? "").trim();
+  const h = String(row[col.H] ?? "").trim();
+  if (!a || a.length < 3) return false;
+  // Data rows always have col H (drug/item name); dept headers don't
+  if (h) return false;
+  // Article codes start with a digit
+  if (/^\d/.test(a)) return false;
+  const lc = a.toLowerCase();
   if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
   return true;
 }
@@ -553,31 +556,51 @@ function parseWorkbook(arrayBuffer) {
   const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
   const items = [];
   let currentDept = "—";
-  const col = { A:0, E:4, N:13, O:14, P:15, Q:16, R:17, U:20 };
+
+  // ── Column mapping (new format with MNN) ──
+  // A(0)  = Артикул
+  // E(4)  = Номенклатура.МНН
+  // H(7)  = Номенклатура (drug/item name)
+  // N(13) = Характеристика
+  // O(14) = Серія
+  // P(15) = Придатний до (expiry date)
+  // Q(16) = Придатний (днів)
+  // R(17) = Од. вим.
+  // S(18) = Початковий залишок
+  // V(21) = Кінцевий залишок
+  const col = { A:0, E:4, H:7, N:13, O:14, P:15, Q:16, R:17, S:18, V:21 };
+
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
-    const a    = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
-    const e    = String(row[col.E] ?? "").trim().replace(/\s+/g, ' ');
-    const rVal = row[col.R];
-    const uVal = row[col.U];
-    if (isDeptHeader(a, e, rVal, uVal)) { currentDept = a; }
-    if (!e || e.toLowerCase() === "номенклатура") continue;
-    const qtyRaw = (uVal !== "" && uVal != null) ? uVal : rVal;
+    const a = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
+    const h = String(row[col.H] ?? "").trim().replace(/\s+/g, ' ');
+
+    // Detect department header rows
+    if (isDeptHeader(row, col)) { currentDept = a; }
+
+    // Skip rows without a drug/item name in column H
+    if (!h || h.toLowerCase() === "номенклатура") continue;
+
+    const mnn = String(row[col.E] ?? "").trim() || null;
+    // Prefer final balance (V), fall back to initial (S)
+    const qtyRaw = (row[col.V] !== "" && row[col.V] != null) ? row[col.V] : row[col.S];
     const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
+
     items.push({
       dept:   currentDept,
-      name:   e,
-      series: String(row[col.N] || "").trim() || null,
-      expiry: String(row[col.O] || "").trim() || null,
-      days:   (row[col.P] !== "" && row[col.P] != null) ? Number(row[col.P]) : null,
-      unit:   String(row[col.Q] || "").trim() || null,
+      name:   h,
+      mnn:    mnn,
+      series: String(row[col.O] || "").trim() || null,
+      expiry: String(row[col.P] || "").trim() || null,
+      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
+      unit:   String(row[col.R] || "").trim() || null,
       qty,
     });
   }
   return items;
 }
 
-// ── date ─────────────────────────────────────────────────────────────────────
+// ── date helpers ─────────────────────────────────────────────────────────────
 function parseDate(val) {
   if (!val) return null;
   const p = val.match(/(\d{2})\.(\d{2})\.(\d{4})/);
@@ -610,48 +633,14 @@ function statusLabel(st, days) {
 
 // ── ui ────────────────────────────────────────────────────────────────────────
 function show(screen) {
-  document.getElementById("section-screen").style.display   = screen==="sections" ? "block" : "none";
-  document.getElementById("analytics-screen").style.display = screen==="analytics"? "block" : "none";
-  document.getElementById("start-screen").style.display     = screen==="start"    ? "block" : "none";
-  document.getElementById("loader").style.display           = screen==="loader"   ? "block" : "none";
-  document.getElementById("home-screen").style.display      = screen==="home"     ? "block" : "none";
-  document.getElementById("results-screen").style.display   = screen==="results"  ? "block" : "none";
-  const showHeader = screen==="home" || screen==="results";
-  document.getElementById("search-wrap").style.display     = showHeader ? "block" : "none";
-  document.getElementById("header-btns").style.display     = showHeader ? "flex"  : "none";
-}
-
-// ── section navigation ──────────────────────────────────────────────────────
-function goToSections() {
-  // reset stock state so returning via "Залишки ТМО" behaves naturally
-  currentQuery = "";
-  currentFilter = "all";
-  searchMode = "name";
-  selectedDepts = [];
-  const si = document.getElementById("search-input");
-  if (si) si.value = "";
-  show("sections");
-}
-
-function openStock() {
-  // If cache exists — jump straight into home view; otherwise show entry screen
-  const cache = loadCache();
-  if (cache) {
-    allItems = cache.items;
-    lastLoaded = cache.time;
-    currentQuery = "";
-    document.getElementById("search-input").value = "";
-    renderHome();
-    show("home");
-    // silently refresh in background
-    fetchAndUpdate(false);
-  } else {
-    show("start");
-  }
-}
-
-function openAnalytics() {
-  show("analytics");
+  document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
+  document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
+  document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
+  document.getElementById("results-screen").style.display    = screen==="results"  ? "block" : "none";
+  document.getElementById("new-items-screen").style.display  = screen==="newitems" ? "block" : "none";
+  const showHeader = screen==="home" || screen==="results" || screen==="newitems";
+  document.getElementById("search-wrap").style.display       = showHeader ? "block" : "none";
+  document.getElementById("header-btns").style.display       = showHeader ? "flex"  : "none";
 }
 
 function renderHome() {
@@ -679,14 +668,20 @@ function renderHome() {
     document.getElementById("last-updated").textContent =
       "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
   }
+  updateNewStat();
 }
 
 function setSearchMode(mode, btn) {
   searchMode = mode;
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  const ph = mode === 'series' ? 'Введіть серію...' : mode === 'dept' ? 'Введіть назву відділення...' : 'Введіть назву препарату...';
-  document.getElementById("search-input").placeholder = ph;
+  const placeholders = {
+    name:   'Введіть назву препарату...',
+    mnn:    'Введіть МНН (латиницею)...',
+    series: 'Введіть серію...',
+    dept:   'Введіть назву відділення...'
+  };
+  document.getElementById("search-input").placeholder = placeholders[mode] || placeholders.name;
   document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
   document.getElementById("search-input").value = "";
   currentQuery = "";
@@ -696,26 +691,25 @@ function setSearchMode(mode, btn) {
     else show("home");
   } else {
     selectedDepts = [];
-    if (currentQuery) renderResults();
+    show("home");
   }
 }
 
 function normalize(str) {
-  return String(str || "").toLowerCase().replace(/["'’`ʼ]/g, "'").trim();
+  return String(str || "").toLowerCase().replace(/["''`ʼ]/g, "'").trim();
 }
 
 function onDeptInput(val) {
   const q = normalize(val);
   const suggestEl = document.getElementById("dept-suggestions");
   if (!q) { suggestEl.style.display = "none"; return; }
-  
+
   const allDepts = [...new Set(allItems.map(i=>i.dept))].filter(d=>normalize(d).includes(q));
-  currentDeptSuggestions = allDepts.slice(0, 20); // Зберігаємо в глобальний масив
-  
+  currentDeptSuggestions = allDepts.slice(0, 20);
+
   if (!currentDeptSuggestions.length) { suggestEl.style.display = "none"; return; }
   suggestEl.style.display = "block";
-  
-  // Тепер ми передаємо лише індекс (цифру) у функцію кліку
+
   suggestEl.innerHTML = currentDeptSuggestions.map((d, index) => {
     const isSel = selectedDepts.includes(d);
     return `<div class="dept-suggestion-item${isSel?' selected':''}" onclick="toggleDeptByIndex(${index})">
@@ -725,18 +719,17 @@ function onDeptInput(val) {
   }).join("");
 }
 
-// Нова функція, яка приймає цифру, а не текст
 function toggleDeptByIndex(index) {
   const dept = currentDeptSuggestions[index];
   if (!dept) return;
-  
+
   const idx = selectedDepts.indexOf(dept);
   if (idx === -1) selectedDepts.push(dept);
   else selectedDepts.splice(idx, 1);
-  
+
   renderSelectedDepts();
   onDeptInput(document.getElementById("search-input").value);
-  
+
   if (selectedDepts.length > 0) { show("results"); renderResults(); }
   else show("home");
 }
@@ -751,7 +744,6 @@ function removeDept(index) {
 
 function renderSelectedDepts() {
   const el = document.getElementById("selected-depts");
-  // І тут ми теж використовуємо порядковий номер замість тексту
   el.innerHTML = selectedDepts.map((d, i) =>
     `<div class="selected-dept-chip" onclick="removeDept(${i})">
       ${esc(d)} <span>✕</span>
@@ -771,6 +763,7 @@ function goHome() {
   searchMode = "name";
   selectedDepts = [];
   document.getElementById("search-input").value = "";
+  document.getElementById("search-input").placeholder = "Введіть назву препарату...";
   document.getElementById("dept-search-wrap").style.display = "none";
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
@@ -791,7 +784,7 @@ function quickFilter(type) {
   document.getElementById("mode-name").classList.add("active");
   currentQuery = "*";
   currentFilter = type;
-  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".filter-row .filter-btn").forEach(b=>b.classList.remove("active"));
   const filterBtns = document.querySelectorAll(".filter-row .filter-btn");
   filterBtns.forEach(b => {
     if ((type==='expired' && b.textContent.includes('Прострочені')) ||
@@ -804,56 +797,270 @@ function quickFilter(type) {
 function onSearch(val) {
   currentQuery = val.trim();
   if (!currentQuery) { show("home"); return; }
+  if (currentQuery.length < 2) return;
   show("results");
   renderResults();
 }
 
 function setFilter(val, btn) {
   currentFilter = val;
-  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".filter-row .filter-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   renderResults();
 }
 
+let displayLimit = 50;
+
+function multiWordMatch(text, words) {
+  const t = normalize(text);
+  return words.every(w => t.includes(w));
+}
+
 function renderResults() {
   const q = normalize(currentQuery);
-  let res = allItems.filter(it=>{
-    if (searchMode === 'dept') return selectedDepts.includes(it.dept);
+  const words = q.split(/\s+/).filter(w => w.length > 0);
+  let res = allItems.filter(it => {
+    if (searchMode === 'dept')   return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
-    if (currentQuery === '*') return true;
-    return normalize(it.name).includes(q);
+    if (searchMode === 'mnn')    return it.mnn && multiWordMatch(it.mnn, words);
+    if (currentQuery === '*')    return true;
+    return multiWordMatch(it.name, words);
   });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
+  displayLimit = 50;
+  renderResultsList(res);
+}
+
+function renderResultsList(res) {
   document.getElementById("result-count").textContent = res.length + " записів";
   const list = document.getElementById("results-list");
   if (!res.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
     return;
   }
-  list.innerHTML = res.map(item => {
-    const st = expiryStatus(item.expiry);
-    return `<div class="result-card${st==="expired"?" expired":""}">
-      <div class="card-head">
-        <div class="drug-name">${esc(item.name)}</div>
-        <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+
+  // Group by normalized drug name
+  const groups = {};
+  const groupOrder = [];
+  res.forEach(item => {
+    const key = normalize(item.name);
+    if (!groups[key]) {
+      groups[key] = [];
+      groupOrder.push(key);
+    }
+    groups[key].push(item);
+  });
+
+  const visibleGroups = groupOrder.slice(0, displayLimit);
+  let html = visibleGroups.map((key, gIdx) => {
+    const items = groups[key];
+    const displayName = items[0].name;
+    const mnn = items.find(it => it.mnn)?.mnn || null;
+    const deptCount = new Set(items.map(it => it.dept)).size;
+    const totalQty = items.reduce((sum, it) => sum + (it.qty || 0), 0);
+    const unit = items.find(it => it.unit)?.unit || "";
+
+    // Always show summary accordion
+    const detailCards = items.map(item => {
+      const st = expiryStatus(item.expiry);
+      return `<div class="result-card${st==="expired"?" expired":""}">
+        <div class="card-head">
+          <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+        </div>
+        <div class="card-body">
+          ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+          ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+          ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+          ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="summary-accordion">
+      <div class="summary-header" onclick="toggleSummary(${gIdx})">
+        <div class="summary-info">
+          <div class="summary-name">${esc(displayName)}</div>
+          ${mnn ? `<div class="summary-mnn">🧬 ${esc(mnn)}</div>` : ''}
+          <div class="summary-stats">
+            <span class="summary-tag qty">Всього: ${totalQty} ${esc(unit)}</span>
+            <span class="summary-tag depts">🏥 ${deptCount} відд.</span>
+          </div>
+        </div>
+        <span class="summary-arrow" id="sum-arrow-${gIdx}">▼</span>
       </div>
-      <div class="card-body">
-        ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
-        ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
-        ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
-        ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+      <div class="summary-details" id="sum-details-${gIdx}">
+        ${detailCards}
       </div>
     </div>`;
   }).join("");
+
+  if (groupOrder.length > displayLimit) {
+    html += `<button class="big-btn" style="margin-top:10px;font-size:14px;padding:12px;" onclick="showMore()">Показати ще (${groupOrder.length - displayLimit} назв залишилось)</button>`;
+  }
+  list.innerHTML = html;
+  window._lastResults = res;
+}
+
+function toggleSummary(idx) {
+  const details = document.getElementById("sum-details-" + idx);
+  const arrow = document.getElementById("sum-arrow-" + idx);
+  details.classList.toggle("open");
+  arrow.classList.toggle("open");
+}
+
+function showMore() {
+  displayLimit += 50;
+  if (window._lastResults) renderResultsList(window._lastResults);
 }
 
 function esc(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
-// ── initial screen ──────────────────────────────────────────────────────────
-goToSections();
+// ── new items (snapshot comparison) ─────────────────────────────────────────
+const SNAPSHOT_KEY = "medsklad_snapshot";
+const SNAPSHOT_TIME_KEY = "medsklad_snapshot_time";
+const NEW_NAMES_KEY = "medsklad_new_names";
+let newItemNames = [];
+
+function getUniqueNames(items) {
+  return [...new Set(items.map(it => normalize(it.name)))];
+}
+
+function loadSnapshot() {
+  try {
+    const data = localStorage.getItem(SNAPSHOT_KEY);
+    const time = localStorage.getItem(SNAPSHOT_TIME_KEY);
+    if (data && time) return { names: JSON.parse(data), time: new Date(parseInt(time)) };
+  } catch(e) {}
+  return null;
+}
+
+function saveSnapshot(names) {
+  try {
+    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(names));
+    localStorage.setItem(SNAPSHOT_TIME_KEY, Date.now().toString());
+  } catch(e) {}
+}
+
+function saveNewNames(names) {
+  try { localStorage.setItem(NEW_NAMES_KEY, JSON.stringify(names)); } catch(e) {}
+}
+
+function loadNewNames() {
+  try {
+    const data = localStorage.getItem(NEW_NAMES_KEY);
+    if (data) return JSON.parse(data);
+  } catch(e) {}
+  return [];
+}
+
+function computeNewItems() {
+  const prev = loadSnapshot();
+  const currentNames = getUniqueNames(allItems);
+
+  if (!prev) {
+    saveSnapshot(currentNames);
+    newItemNames = [];
+    saveNewNames(newItemNames);
+    return;
+  }
+
+  const prevSet = new Set(prev.names);
+  newItemNames = currentNames.filter(n => !prevSet.has(n));
+  // Don't overwrite snapshot here — only update when user explicitly refreshes
+}
+
+function updateNewStat() {
+  const el = document.getElementById("stat-new");
+  el.textContent = newItemNames.length;
+  el.className = "stat-num " + (newItemNames.length > 0 ? "accent" : "green");
+  if (newItemNames.length > 0) el.style.color = "#a78bfa";
+  else el.style.color = "";
+}
+
+function showNewItems() {
+  if (!newItemNames.length) {
+    show("newitems");
+    const snap = loadSnapshot();
+    const info = snap ? "Порівняно з попереднім завантаженням від " +
+      snap.time.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "";
+    document.getElementById("new-items-info").textContent = info;
+    document.getElementById("new-items-count").textContent = "0 позицій";
+    document.getElementById("new-items-list").innerHTML =
+      `<div class="empty-state"><div class="empty-ico">✅</div><div class="empty-title">Нових позицій немає</div><div class="empty-sub">Порівняно з попереднім оновленням</div></div>`;
+    return;
+  }
+
+  show("newitems");
+  document.getElementById("new-items-count").textContent = newItemNames.length + " позицій";
+
+  const snap = loadSnapshot();
+  const info = snap ? "Нові назви порівняно з попереднім завантаженням" : "";
+  document.getElementById("new-items-info").textContent = info;
+
+  // Build accordion: for each new name, find all items with that name
+  const html = newItemNames.map((normName, idx) => {
+    // Find original (non-normalized) name from items
+    const matchingItems = allItems.filter(it => normalize(it.name) === normName);
+    const displayName = matchingItems.length > 0 ? matchingItems[0].name : normName;
+    const mnn = matchingItems.find(it => it.mnn)?.mnn || null;
+    const deptCount = new Set(matchingItems.map(it => it.dept)).size;
+
+    const detailCards = matchingItems.map(item => {
+      const st = expiryStatus(item.expiry);
+      return `<div class="result-card${st==="expired"?" expired":""}">
+        <div class="card-head">
+          <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+        </div>
+        <div class="card-body">
+          ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+          ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+          ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+          ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="new-item-accordion">
+      <div class="new-item-header" onclick="toggleNewItem(${idx})">
+        <div class="new-item-title">
+          <span>${esc(displayName)}</span>
+          ${mnn ? `<span style="color:#a78bfa;font-size:11px;font-style:italic">${esc(mnn)}</span>` : ''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="new-item-badge">${deptCount} відд.</span>
+          <span class="new-item-arrow" id="new-arrow-${idx}">▼</span>
+        </div>
+      </div>
+      <div class="new-item-details" id="new-details-${idx}">
+        ${detailCards}
+      </div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("new-items-list").innerHTML = html +
+    `<button class="big-btn" style="margin-top:14px;font-size:14px;padding:12px;background:linear-gradient(135deg,#34d399,#10b981);" onclick="markNewAsReviewed()">✅ Переглянуто</button>`;
+}
+
+function markNewAsReviewed() {
+  // Save current names as new snapshot — next comparison starts from here
+  const currentNames = getUniqueNames(allItems);
+  saveSnapshot(currentNames);
+  newItemNames = [];
+  saveNewNames(newItemNames);
+  updateNewStat();
+  show("home");
+}
+
+function toggleNewItem(idx) {
+  const details = document.getElementById("new-details-" + idx);
+  const arrow = document.getElementById("new-arrow-" + idx);
+  const isOpen = details.classList.contains("open");
+  details.classList.toggle("open");
+  arrow.classList.toggle("open");
+}
 </script>
 </body>
 </html>
