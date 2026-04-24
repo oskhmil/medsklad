@@ -72,9 +72,60 @@
   #body { padding: 16px 16px 0; }
 
   #start-screen { text-align: center; padding: 60px 20px; }
+  #medsearch-screen, #analytics-screen { text-align: center; padding: 40px 20px; }
   .start-ico { font-size: 56px; margin-bottom: 18px; }
   .start-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
   .start-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+
+  /* two-choice start buttons */
+  .choice-wrap {
+    display: flex; flex-direction: column; gap: 12px;
+    max-width: 360px; margin: 34px auto 0;
+  }
+  .choice-btn {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px; border-radius: 16px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text);
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: border-color .15s, transform .1s, background .15s;
+    text-align: left;
+  }
+  .choice-btn:hover { border-color: var(--accent); background: var(--card2); }
+  .choice-btn:active { transform: scale(.98); }
+  .choice-btn .choice-ico {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+    background: linear-gradient(135deg, #4f8ef7, #38bdf8);
+  }
+  .choice-btn.analytics .choice-ico { background: linear-gradient(135deg, #a78bfa, #f472b6); }
+  .choice-btn .choice-body { flex: 1; }
+  .choice-btn .choice-title { font-size: 15px; font-weight: 700; }
+  .choice-btn .choice-sub { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
+  .choice-btn .choice-arrow { color: var(--muted); font-size: 20px; }
+
+  .back-btn {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    border-radius: 10px; padding: 7px 14px; font-size: 13px; cursor: pointer;
+    margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .screen-head-row { display: flex; justify-content: flex-start; padding: 10px 20px 0; }
+
+  /* analytics stub */
+  .analytics-stub {
+    margin-top: 10px; padding: 40px 20px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  }
+  .analytics-stub-ico { font-size: 48px; margin-bottom: 14px; }
+  .analytics-stub-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .analytics-stub-sub { font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 420px; margin: 0 auto; }
+  .analytics-stub-badge {
+    display: inline-block; margin-top: 14px;
+    font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--warn); background: rgba(245,158,11,.12);
+    border: 1px solid rgba(245,158,11,.3); border-radius: 20px; padding: 3px 10px;
+  }
   .big-btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 14px 28px; border-radius: 14px; border: none;
@@ -85,14 +136,11 @@
   }
   .or-divider {
     text-align: center; color: var(--muted); font-size: 12px;
-    margin: 10px 0; position: relative;
+    margin: 14px 0; display: flex; align-items: center; gap: 10px;
   }
   .or-divider::before, .or-divider::after {
-    content: ""; position: absolute; top: 50%;
-    width: 40%; height: 1px; background: var(--border);
+    content: ""; flex: 1; height: 1px; background: var(--border);
   }
-  .or-divider::before { left: 0; }
-  .or-divider::after { right: 0; }
   .upload-zone {
     border: 2px dashed var(--border); border-radius: 14px;
     padding: 20px; text-align: center; cursor: pointer;
@@ -323,19 +371,63 @@
     <div id="start-screen">
       <div class="start-ico">💊</div>
       <div class="start-title">Liki.on!</div>
-      <div style="font-size:15px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;margin-bottom:6px;">Developed by Ostap Khmil</div>
-      <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
-      <button class="big-btn" onclick="loadFromDrive(false)">
-        ☁️ Завантажити актуальні дані
-      </button>
-      <div class="or-divider">або завантажити файл вручну</div>
-      <div class="upload-zone" id="upload-zone"
-        onclick="document.getElementById('file-input').click()"
-        ondragover="event.preventDefault(); this.classList.add('over')"
-        ondragleave="this.classList.remove('over')"
-        ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
-        <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
-        📂 Натисніть або перетягніть .xlsx файл
+      <div style="font-size:15px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;">Developed by Ostap Khmil</div>
+      <div class="choice-wrap">
+        <button class="choice-btn" onclick="openMedsearch()">
+          <div class="choice-ico">🔎</div>
+          <div class="choice-body">
+            <div class="choice-title">Пошук медикаментів</div>
+            <div class="choice-sub">Залишки ТМО, серії, терміни</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
+        <button class="choice-btn analytics" onclick="openAnalytics()">
+          <div class="choice-ico">📊</div>
+          <div class="choice-body">
+            <div class="choice-title">Аналіз відділень</div>
+            <div class="choice-sub">Статистика та зведення</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
+      </div>
+    </div>
+
+    <div id="medsearch-screen" style="display:none">
+      <div class="screen-head-row">
+        <button class="back-btn" onclick="goStart()">← Назад</button>
+      </div>
+      <div style="text-align:center;padding:20px 20px 40px;">
+        <div class="start-ico">🔎</div>
+        <div class="start-title">Пошук медикаментів</div>
+        <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
+        <button class="big-btn" onclick="loadFromDrive(false)">
+          ☁️ Завантажити актуальні дані
+        </button>
+        <div class="or-divider">або завантажити файл вручну</div>
+        <div class="upload-zone" id="upload-zone"
+          onclick="document.getElementById('file-input').click()"
+          ondragover="event.preventDefault(); this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
+          <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
+          📂 Натисніть або перетягніть .xlsx файл
+        </div>
+      </div>
+    </div>
+
+    <div id="analytics-screen" style="display:none">
+      <div class="screen-head-row">
+        <button class="back-btn" onclick="goStart()">← Назад</button>
+      </div>
+      <div style="text-align:center;padding:20px 20px 40px;">
+        <div class="start-ico">📊</div>
+        <div class="start-title">Аналіз відділень</div>
+        <div class="analytics-stub">
+          <div class="analytics-stub-ico">🚧</div>
+          <div class="analytics-stub-title">Розділ у розробці</div>
+          <div class="analytics-stub-sub">Тут з'явиться статистика по відділеннях: кількість позицій, прострочені залишки, топ-препарати та зведені графіки.</div>
+          <div class="analytics-stub-badge">Незабаром</div>
+        </div>
       </div>
     </div>
 
@@ -488,7 +580,7 @@ async function fetchAndUpdate(showLoader) {
   } catch(err) {
     if (showLoader) {
       alert("Не вдалось завантажити файл з Google Диску.\nПеревірте інтернет.\n\n" + err.message);
-      show("start");
+      show("medsearch");
     }
   }
 }
@@ -528,7 +620,7 @@ function handleFile(file) {
       show("home");
     } catch(err) {
       alert("Помилка читання файлу: " + err.message);
-      show("start");
+      show("medsearch");
     }
   };
   reader.readAsArrayBuffer(file);
@@ -633,14 +725,28 @@ function statusLabel(st, days) {
 
 // ── ui ────────────────────────────────────────────────────────────────────────
 function show(screen) {
-  document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
-  document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
-  document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
-  document.getElementById("results-screen").style.display    = screen==="results"  ? "block" : "none";
-  document.getElementById("new-items-screen").style.display  = screen==="newitems" ? "block" : "none";
+  document.getElementById("start-screen").style.display      = screen==="start"     ? "block" : "none";
+  document.getElementById("medsearch-screen").style.display  = screen==="medsearch" ? "block" : "none";
+  document.getElementById("analytics-screen").style.display  = screen==="analytics" ? "block" : "none";
+  document.getElementById("loader").style.display            = screen==="loader"    ? "block" : "none";
+  document.getElementById("home-screen").style.display       = screen==="home"      ? "block" : "none";
+  document.getElementById("results-screen").style.display    = screen==="results"   ? "block" : "none";
+  document.getElementById("new-items-screen").style.display  = screen==="newitems"  ? "block" : "none";
   const showHeader = screen==="home" || screen==="results" || screen==="newitems";
   document.getElementById("search-wrap").style.display       = showHeader ? "block" : "none";
   document.getElementById("header-btns").style.display       = showHeader ? "flex"  : "none";
+}
+
+function goStart() {
+  show("start");
+}
+
+function openMedsearch() {
+  show("medsearch");
+}
+
+function openAnalytics() {
+  show("analytics");
 }
 
 function renderHome() {
