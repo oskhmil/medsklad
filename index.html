@@ -72,60 +72,9 @@
   #body { padding: 16px 16px 0; }
 
   #start-screen { text-align: center; padding: 60px 20px; }
-  #medsearch-screen, #analytics-screen { text-align: center; padding: 40px 20px; }
   .start-ico { font-size: 56px; margin-bottom: 18px; }
   .start-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
   .start-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
-
-  /* two-choice start buttons */
-  .choice-wrap {
-    display: flex; flex-direction: column; gap: 12px;
-    max-width: 360px; margin: 34px auto 0;
-  }
-  .choice-btn {
-    display: flex; align-items: center; gap: 14px;
-    padding: 18px 20px; border-radius: 16px; border: 1px solid var(--border);
-    background: var(--card); color: var(--text);
-    font-size: 16px; font-weight: 700; cursor: pointer;
-    transition: border-color .15s, transform .1s, background .15s;
-    text-align: left;
-  }
-  .choice-btn:hover { border-color: var(--accent); background: var(--card2); }
-  .choice-btn:active { transform: scale(.98); }
-  .choice-btn .choice-ico {
-    width: 44px; height: 44px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-    background: linear-gradient(135deg, #4f8ef7, #38bdf8);
-  }
-  .choice-btn.analytics .choice-ico { background: linear-gradient(135deg, #a78bfa, #f472b6); }
-  .choice-btn .choice-body { flex: 1; }
-  .choice-btn .choice-title { font-size: 15px; font-weight: 700; }
-  .choice-btn .choice-sub { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 2px; }
-  .choice-btn .choice-arrow { color: var(--muted); font-size: 20px; }
-
-  .back-btn {
-    background: none; border: 1px solid var(--border); color: var(--muted);
-    border-radius: 10px; padding: 7px 14px; font-size: 13px; cursor: pointer;
-    margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px;
-  }
-  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .screen-head-row { display: flex; justify-content: flex-start; padding: 10px 20px 0; }
-
-  /* analytics stub */
-  .analytics-stub {
-    margin-top: 10px; padding: 40px 20px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-  }
-  .analytics-stub-ico { font-size: 48px; margin-bottom: 14px; }
-  .analytics-stub-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
-  .analytics-stub-sub { font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 420px; margin: 0 auto; }
-  .analytics-stub-badge {
-    display: inline-block; margin-top: 14px;
-    font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--warn); background: rgba(245,158,11,.12);
-    border: 1px solid rgba(245,158,11,.3); border-radius: 20px; padding: 3px 10px;
-  }
   .big-btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 14px 28px; border-radius: 14px; border: none;
@@ -136,11 +85,14 @@
   }
   .or-divider {
     text-align: center; color: var(--muted); font-size: 12px;
-    margin: 14px 0; display: flex; align-items: center; gap: 10px;
+    margin: 10px 0; position: relative;
   }
   .or-divider::before, .or-divider::after {
-    content: ""; flex: 1; height: 1px; background: var(--border);
+    content: ""; position: absolute; top: 50%;
+    width: 40%; height: 1px; background: var(--border);
   }
+  .or-divider::before { left: 0; }
+  .or-divider::after { right: 0; }
   .upload-zone {
     border: 2px dashed var(--border); border-radius: 14px;
     padding: 20px; text-align: center; cursor: pointer;
@@ -191,6 +143,36 @@
     text-align: center; font-size: 11px; color: var(--muted);
     margin-bottom: 14px;
   }
+  /* Background-refresh indicator (used in Пошук медикаментів) */
+  .refresh-indicator {
+    display: none;
+    text-align: center; margin-bottom: 10px;
+    font-size: 12px; color: var(--accent);
+    background: rgba(79,142,247,.08);
+    border: 1px solid rgba(79,142,247,.2);
+    border-radius: 10px;
+    padding: 7px 12px;
+  }
+  .refresh-indicator.on { display: block; }
+  .refresh-indicator .spinner {
+    display: inline-block; margin-right: 6px;
+    animation: spin 1s linear infinite;
+  }
+  /* Subtle pulse on stat cards while refreshing */
+  .stats-bar.refreshing .stat-card {
+    animation: stat-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes stat-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  /* Refresh button spinner state */
+  .hbtn.refreshing { color: var(--accent); border-color: var(--accent); }
+  .hbtn.refreshing .icon { animation: spin 1s linear infinite; display: inline-block; }
 
   #results-screen { display: none; }
   .results-header {
@@ -333,6 +315,266 @@
   }
   .summary-details.open { display: block; }
   .summary-details .result-card { margin-bottom: 6px; }
+
+  /* ═══════════════════════════════════════════════════════════════════ */
+  /*                         SECTION SELECTOR                             */
+  /* ═══════════════════════════════════════════════════════════════════ */
+  #section-screen { display: none; padding: 20px 4px; }
+  .section-hero { text-align: center; margin-bottom: 28px; }
+  .section-hero-ico { font-size: 52px; margin-bottom: 12px; }
+  .section-hero-title {
+    font-size: 24px; font-weight: 800; margin-bottom: 8px; color: #fff;
+  }
+  .section-hero-sub {
+    font-size: 14px; font-weight: 800;
+    background: linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    letter-spacing: .06em;
+  }
+  .choice-wrap {
+    display: flex; flex-direction: column; gap: 12px;
+    max-width: 420px; margin: 28px auto 0;
+  }
+  .choice-btn {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px; border-radius: 16px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text);
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: border-color .15s, transform .1s, background .15s;
+    text-align: left;
+  }
+  .choice-btn:hover { border-color: var(--accent); background: var(--card2); }
+  .choice-btn:active { transform: scale(.98); }
+  .choice-btn .choice-ico {
+    width: 46px; height: 46px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+    background: linear-gradient(135deg, #4f8ef7, #38bdf8);
+  }
+  .choice-btn.analytics .choice-ico { background: linear-gradient(135deg, #a78bfa, #f472b6); }
+  .choice-btn .choice-body { flex: 1; min-width: 0; }
+  .choice-btn .choice-title { font-size: 15px; font-weight: 700; color: #fff; }
+  .choice-btn .choice-sub { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 3px; }
+  .choice-btn .choice-arrow { color: var(--muted); font-size: 22px; }
+
+  .back-btn {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    border-radius: 10px; padding: 7px 14px; font-size: 13px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ═══════════════════════════════════════════════════════════════════ */
+  /*                         ANALYTICS SCREEN                             */
+  /* ═══════════════════════════════════════════════════════════════════ */
+  #analytics-screen { display: none; padding: 0; }
+  .an-back-row { padding: 12px 0 8px; }
+
+  #analytics-loading, #analytics-error {
+    text-align: center; padding: 40px 20px; display: none;
+  }
+  #analytics-loading.on, #analytics-error.on { display: block; }
+  .an-progress-bar {
+    width: 100%; max-width: 300px; margin: 16px auto;
+    height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .an-progress-fill {
+    height: 100%; background: var(--accent); width: 0%;
+    transition: width .2s;
+  }
+
+  /* month tabs */
+  .an-month-tabs {
+    display: flex; gap: 6px; overflow-x: auto;
+    padding: 4px 0 10px; margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .an-month-tab {
+    flex-shrink: 0;
+    padding: 6px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: none;
+    color: var(--muted); font-size: 12px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+  }
+  .an-month-tab.active {
+    border-color: var(--accent); background: rgba(79,142,247,.15); color: var(--accent);
+  }
+  .an-compare-select {
+    flex-shrink: 0;
+    padding: 6px 10px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--muted); font-size: 12px; font-weight: 600;
+    cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+  }
+
+  /* overview KPI grid */
+  .an-kpi-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; margin-bottom: 14px;
+  }
+  .an-kpi {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 12px;
+  }
+  .an-kpi-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+  .an-kpi-val { font-size: 17px; font-weight: 800; color: var(--text); line-height: 1.15; }
+  .an-kpi-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .an-kpi-delta { font-size: 11px; margin-top: 4px; font-weight: 600; }
+  .an-kpi-delta.up { color: var(--green); }
+  .an-kpi-delta.down { color: var(--danger); }
+  .an-kpi-delta.flat { color: var(--muted); }
+  .an-kpi.wide { grid-column: 1 / -1; }
+
+  /* flow box (open → receipt → expense → close) */
+  .an-flow {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px; margin-bottom: 14px;
+  }
+  .an-flow-title {
+    font-size: 11px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .08em; margin-bottom: 10px; font-weight: 700;
+  }
+  .an-flow-row {
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 6px 0; border-bottom: 1px dashed rgba(37,43,68,.6);
+  }
+  .an-flow-row:last-child { border-bottom: none; }
+  .an-flow-ico {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .an-flow-ico.open { background: rgba(79,142,247,.15); }
+  .an-flow-ico.in   { background: rgba(52,211,153,.15); color: var(--green); }
+  .an-flow-ico.out  { background: rgba(248,113,113,.15); color: var(--danger); }
+  .an-flow-ico.close{ background: rgba(167,139,250,.15); color: #a78bfa; }
+  .an-flow-lbl { font-size: 13px; font-weight: 600; }
+  .an-flow-lbl-sub { font-size: 11px; color: var(--muted); }
+  .an-flow-val { text-align: right; }
+  .an-flow-val-main { font-size: 13px; font-weight: 700; }
+  .an-flow-val-sub { font-size: 11px; color: var(--muted); }
+
+  /* hierarchy nodes */
+  .an-node {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 8px; overflow: hidden;
+  }
+  .an-node-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; cursor: pointer; user-select: none;
+  }
+  .an-node-head:hover { background: var(--card2); }
+  .an-node-arrow {
+    color: var(--muted); font-size: 11px;
+    transition: transform .15s; flex-shrink: 0; width: 10px;
+  }
+  .an-node-arrow.open { transform: rotate(90deg); }
+  .an-node-title {
+    flex: 1; min-width: 0;
+    font-size: 13px; font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis;
+    word-break: break-word;
+  }
+  .an-node-sum {
+    font-size: 12px; font-weight: 700; color: var(--text);
+    flex-shrink: 0; text-align: right;
+  }
+  .an-node-sum-sub { font-size: 10px; color: var(--muted); font-weight: 500; margin-top: 1px; }
+  .an-node-body { display: none; padding: 0 10px 10px; }
+  .an-node-body.open { display: block; }
+  .an-node.direction > .an-node-head { background: linear-gradient(90deg, rgba(79,142,247,.08), transparent); }
+  .an-node.direction > .an-node-head .an-node-title { color: var(--accent); font-size: 14px; }
+  .an-node.group .an-node-head { padding-left: 18px; }
+  .an-node.group .an-node-head .an-node-title { font-size: 12px; color: #a78bfa; }
+  .an-node.subdivision { background: var(--card2); }
+  .an-node.subdivision .an-node-head { padding-left: 26px; }
+  .an-node.subdivision .an-node-head .an-node-title { font-size: 12px; color: #38bdf8; }
+  .an-node-path {
+    font-size: 10px; color: var(--muted); font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* items table */
+  .an-items {
+    border-top: 1px solid var(--border); padding-top: 6px;
+  }
+  .an-item {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 4px 10px; padding: 8px 6px;
+    border-bottom: 1px dashed rgba(37,43,68,.5);
+    font-size: 12px;
+  }
+  .an-item:last-child { border-bottom: none; }
+  .an-item-name {
+    grid-column: 1; font-weight: 600; color: var(--text);
+    word-break: break-word;
+  }
+  .an-item-series {
+    grid-column: 1; font-size: 10px; color: var(--muted); font-weight: 500;
+  }
+  .an-item-flow {
+    grid-column: 2; grid-row: 1 / span 2;
+    font-size: 10.5px; text-align: right; color: var(--muted);
+    white-space: nowrap; line-height: 1.5;
+  }
+  .an-item-flow .v { color: var(--text); font-weight: 600; }
+  .an-item-flow .plus { color: var(--green); }
+  .an-item-flow .minus { color: var(--danger); }
+  .an-item-badges {
+    grid-column: 1 / -1;
+    display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2px;
+  }
+  .an-badge {
+    font-size: 9.5px; font-weight: 700;
+    padding: 2px 6px; border-radius: 10px;
+    text-transform: uppercase; letter-spacing: .03em;
+  }
+  .an-badge.dead { background: rgba(107,122,153,.15); color: #8fa0c2; }
+  .an-badge.excess { background: rgba(245,158,11,.15); color: var(--warn); }
+  .an-badge.fast { background: rgba(52,211,153,.15); color: var(--green); }
+  .an-badge.deficit { background: rgba(248,113,113,.15); color: var(--danger); }
+  .an-badge.new { background: rgba(167,139,250,.15); color: #a78bfa; }
+
+  /* analytics filter bar */
+  .an-filter-row {
+    display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0;
+  }
+  .an-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    color: var(--muted); text-transform: uppercase;
+    margin: 20px 0 8px;
+  }
+
+  /* subdivision type switch */
+  .an-type-switch {
+    display: flex; background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 3px; margin-bottom: 14px;
+  }
+  .an-type-btn {
+    flex: 1; background: none; border: none;
+    color: var(--muted); font-size: 12px; font-weight: 600;
+    padding: 8px; border-radius: 8px; cursor: pointer;
+  }
+  .an-type-btn.active {
+    background: rgba(79,142,247,.2); color: var(--accent);
+  }
+
+  /* warnings */
+  .an-warn {
+    background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.3);
+    border-radius: 10px; padding: 10px 12px; margin-bottom: 12px;
+    font-size: 12px; color: var(--warn); display: flex; gap: 8px;
+  }
+  .an-warn-ico { flex-shrink: 0; }
+
+  @media (max-width: 420px) {
+    .an-kpi-grid { grid-template-columns: 1fr; }
+    .an-node-title { font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -345,7 +587,7 @@
         <div class="logo-sub">Пошук по відомості залишків ТМО</div>
       </div>
       <div class="header-btns" id="header-btns" style="display:none">
-        <button class="hbtn primary" onclick="loadFromDrive(true)">🔄 Оновити</button>
+        <button class="hbtn primary" id="refresh-btn" onclick="loadFromDrive(true)"><span class="icon">🔄</span> Оновити</button>
         <button class="hbtn" onclick="showManualUpload()">📂</button>
       </div>
     </div>
@@ -368,10 +610,15 @@
   </div>
 
   <div id="body">
-    <div id="start-screen">
-      <div class="start-ico">💊</div>
-      <div class="start-title">Liki.on!</div>
-      <div style="font-size:15px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;">Developed by Ostap Khmil</div>
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  SECTION SELECTOR (root)                     -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="section-screen">
+      <div class="section-hero">
+        <div class="section-hero-ico">💊</div>
+        <div class="section-hero-title">Liki.on!</div>
+        <div class="section-hero-sub">Developed by Ostap Khmil</div>
+      </div>
       <div class="choice-wrap">
         <button class="choice-btn" onclick="openMedsearch()">
           <div class="choice-ico">🔎</div>
@@ -385,49 +632,95 @@
           <div class="choice-ico">📊</div>
           <div class="choice-body">
             <div class="choice-title">Аналіз відділень</div>
-            <div class="choice-sub">Статистика та зведення</div>
+            <div class="choice-sub">Фінансовий рух, оборотність, порівняння місяців</div>
           </div>
           <div class="choice-arrow">›</div>
         </button>
       </div>
     </div>
 
-    <div id="medsearch-screen" style="display:none">
-      <div class="screen-head-row">
-        <button class="back-btn" onclick="goStart()">← Назад</button>
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  ANALYTICS                                   -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="analytics-screen">
+      <div class="an-back-row">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
       </div>
-      <div style="text-align:center;padding:20px 20px 40px;">
-        <div class="start-ico">🔎</div>
-        <div class="start-title">Пошук медикаментів</div>
-        <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
-        <button class="big-btn" onclick="loadFromDrive(false)">
-          ☁️ Завантажити актуальні дані
-        </button>
-        <div class="or-divider">або завантажити файл вручну</div>
-        <div class="upload-zone" id="upload-zone"
-          onclick="document.getElementById('file-input').click()"
-          ondragover="event.preventDefault(); this.classList.add('over')"
-          ondragleave="this.classList.remove('over')"
-          ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
-          <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
-          📂 Натисніть або перетягніть .xlsx файл
+
+      <div id="analytics-loading">
+        <div style="font-size:44px;margin-bottom:14px;">📊</div>
+        <div style="font-size:15px;" id="an-loading-text">Завантажуємо дані аналітики...</div>
+        <div class="an-progress-bar"><div class="an-progress-fill" id="an-progress"></div></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="an-loading-hint">Файл близько 900 КБ, секунда на мобільному</div>
+      </div>
+
+      <div id="analytics-error">
+        <div style="font-size:44px;margin-bottom:14px;">⚠️</div>
+        <div style="font-size:15px;margin-bottom:8px;" id="an-error-text">Не вдалось завантажити аналітику</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;" id="an-error-details"></div>
+        <button class="big-btn" style="max-width:240px;" onclick="loadAnalytics(true)">🔄 Спробувати ще</button>
+      </div>
+
+      <div id="analytics-content" style="display:none">
+        <!-- Month selector -->
+        <div class="an-month-tabs" id="an-month-tabs"></div>
+
+        <!-- Subdivision type switch (Відділення / Склади) -->
+        <!-- Hidden for now; file currently has all in one flat tree per direction.
+             If we later classify by type, we'll wire this up. -->
+
+        <!-- Updated info -->
+        <div style="font-size:11px;color:var(--muted);text-align:center;margin-bottom:10px;" id="an-updated"></div>
+
+        <!-- Warnings (if any) -->
+        <div id="an-warnings"></div>
+
+        <!-- KPI overview -->
+        <div class="an-section-title">Огляд</div>
+        <div class="an-kpi-grid" id="an-kpis"></div>
+
+        <!-- Flow box for selected month -->
+        <div class="an-flow" id="an-flow"></div>
+
+        <!-- Analytics highlights: dead stock, excess, deficit -->
+        <div class="an-section-title">Аналітика</div>
+        <div class="an-filter-row">
+          <button class="filter-btn active" onclick="setAnalyticsView('all', this)">Все</button>
+          <button class="filter-btn" onclick="setAnalyticsView('dead', this)">💀 Без руху</button>
+          <button class="filter-btn" onclick="setAnalyticsView('excess', this)">📦 Надлишок</button>
+          <button class="filter-btn" onclick="setAnalyticsView('fast', this)">⚡ Оборотні</button>
+          <button class="filter-btn" onclick="setAnalyticsView('new', this)">🆕 Нові</button>
         </div>
+        <div id="an-analytics-summary"></div>
+
+        <!-- Hierarchy (directions → groups → subdivisions → items) -->
+        <div class="an-section-title">Напрями діяльності</div>
+        <div id="an-hierarchy"></div>
       </div>
     </div>
 
-    <div id="analytics-screen" style="display:none">
-      <div class="screen-head-row">
-        <button class="back-btn" onclick="goStart()">← Назад</button>
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--       MEDSEARCH ENTRY (formerly stand-alone start-screen)    -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="start-screen">
+      <div style="display:flex;justify-content:flex-start;padding:0 4px 16px;">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
       </div>
-      <div style="text-align:center;padding:20px 20px 40px;">
-        <div class="start-ico">📊</div>
-        <div class="start-title">Аналіз відділень</div>
-        <div class="analytics-stub">
-          <div class="analytics-stub-ico">🚧</div>
-          <div class="analytics-stub-title">Розділ у розробці</div>
-          <div class="analytics-stub-sub">Тут з'явиться статистика по відділеннях: кількість позицій, прострочені залишки, топ-препарати та зведені графіки.</div>
-          <div class="analytics-stub-badge">Незабаром</div>
-        </div>
+      <div class="start-ico">💊</div>
+      <div class="start-title">Liki.on!</div>
+      <div style="font-size:15px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;margin-bottom:6px;">Developed by Ostap Khmil</div>
+      <div class="start-sub">Пошук по відомості залишків товарів на складах лікарні</div>
+      <button class="big-btn" onclick="loadFromDrive(false)">
+        ☁️ Завантажити актуальні дані
+      </button>
+      <div class="or-divider">або завантажити файл вручну</div>
+      <div class="upload-zone" id="upload-zone"
+        onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault(); this.classList.add('over')"
+        ondragleave="this.classList.remove('over')"
+        ondrop="event.preventDefault(); this.classList.remove('over'); handleFile(event.dataTransfer.files[0])">
+        <input id="file-input" type="file" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this.files[0])">
+        📂 Натисніть або перетягніть .xlsx файл
       </div>
     </div>
 
@@ -439,7 +732,10 @@
 
     <div id="home-screen">
       <div class="last-updated" id="last-updated"></div>
-      <div class="stats-bar">
+      <div class="refresh-indicator" id="refresh-indicator">
+        <span class="spinner">⟳</span>Оновлюємо дані з Google Диску...
+      </div>
+      <div class="stats-bar" id="stats-bar">
         <div class="stat-card">
           <div class="stat-num" id="stat-total">0</div>
           <div class="stat-lbl">Рядків у файлі</div>
@@ -504,26 +800,99 @@ let lastLoaded = null;
 let searchMode = 'name';
 let selectedDepts = [];
 let currentDeptSuggestions = [];
+let _cacheFailedThisSession = false;
 
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
 
 // ── cache ────────────────────────────────────────────────────────────────────
-const CACHE_KEY = "medsklad_cache";
+// localStorage on mobile is small (5 MB on iOS Safari). The medsearch dataset
+// expanded with item count + new MNN field can exceed that, causing silent
+// QuotaExceededError. To fit reliably, we:
+//   1) Dedupe repeating strings (depts, units, MNN) into lookup tables.
+//   2) Use shorter field names in the serialized form.
+//   3) Log failures explicitly instead of swallowing them, so we know.
+const CACHE_KEY = "medsklad_cache";        // legacy uncompressed (kept for migration)
 const CACHE_TIME_KEY = "medsklad_cache_time";
+const CACHE_KEY_V2 = "medsklad_cache_v2";  // compact format
 
 function saveCache(items) {
+  // Build compact representation: lookup tables + items referencing indices.
+  const depts = [], deptIdx = new Map();
+  const units = [], unitIdx = new Map();
+  const mnns  = [], mnnIdx  = new Map();
+  const intern = (val, arr, map) => {
+    if (val == null || val === "") return -1;
+    let i = map.get(val);
+    if (i === undefined) {
+      i = arr.length;
+      map.set(val, i);
+      arr.push(val);
+    }
+    return i;
+  };
+  const compact = items.map(it => ({
+    d: intern(it.dept,  depts, deptIdx),
+    n: it.name,
+    s: it.series || null,
+    e: it.expiry || null,
+    y: it.days != null ? it.days : null,
+    u: intern(it.unit, units, unitIdx),
+    q: it.qty != null ? it.qty : null,
+    m: intern(it.mnn,  mnns,  mnnIdx),
+  }));
+  const payload = { v: 2, depts, units, mnns, items: compact, ts: Date.now() };
+  const serialized = JSON.stringify(payload);
+
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(items));
-    localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-  } catch(e) {}
+    localStorage.setItem(CACHE_KEY_V2, serialized);
+    localStorage.setItem(CACHE_TIME_KEY, payload.ts.toString());
+    // Drop legacy v1 if present
+    try { localStorage.removeItem(CACHE_KEY); } catch(_) {}
+    return true;
+  } catch (e) {
+    console.warn("[medsklad] saveCache failed:", e.name, e.message,
+                 "size=", (serialized.length / 1024 / 1024).toFixed(2), "MB");
+    // Cache write failed (quota or other). Drop ALL stale cache so we don't
+    // mislead the user with old phantom numbers next time.
+    try {
+      localStorage.removeItem(CACHE_KEY_V2);
+      localStorage.removeItem(CACHE_KEY);
+      localStorage.removeItem(CACHE_TIME_KEY);
+    } catch(_) {}
+    return false;
+  }
 }
 
 function loadCache() {
   try {
-    const data = localStorage.getItem(CACHE_KEY);
-    const time = localStorage.getItem(CACHE_TIME_KEY);
-    if (data && time) return { items: JSON.parse(data), time: new Date(parseInt(time)) };
-  } catch(e) {}
+    // Try compact v2 first
+    const rawV2 = localStorage.getItem(CACHE_KEY_V2);
+    const time  = localStorage.getItem(CACHE_TIME_KEY);
+    if (rawV2 && time) {
+      const p = JSON.parse(rawV2);
+      if (p && p.v === 2 && Array.isArray(p.items)) {
+        const items = p.items.map(c => ({
+          dept:   p.depts[c.d] || "—",
+          name:   c.n,
+          series: c.s,
+          expiry: c.e,
+          days:   c.y,
+          unit:   p.units[c.u] || null,
+          qty:    c.q,
+          mnn:    c.m >= 0 ? p.mnns[c.m] : null,
+        }));
+        return { items, time: new Date(parseInt(time)) };
+      }
+    }
+    // Legacy v1 (uncompressed) fallback
+    const rawV1 = localStorage.getItem(CACHE_KEY);
+    if (rawV1 && time) {
+      const items = JSON.parse(rawV1);
+      return { items, time: new Date(parseInt(time)) };
+    }
+  } catch (e) {
+    console.warn("[medsklad] loadCache failed:", e.name, e.message);
+  }
   return null;
 }
 
@@ -550,6 +919,8 @@ async function loadFromDrive(isRefresh) {
 }
 
 async function fetchAndUpdate(showLoader) {
+  // For silent (background) refresh: show subtle indicator instead of loader.
+  if (!showLoader) setRefreshing(true);
   try {
     const resp = await fetch(GDRIVE_URL);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
@@ -558,7 +929,13 @@ async function fetchAndUpdate(showLoader) {
 
     allItems = newItems;
     lastLoaded = new Date();
-    saveCache(newItems);
+    const cacheOk = saveCache(newItems);
+    if (!cacheOk) {
+      // Tell the user we can't cache — otherwise they'll wonder why every
+      // open feels slow. The home-screen indicator below stays after refresh
+      // ends so it's visible.
+      _cacheFailedThisSession = true;
+    }
 
     // Compare with last confirmed snapshot (updated only on "Переглянуто")
     const prevSnapshot = loadSnapshot();
@@ -580,9 +957,23 @@ async function fetchAndUpdate(showLoader) {
   } catch(err) {
     if (showLoader) {
       alert("Не вдалось завантажити файл з Google Диску.\nПеревірте інтернет.\n\n" + err.message);
-      show("medsearch");
+      show("start");
     }
+    // For silent failures (no internet during background refresh): stay quiet,
+    // user already sees cached data — no need to interrupt them.
+  } finally {
+    if (!showLoader) setRefreshing(false);
   }
+}
+
+// Visual indicator for background refresh.
+function setRefreshing(on) {
+  const indicator = document.getElementById("refresh-indicator");
+  const statsBar  = document.getElementById("stats-bar");
+  const btn       = document.getElementById("refresh-btn");
+  if (indicator) indicator.classList.toggle("on", !!on);
+  if (statsBar)  statsBar.classList.toggle("refreshing", !!on);
+  if (btn)       btn.classList.toggle("refreshing", !!on);
 }
 
 // ── manual upload ───────────────────────────────────────────────────────────
@@ -620,7 +1011,7 @@ function handleFile(file) {
       show("home");
     } catch(err) {
       alert("Помилка читання файлу: " + err.message);
-      show("medsearch");
+      show("start");
     }
   };
   reader.readAsArrayBuffer(file);
@@ -725,28 +1116,60 @@ function statusLabel(st, days) {
 
 // ── ui ────────────────────────────────────────────────────────────────────────
 function show(screen) {
-  document.getElementById("start-screen").style.display      = screen==="start"     ? "block" : "none";
-  document.getElementById("medsearch-screen").style.display  = screen==="medsearch" ? "block" : "none";
-  document.getElementById("analytics-screen").style.display  = screen==="analytics" ? "block" : "none";
-  document.getElementById("loader").style.display            = screen==="loader"    ? "block" : "none";
-  document.getElementById("home-screen").style.display       = screen==="home"      ? "block" : "none";
-  document.getElementById("results-screen").style.display    = screen==="results"   ? "block" : "none";
-  document.getElementById("new-items-screen").style.display  = screen==="newitems"  ? "block" : "none";
+  document.getElementById("section-screen").style.display    = screen==="sections" ? "block" : "none";
+  document.getElementById("analytics-screen").style.display  = screen==="analytics"? "block" : "none";
+  document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
+  document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
+  document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
+  document.getElementById("results-screen").style.display    = screen==="results"  ? "block" : "none";
+  document.getElementById("new-items-screen").style.display  = screen==="newitems" ? "block" : "none";
+  // Header: search bar + refresh buttons only on medsearch data screens
   const showHeader = screen==="home" || screen==="results" || screen==="newitems";
   document.getElementById("search-wrap").style.display       = showHeader ? "block" : "none";
   document.getElementById("header-btns").style.display       = showHeader ? "flex"  : "none";
+  // Update logo subtitle based on section
+  const logoSub = document.querySelector(".logo-sub");
+  if (logoSub) {
+    if (screen === "analytics") logoSub.textContent = "Аналіз відділень";
+    else if (screen === "sections") logoSub.textContent = "Оберіть розділ";
+    else logoSub.textContent = "Пошук по відомості залишків ТМО";
+  }
+  // Scroll to top on screen change
+  window.scrollTo(0, 0);
 }
 
 function goStart() {
-  show("start");
+  // Reset medsearch state so returning via logo behaves naturally
+  currentQuery = "";
+  currentFilter = "all";
+  searchMode = "name";
+  selectedDepts = [];
+  const si = document.getElementById("search-input");
+  if (si) si.value = "";
+  show("sections");
 }
 
 function openMedsearch() {
-  show("medsearch");
+  // If cached medsearch data exists → jump straight to home, else entry screen
+  const cache = loadCache();
+  if (cache) {
+    allItems = cache.items;
+    lastLoaded = cache.time;
+    newItemNames = loadNewNames();
+    currentQuery = "";
+    document.getElementById("search-input").value = "";
+    renderHome();
+    show("home");
+    // silent background refresh
+    fetchAndUpdate(false);
+  } else {
+    show("start");
+  }
 }
 
 function openAnalytics() {
   show("analytics");
+  loadAnalytics(false);
 }
 
 function renderHome() {
@@ -771,8 +1194,11 @@ function renderHome() {
     .map(([d,c])=>`<div class="chip"><span style="color:#38bdf8">🏥</span><span class="chip-name">${esc(d)}</span><span class="chip-cnt">${c}</span></div>`)
     .join("");
   if (lastLoaded) {
-    document.getElementById("last-updated").textContent =
-      "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    let txt = "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    if (_cacheFailedThisSession) {
+      txt += " · ⚠️ кеш переповнено (дані будуть тягнутись щоразу)";
+    }
+    document.getElementById("last-updated").textContent = txt;
   }
   updateNewStat();
 }
@@ -1167,6 +1593,681 @@ function toggleNewItem(idx) {
   details.classList.toggle("open");
   arrow.classList.toggle("open");
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ANALYTICS MODULE
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Data shape (from parser/parse.py):
+// {
+//   meta: { generated_at, source_file, periods: [{key, sheet, period}], format_version },
+//   names: [<item name strings>],
+//   paths: [<subdivision path component strings>],
+//   months: {
+//     "2026-01": {
+//       period: { from: "YYYY-MM-DD", to: "YYYY-MM-DD" },
+//       org_totals: { oq?, os?, rq?, rs?, eq?, es?, cq?, cs? },   // mostly `os,rs,es,cs`
+//       directions: [
+//         {
+//           name: string,
+//           totals: { ... },
+//           groups: [
+//             {
+//               name: string,
+//               totals: { ... },
+//               subdivisions: [
+//                 { path: [nameIndex,...], totals: {...}, items: [
+//                     { n: nameIndex, s?: string, oq?, os?, rq?, rs?, eq?, es?, cq?, cs? }
+//                   ]
+//                 }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
+//     }
+//   }
+// }
+//
+// Numeric field short names:
+//   oq/os = opening quantity/sum
+//   rq/rs = receipt (надходження) quantity/sum
+//   eq/es = expense  (видаток)    quantity/sum
+//   cq/cs = closing  (кінцевий)   quantity/sum
+
+const ANALYTICS_URL       = "data/analytics.json";
+const ANALYTICS_CACHE_KEY = "medsklad_analytics_cache_v1";
+const ANALYTICS_CACHE_TTL = 30 * 60 * 1000; // 30 min silent refresh
+
+let analyticsData = null;
+let currentMonthKey = null;
+let compareMonthKey = null;  // for month-vs-month comparison
+let analyticsView = "all";
+
+// ── Loader ──────────────────────────────────────────────────────────────────
+async function loadAnalytics(forceRefresh) {
+  const loadingEl = document.getElementById("analytics-loading");
+  const errorEl   = document.getElementById("analytics-error");
+  const contentEl = document.getElementById("analytics-content");
+
+  // Helper to flip visibility
+  const setState = (s) => {
+    loadingEl.classList.toggle("on", s === "loading");
+    errorEl.classList.toggle("on", s === "error");
+    contentEl.style.display = s === "ready" ? "block" : "none";
+  };
+
+  // Try cache first
+  if (!forceRefresh) {
+    try {
+      const raw = localStorage.getItem(ANALYTICS_CACHE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw);
+        if (cached && cached.data) {
+          analyticsData = cached.data;
+          initAnalyticsUI();
+          setState("ready");
+          // Silent background refresh if cache is older than TTL
+          const age = Date.now() - (cached.ts || 0);
+          if (age > ANALYTICS_CACHE_TTL) {
+            fetchAnalytics({ silent: true });
+          }
+          return;
+        }
+      }
+    } catch (e) {
+      // cache corrupted / quota — ignore and fall through to network
+      try { localStorage.removeItem(ANALYTICS_CACHE_KEY); } catch (_) {}
+    }
+  }
+
+  setState("loading");
+  await fetchAnalytics({ silent: false });
+  if (analyticsData) setState("ready");
+}
+
+async function fetchAnalytics({ silent }) {
+  const progressEl = document.getElementById("an-progress");
+  const textEl     = document.getElementById("an-loading-text");
+  const errorEl    = document.getElementById("analytics-error");
+  const loadingEl  = document.getElementById("analytics-loading");
+  const errDetails = document.getElementById("an-error-details");
+
+  try {
+    // Cache-bust to avoid stale CDN copy when user clicks refresh
+    const url = ANALYTICS_URL + (silent ? "" : ("?t=" + Date.now()));
+    if (!silent) textEl.textContent = "Завантажуємо дані аналітики...";
+
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+
+    // Stream with progress bar when Content-Length is available
+    const total = parseInt(resp.headers.get("Content-Length") || "0", 10);
+    if (!silent && total > 0 && resp.body && resp.body.getReader) {
+      const reader = resp.body.getReader();
+      const chunks = [];
+      let received = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+        const pct = Math.round(received / total * 100);
+        progressEl.style.width = pct + "%";
+        textEl.textContent = `Завантажуємо: ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
+      }
+      // Concatenate — we'll decode manually
+      let size = 0; chunks.forEach(c => size += c.length);
+      const merged = new Uint8Array(size);
+      let off = 0; chunks.forEach(c => { merged.set(c, off); off += c.length; });
+      if (!silent) textEl.textContent = "Обробка...";
+      await new Promise(r => setTimeout(r, 10)); // let UI repaint
+      const jsonText = new TextDecoder("utf-8").decode(merged);
+      analyticsData = JSON.parse(jsonText);
+    } else {
+      // Fallback: whole-response json
+      if (!silent) textEl.textContent = "Обробка...";
+      analyticsData = await resp.json();
+    }
+
+    // Persist cache
+    try {
+      localStorage.setItem(ANALYTICS_CACHE_KEY, JSON.stringify({
+        ts: Date.now(),
+        data: analyticsData,
+      }));
+    } catch (e) {
+      // Quota exceeded — the JSON might be too big for localStorage on this device.
+      // Everything still works in-memory; we just won't cache.
+      try { localStorage.removeItem(ANALYTICS_CACHE_KEY); } catch(_) {}
+    }
+
+    if (!silent) {
+      initAnalyticsUI();
+    } else {
+      // Silent refresh: only update if UI is visible
+      const screen = document.getElementById("analytics-screen");
+      if (screen && screen.style.display !== "none") {
+        initAnalyticsUI();
+      }
+    }
+  } catch (err) {
+    console.error("Analytics load failed:", err);
+    if (!silent) {
+      loadingEl.classList.remove("on");
+      errorEl.classList.add("on");
+      errDetails.textContent = err && err.message ? err.message : String(err);
+    }
+  }
+}
+
+// ── UI Init after data loaded ───────────────────────────────────────────────
+function initAnalyticsUI() {
+  if (!analyticsData || !analyticsData.months) return;
+  const monthKeys = Object.keys(analyticsData.months).sort();
+  if (monthKeys.length === 0) {
+    document.getElementById("analytics-content").innerHTML =
+      '<div class="empty-state"><div class="empty-ico">📊</div><div class="empty-title">Дані відсутні</div></div>';
+    return;
+  }
+
+  // Preserve month selection on refresh; otherwise latest
+  if (!currentMonthKey || !monthKeys.includes(currentMonthKey)) {
+    currentMonthKey = monthKeys[monthKeys.length - 1];
+  }
+  if (!compareMonthKey || !monthKeys.includes(compareMonthKey)) {
+    compareMonthKey = monthKeys.length >= 2 ? monthKeys[monthKeys.length - 2] : null;
+  }
+
+  renderMonthTabs(monthKeys);
+  renderUpdatedInfo();
+  renderWarnings();
+  renderAnalyticsMonth();
+}
+
+function renderMonthTabs(monthKeys) {
+  const tabsEl = document.getElementById("an-month-tabs");
+  const MONTHS_UK = { "01":"Січень","02":"Лютий","03":"Березень","04":"Квітень","05":"Травень","06":"Червень","07":"Липень","08":"Серпень","09":"Вересень","10":"Жовтень","11":"Листопад","12":"Грудень" };
+  const tabs = monthKeys.map(k => {
+    const mm = k.slice(5, 7);
+    const label = MONTHS_UK[mm] || k;
+    const active = k === currentMonthKey ? " active" : "";
+    return `<button class="an-month-tab${active}" onclick="selectAnalyticsMonth('${k}')">${label}</button>`;
+  }).join("");
+  // Compare selector
+  const compareOptions = ['<option value="">Порівняти з...</option>']
+    .concat(monthKeys.filter(k => k !== currentMonthKey).map(k => {
+      const label = (MONTHS_UK[k.slice(5,7)] || k);
+      const sel = k === compareMonthKey ? " selected" : "";
+      return `<option value="${k}"${sel}>↔ ${label}</option>`;
+    })).join("");
+  tabsEl.innerHTML = tabs +
+    `<select class="an-compare-select" onchange="setCompareMonth(this.value)">${compareOptions}</select>`;
+}
+
+function renderUpdatedInfo() {
+  const el = document.getElementById("an-updated");
+  const meta = analyticsData.meta || {};
+  let txt = "";
+  if (meta.generated_at) {
+    const d = new Date(meta.generated_at);
+    if (!isNaN(d)) {
+      txt = "Оновлено: " + d.toLocaleString("uk-UA", { day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit" });
+    }
+  }
+  el.textContent = txt;
+}
+
+function renderWarnings() {
+  const el = document.getElementById("an-warnings");
+  const warnings = [];
+  const m = analyticsData.months[currentMonthKey];
+  if (m) {
+    // Check for "(Без напряму)" direction — bookkeeping oversight worth flagging
+    const noDir = m.directions.find(d => d.name === "(Без напряму)");
+    if (noDir) {
+      const sum = (noDir.totals && noDir.totals.os) || 0;
+      if (sum > 0) {
+        warnings.push(`У цьому місяці виявлено позиції без проставленого напряму діяльності. Загальна вартість: ${fmtMoney(sum)}.`);
+      }
+    }
+  }
+  el.innerHTML = warnings.length === 0 ? "" : warnings.map(w =>
+    `<div class="an-warn"><span class="an-warn-ico">⚠️</span><span>${esc(w)}</span></div>`
+  ).join("");
+}
+
+function selectAnalyticsMonth(monthKey) {
+  currentMonthKey = monthKey;
+  // If compare equals current, drop it
+  if (compareMonthKey === currentMonthKey) compareMonthKey = null;
+  initAnalyticsUI();
+}
+
+function setCompareMonth(monthKey) {
+  compareMonthKey = monthKey || null;
+  renderAnalyticsMonth();
+}
+
+// ── Main renderer for selected month ────────────────────────────────────────
+function renderAnalyticsMonth() {
+  const m = analyticsData.months[currentMonthKey];
+  if (!m) return;
+  const mCompare = compareMonthKey ? analyticsData.months[compareMonthKey] : null;
+
+  renderKPIs(m, mCompare);
+  renderFlow(m, mCompare);
+  renderAnalyticsSummary(m);
+  renderHierarchy(m);
+}
+
+// ── KPI cards ──────────────────────────────────────────────────────────────
+function renderKPIs(m, mCompare) {
+  const org = m.org_totals || {};
+  const stats = computeMonthStats(m);
+  const cmpStats = mCompare ? computeMonthStats(mCompare) : null;
+
+  const card = (label, val, sub, delta) => {
+    const deltaHtml = delta != null ? `<div class="an-kpi-delta ${delta.cls}">${delta.text}</div>` : "";
+    return `<div class="an-kpi">
+      <div class="an-kpi-lbl">${esc(label)}</div>
+      <div class="an-kpi-val">${val}</div>
+      ${sub ? `<div class="an-kpi-sub">${esc(sub)}</div>` : ""}
+      ${deltaHtml}
+    </div>`;
+  };
+
+  const deltaFor = (cur, prev) => {
+    if (cmpStats == null || prev == null || prev === 0) return null;
+    const diff = cur - prev;
+    const pct = (diff / prev * 100);
+    if (Math.abs(pct) < 0.5) return { text: "≈ без змін", cls: "flat" };
+    const sign = diff > 0 ? "▲" : "▼";
+    const cls  = diff > 0 ? "up" : "down";
+    return { text: `${sign} ${fmtMoney(Math.abs(diff), true)} (${pct.toFixed(1)}%)`, cls };
+  };
+
+  const cards = [];
+  cards.push(card("Залишок на кінець", fmtMoney(org.cs || 0), `${stats.totalItems} позицій, ${stats.subdivisionCount} підрозділів`, deltaFor(org.cs || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.cs || 0) : null)));
+  cards.push(card("Прихід за місяць", fmtMoney(org.rs || 0), "", deltaFor(org.rs || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.rs || 0) : null)));
+  cards.push(card("Видаток за місяць", fmtMoney(org.es || 0), "", deltaFor(org.es || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.es || 0) : null)));
+  cards.push(card("Оборотність (видаток/залишок)", stats.turnoverStr, stats.turnoverHint));
+
+  document.getElementById("an-kpis").innerHTML = cards.join("");
+}
+
+// ── Flow box ───────────────────────────────────────────────────────────────
+function renderFlow(m, mCompare) {
+  const org = m.org_totals || {};
+  const period = m.period ? `${fmtShortDate(m.period.from)} – ${fmtShortDate(m.period.to)}` : "";
+  const row = (ico, iclass, label, sub, qty, sum) => {
+    const sumCell = (sum != null)
+      ? `<div class="an-flow-val-main">${fmtMoney(sum)}</div>`
+      : `<div class="an-flow-val-main" style="color:var(--muted)">—</div>`;
+    const qtyCell = (qty != null && qty !== 0)
+      ? `<div class="an-flow-val-sub">${fmtNum(qty)} од.</div>`
+      : "";
+    return `<div class="an-flow-row">
+      <div class="an-flow-ico ${iclass}">${ico}</div>
+      <div>
+        <div class="an-flow-lbl">${esc(label)}</div>
+        <div class="an-flow-lbl-sub">${esc(sub || "")}</div>
+      </div>
+      <div class="an-flow-val">${sumCell}${qtyCell}</div>
+    </div>`;
+  };
+
+  document.getElementById("an-flow").innerHTML =
+    `<div class="an-flow-title">Фінансовий рух · ${esc(period)}</div>` +
+    row("⊙", "open",  "Залишок на початок", "станом на початок місяця",  org.oq, org.os) +
+    row("↓", "in",    "Надходження",        "прихід за місяць",           org.rq, org.rs) +
+    row("↑", "out",   "Видаток",            "списано, переміщено, видано",org.eq, org.es) +
+    row("●", "close", "Залишок на кінець",  "станом на кінець місяця",    org.cq, org.cs);
+}
+
+// ── Analytics summary (dead/excess/fast/new) ────────────────────────────────
+function setAnalyticsView(view, btn) {
+  analyticsView = view;
+  if (btn) {
+    btn.parentElement.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+  const m = analyticsData.months[currentMonthKey];
+  if (m) renderAnalyticsSummary(m);
+}
+
+function renderAnalyticsSummary(m) {
+  const items = classifyAllItems(m);
+  const containerEl = document.getElementById("an-analytics-summary");
+
+  let shown;
+  if (analyticsView === "all") {
+    // Show counts summary
+    containerEl.innerHTML = `
+      <div class="an-kpi-grid">
+        <div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${items.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.dead, "cs"))}</div></div>
+        <div class="an-kpi"><div class="an-kpi-lbl">📦 Надлишок (>3× видатку)</div><div class="an-kpi-val">${items.excess.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.excess, "cs"))}</div></div>
+        <div class="an-kpi"><div class="an-kpi-lbl">⚡ Швидкий рух</div><div class="an-kpi-val">${items.fast.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.fast, "es"))} видано</div></div>
+        <div class="an-kpi"><div class="an-kpi-lbl">🆕 Нові позиції</div><div class="an-kpi-val">${items.newItems.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.newItems, "rs"))}</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin:4px 0 10px;">Оберіть категорію вище щоб побачити список позицій</div>
+    `;
+    return;
+  }
+
+  // Show item list for selected category
+  const list = items[analyticsView] || [];
+  const titleMap = { dead: "Без руху (0 видатку)", excess: "Надлишок (залишок > 3× видатку)", fast: "Швидкий рух", newItems: "Нові в цьому місяці" };
+  if (list.length === 0) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">У категорії "${esc(titleMap[analyticsView])}" нічого немає</div></div>`;
+    return;
+  }
+
+  // Sort by money impact (descending)
+  const sortField = analyticsView === "fast" ? "es" : (analyticsView === "newItems" ? "rs" : "cs");
+  list.sort((a, b) => (b.item[sortField] || 0) - (a.item[sortField] || 0));
+
+  // Limit to top 100 for perf; add "show more" if needed
+  const limit = 100;
+  const visible = list.slice(0, limit);
+
+  let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Показано ${visible.length} з ${list.length} позицій</div>`;
+  html += visible.map(entry => renderAnItemCard(entry.item, entry.path, entry.direction, analyticsView)).join("");
+  if (list.length > limit) {
+    html += `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">Решта ${list.length - limit} позицій доступні через розгортання відділень нижче</div>`;
+  }
+
+  containerEl.innerHTML = html;
+}
+
+function classifyAllItems(m) {
+  // Walk all items once, returning buckets
+  const dead = [], excess = [], fast = [], newItems = [];
+  for (const d of m.directions) {
+    for (const g of d.groups) {
+      for (const sub of g.subdivisions) {
+        for (const it of sub.items) {
+          const cat = classifyItem(it);
+          const entry = { item: it, path: sub.path, direction: d.name };
+          if (cat.dead)     dead.push(entry);
+          if (cat.excess)   excess.push(entry);
+          if (cat.fast)     fast.push(entry);
+          if (cat.newItem)  newItems.push(entry);
+        }
+      }
+    }
+  }
+  return { dead, excess, fast, newItems };
+}
+
+function classifyItem(it) {
+  const oq = it.oq || 0, cq = it.cq || 0, eq = it.eq || 0, rq = it.rq || 0;
+  const os = it.os || 0, cs = it.cs || 0, es = it.es || 0, rs = it.rs || 0;
+
+  // Dead: opening > 0, expense = 0, still present at close
+  const dead = (os > 0) && (es === 0) && (cs > 0);
+
+  // Excess: closing > 3× expense (both in sum terms, so unit-invariant)
+  // Only consider items where there was some expense during period (else dead)
+  const excess = (es > 0) && (cs > 3 * es);
+
+  // Fast-moving: expense > opening (sold more than had, i.e. strong turnover, needs frequent restock)
+  const fast = (es > 0) && (os > 0) && (es > os * 0.5);
+
+  // New item in this month: no opening, received something
+  const newItem = (os === 0) && (rs > 0);
+
+  return { dead, excess, fast, newItem };
+}
+
+function sumField(entries, field) {
+  let s = 0;
+  for (const e of entries) s += e.item[field] || 0;
+  return s;
+}
+
+// ── Hierarchy rendering ────────────────────────────────────────────────────
+// To keep initial paint fast even on mobile (43k+ items total), we render
+// lazily: directions and groups render always, but subdivision bodies
+// (the actual item rows) are only built into the DOM when the user expands
+// the subdivision. This keeps initial hierarchy DOM tiny (~300 nodes)
+// instead of 100k+.
+
+// We stash references so the expand handler can find the right subdivision object.
+let _anTree = null;  // cached reference to { directions } of current month
+
+function renderHierarchy(m) {
+  _anTree = m;
+  const root = document.getElementById("an-hierarchy");
+  // Sort directions by size (closing sum desc); "(Без напряму)" last
+  const dirs = m.directions.slice().sort((a, b) => {
+    if (a.name === "(Без напряму)") return 1;
+    if (b.name === "(Без напряму)") return -1;
+    const A = (a.totals && a.totals.cs) || 0;
+    const B = (b.totals && b.totals.cs) || 0;
+    return B - A;
+  });
+
+  // We remember the original direction index so subdivision IDs can map back to _anTree.
+  const dirIndexMap = new Map(m.directions.map((d, i) => [d, i]));
+  root.innerHTML = dirs.map(d => renderDirectionNode(d, dirIndexMap.get(d))).join("");
+}
+
+function renderDirectionNode(d, dIdx) {
+  const subsCount = d.groups.reduce((s, g) => s + g.subdivisions.length, 0);
+  const itemsCount = d.groups.reduce((s, g) => s + g.subdivisions.reduce((ss, sub) => ss + sub.items.length, 0), 0);
+  const t = d.totals || {};
+  const id = `d${dIdx}`;
+  return `
+    <div class="an-node direction">
+      <div class="an-node-head" onclick="toggleAnNode('${id}')">
+        <span class="an-node-arrow" id="arr-${id}">▶</span>
+        <div class="an-node-title">${esc(d.name)}</div>
+        <div class="an-node-sum">${fmtMoney(t.cs || 0)}<div class="an-node-sum-sub">${itemsCount} поз. у ${subsCount} підрозд.</div></div>
+      </div>
+      <div class="an-node-body" id="body-${id}">
+        ${d.groups.map((g, gi) => renderGroupNode(g, `${id}-g${gi}`)).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderGroupNode(g, id) {
+  const itemsCount = g.subdivisions.reduce((s, sub) => s + sub.items.length, 0);
+  const t = g.totals || {};
+  return `
+    <div class="an-node group">
+      <div class="an-node-head" onclick="toggleAnNode('${id}')">
+        <span class="an-node-arrow" id="arr-${id}">▶</span>
+        <div class="an-node-title">${esc(g.name)}</div>
+        <div class="an-node-sum">${fmtMoney(t.cs || 0)}<div class="an-node-sum-sub">${g.subdivisions.length} підрозд., ${itemsCount} поз.</div></div>
+      </div>
+      <div class="an-node-body" id="body-${id}">
+        ${g.subdivisions.map((sub, si) => renderSubdivisionShell(sub, `${id}-s${si}`)).join("")}
+      </div>
+    </div>
+  `;
+}
+
+// Subdivision SHELL — only head, no items rendered yet. Items are built on first expand.
+function renderSubdivisionShell(sub, id) {
+  const t = sub.totals || {};
+  const leaf = sub.path.length > 0 ? analyticsData.paths[sub.path[sub.path.length - 1]] : "(без назви)";
+  return `
+    <div class="an-node subdivision" data-sub-id="${id}">
+      <div class="an-node-head" onclick="expandSubdivision('${id}')">
+        <span class="an-node-arrow" id="arr-${id}">▶</span>
+        <div class="an-node-title">
+          ${esc(leaf)}
+          ${sub.path.length > 1 ? `<div class="an-node-path">${esc(sub.path.slice(0, -1).map(i => analyticsData.paths[i]).join(" › "))}</div>` : ""}
+        </div>
+        <div class="an-node-sum">${fmtMoney(t.cs || 0)}<div class="an-node-sum-sub">${sub.items.length} поз.</div></div>
+      </div>
+      <div class="an-node-body" id="body-${id}" data-lazy="pending"></div>
+    </div>
+  `;
+}
+
+// Called on first click of a subdivision — builds the items and caches the HTML.
+function expandSubdivision(id) {
+  const body = document.getElementById("body-" + id);
+  const arr  = document.getElementById("arr-" + id);
+  if (!body) return;
+
+  // First expansion? Materialize the items list now.
+  if (body.dataset.lazy === "pending") {
+    const sub = _lookupSubdivision(id);
+    if (!sub) {
+      body.innerHTML = '<div style="padding:10px;color:var(--danger)">Помилка пошуку підрозділу</div>';
+      body.dataset.lazy = "done";
+    } else {
+      const t = sub.totals || {};
+      const rs = t.rs || 0, es = t.es || 0;
+      const movementLine = (rs > 0 || es > 0)
+        ? `<div style="font-size:11px;color:var(--muted);padding:4px 6px 8px;">Прихід: <span style="color:var(--green)">+${fmtMoney(rs)}</span> · Видаток: <span style="color:var(--danger)">−${fmtMoney(es)}</span></div>`
+        : `<div style="font-size:11px;color:var(--muted);padding:4px 6px 8px;">💤 Немає руху за період</div>`;
+      body.innerHTML = movementLine + '<div class="an-items">' + sub.items.map(it => renderAnItemRow(it)).join("") + '</div>';
+      body.dataset.lazy = "done";
+    }
+  }
+
+  const open = body.classList.toggle("open");
+  if (arr) arr.classList.toggle("open", open);
+}
+
+// Resolve id like "d2-g1-s5" back to the subdivision object in _anTree
+function _lookupSubdivision(id) {
+  if (!_anTree) return null;
+  const m = /^d(\d+)-g(\d+)-s(\d+)$/.exec(id);
+  if (!m) return null;
+  const [, di, gi, si] = m;
+  const d = _anTree.directions[+di];
+  if (!d) return null;
+  const g = d.groups[+gi];
+  if (!g) return null;
+  return g.subdivisions[+si] || null;
+}
+
+function renderAnItemRow(it) {
+  const name = analyticsData.names[it.n] || "(?)";
+  const cat = classifyItem(it);
+  const badges = [];
+  if (cat.dead)    badges.push('<span class="an-badge dead">💀 без руху</span>');
+  if (cat.excess)  badges.push('<span class="an-badge excess">📦 надлишок</span>');
+  if (cat.fast)    badges.push('<span class="an-badge fast">⚡ швидкий</span>');
+  if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
+
+  const flowBits = [];
+  if (it.os != null && it.os !== 0) flowBits.push(`<div>поч: <span class="v">${fmtMoney(it.os)}</span></div>`);
+  if (it.rs != null && it.rs !== 0) flowBits.push(`<div>+ <span class="v plus">${fmtMoney(it.rs)}</span></div>`);
+  if (it.es != null && it.es !== 0) flowBits.push(`<div>− <span class="v minus">${fmtMoney(it.es)}</span></div>`);
+  if (it.cs != null && it.cs !== 0) flowBits.push(`<div>кін: <span class="v">${fmtMoney(it.cs)}</span></div>`);
+
+  return `<div class="an-item">
+    <div class="an-item-name">${esc(name)}</div>
+    ${it.s ? `<div class="an-item-series">${esc(it.s)}</div>` : ""}
+    <div class="an-item-flow">${flowBits.join("")}</div>
+    ${badges.length ? `<div class="an-item-badges">${badges.join("")}</div>` : ""}
+  </div>`;
+}
+
+// Card-style (used in analytics summary views)
+function renderAnItemCard(it, path, direction, view) {
+  const name = analyticsData.names[it.n] || "(?)";
+  const pathStr = (path || []).map(i => analyticsData.paths[i]).join(" › ");
+  const cat = classifyItem(it);
+  const badges = [];
+  if (cat.dead)    badges.push('<span class="an-badge dead">💀 без руху</span>');
+  if (cat.excess)  badges.push('<span class="an-badge excess">📦 надлишок</span>');
+  if (cat.fast)    badges.push('<span class="an-badge fast">⚡ швидкий</span>');
+  if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
+
+  const flowBits = [];
+  if (it.os != null && it.os !== 0) flowBits.push(`поч: <span class="v">${fmtMoney(it.os)}</span>`);
+  if (it.rs != null && it.rs !== 0) flowBits.push(`+ <span class="v plus">${fmtMoney(it.rs)}</span>`);
+  if (it.es != null && it.es !== 0) flowBits.push(`− <span class="v minus">${fmtMoney(it.es)}</span>`);
+  if (it.cs != null && it.cs !== 0) flowBits.push(`кін: <span class="v">${fmtMoney(it.cs)}</span>`);
+
+  return `<div class="result-card" style="padding:10px 12px;">
+    <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${esc(name)}</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">
+      ${esc(direction)} › ${esc(pathStr)}
+    </div>
+    ${it.s ? `<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">серія: ${esc(it.s)}</div>` : ""}
+    <div style="font-size:11px;color:var(--muted);line-height:1.6;">${flowBits.join(" · ")}</div>
+    ${badges.length ? `<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap;">${badges.join("")}</div>` : ""}
+  </div>`;
+}
+
+function toggleAnNode(id) {
+  const body = document.getElementById("body-" + id);
+  const arr  = document.getElementById("arr-" + id);
+  if (!body) return;
+  const open = body.classList.toggle("open");
+  if (arr) arr.classList.toggle("open", open);
+}
+
+// ── Stats helpers ──────────────────────────────────────────────────────────
+function computeMonthStats(m) {
+  let totalItems = 0;
+  const subs = new Set();
+  for (const d of m.directions) {
+    for (const g of d.groups) {
+      for (const sub of g.subdivisions) {
+        subs.add(d.name + "|" + g.name + "|" + sub.path.join(">"));
+        totalItems += sub.items.length;
+      }
+    }
+  }
+  const org = m.org_totals || {};
+  let turnoverStr = "—", turnoverHint = "";
+  const closing = org.cs || 0, expense = org.es || 0;
+  if (closing > 0 && expense > 0) {
+    // Days of supply = closing / (expense / daysInPeriod)
+    const days = daysInPeriod(m.period);
+    const dayRate = expense / days;
+    const daysOfSupply = closing / dayRate;
+    turnoverStr = Math.round(daysOfSupply) + " дн.";
+    turnoverHint = "днів запасу при поточному видатку";
+  }
+  return { totalItems, subdivisionCount: subs.size, turnoverStr, turnoverHint };
+}
+
+function daysInPeriod(period) {
+  if (!period || !period.from || !period.to) return 30;
+  const a = new Date(period.from), b = new Date(period.to);
+  const d = Math.round((b - a) / (86400000)) + 1;
+  return d > 0 ? d : 30;
+}
+
+// ── Formatters ─────────────────────────────────────────────────────────────
+function fmtMoney(v, compact) {
+  if (v == null || isNaN(v)) return "—";
+  const abs = Math.abs(v);
+  if (compact) {
+    if (abs >= 1e6) return (v / 1e6).toFixed(1) + " млн ₴";
+    if (abs >= 1e3) return (v / 1e3).toFixed(1) + " тис ₴";
+  }
+  // Regular: "1 234 567,89 ₴"
+  return v.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " ₴";
+}
+
+function fmtNum(v) {
+  if (v == null || isNaN(v)) return "—";
+  return v.toLocaleString("uk-UA", { maximumFractionDigits: 2 });
+}
+
+function fmtShortDate(iso) {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-");
+  return `${d}.${m}.${y}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INITIALIZATION
+// ═══════════════════════════════════════════════════════════════════════════
+show("sections");
+
 </script>
 </body>
 </html>
