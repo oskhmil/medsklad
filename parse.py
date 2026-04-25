@@ -162,11 +162,24 @@ def is_document_row(text):
     """Detect document/operation rows (Списання, Переміщення, Надходження, Коригування)."""
     if not text:
         return False
-    t = str(text)
+    t = str(text).lstrip()
     return bool(re.match(
         r"^(Списання|Переміщення|Надходження|Коригування|Реалізація|Повернення|Оприбуткування|Інвентариза)",
         t
     ))
+
+
+def _extract_doc_date(text):
+    """Extract date from document title like 'Списання товарів за вимогою 0000-001065 від 26.01.2026 12:53:03'.
+    Returns ISO date 'YYYY-MM-DD' or None.
+    """
+    if not text:
+        return None
+    m = re.search(r"від\s+(\d{2})\.(\d{2})\.(\d{4})", str(text))
+    if m:
+        d, mo, y = m.groups()
+        return f"{y}-{mo}-{d}"
+    return None
 
 
 def parse_sheet(ws, sheet_name):
@@ -260,7 +273,33 @@ def parse_sheet(ws, sheet_name):
                 dirobj["groups"][a_val]["totals"] = _sum_totals(existing, grp_totals)
             continue
 
-        # Subdivision levels — indent=6,8,10
+        # Document/operation row — detected by NAME, not just indent.
+        # In some 1C reports, a line like "Списання товарів за вимогою..." can
+        # appear at indent=10/12/14 depending on the depth of the parent
+        # subdivision. Treating it by prefix avoids misclassifying it as a
+        # subdivision and creating phantom entries in the hierarchy tree.
+        if a_val and is_document_row(a_val):
+            # Track latest write-off date for the current subdivision so we
+            # can show "last write-off N days ago" later.
+            if a_val.lstrip().startswith("Списання"):
+                d = _extract_doc_date(a_val)
+                if d:
+                    # Build path and record last write-off date at this level
+                    path = tuple(subdiv_path[i] for i in (6, 8, 10) if i in subdiv_path)
+                    if path and current_direction in directions and current_group:
+                        gobj = directions[current_direction]["groups"].get(current_group)
+                        if gobj:
+                            sub_obj = gobj["subdivisions"].get(path)
+                            if sub_obj is None:
+                                sub_obj = gobj["subdivisions"][path] = {
+                                    "path": list(path), "items": [], "last_writeoff": None,
+                                }
+                            prev = sub_obj.get("last_writeoff")
+                            if prev is None or d > prev:
+                                sub_obj["last_writeoff"] = d
+            continue
+
+        # Subdivision levels — indent=6,8,10 (only if NOT a document row, handled above)
         if indent in (6, 8, 10) and a_val:
             # Setting a new level invalidates deeper levels
             subdiv_path[indent] = a_val
@@ -270,11 +309,25 @@ def parse_sheet(ws, sheet_name):
             # We don't create the subdivision record yet; created when first item arrives
             continue
 
-        # Document/operation headers — indent=12 or 14
+        # Document/operation headers — indent=12 or 14 (legacy fallback)
         if indent in (12, 14):
-            # These are document-level aggregations within an item/subdivision.
-            # For now we don't surface them individually to save space; we still
-            # continue context traversal. Skip row.
+            # Even if name didn't match our prefixes, these indents are always docs.
+            # Try to extract date in case it's a write-off we didn't recognize.
+            if a_val and "Списання" in a_val:
+                d = _extract_doc_date(a_val)
+                if d:
+                    path = tuple(subdiv_path[i] for i in (6, 8, 10) if i in subdiv_path)
+                    if path and current_direction in directions and current_group:
+                        gobj = directions[current_direction]["groups"].get(current_group)
+                        if gobj:
+                            sub_obj = gobj["subdivisions"].get(path)
+                            if sub_obj is None:
+                                sub_obj = gobj["subdivisions"][path] = {
+                                    "path": list(path), "items": [], "last_writeoff": None,
+                                }
+                            prev = sub_obj.get("last_writeoff")
+                            if prev is None or d > prev:
+                                sub_obj["last_writeoff"] = d
             continue
 
         # Data row: indent=0, empty A, col B (name) filled — item
@@ -303,18 +356,42 @@ def parse_sheet(ws, sheet_name):
                 grp["subdivisions"][sub_key] = {
                     "path": list(path),
                     "items": [],
+                    "_items_by_name": {},  # name -> index in items[]
+                    "last_writeoff": None,
                 }
             sub = grp["subdivisions"][sub_key]
+            if "_items_by_name" not in sub:
+                sub["_items_by_name"] = {}
 
-            item = {
-                "n": b_val,          # name
-                "s": c_val or None,  # series (string "<seq> до <date>")
-                **nums,
-            }
-            # Remove None keys to compact JSON
-            item = {k: v for k, v in item.items() if v is not None}
-            sub["items"].append(item)
-            stats["items_captured"] += 1
+            # AGGREGATION: if same name already in this subdivision, merge into it.
+            # Different series of the same drug => one logical position.
+            existing_idx = sub["_items_by_name"].get(b_val)
+            if existing_idx is not None:
+                existing = sub["items"][existing_idx]
+                # Sum all numeric fields
+                for k, v in nums.items():
+                    if v is not None and v != 0:
+                        existing[k] = round((existing.get(k) or 0) + v, 2)
+                # Track the list of series (and pick the earliest expiry to surface)
+                if c_val:
+                    series_list = existing.get("series_list")
+                    if series_list is None:
+                        # Initialize from existing single series (if any)
+                        series_list = [existing["s"]] if existing.get("s") else []
+                        existing["series_list"] = series_list
+                    if c_val not in series_list:
+                        series_list.append(c_val)
+                # Don't overwrite the canonical series field
+            else:
+                item = {
+                    "n": b_val,
+                    "s": c_val or None,
+                    **nums,
+                }
+                item = {k: v for k, v in item.items() if v is not None}
+                sub["items"].append(item)
+                sub["_items_by_name"][b_val] = len(sub["items"]) - 1
+                stats["items_captured"] += 1
             continue
 
         # Unknown row pattern — log and skip
@@ -331,11 +408,14 @@ def parse_sheet(ws, sheet_name):
             for path_tuple, sub in grp["subdivisions"].items():
                 # Compute aggregate totals from items
                 sub_totals = aggregate_items(sub["items"])
-                subs_out.append({
+                sub_record = {
                     "path": sub["path"],
                     "totals": sub_totals,
                     "items": sub["items"],
-                })
+                }
+                if sub.get("last_writeoff"):
+                    sub_record["last_writeoff"] = sub["last_writeoff"]
+                subs_out.append(sub_record)
             groups_out.append({
                 "name": grp["name"],
                 "totals": _strip_none(grp["totals"]),
