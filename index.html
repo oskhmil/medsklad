@@ -695,8 +695,61 @@
 
         <!-- Hierarchy (directions → groups → subdivisions → items) -->
         <div class="an-section-title">Напрями діяльності</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">
+          Натисніть на підрозділ щоб побачити детальну аналітику.
+          Велика цифра справа від кожного блоку — <b>залишок на кінець місяця в гривнях</b>.
+          Маленька — кількість позицій і вкладених підрозділів.
+        </div>
+        <div style="position:relative;margin-bottom:10px;">
+          <input id="an-hier-search" type="text" placeholder="Пошук відділення/підрозділу..."
+                 oninput="onHierSearch(this.value)"
+                 style="width:100%;background:#2a3050;border:1.5px solid var(--border);border-radius:10px;padding:9px 36px 9px 14px;color:#fff;font-size:13px;outline:none;">
+          <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔍</span>
+        </div>
         <div id="an-hierarchy"></div>
       </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  SUBDIVISION DETAIL                          -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="sub-detail-screen" style="display:none">
+      <div class="an-back-row">
+        <button class="back-btn" onclick="closeSubDetail()">← Назад до напрямів</button>
+      </div>
+
+      <!-- Subdivision header -->
+      <div id="sub-detail-header" class="an-flow" style="margin-bottom:12px;"></div>
+
+      <!-- KPI strip -->
+      <div class="an-kpi-grid" id="sub-detail-kpis"></div>
+
+      <!-- Flow box -->
+      <div class="an-flow" id="sub-detail-flow"></div>
+
+      <!-- Filters -->
+      <div class="an-section-title">Позиції</div>
+      <div class="an-filter-row" id="sub-detail-filters"></div>
+
+      <!-- Search + sort -->
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <div style="position:relative;flex:1;">
+          <input id="sub-search" type="text" placeholder="Пошук позиції..."
+                 oninput="renderSubItems()"
+                 style="width:100%;background:#2a3050;border:1.5px solid var(--border);border-radius:10px;padding:9px 36px 9px 12px;color:#fff;font-size:13px;outline:none;">
+          <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;">🔍</span>
+        </div>
+        <select id="sub-sort" onchange="renderSubItems()" class="an-compare-select" style="flex-shrink:0;">
+          <option value="cs_desc">↓ Залишок (грн)</option>
+          <option value="es_desc">↓ Видаток (грн)</option>
+          <option value="dos_desc">↓ Дні запасу</option>
+          <option value="dos_asc">↑ Дні запасу</option>
+          <option value="dead_desc">↓ Дні без руху</option>
+          <option value="name_asc">А → Я</option>
+        </select>
+      </div>
+
+      <div id="sub-items-container"></div>
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
@@ -1118,6 +1171,7 @@ function statusLabel(st, days) {
 function show(screen) {
   document.getElementById("section-screen").style.display    = screen==="sections" ? "block" : "none";
   document.getElementById("analytics-screen").style.display  = screen==="analytics"? "block" : "none";
+  document.getElementById("sub-detail-screen").style.display = screen==="subdetail"? "block" : "none";
   document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
   document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
   document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
@@ -1130,7 +1184,7 @@ function show(screen) {
   // Update logo subtitle based on section
   const logoSub = document.querySelector(".logo-sub");
   if (logoSub) {
-    if (screen === "analytics") logoSub.textContent = "Аналіз відділень";
+    if (screen === "analytics" || screen === "subdetail") logoSub.textContent = "Аналіз відділень";
     else if (screen === "sections") logoSub.textContent = "Оберіть розділ";
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
   }
@@ -1680,6 +1734,7 @@ async function loadAnalytics(forceRefresh) {
         const cached = JSON.parse(raw);
         if (cached && cached.data) {
           analyticsData = cached.data;
+          _expenseByItemPerMonth = null;
           initAnalyticsUI();
           setState("ready");
           // Silent background refresh if cache is older than TTL
@@ -1739,10 +1794,12 @@ async function fetchAnalytics({ silent }) {
       await new Promise(r => setTimeout(r, 10)); // let UI repaint
       const jsonText = new TextDecoder("utf-8").decode(merged);
       analyticsData = JSON.parse(jsonText);
+      _expenseByItemPerMonth = null; // invalidate cached index
     } else {
       // Fallback: whole-response json
       if (!silent) textEl.textContent = "Обробка...";
       analyticsData = await resp.json();
+      _expenseByItemPerMonth = null;
     }
 
     // Persist cache
@@ -1961,7 +2018,7 @@ function renderAnalyticsSummary(m) {
     containerEl.innerHTML = `
       <div class="an-kpi-grid">
         <div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${items.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.dead, "cs"))}</div></div>
-        <div class="an-kpi"><div class="an-kpi-lbl">📦 Надлишок (>3× видатку)</div><div class="an-kpi-val">${items.excess.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.excess, "cs"))}</div></div>
+        <div class="an-kpi"><div class="an-kpi-lbl">📦 Надлишок (>90 дн запасу)</div><div class="an-kpi-val">${items.excess.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.excess, "cs"))}</div></div>
         <div class="an-kpi"><div class="an-kpi-lbl">⚡ Швидкий рух</div><div class="an-kpi-val">${items.fast.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.fast, "es"))} видано</div></div>
         <div class="an-kpi"><div class="an-kpi-lbl">🆕 Нові позиції</div><div class="an-kpi-val">${items.newItems.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.newItems, "rs"))}</div></div>
       </div>
@@ -1972,7 +2029,7 @@ function renderAnalyticsSummary(m) {
 
   // Show item list for selected category
   const list = items[analyticsView] || [];
-  const titleMap = { dead: "Без руху (0 видатку)", excess: "Надлишок (залишок > 3× видатку)", fast: "Швидкий рух", newItems: "Нові в цьому місяці" };
+  const titleMap = { dead: "Без руху (0 видатку)", excess: "Надлишок (>90 днів запасу)", fast: "Швидкий рух (<30 днів запасу)", newItems: "Нові в цьому місяці" };
   if (list.length === 0) {
     containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">У категорії "${esc(titleMap[analyticsView])}" нічого немає</div></div>`;
     return;
@@ -1987,7 +2044,7 @@ function renderAnalyticsSummary(m) {
   const visible = list.slice(0, limit);
 
   let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Показано ${visible.length} з ${list.length} позицій</div>`;
-  html += visible.map(entry => renderAnItemCard(entry.item, entry.path, entry.direction, analyticsView)).join("");
+  html += visible.map(entry => renderAnItemCard(entry)).join("");
   if (list.length > limit) {
     html += `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">Решта ${list.length - limit} позицій доступні через розгортання відділень нижче</div>`;
   }
@@ -2002,8 +2059,8 @@ function classifyAllItems(m) {
     for (const g of d.groups) {
       for (const sub of g.subdivisions) {
         for (const it of sub.items) {
-          const cat = classifyItem(it);
-          const entry = { item: it, path: sub.path, direction: d.name };
+          const cat = classifyItem(it, sub, m.period);
+          const entry = { item: it, sub, path: sub.path, direction: d.name, cat };
           if (cat.dead)     dead.push(entry);
           if (cat.excess)   excess.push(entry);
           if (cat.fast)     fast.push(entry);
@@ -2015,24 +2072,135 @@ function classifyAllItems(m) {
   return { dead, excess, fast, newItems };
 }
 
-function classifyItem(it) {
+// ── Item analytics: classification, turnover, days-of-supply ──────────────
+// All thresholds applied in monetary terms (sum), so we don't fight unit
+// inconsistencies between receipt and expense for the same item.
+
+const DAYS_OF_SUPPLY_EXCESS_THRESHOLD = 90;  // > N days of supply → excess
+const DAYS_OF_SUPPLY_FAST_THRESHOLD   = 30;  // < N days of supply → fast turnover
+
+// Days of supply = closing balance / (expense per day in current period).
+// Returns Infinity if no expense (means "lasts forever" at zero burn rate).
+// Returns 0 if closing == 0.
+function daysOfSupply(it_or_totals, period) {
+  const cs = (it_or_totals && it_or_totals.cs) || 0;
+  const es = (it_or_totals && it_or_totals.es) || 0;
+  if (cs <= 0) return 0;
+  if (es <= 0) return Infinity;
+  const days = daysInPeriod(period);
+  const dailyBurn = es / days;
+  return cs / dailyBurn;
+}
+
+// Days of supply in QUANTITY terms (using cq/eq instead of cs/es).
+// Useful when both quantities exist and use the same unit.
+function daysOfSupplyQty(it_or_totals, period) {
+  const cq = (it_or_totals && it_or_totals.cq) || 0;
+  const eq = (it_or_totals && it_or_totals.eq) || 0;
+  if (cq <= 0) return 0;
+  if (eq <= 0) return Infinity;
+  const days = daysInPeriod(period);
+  const dailyBurn = eq / days;
+  return cq / dailyBurn;
+}
+
+// Format days-of-supply for display.
+function fmtDaysOfSupply(d) {
+  if (!isFinite(d)) return "∞";
+  if (d <= 0) return "0";
+  if (d > 365) return Math.round(d / 30) + " міс";
+  return Math.round(d) + " дн";
+}
+
+// Number of days an item has had ZERO expense, looking backwards through
+// the chain of monthly snapshots. The current month is included if its
+// expense is zero. Caps at total days available in data.
+//
+// itemKey: the n (name index) + path joined — same item across months.
+// Returns either a number of days, or null if we can't tell.
+function daysWithoutMovement(itemKey, currentMonthKey) {
+  if (!analyticsData || !analyticsData.months) return null;
+  const monthKeys = Object.keys(analyticsData.months).sort();
+  const curIdx = monthKeys.indexOf(currentMonthKey);
+  if (curIdx < 0) return null;
+
+  let totalDays = 0;
+  // Walk from current month back to earliest. Stop as soon as we find a
+  // month where this item had non-zero expense — that's the last movement.
+  for (let i = curIdx; i >= 0; i--) {
+    const mk = monthKeys[i];
+    const m = analyticsData.months[mk];
+    const hadMovement = _itemHadExpenseInMonth(itemKey, m);
+    if (hadMovement) {
+      // Stop counting; days accumulated so far is the answer.
+      return totalDays;
+    }
+    totalDays += daysInPeriod(m.period);
+  }
+  // No movement found in any month — return the total span.
+  return totalDays;
+}
+
+// Build a fast lookup of "items with movement" per month for the dead-days
+// computation. Cached per analyticsData load.
+let _expenseByItemPerMonth = null;
+function _ensureExpenseIndex() {
+  if (_expenseByItemPerMonth) return;
+  _expenseByItemPerMonth = new Map();  // monthKey -> Set of itemKeys with es>0
+  for (const [mk, m] of Object.entries(analyticsData.months)) {
+    const set = new Set();
+    for (const d of m.directions) {
+      for (const g of d.groups) {
+        for (const sub of g.subdivisions) {
+          for (const it of sub.items) {
+            if ((it.es || 0) > 0) {
+              set.add(itemKey(it, sub));
+            }
+          }
+        }
+      }
+    }
+    _expenseByItemPerMonth.set(mk, set);
+  }
+}
+function _itemHadExpenseInMonth(key, m) {
+  _ensureExpenseIndex();
+  const monthKey = Object.keys(analyticsData.months).find(k => analyticsData.months[k] === m);
+  const set = _expenseByItemPerMonth.get(monthKey);
+  return set ? set.has(key) : false;
+}
+
+// Stable identifier for an item across months: name index + path joined.
+function itemKey(it, sub) {
+  return it.n + "|" + sub.path.join(">");
+}
+
+// Classify an item into one or more analytics buckets, given its containing
+// subdivision and the current period. Returns flags + key metrics.
+function classifyItem(it, sub, period) {
   const oq = it.oq || 0, cq = it.cq || 0, eq = it.eq || 0, rq = it.rq || 0;
   const os = it.os || 0, cs = it.cs || 0, es = it.es || 0, rs = it.rs || 0;
 
-  // Dead: opening > 0, expense = 0, still present at close
+  const dos     = daysOfSupply(it, period);
+  const dosQty  = daysOfSupplyQty(it, period);
+
+  // Dead: has stock at close, zero expense in this period, was there at start.
   const dead = (os > 0) && (es === 0) && (cs > 0);
 
-  // Excess: closing > 3× expense (both in sum terms, so unit-invariant)
-  // Only consider items where there was some expense during period (else dead)
-  const excess = (es > 0) && (cs > 3 * es);
+  // Excess: closing covers more than threshold days of supply.
+  // Skip items with no expense (those are "dead", not "excess").
+  const excess = (es > 0) && (dos > DAYS_OF_SUPPLY_EXCESS_THRESHOLD);
 
-  // Fast-moving: expense > opening (sold more than had, i.e. strong turnover, needs frequent restock)
-  const fast = (es > 0) && (os > 0) && (es > os * 0.5);
+  // Fast: closing covers less than threshold days — running out soon.
+  const fast = (es > 0) && (cs > 0) && (dos < DAYS_OF_SUPPLY_FAST_THRESHOLD);
 
-  // New item in this month: no opening, received something
+  // Brand new: nothing at start of period, received stock during it.
   const newItem = (os === 0) && (rs > 0);
 
-  return { dead, excess, fast, newItem };
+  // Out of stock: had it at start, zero at close.
+  const outOfStock = (os > 0) && (cs === 0);
+
+  return { dead, excess, fast, newItem, outOfStock, dos, dosQty };
 }
 
 function sumField(entries, field) {
@@ -2104,50 +2272,267 @@ function renderGroupNode(g, id) {
   `;
 }
 
-// Subdivision SHELL — only head, no items rendered yet. Items are built on first expand.
+// Subdivision SHELL — clicking it now opens a full detail screen.
 function renderSubdivisionShell(sub, id) {
   const t = sub.totals || {};
   const leaf = sub.path.length > 0 ? analyticsData.paths[sub.path[sub.path.length - 1]] : "(без назви)";
+  const period = analyticsData.months[currentMonthKey].period;
+  const dos = daysOfSupply(t, period);
+  const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
   return `
     <div class="an-node subdivision" data-sub-id="${id}">
-      <div class="an-node-head" onclick="expandSubdivision('${id}')">
-        <span class="an-node-arrow" id="arr-${id}">▶</span>
+      <div class="an-node-head" onclick="openSubDetail('${id}')">
+        <span class="an-node-arrow">›</span>
         <div class="an-node-title">
           ${esc(leaf)}
           ${sub.path.length > 1 ? `<div class="an-node-path">${esc(sub.path.slice(0, -1).map(i => analyticsData.paths[i]).join(" › "))}</div>` : ""}
         </div>
-        <div class="an-node-sum">${fmtMoney(t.cs || 0)}<div class="an-node-sum-sub">${sub.items.length} поз.</div></div>
+        <div class="an-node-sum">
+          ${fmtMoney(t.cs || 0)}
+          <div class="an-node-sum-sub">${sub.items.length} поз. · ${dosLabel} запасу</div>
+        </div>
       </div>
-      <div class="an-node-body" id="body-${id}" data-lazy="pending"></div>
     </div>
   `;
 }
 
-// Called on first click of a subdivision — builds the items and caches the HTML.
-function expandSubdivision(id) {
-  const body = document.getElementById("body-" + id);
-  const arr  = document.getElementById("arr-" + id);
-  if (!body) return;
+// ── Subdivision detail page ────────────────────────────────────────────────
+let _currentSubdivision = null;
+let _currentSubId = null;
+let subDetailFilter = "all";  // all | dead | excess | fast | new | deficit
 
-  // First expansion? Materialize the items list now.
-  if (body.dataset.lazy === "pending") {
-    const sub = _lookupSubdivision(id);
-    if (!sub) {
-      body.innerHTML = '<div style="padding:10px;color:var(--danger)">Помилка пошуку підрозділу</div>';
-      body.dataset.lazy = "done";
-    } else {
-      const t = sub.totals || {};
-      const rs = t.rs || 0, es = t.es || 0;
-      const movementLine = (rs > 0 || es > 0)
-        ? `<div style="font-size:11px;color:var(--muted);padding:4px 6px 8px;">Прихід: <span style="color:var(--green)">+${fmtMoney(rs)}</span> · Видаток: <span style="color:var(--danger)">−${fmtMoney(es)}</span></div>`
-        : `<div style="font-size:11px;color:var(--muted);padding:4px 6px 8px;">💤 Немає руху за період</div>`;
-      body.innerHTML = movementLine + '<div class="an-items">' + sub.items.map(it => renderAnItemRow(it)).join("") + '</div>';
-      body.dataset.lazy = "done";
-    }
+function openSubDetail(id) {
+  const sub = _lookupSubdivision(id);
+  if (!sub) {
+    alert("Не знайдено підрозділ");
+    return;
+  }
+  _currentSubdivision = sub;
+  _currentSubId = id;
+  subDetailFilter = "all";
+  // Reset search/sort
+  const ss = document.getElementById("sub-search");
+  if (ss) ss.value = "";
+  const ssort = document.getElementById("sub-sort");
+  if (ssort) ssort.value = "cs_desc";
+
+  show("subdetail");
+  renderSubDetail();
+}
+
+function closeSubDetail() {
+  show("analytics");
+}
+
+function renderSubDetail() {
+  const sub = _currentSubdivision;
+  if (!sub) return;
+  const m = analyticsData.months[currentMonthKey];
+  const period = m.period;
+  const t = sub.totals || {};
+
+  // Header
+  const pathFull = sub.path.map(i => analyticsData.paths[i]).join(" › ");
+  const leaf = sub.path.length > 0 ? analyticsData.paths[sub.path[sub.path.length - 1]] : "—";
+  document.getElementById("sub-detail-header").innerHTML = `
+    <div class="an-flow-title">Підрозділ</div>
+    <div style="font-size:15px;font-weight:700;line-height:1.3;margin-bottom:4px;">${esc(leaf)}</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.4;">${esc(pathFull)}</div>
+  `;
+
+  // KPI strip
+  const dos = daysOfSupply(t, period);
+  const buckets = _classifySubItems(sub, m);
+  const sumQty = (arr, field) => arr.reduce((s, e) => s + (e.item[field] || 0), 0);
+  const sumSum = (arr, field) => arr.reduce((s, e) => s + (e.item[field] || 0), 0);
+  const kpis = [];
+  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Залишок на кінець</div><div class="an-kpi-val">${fmtMoney(t.cs || 0)}</div><div class="an-kpi-sub">${sub.items.length} позицій</div></div>`);
+  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Оборотність</div><div class="an-kpi-val">${fmtDaysOfSupply(dos)}</div><div class="an-kpi-sub">днів запасу при поточному видатку</div></div>`);
+  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${buckets.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.dead, "cs"))}</div></div>`);
+  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">📦 Надлишок &gt;90 дн</div><div class="an-kpi-val">${buckets.excess.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.excess, "cs"))}</div></div>`);
+  document.getElementById("sub-detail-kpis").innerHTML = kpis.join("");
+
+  // Flow box
+  const row = (ico, iclass, label, qty, sum) => {
+    const sumCell = (sum != null) ? `<div class="an-flow-val-main">${fmtMoney(sum)}</div>` : `<div class="an-flow-val-main" style="color:var(--muted)">—</div>`;
+    const qtyCell = (qty != null && qty !== 0) ? `<div class="an-flow-val-sub">${fmtNum(qty)} од.</div>` : "";
+    return `<div class="an-flow-row">
+      <div class="an-flow-ico ${iclass}">${ico}</div>
+      <div><div class="an-flow-lbl">${esc(label)}</div></div>
+      <div class="an-flow-val">${sumCell}${qtyCell}</div>
+    </div>`;
+  };
+  document.getElementById("sub-detail-flow").innerHTML =
+    `<div class="an-flow-title">Фінансовий рух · ${esc(fmtShortDate(period.from))} – ${esc(fmtShortDate(period.to))}</div>` +
+    row("⊙", "open",  "Залишок на початок", t.oq, t.os) +
+    row("↓", "in",    "Надходження",        t.rq, t.rs) +
+    row("↑", "out",   "Видаток",            t.eq, t.es) +
+    row("●", "close", "Залишок на кінець",  t.cq, t.cs);
+
+  // Filter buttons with counts
+  const fb = (key, label, count) => {
+    const active = subDetailFilter === key ? " active" : "";
+    return `<button class="filter-btn${active}" onclick="setSubFilter('${key}')">${label} <span style="opacity:.7;">${count}</span></button>`;
+  };
+  document.getElementById("sub-detail-filters").innerHTML =
+    fb("all",     "Усі",         sub.items.length) +
+    fb("dead",    "💀 Без руху",  buckets.dead.length) +
+    fb("excess",  "📦 Надлишок",  buckets.excess.length) +
+    fb("fast",    "⚡ Швидкий",   buckets.fast.length) +
+    fb("new",     "🆕 Нові",      buckets.newItems.length) +
+    fb("deficit", "🚨 Закінчилось", buckets.outOfStock.length);
+
+  renderSubItems();
+}
+
+function _classifySubItems(sub, m) {
+  const dead = [], excess = [], fast = [], newItems = [], outOfStock = [];
+  for (const it of sub.items) {
+    const cat = classifyItem(it, sub, m.period);
+    const entry = { item: it, sub, cat };
+    if (cat.dead)       dead.push(entry);
+    if (cat.excess)     excess.push(entry);
+    if (cat.fast)       fast.push(entry);
+    if (cat.newItem)    newItems.push(entry);
+    if (cat.outOfStock) outOfStock.push(entry);
+  }
+  return { dead, excess, fast, newItems, outOfStock };
+}
+
+function setSubFilter(key) {
+  subDetailFilter = key;
+  renderSubDetail();
+}
+
+function renderSubItems() {
+  const sub = _currentSubdivision;
+  if (!sub) return;
+  const m = analyticsData.months[currentMonthKey];
+  const period = m.period;
+  const buckets = _classifySubItems(sub, m);
+
+  // Pick bucket
+  let entries;
+  switch (subDetailFilter) {
+    case "dead":    entries = buckets.dead; break;
+    case "excess":  entries = buckets.excess; break;
+    case "fast":    entries = buckets.fast; break;
+    case "new":     entries = buckets.newItems; break;
+    case "deficit": entries = buckets.outOfStock; break;
+    default:
+      entries = sub.items.map(it => ({ item: it, sub, cat: classifyItem(it, sub, period) }));
   }
 
-  const open = body.classList.toggle("open");
-  if (arr) arr.classList.toggle("open", open);
+  // Search filter
+  const searchEl = document.getElementById("sub-search");
+  const q = searchEl ? normalize(searchEl.value || "") : "";
+  if (q.length >= 2) {
+    entries = entries.filter(e => normalize(analyticsData.names[e.item.n] || "").includes(q));
+  }
+
+  // Sort
+  const sortEl = document.getElementById("sub-sort");
+  const sortKey = sortEl ? sortEl.value : "cs_desc";
+  const cmp = (a, b, fn) => fn(a) - fn(b);
+  entries.sort((a, b) => {
+    switch (sortKey) {
+      case "cs_desc":  return (b.item.cs || 0) - (a.item.cs || 0);
+      case "es_desc":  return (b.item.es || 0) - (a.item.es || 0);
+      case "dos_desc": {
+        const da = isFinite(a.cat.dos) ? a.cat.dos : 1e12;
+        const db = isFinite(b.cat.dos) ? b.cat.dos : 1e12;
+        return db - da;
+      }
+      case "dos_asc": {
+        const da = isFinite(a.cat.dos) ? a.cat.dos : 1e12;
+        const db = isFinite(b.cat.dos) ? b.cat.dos : 1e12;
+        return da - db;
+      }
+      case "dead_desc": {
+        const dadays = a.cat.dead ? (daysWithoutMovement(itemKey(a.item, sub), currentMonthKey) || 0) : -1;
+        const dbdays = b.cat.dead ? (daysWithoutMovement(itemKey(b.item, sub), currentMonthKey) || 0) : -1;
+        return dbdays - dadays;
+      }
+      case "name_asc":  return (analyticsData.names[a.item.n] || "").localeCompare(analyticsData.names[b.item.n] || "", "uk");
+      default: return 0;
+    }
+  });
+
+  const containerEl = document.getElementById("sub-items-container");
+  if (entries.length === 0) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:40px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Нічого не знайдено</div></div>`;
+    return;
+  }
+
+  // Limit to first N for perf, give "show more" button
+  const limit = 200;
+  const visible = entries.slice(0, limit);
+  let html = `<div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Показано ${visible.length} з ${entries.length}</div>`;
+  html += `<div class="an-items">${visible.map(e => renderAnItemRow(e.item, e.sub, period)).join("")}</div>`;
+  if (entries.length > limit) {
+    html += `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">+ ще ${entries.length - limit} (звузьте пошуком або фільтром)</div>`;
+  }
+  containerEl.innerHTML = html;
+}
+
+// ── Hierarchy search (filter directions/groups/subdivisions by name) ────────
+let _hierSearchTimer = null;
+function onHierSearch(val) {
+  clearTimeout(_hierSearchTimer);
+  _hierSearchTimer = setTimeout(() => {
+    const q = normalize(val || "");
+    const root = document.getElementById("an-hierarchy");
+    if (!root) return;
+    if (q.length < 2) {
+      // Reset: render full hierarchy
+      renderHierarchy(analyticsData.months[currentMonthKey]);
+      return;
+    }
+    // Render filtered: only directions whose any subdivision/group matches
+    const m = analyticsData.months[currentMonthKey];
+    const filtered = m.directions.map(d => {
+      const groups = d.groups.map(g => {
+        const subs = g.subdivisions.filter(sub => {
+          const pathStr = sub.path.map(i => normalize(analyticsData.paths[i] || "")).join(" ");
+          return pathStr.includes(q);
+        });
+        const groupNameMatch = normalize(g.name).includes(q);
+        return groupNameMatch ? g : (subs.length ? Object.assign({}, g, { subdivisions: subs }) : null);
+      }).filter(Boolean);
+      const dirNameMatch = normalize(d.name).includes(q);
+      return dirNameMatch ? d : (groups.length ? Object.assign({}, d, { groups }) : null);
+    }).filter(Boolean);
+
+    if (filtered.length === 0) {
+      root.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">🔍</div><div class="empty-sub">Нічого не знайдено</div></div>`;
+      return;
+    }
+
+    // Use the existing renderer with the filtered tree
+    const fakeMonth = { ...m, directions: filtered };
+    _renderHierarchyTree(fakeMonth, /*expandAll=*/true);
+  }, 250);
+}
+
+// ── Hierarchy rendering helpers ─────────────────────────────────────────────
+function _renderHierarchyTree(m, expandAll) {
+  _anTree = m;
+  const root = document.getElementById("an-hierarchy");
+  const dirs = m.directions.slice().sort((a, b) => {
+    if (a.name === "(Без напряму)") return 1;
+    if (b.name === "(Без напряму)") return -1;
+    return ((b.totals && b.totals.cs) || 0) - ((a.totals && a.totals.cs) || 0);
+  });
+  // Look up the original index of each direction for stable ID mapping
+  const fullM = analyticsData.months[currentMonthKey];
+  const dirIndexMap = new Map(fullM.directions.map((d, i) => [d.name, i]));
+  root.innerHTML = dirs.map(d => renderDirectionNode(d, dirIndexMap.get(d.name) ?? 0)).join("");
+
+  if (expandAll) {
+    // Open all direction and group nodes in the filtered view
+    root.querySelectorAll(".an-node-body").forEach(b => b.classList.add("open"));
+    root.querySelectorAll(".an-node-arrow").forEach(a => a.classList.add("open"));
+  }
 }
 
 // Resolve id like "d2-g1-s5" back to the subdivision object in _anTree
@@ -2163,45 +2548,88 @@ function _lookupSubdivision(id) {
   return g.subdivisions[+si] || null;
 }
 
-function renderAnItemRow(it) {
-  const name = analyticsData.names[it.n] || "(?)";
-  const cat = classifyItem(it);
-  const badges = [];
-  if (cat.dead)    badges.push('<span class="an-badge dead">💀 без руху</span>');
-  if (cat.excess)  badges.push('<span class="an-badge excess">📦 надлишок</span>');
-  if (cat.fast)    badges.push('<span class="an-badge fast">⚡ швидкий</span>');
-  if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
+// Build the qty+sum text for one flow stage, e.g. "10 флак · 118 824 ₴".
+// Returns null if both qty and sum are zero/missing.
+function _flowCell(qty, sum, unit) {
+  const hasQty = qty != null && qty !== 0;
+  const hasSum = sum != null && sum !== 0;
+  if (!hasQty && !hasSum) return null;
+  const parts = [];
+  if (hasQty) parts.push(`${fmtNum(qty)}${unit ? " " + esc(unit) : ""}`);
+  if (hasSum) parts.push(fmtMoney(sum));
+  return parts.join(" · ");
+}
 
+function _itemBadges(cat, deadDays) {
+  const badges = [];
+  if (cat.dead) {
+    const txt = (deadDays != null && deadDays > 0)
+      ? `💀 без руху ${deadDays} дн`
+      : "💀 без руху";
+    badges.push(`<span class="an-badge dead">${txt}</span>`);
+  }
+  if (cat.excess)  badges.push(`<span class="an-badge excess">📦 надлишок ${fmtDaysOfSupply(cat.dos)}</span>`);
+  if (cat.fast)    badges.push(`<span class="an-badge fast">⚡ швидкий ${fmtDaysOfSupply(cat.dos)}</span>`);
+  if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
+  if (cat.outOfStock) badges.push('<span class="an-badge deficit">🚨 закінчився</span>');
+  return badges;
+}
+
+function renderAnItemRow(it, sub, period) {
+  const name = analyticsData.names[it.n] || "(?)";
+  const cat = classifyItem(it, sub, period);
+  const unit = it.u >= 0 ? null : null; // unit not stored in items; we'll show qty bare
+  // Item unit is not in current JSON schema; we display qty as plain numbers.
+
+  const dosLine = (cat.dead || cat.outOfStock || it.es == 0)
+    ? null
+    : `<div style="color:var(--muted);font-size:10px;">≈ ${fmtDaysOfSupply(cat.dos)} запасу</div>`;
+
+  const deadDays = cat.dead ? daysWithoutMovement(itemKey(it, sub), currentMonthKey) : null;
+  const badges = _itemBadges(cat, deadDays);
+
+  // Flow rows: each stage gets qty (left) + sum (right) on one line
   const flowBits = [];
-  if (it.os != null && it.os !== 0) flowBits.push(`<div>поч: <span class="v">${fmtMoney(it.os)}</span></div>`);
-  if (it.rs != null && it.rs !== 0) flowBits.push(`<div>+ <span class="v plus">${fmtMoney(it.rs)}</span></div>`);
-  if (it.es != null && it.es !== 0) flowBits.push(`<div>− <span class="v minus">${fmtMoney(it.es)}</span></div>`);
-  if (it.cs != null && it.cs !== 0) flowBits.push(`<div>кін: <span class="v">${fmtMoney(it.cs)}</span></div>`);
+  const ec = (lbl, qty, sum, cls) => {
+    const cell = _flowCell(qty, sum, "");
+    if (cell) flowBits.push(`<div>${lbl}<span class="v ${cls || ''}">${cell}</span></div>`);
+  };
+  ec("поч: ", it.oq, it.os, "");
+  ec("+ ",    it.rq, it.rs, "plus");
+  ec("− ",    it.eq, it.es, "minus");
+  ec("кін: ", it.cq, it.cs, "");
 
   return `<div class="an-item">
     <div class="an-item-name">${esc(name)}</div>
     ${it.s ? `<div class="an-item-series">${esc(it.s)}</div>` : ""}
-    <div class="an-item-flow">${flowBits.join("")}</div>
+    <div class="an-item-flow">${flowBits.join("")}${dosLine || ""}</div>
     ${badges.length ? `<div class="an-item-badges">${badges.join("")}</div>` : ""}
   </div>`;
 }
 
-// Card-style (used in analytics summary views)
-function renderAnItemCard(it, path, direction, view) {
+// Card-style (used in analytics summary views — across many subdivisions)
+function renderAnItemCard(entry) {
+  const it = entry.item, sub = entry.sub, direction = entry.direction;
   const name = analyticsData.names[it.n] || "(?)";
-  const pathStr = (path || []).map(i => analyticsData.paths[i]).join(" › ");
-  const cat = classifyItem(it);
-  const badges = [];
-  if (cat.dead)    badges.push('<span class="an-badge dead">💀 без руху</span>');
-  if (cat.excess)  badges.push('<span class="an-badge excess">📦 надлишок</span>');
-  if (cat.fast)    badges.push('<span class="an-badge fast">⚡ швидкий</span>');
-  if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
+  const pathStr = (entry.path || []).map(i => analyticsData.paths[i]).join(" › ");
+  const period = analyticsData.months[currentMonthKey].period;
+  const cat = entry.cat || classifyItem(it, sub, period);
+  const deadDays = cat.dead ? daysWithoutMovement(itemKey(it, sub), currentMonthKey) : null;
+  const badges = _itemBadges(cat, deadDays);
 
   const flowBits = [];
-  if (it.os != null && it.os !== 0) flowBits.push(`поч: <span class="v">${fmtMoney(it.os)}</span>`);
-  if (it.rs != null && it.rs !== 0) flowBits.push(`+ <span class="v plus">${fmtMoney(it.rs)}</span>`);
-  if (it.es != null && it.es !== 0) flowBits.push(`− <span class="v minus">${fmtMoney(it.es)}</span>`);
-  if (it.cs != null && it.cs !== 0) flowBits.push(`кін: <span class="v">${fmtMoney(it.cs)}</span>`);
+  const ec = (lbl, qty, sum, cls) => {
+    const cell = _flowCell(qty, sum, "");
+    if (cell) flowBits.push(`${lbl}<span class="v ${cls || ''}">${cell}</span>`);
+  };
+  ec("поч: ", it.oq, it.os, "");
+  ec("+ ",    it.rq, it.rs, "plus");
+  ec("− ",    it.eq, it.es, "minus");
+  ec("кін: ", it.cq, it.cs, "");
+
+  const dosLine = (cat.dead || cat.outOfStock || (it.es || 0) === 0)
+    ? ""
+    : `<div style="font-size:11px;color:var(--muted);margin-top:3px;">≈ ${fmtDaysOfSupply(cat.dos)} запасу</div>`;
 
   return `<div class="result-card" style="padding:10px 12px;">
     <div style="font-size:13px;font-weight:700;margin-bottom:4px;">${esc(name)}</div>
@@ -2210,6 +2638,7 @@ function renderAnItemCard(it, path, direction, view) {
     </div>
     ${it.s ? `<div style="font-size:10px;color:var(--muted);margin-bottom:4px;">серія: ${esc(it.s)}</div>` : ""}
     <div style="font-size:11px;color:var(--muted);line-height:1.6;">${flowBits.join(" · ")}</div>
+    ${dosLine}
     ${badges.length ? `<div style="margin-top:6px;display:flex;gap:4px;flex-wrap:wrap;">${badges.join("")}</div>` : ""}
   </div>`;
 }
