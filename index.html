@@ -1149,6 +1149,11 @@ function goStart() {
   show("sections");
 }
 
+// Auto-refresh the medsearch dataset only if cache is older than this.
+// Below the threshold we trust the cache fully (no network at open).
+// Manual "🔄 Оновити" button always forces a refresh regardless.
+const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
+
 function openMedsearch() {
   // If cached medsearch data exists → jump straight to home, else entry screen
   const cache = loadCache();
@@ -1160,8 +1165,12 @@ function openMedsearch() {
     document.getElementById("search-input").value = "";
     renderHome();
     show("home");
-    // silent background refresh
-    fetchAndUpdate(false);
+    // Auto-refresh in the background ONLY when cache is older than the TTL.
+    // For fresh-enough cache, we save bandwidth and skip the 5–10 s parse.
+    const cacheAge = Date.now() - (cache.time ? cache.time.getTime() : 0);
+    if (cacheAge > MEDSEARCH_TTL_MS) {
+      fetchAndUpdate(false);
+    }
   } else {
     show("start");
   }
@@ -1195,6 +1204,12 @@ function renderHome() {
     .join("");
   if (lastLoaded) {
     let txt = "Оновлено: " + lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+    // Hint how old the cache is — useful when auto-refresh is suppressed
+    const ageMs = Date.now() - lastLoaded.getTime();
+    const ageHrs = Math.floor(ageMs / (60 * 60 * 1000));
+    if (ageHrs >= 2) {
+      txt += `  (${ageHrs} год тому)`;
+    }
     if (_cacheFailedThisSession) {
       txt += " · ⚠️ кеш переповнено (дані будуть тягнутись щоразу)";
     }
