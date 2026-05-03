@@ -354,10 +354,90 @@
     background: linear-gradient(135deg, #4f8ef7, #38bdf8);
   }
   .choice-btn.analytics .choice-ico { background: linear-gradient(135deg, #a78bfa, #f472b6); }
+  .choice-btn.finplan .choice-ico { background: linear-gradient(135deg, #34d399, #10b981); }
   .choice-btn .choice-body { flex: 1; min-width: 0; }
   .choice-btn .choice-title { font-size: 15px; font-weight: 700; color: #fff; }
   .choice-btn .choice-sub { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 3px; }
   .choice-btn .choice-arrow { color: var(--muted); font-size: 22px; }
+
+  /* ── Finplan section ─────────────────────────────────────────────── */
+  #finplan-screen { display: none; padding: 0; }
+  .fp-back-row { padding: 10px 4px 6px; }
+  .fp-toolbar {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 14px; padding: 0 4px;
+  }
+  .fp-month-select {
+    flex: 1; min-width: 140px;
+    background: var(--card2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 9px 12px; font-size: 14px; font-weight: 600;
+    outline: none; cursor: pointer;
+  }
+  .fp-month-select:focus { border-color: var(--accent); }
+  .fp-sort-btn, .fp-export-btn, .fp-refresh-btn {
+    background: var(--card2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+    white-space: nowrap;
+  }
+  .fp-sort-btn.active { border-color: var(--accent); color: var(--accent); }
+  .fp-export-btn { border-color: var(--green); color: var(--green); }
+  .fp-export-btn:hover { background: rgba(52,211,153,.1); }
+  .fp-refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .fp-summary {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px; margin: 0 4px 14px;
+  }
+  .fp-summary-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .fp-summary-total { font-size: 22px; font-weight: 800; color: var(--accent); margin-top: 4px; }
+  .fp-summary-period { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .fp-hospital-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin: 0 4px 10px; overflow: hidden;
+  }
+  .fp-hospital-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; cursor: pointer;
+    transition: background .15s;
+  }
+  .fp-hospital-head:hover { background: var(--card2); }
+  .fp-hospital-head.expanded { border-bottom: 1px solid var(--border); }
+  .fp-hospital-ico {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #34d399, #10b981);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .fp-hospital-body { flex: 1; min-width: 0; }
+  .fp-hospital-name { font-size: 14px; font-weight: 700; color: #fff; }
+  .fp-hospital-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .fp-hospital-sum { font-size: 15px; font-weight: 700; color: var(--green); white-space: nowrap; }
+  .fp-hospital-arrow {
+    color: var(--muted); font-size: 14px; margin-left: 6px;
+    transition: transform .2s;
+  }
+  .fp-hospital-arrow.expanded { transform: rotate(90deg); }
+
+  .fp-items-list {
+    background: var(--card2); padding: 8px 0; max-height: 600px; overflow-y: auto;
+  }
+  .fp-item-row {
+    display: grid; grid-template-columns: 1fr auto auto; gap: 10px;
+    align-items: center; padding: 8px 16px;
+    border-bottom: 1px solid rgba(37,43,68,.5);
+  }
+  .fp-item-row:last-child { border-bottom: none; }
+  .fp-item-name { font-size: 13px; color: var(--text); line-height: 1.35; word-break: break-word; }
+  .fp-item-qty { font-size: 11px; color: var(--muted); white-space: nowrap; text-align: right; }
+  .fp-item-sum { font-size: 13px; font-weight: 700; color: var(--green); white-space: nowrap; text-align: right; }
+
+  .fp-empty {
+    text-align: center; padding: 50px 20px; color: var(--muted);
+  }
+  .fp-empty-ico { font-size: 44px; margin-bottom: 12px; }
 
   .back-btn {
     background: none; border: 1px solid var(--border); color: var(--muted);
@@ -682,6 +762,14 @@
           </div>
           <div class="choice-arrow">›</div>
         </button>
+        <button class="choice-btn finplan" onclick="openFinplan()">
+          <div class="choice-ico">💰</div>
+          <div class="choice-body">
+            <div class="choice-title">Фінансовий план</div>
+            <div class="choice-sub">Закупівлі по лікарнях, рахунок 202 НСЗУ</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
       </div>
     </div>
 
@@ -796,6 +884,48 @@
       </div>
 
       <div id="sub-items-container"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  FINPLAN (Фінансовий план)                   -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="finplan-screen" style="display:none">
+      <div class="fp-back-row">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
+      </div>
+
+      <div id="fp-loading" style="text-align:center;padding:60px 20px;color:var(--muted);">
+        <div style="font-size:44px;margin-bottom:14px;">💰</div>
+        <div style="font-size:15px;" id="fp-loading-text">Завантажуємо фінансовий план...</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;">Файл ~440 КБ, кілька секунд</div>
+      </div>
+
+      <div id="fp-error" style="display:none;text-align:center;padding:60px 20px;">
+        <div style="font-size:44px;margin-bottom:14px;">⚠️</div>
+        <div style="font-size:15px;margin-bottom:8px;" id="fp-error-text">Не вдалось завантажити фінансовий план</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;" id="fp-error-details"></div>
+        <button class="big-btn" style="max-width:240px;" onclick="loadFinplan(true)">🔄 Спробувати ще</button>
+      </div>
+
+      <div id="fp-content" style="display:none">
+        <div class="fp-toolbar">
+          <select class="fp-month-select" id="fp-month-select" onchange="renderFinplan()"></select>
+          <button class="fp-refresh-btn" onclick="loadFinplan(true)" title="Оновити дані">🔄</button>
+          <button class="fp-export-btn" onclick="exportFinplanXlsx()">📥 Excel</button>
+        </div>
+
+        <div class="fp-summary" id="fp-summary"></div>
+
+        <div class="fp-toolbar" style="margin-bottom:10px;">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;flex:1;">Сортування:</div>
+          <button class="fp-sort-btn active" id="fp-sort-sum" onclick="setFinplanSort('sum',this)">↓ Сума</button>
+          <button class="fp-sort-btn" id="fp-sort-name" onclick="setFinplanSort('name',this)">А-Я</button>
+        </div>
+
+        <div id="fp-hospitals-list"></div>
+
+        <div style="text-align:center;font-size:11px;color:var(--muted);padding:18px 0;" id="fp-updated"></div>
+      </div>
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
@@ -1235,6 +1365,7 @@ function show(screen) {
   document.getElementById("section-screen").style.display    = screen==="sections" ? "block" : "none";
   document.getElementById("analytics-screen").style.display  = screen==="analytics"? "block" : "none";
   document.getElementById("sub-detail-screen").style.display = screen==="subdetail"? "block" : "none";
+  document.getElementById("finplan-screen").style.display    = screen==="finplan"  ? "block" : "none";
   document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
   document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
   document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
@@ -1248,6 +1379,7 @@ function show(screen) {
   const logoSub = document.querySelector(".logo-sub");
   if (logoSub) {
     if (screen === "analytics" || screen === "subdetail") logoSub.textContent = "Аналіз відділень";
+    else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
     else if (screen === "sections") logoSub.textContent = "Оберіть розділ";
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
   }
@@ -1298,7 +1430,12 @@ function openMedsearch() {
 // It's intended only to discourage casual access while we work on the section.
 // The expected password is stored as SHA-256 hash, not plain text.
 const ANALYTICS_PWD_HASH = "1b6a7bf29d58d165fe92eb80a3d7d94b0945089aff904f5a5284a8d14b4c16ab"; // sha256("0321")
+const FINPLAN_PWD_HASH   = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
 const ANALYTICS_AUTH_KEY = "medsklad_analytics_auth";
+const FINPLAN_AUTH_KEY   = "medsklad_finplan_auth";
+
+// Which section the password modal is currently gating: "analytics" | "finplan"
+let _pwdTarget = "analytics";
 
 async function _sha256Hex(s) {
   const buf = new TextEncoder().encode(s);
@@ -1313,18 +1450,44 @@ function _isAnalyticsAuthorized() {
   } catch (_) { return false; }
 }
 
+function _isFinplanAuthorized() {
+  try {
+    return sessionStorage.getItem(FINPLAN_AUTH_KEY) === "1";
+  } catch (_) { return false; }
+}
+
 function openAnalytics() {
+  _pwdTarget = "analytics";
   if (_isAnalyticsAuthorized()) {
     show("analytics");
     loadAnalytics(false);
     return;
   }
-  // Show password prompt overlay
+  _showPwdOverlay("Введіть пароль для перегляду аналітики", "numeric");
+}
+
+function openFinplan() {
+  _pwdTarget = "finplan";
+  if (_isFinplanAuthorized()) {
+    show("finplan");
+    loadFinplan(false);
+    return;
+  }
+  _showPwdOverlay("Введіть пароль для перегляду фінансового плану", "text");
+}
+
+function _showPwdOverlay(subtitle, inputMode) {
   const overlay = document.getElementById("pwd-overlay");
-  const input = document.getElementById("pwd-input");
-  const err = document.getElementById("pwd-error");
+  const input   = document.getElementById("pwd-input");
+  const err     = document.getElementById("pwd-error");
+  const subEl   = overlay ? overlay.querySelector(".pwd-sub") : null;
+  if (subEl) subEl.textContent = subtitle;
+  if (input) {
+    input.value = "";
+    input.setAttribute("inputmode", inputMode);
+    setTimeout(() => input.focus(), 50);
+  }
   if (err) err.textContent = "";
-  if (input) { input.value = ""; setTimeout(() => input.focus(), 50); }
   if (overlay) overlay.classList.add("on");
 }
 
@@ -1334,6 +1497,8 @@ function closePwdOverlay() {
 }
 
 async function submitAnalyticsPassword() {
+  // Function name kept for backward compat with HTML onclick;
+  // routes to the appropriate target based on _pwdTarget.
   const input = document.getElementById("pwd-input");
   const err   = document.getElementById("pwd-error");
   if (!input) return;
@@ -1343,15 +1508,21 @@ async function submitAnalyticsPassword() {
   try {
     hash = await _sha256Hex(val);
   } catch (e) {
-    // Older browser — bail out (subtle.crypto requires HTTPS)
     if (err) err.textContent = "Браузер не підтримує перевірку. Відкрийте через https://";
     return;
   }
-  if (hash === ANALYTICS_PWD_HASH) {
-    try { sessionStorage.setItem(ANALYTICS_AUTH_KEY, "1"); } catch (_) {}
+  const expected  = _pwdTarget === "finplan" ? FINPLAN_PWD_HASH   : ANALYTICS_PWD_HASH;
+  const authKey   = _pwdTarget === "finplan" ? FINPLAN_AUTH_KEY   : ANALYTICS_AUTH_KEY;
+  if (hash === expected) {
+    try { sessionStorage.setItem(authKey, "1"); } catch (_) {}
     closePwdOverlay();
-    show("analytics");
-    loadAnalytics(false);
+    if (_pwdTarget === "finplan") {
+      show("finplan");
+      loadFinplan(false);
+    } else {
+      show("analytics");
+      loadAnalytics(false);
+    }
   } else {
     if (err) err.textContent = "Невірний пароль";
     input.value = "";
@@ -2864,6 +3035,630 @@ function fmtShortDate(iso) {
   if (!iso) return "";
   const [y, m, d] = iso.split("-");
   return `${d}.${m}.${y}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FINPLAN MODULE (Фінансовий план - закупівлі по лікарнях)
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Source: Google Sheets "Фнплан.xlsx" — экспорт из 1С реєстру "Закупки".
+// Each tab = month (Січень, Лютий, ...). Same hierarchy in every tab:
+//   indent=2: Напрям діяльності (we keep ONLY "03-НСЗУ")
+//   indent=4: Рахунок (we keep ONLY "202")
+//   indent=6: МВО / Склад / Підрозділ (the level we classify by hospital)
+//   indent=8: Назва товару (data row: name=B, qty=B sum=C as we read row[A]
+//             but actually the structure is: col A=name at indent 6, items
+//             come at indent 0 with name in A and numbers in B+)
+//
+// Wait — looking at the actual file via web fetch:
+//   row[A]: "03-НСЗУ"            (header)
+//   row[A]: "201" / "202"         (account)
+//   row[A]: "Федорович..."        (МВО)
+//   row[A]: "Апельсини"           (item under МВО)
+//   row[B]: quantity, row[C]: sum
+// All in column A; level distinguished by alignment.indent.
+//
+// Hospital classification: based on substring markers in МВО name.
+// Order matters — most specific first to avoid false positives
+// (e.g., "Пантелеймон" must be checked before "Пан").
+const FINPLAN_URL = "https://docs.google.com/spreadsheets/d/1wXlsqZL2f7Tt9yxZv_gS8DI_q5Jg7DZh/export?format=xlsx";
+const FINPLAN_CACHE_KEY = "medsklad_finplan_cache";
+const FINPLAN_CACHE_TIME_KEY = "medsklad_finplan_cache_time";
+
+// Hospital markers: ordered list of [hospital_label, [keywords...]].
+// Matching is case-insensitive substring on normalized МВО name.
+// "Пантелеймон" → "Пан" is intentional: МВО often abbreviates as "Пан".
+// "СВ.Луки" / "Лук" → св.Луки. Same logic for св.Миколая, св.Анни.
+// Лабораторія: literal substring "лаборат".
+// Поліклініки: substrings "поліклін" / "поліклініка".
+// IMPORTANT: longer/more specific markers MUST appear earlier so they win.
+const HOSPITALS = [
+  { id: "pantelejmon", label: "Лікарня св. Пантелеймона", icon: "🏥",
+    markers: ["пантелеймон", "св.пан", "св пан", " пан", "(пан"] },
+  { id: "luky",        label: "Лікарня св. Луки",        icon: "🏥",
+    markers: ["св.лук", "св.лука", "св.луки", "св лук", "(лук", " луки", " лука", "св.лк"] },
+  { id: "mykolaja",    label: "Лікарня св. Миколая",     icon: "🏥",
+    markers: ["миколай", "св.мик", "св мик", "(мик"] },
+  { id: "anny",        label: "Лікарня св. Анни",        icon: "🏥",
+    markers: ["св.ан", "св ан", "вп ан", "(ан"] },
+  { id: "lab",         label: "Лабораторія",             icon: "🧪",
+    markers: ["лаборат"] },
+  { id: "polic",       label: "Поліклініки",             icon: "🏨",
+    markers: ["поліклін"] },
+  { id: "other",       label: "Інші підрозділи",         icon: "📦",
+    markers: [] }, // catch-all
+];
+
+let _finplanData = null;       // { months: { "Січень": { mvos: [...], total: N }, ... }, loadedAt: Date }
+let _finplanCurrentMonth = null;
+let _finplanSort = "sum";      // "sum" | "name"
+
+function _classifyHospital(mvoName) {
+  const lc = (mvoName || "").toLowerCase();
+  for (const h of HOSPITALS) {
+    if (h.id === "other") continue; // skip catch-all in loop
+    for (const m of h.markers) {
+      if (lc.includes(m)) return h.id;
+    }
+  }
+  return "other";
+}
+
+// Save / load cache. Same TTL as other caches.
+const FINPLAN_TTL_MS = 12 * 60 * 60 * 1000;
+
+function _saveFinplanCache(data) {
+  try {
+    localStorage.setItem(FINPLAN_CACHE_KEY, JSON.stringify(data));
+    localStorage.setItem(FINPLAN_CACHE_TIME_KEY, Date.now().toString());
+  } catch (e) {
+    console.warn("[finplan] cache save failed:", e.message);
+  }
+}
+
+function _loadFinplanCache() {
+  try {
+    const raw = localStorage.getItem(FINPLAN_CACHE_KEY);
+    const ts = localStorage.getItem(FINPLAN_CACHE_TIME_KEY);
+    if (!raw || !ts) return null;
+    return { data: JSON.parse(raw), time: new Date(parseInt(ts)) };
+  } catch (e) {
+    return null;
+  }
+}
+
+async function loadFinplan(forceRefresh) {
+  const loadingEl = document.getElementById("fp-loading");
+  const errorEl   = document.getElementById("fp-error");
+  const contentEl = document.getElementById("fp-content");
+
+  // Try cache first if not forcing refresh
+  if (!forceRefresh) {
+    const cache = _loadFinplanCache();
+    if (cache) {
+      _finplanData = cache.data;
+      _finplanData.loadedAt = cache.time.toISOString();
+      _initFinplanUI();
+      loadingEl.style.display = "none";
+      errorEl.style.display = "none";
+      contentEl.style.display = "block";
+      // Background refresh if stale
+      const age = Date.now() - cache.time.getTime();
+      if (age > FINPLAN_TTL_MS) {
+        _fetchFinplanInBackground();
+      }
+      return;
+    }
+  }
+
+  // Show loader
+  loadingEl.style.display = "block";
+  errorEl.style.display = "none";
+  contentEl.style.display = "none";
+  document.getElementById("fp-loading-text").textContent = forceRefresh
+    ? "Оновлюємо фінансовий план..."
+    : "Завантажуємо фінансовий план...";
+
+  try {
+    const data = await _fetchFinplan();
+    _finplanData = data;
+    _saveFinplanCache(data);
+    _initFinplanUI();
+    loadingEl.style.display = "none";
+    contentEl.style.display = "block";
+  } catch (err) {
+    console.error("[finplan] load failed:", err);
+    loadingEl.style.display = "none";
+    errorEl.style.display = "block";
+    document.getElementById("fp-error-details").textContent = err.message || String(err);
+  }
+}
+
+async function _fetchFinplanInBackground() {
+  try {
+    const data = await _fetchFinplan();
+    _finplanData = data;
+    _saveFinplanCache(data);
+    // Only re-render if user is still on finplan screen
+    if (document.getElementById("finplan-screen").style.display === "block") {
+      _initFinplanUI();
+    }
+  } catch (e) {
+    // Silent: cache stays
+    console.warn("[finplan] background refresh failed:", e.message);
+  }
+}
+
+async function _fetchFinplan() {
+  const resp = await fetch(FINPLAN_URL);
+  if (!resp.ok) throw new Error("HTTP " + resp.status);
+  const buf = await resp.arrayBuffer();
+  // cellStyles:true is required to preserve alignment.indent on column A,
+  // which is how the 1С export encodes hierarchy (direction → account →
+  // МВО → item). Without it, indents come back as 0 and we have to fall
+  // back to content heuristics.
+  const wb = XLSX.read(buf, { type: "array", cellDates: false, cellStyles: true });
+
+  const months = {};
+  for (const sheetName of wb.SheetNames) {
+    const ws = wb.Sheets[sheetName];
+    const parsed = _parseFinplanSheet(ws);
+    if (parsed) months[sheetName] = parsed;
+  }
+
+  return {
+    months,
+    sheetNames: wb.SheetNames.filter(n => months[n]),
+    loadedAt: new Date().toISOString(),
+  };
+}
+
+// Parse one sheet. Hierarchy is conveyed by the position of text within
+// the merged-cell layout (col A): indent values aren't reliably preserved
+// when SheetJS parses a Google-Sheets-exported xlsx, so we fall back to
+// CONTENT-based detection:
+//   - "03-НСЗУ"          → direction header (we activate this block)
+//   - other напрями (67-, 81- etc.) → deactivate
+//   - "201" / "202"      → account header (we activate ONLY 202)
+//   - row with col A text + col B number = either МВО (qty/sum at МВО level
+//     are aggregates) or item. We distinguish by checking if next rows
+//     are children-with-numbers under it. Practically: МВО names tend to
+//     contain a person's surname/initials/comma/parentheses; items are
+//     drug/food names. But that's fragile.
+//
+// A more robust signal: in 1С exports of "Закупки" the col A cells have
+// alignment.indent set. SheetJS preserves cell.s.alignment.indent in
+// 'cellStyles: true' mode. So we read indent from cell metadata.
+function _parseFinplanSheet(ws) {
+  // Read raw with header:1 to get array-of-arrays
+  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "", raw: true });
+  if (!rows.length) return null;
+
+  // Find "Період" row to extract period
+  let period = null;
+  for (let i = 0; i < Math.min(20, rows.length); i++) {
+    for (const cell of rows[i]) {
+      if (typeof cell === "string" && cell.includes("Період")) {
+        const m = cell.match(/(\d{2})\.(\d{2})\.(\d{4})\s*-\s*(\d{2})\.(\d{2})\.(\d{4})/);
+        if (m) period = { from: `${m[3]}-${m[2]}-${m[1]}`, to: `${m[6]}-${m[5]}-${m[4]}` };
+        break;
+      }
+    }
+    if (period) break;
+  }
+
+  // Read indent of column A for each row. SheetJS preserves
+  // cell.s.alignment.indent only when XLSX.read was called with
+  // cellStyles:true. For files exported via Google Sheets, the indent
+  // metadata is often stripped on the server side, so we ALSO have a
+  // content-based fallback below for the case where all indents are 0.
+  const range = XLSX.utils.decode_range(ws["!ref"] || "A1");
+  const indents = [];
+  for (let r = range.s.r; r <= range.e.r; r++) {
+    const addr = XLSX.utils.encode_cell({ c: 0, r });
+    const cell = ws[addr];
+    let indent = 0;
+    if (cell && cell.s && cell.s.alignment && typeof cell.s.alignment.indent === "number") {
+      indent = cell.s.alignment.indent;
+    }
+    indents.push(indent);
+  }
+
+  // State machine: we walk rows, tracking direction/account/МВО.
+  // We accumulate items only when:
+  //   currentDirection === "03-НСЗУ" AND currentAccount === "202".
+  //
+  // Hierarchy detection — primary: alignment.indent.
+  //   indent 2 = direction
+  //   indent 4 = account
+  //   indent 6 = МВО
+  //   indent 8 = item (numbers in cols B (qty) and C (sum))
+  // Fallback (if indents all zero — happens when SheetJS didn't capture
+  // styles): we use content heuristics. Since the file very reliably has
+  // direction names like "03-НСЗУ" and accounts as bare numbers "201"/"202",
+  // we can detect them by string match.
+  //
+  // Build result: per МВО, sum of qty & sum, and array of items.
+  const mvos = []; // [{ name, hospitalId, qty, sum, items: [{name, qty, sum}] }]
+  const mvoByName = new Map();
+
+  let currentDirection = null;
+  let currentAccount = null;
+  let currentMvo = null;
+  let inTargetBlock = false;
+
+  // detect if indents are all-zero (fallback mode)
+  const hasIndents = indents.some(v => v > 0);
+
+  // Header row layout: row 8 in the file has col headers
+  // A: Реєстратор.Напрям діяльності  B: Кількість  C: Сума
+  // We treat columns by index regardless: col 0 = A, col 1 = B (qty), col 2 = C (sum).
+  const COL_NAME = 0, COL_QTY = 1, COL_SUM = 2;
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    const aRaw = row[COL_NAME];
+    const aText = (aRaw == null) ? "" : String(aRaw).trim();
+    if (!aText) continue;
+
+    // Skip header/parameter rows: anything before first НСЗУ/200/etc.
+    // We detect data rows below by content + indent.
+    const indent = hasIndents ? indents[i] : null;
+
+    const qty = _parseFpNum(row[COL_QTY]);
+    const sum = _parseFpNum(row[COL_SUM]);
+
+    // Determine row type
+    // Direction: indent==2 OR text matches /^\d{2}-/ (e.g., "03-НСЗУ", "67-Благодійна")
+    const isDirection = (indent === 2) ||
+      (indent === null && /^\d{2}\s*-\s*/.test(aText));
+
+    // Account: indent==4 OR text is a 3-digit number (201, 202, 203, ...)
+    // Must be inside a direction block (not a stray) — caller checks.
+    const isAccount = (indent === 4) ||
+      (indent === null && /^\d{3}$/.test(aText));
+
+    if (isDirection) {
+      currentDirection = aText;
+      currentAccount = null;
+      currentMvo = null;
+      inTargetBlock = (currentDirection.toUpperCase().includes("НСЗУ"));
+      continue;
+    }
+
+    if (isAccount && currentDirection) {
+      currentAccount = aText;
+      currentMvo = null;
+      inTargetBlock = (currentDirection && currentDirection.toUpperCase().includes("НСЗУ")
+                      && currentAccount === "202");
+      continue;
+    }
+
+    // From here, we only care about content if inTargetBlock
+    if (!inTargetBlock) continue;
+
+    // Skip param/header rows that may slip through (no qty/sum)
+    if (qty == null && sum == null) continue;
+
+    // МВО vs item:
+    //   indent==6 → МВО
+    //   indent==8 → item
+    //   fallback: МВО is detected by row that starts a new sub-section AND
+    //   typically has both qty and sum that exactly equal the sum of
+    //   subsequent items. Hard to detect without looking ahead. Simpler
+    //   heuristic for fallback: if previous row was a direction/account
+    //   header OR the current row name has a comma + parenthesis or
+    //   contains "(" or "Склад" or "комірник" or "центр" — likely МВО.
+    //   Otherwise it's an item.
+    let isMvo = false;
+    let isItem = false;
+    if (indent === 6) isMvo = true;
+    else if (indent === 8) isItem = true;
+    else if (indent === null) {
+      // Fallback heuristic — used when SheetJS didn't preserve alignment.indent
+      // (this is, in practice, almost always the case for Google-Sheets-exported
+      // xlsx files: GS strips style metadata that 1С originally encoded).
+      //
+      // Strategy: МВО rows reliably look like:
+      //   "Прізвище І.О. ..."  ← person/storage name with initials
+      //   "...комірник..."       ← keyword
+      //   "...Склад N..." / "...ВП ..."
+      //   "...лаборатор..." / "...поліклін..."
+      //   "...центр..." (paired with hospital marker)
+      //
+      // Item rows rarely match these patterns. Critically, an item like
+      // "Анальгін-Дарниця ... №10 (5х2)" has parentheses but does NOT start
+      // with a Surname-Initial-Initial pattern, so we don't flag it as МВО.
+      isMvo =
+        /^[А-ЯІЇЄҐ][а-яіїєґ']+\s+[А-ЯІЇЄҐ]\.\s*[А-ЯІЇЄҐ]?\.?(\s|,|\(|$)/.test(aText)
+        || /комірник/i.test(aText)
+        || /склад\s*[№\d]/i.test(aText)
+        || /\bвп\b/i.test(aText)
+        || /лаборатор/i.test(aText)
+        || /поліклін/i.test(aText)
+        || (/центр/i.test(aText) && /(пан|лук|мик|анн)/i.test(aText));
+      isItem = !isMvo;
+    }
+
+    if (isMvo) {
+      const hospitalId = _classifyHospital(aText);
+      currentMvo = mvoByName.get(aText);
+      if (!currentMvo) {
+        currentMvo = {
+          name: aText,
+          hospitalId,
+          qty: qty || 0,
+          sum: sum || 0,
+          items: [],
+        };
+        mvos.push(currentMvo);
+        mvoByName.set(aText, currentMvo);
+      } else {
+        // Same МВО name appears multiple times in a sheet: sum totals
+        currentMvo.qty += qty || 0;
+        currentMvo.sum += sum || 0;
+      }
+    } else if (isItem && currentMvo) {
+      currentMvo.items.push({
+        name: aText,
+        qty: qty || 0,
+        sum: sum || 0,
+      });
+    }
+  }
+
+  // Compute total for the sheet
+  let total = 0;
+  for (const m of mvos) total += m.sum;
+
+  return { period, mvos, total };
+}
+
+function _parseFpNum(v) {
+  if (v == null || v === "") return null;
+  if (typeof v === "number") return v;
+  // Strings: "388 696,310" or "30 583 761,94" — strip spaces, swap comma
+  const s = String(v).replace(/\s/g, "").replace(",", ".");
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+
+function _initFinplanUI() {
+  if (!_finplanData) return;
+  const sel = document.getElementById("fp-month-select");
+  const monthNames = _finplanData.sheetNames || Object.keys(_finplanData.months);
+  sel.innerHTML = monthNames.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join("");
+
+  // Pick most recent month (last non-empty in order)
+  let pick = null;
+  for (let i = monthNames.length - 1; i >= 0; i--) {
+    const m = _finplanData.months[monthNames[i]];
+    if (m && m.total > 0) { pick = monthNames[i]; break; }
+  }
+  if (!pick) pick = monthNames[0];
+  if (_finplanCurrentMonth && monthNames.includes(_finplanCurrentMonth)) {
+    pick = _finplanCurrentMonth;
+  }
+  sel.value = pick;
+  _finplanCurrentMonth = pick;
+
+  renderFinplan();
+}
+
+function setFinplanSort(mode, btn) {
+  _finplanSort = mode;
+  document.querySelectorAll(".fp-sort-btn").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+  renderFinplan();
+}
+
+function renderFinplan() {
+  const sel = document.getElementById("fp-month-select");
+  _finplanCurrentMonth = sel.value;
+  const monthData = _finplanData.months[_finplanCurrentMonth];
+  if (!monthData) return;
+
+  // Group МВО by hospital
+  const byHospital = {};
+  HOSPITALS.forEach(h => { byHospital[h.id] = { ...h, mvos: [], total: 0, itemCount: 0 }; });
+
+  for (const mvo of monthData.mvos) {
+    const bucket = byHospital[mvo.hospitalId] || byHospital.other;
+    bucket.mvos.push(mvo);
+    bucket.total += mvo.sum;
+    bucket.itemCount += mvo.items.length;
+  }
+
+  // Order: first by HOSPITALS order, but if mode==sum, sort by total desc
+  let ordered;
+  if (_finplanSort === "sum") {
+    ordered = HOSPITALS.map(h => byHospital[h.id]).filter(b => b.mvos.length);
+    ordered.sort((a, b) => b.total - a.total);
+  } else {
+    // Alphabetical by hospital label
+    ordered = HOSPITALS.map(h => byHospital[h.id]).filter(b => b.mvos.length);
+    ordered.sort((a, b) => a.label.localeCompare(b.label, "uk"));
+  }
+
+  // Total summary
+  const summaryEl = document.getElementById("fp-summary");
+  let periodStr = "";
+  if (monthData.period) {
+    periodStr = `${fmtShortDate(monthData.period.from)} – ${fmtShortDate(monthData.period.to)}`;
+  }
+  summaryEl.innerHTML = `
+    <div class="fp-summary-label">Всього закупівель (НСЗУ, рах. 202)</div>
+    <div class="fp-summary-total">${fmtFinplanMoney(monthData.total)}</div>
+    <div class="fp-summary-period">${esc(_finplanCurrentMonth)}${periodStr ? " · " + esc(periodStr) : ""}</div>
+  `;
+
+  // Hospital cards
+  const listEl = document.getElementById("fp-hospitals-list");
+  if (!ordered.length) {
+    listEl.innerHTML = `
+      <div class="fp-empty">
+        <div class="fp-empty-ico">📭</div>
+        <div style="font-size:14px;font-weight:600;">Немає даних</div>
+        <div style="font-size:12px;margin-top:6px;">Для цього місяця не знайдено закупівель по НСЗУ / рах. 202</div>
+      </div>`;
+    return;
+  }
+
+  // Aggregate items per hospital across МВО (group by item name)
+  listEl.innerHTML = ordered.map((bucket, idx) => {
+    const itemMap = new Map();
+    for (const mvo of bucket.mvos) {
+      for (const it of mvo.items) {
+        const k = it.name;
+        const cur = itemMap.get(k);
+        if (cur) {
+          cur.qty += it.qty;
+          cur.sum += it.sum;
+        } else {
+          itemMap.set(k, { name: it.name, qty: it.qty, sum: it.sum });
+        }
+      }
+    }
+    let aggItems = Array.from(itemMap.values());
+    if (_finplanSort === "sum") aggItems.sort((a, b) => b.sum - a.sum);
+    else aggItems.sort((a, b) => a.name.localeCompare(b.name, "uk"));
+
+    const cardId = `fp-card-${idx}`;
+    const itemsHtml = aggItems.map(it => `
+      <div class="fp-item-row">
+        <div class="fp-item-name">${esc(it.name)}</div>
+        <div class="fp-item-qty">${fmtFinplanQty(it.qty)}</div>
+        <div class="fp-item-sum">${fmtFinplanMoney(it.sum)}</div>
+      </div>
+    `).join("");
+
+    return `
+      <div class="fp-hospital-card">
+        <div class="fp-hospital-head" onclick="toggleFinplanCard('${cardId}')">
+          <div class="fp-hospital-ico">${bucket.icon}</div>
+          <div class="fp-hospital-body">
+            <div class="fp-hospital-name">${esc(bucket.label)}</div>
+            <div class="fp-hospital-meta">${aggItems.length} позицій${bucket.mvos.length > 1 ? " · " + bucket.mvos.length + " МВО" : ""}</div>
+          </div>
+          <div class="fp-hospital-sum">${fmtFinplanMoney(bucket.total)}</div>
+          <div class="fp-hospital-arrow" id="${cardId}-arrow">›</div>
+        </div>
+        <div class="fp-items-list" id="${cardId}-body" style="display:none;">
+          ${itemsHtml}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  // Updated stamp
+  if (_finplanData.loadedAt) {
+    const d = new Date(_finplanData.loadedAt);
+    document.getElementById("fp-updated").textContent =
+      "Оновлено: " + d.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+  }
+}
+
+function toggleFinplanCard(cardId) {
+  const body  = document.getElementById(cardId + "-body");
+  const arrow = document.getElementById(cardId + "-arrow");
+  const head  = arrow ? arrow.parentElement : null;
+  if (!body) return;
+  const open = body.style.display !== "none";
+  body.style.display = open ? "none" : "block";
+  if (arrow) arrow.classList.toggle("expanded", !open);
+  if (head)  head.classList.toggle("expanded",  !open);
+}
+
+function fmtFinplanMoney(v) {
+  if (v == null || isNaN(v)) return "—";
+  return v.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " ₴";
+}
+
+function fmtFinplanQty(v) {
+  if (v == null || isNaN(v)) return "—";
+  // Strip trailing zeros for cleaner display
+  if (Math.abs(v - Math.round(v)) < 0.001) {
+    return v.toLocaleString("uk-UA", { maximumFractionDigits: 0 });
+  }
+  return v.toLocaleString("uk-UA", { maximumFractionDigits: 3 });
+}
+
+function exportFinplanXlsx() {
+  if (!_finplanData || !_finplanCurrentMonth) return;
+  const monthData = _finplanData.months[_finplanCurrentMonth];
+  if (!monthData) return;
+
+  // Group by hospital (same logic as render)
+  const byHospital = {};
+  HOSPITALS.forEach(h => { byHospital[h.id] = { ...h, mvos: [], total: 0 }; });
+  for (const mvo of monthData.mvos) {
+    const bucket = byHospital[mvo.hospitalId] || byHospital.other;
+    bucket.mvos.push(mvo);
+    bucket.total += mvo.sum;
+  }
+
+  // Sheet 1: summary by hospital
+  const summaryRows = [
+    ["Лікарня / підрозділ", "Кількість позицій", "Кількість МВО", "Сума закупівель (₴)"]
+  ];
+  let grandTotal = 0;
+  HOSPITALS.forEach(h => {
+    const b = byHospital[h.id];
+    if (!b.mvos.length) return;
+    let itemCount = 0;
+    const seen = new Set();
+    for (const mvo of b.mvos) for (const it of mvo.items) {
+      if (!seen.has(it.name)) { seen.add(it.name); itemCount++; }
+    }
+    summaryRows.push([h.label, itemCount, b.mvos.length, +b.total.toFixed(2)]);
+    grandTotal += b.total;
+  });
+  summaryRows.push([]);
+  summaryRows.push(["ВСЬОГО", "", "", +grandTotal.toFixed(2)]);
+
+  // Sheet 2: detailed (one row per item, with hospital column)
+  const detailRows = [
+    ["Лікарня / підрозділ", "МВО", "Назва позиції", "Кількість", "Сума (₴)"]
+  ];
+  HOSPITALS.forEach(h => {
+    const b = byHospital[h.id];
+    if (!b.mvos.length) return;
+    // Aggregate items per hospital
+    const itemMap = new Map();
+    for (const mvo of b.mvos) {
+      for (const it of mvo.items) {
+        const k = it.name;
+        const cur = itemMap.get(k);
+        if (cur) {
+          cur.qty += it.qty;
+          cur.sum += it.sum;
+          cur.mvos.add(mvo.name);
+        } else {
+          itemMap.set(k, { name: it.name, qty: it.qty, sum: it.sum, mvos: new Set([mvo.name]) });
+        }
+      }
+    }
+    const aggItems = Array.from(itemMap.values()).sort((a, b) => b.sum - a.sum);
+    for (const it of aggItems) {
+      const mvoStr = Array.from(it.mvos).join("; ");
+      detailRows.push([h.label, mvoStr, it.name, +it.qty.toFixed(3), +it.sum.toFixed(2)]);
+    }
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws1 = XLSX.utils.aoa_to_sheet(summaryRows);
+  ws1["!cols"] = [{ wch: 32 }, { wch: 18 }, { wch: 14 }, { wch: 18 }];
+  XLSX.utils.book_append_sheet(wb, ws1, "Підсумок");
+
+  const ws2 = XLSX.utils.aoa_to_sheet(detailRows);
+  ws2["!cols"] = [{ wch: 30 }, { wch: 30 }, { wch: 50 }, { wch: 12 }, { wch: 16 }];
+  XLSX.utils.book_append_sheet(wb, ws2, "Деталізація");
+
+  const periodStr = monthData.period
+    ? `${monthData.period.from}_${monthData.period.to}`
+    : _finplanCurrentMonth;
+  const filename = `Финплан_${_finplanCurrentMonth}_${periodStr}.xlsx`;
+  XLSX.writeFile(wb, filename);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
