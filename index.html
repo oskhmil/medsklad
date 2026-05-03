@@ -3312,7 +3312,7 @@ const HOSPITALS = [
     markers: [
       /поліклін/i,
       /лаб[\-\s]*діагност/i,
-      /діагност[\.\s]*центр/i,
+      /діагностичн\w*\s+центр/i,    // require word "центр" after — not bare "діагност"
     ] },
   { id: "other", label: "Інші підрозділи", icon: "📦",
     markers: [] },
@@ -3704,7 +3704,15 @@ function _looksLikeStorage(text) {
   if (/^лаборант/i.test(text)) return true;
   if (/\bвп\s/i.test(text)) return true;
   if (/поліклін/i.test(text)) return true;
-  if (/діагност/i.test(text)) return true;
+  // Note: bare "діагност" was deliberately removed — it appears in many product
+  // names ("Набір діагностичних для виявлення ДНК...", "Ангіографічний
+  // діагностичний катетер Ursa") and was creating fake МВО out of items.
+  // Real diagnostic-center МВО will be caught either by structural keywords
+  // ("Склад"/"Відділ"/"Лаборант") or by the specific marker
+  // "лаб-діагност" / "діагностичний центр" inside _classifyHospital, which
+  // require enough context not to misfire.
+  if (/лаб[-\s]+діагност/i.test(text)) return true;
+  if (/діагностичн\w*\s+центр/i.test(text)) return true;
   if (/центр/i.test(text) && /(пан|лук|мик|анн)/i.test(text)) return true;
   return false;
 }
