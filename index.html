@@ -422,17 +422,72 @@
   .fp-hospital-arrow.expanded { transform: rotate(90deg); }
 
   .fp-items-list {
-    background: var(--card2); padding: 8px 0; max-height: 600px; overflow-y: auto;
+    background: var(--card2); padding: 0; max-height: 700px; overflow-y: auto;
   }
+
+  /* ─── Storage (МВО) row inside an expanded hospital ─── */
+  .fp-storage {
+    border-bottom: 1px solid rgba(37,43,68,.6);
+  }
+  .fp-storage:last-child { border-bottom: none; }
+  .fp-storage-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 16px; cursor: pointer;
+    transition: background .15s;
+  }
+  .fp-storage-head:hover { background: rgba(79,142,247,.06); }
+  .fp-storage-ico {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--card); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+  }
+  .fp-storage-body { flex: 1; min-width: 0; }
+  .fp-storage-name {
+    font-size: 12.5px; font-weight: 600; color: var(--text);
+    line-height: 1.35; word-break: break-word;
+  }
+  .fp-storage-meta { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  .fp-storage-sum { font-size: 13px; font-weight: 700; color: var(--green); white-space: nowrap; }
+  .fp-storage-arrow {
+    color: var(--muted); font-size: 12px; margin-left: 4px;
+    transition: transform .2s;
+  }
+  .fp-storage-arrow.expanded { transform: rotate(90deg); }
+
+  /* Storage body: filter bar + items + per-storage export */
+  .fp-storage-content {
+    background: var(--bg);
+    padding: 8px 12px 10px;
+    border-top: 1px solid rgba(37,43,68,.4);
+  }
+  .fp-storage-toolbar {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    padding: 4px 0 8px;
+  }
+  .fp-storage-toolbar-label {
+    font-size: 10px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .08em; font-weight: 600; flex: 1;
+  }
+  .fp-mini-btn {
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 5px 9px; font-size: 11px; font-weight: 600; cursor: pointer;
+    white-space: nowrap;
+  }
+  .fp-mini-btn.active { border-color: var(--accent); color: var(--accent); }
+  .fp-mini-btn.export { border-color: var(--green); color: var(--green); }
+  .fp-mini-btn.export:hover { background: rgba(52,211,153,.1); }
+
   .fp-item-row {
     display: grid; grid-template-columns: 1fr auto auto; gap: 10px;
-    align-items: center; padding: 8px 16px;
-    border-bottom: 1px solid rgba(37,43,68,.5);
+    align-items: center; padding: 7px 4px;
+    border-bottom: 1px dashed rgba(37,43,68,.4);
   }
   .fp-item-row:last-child { border-bottom: none; }
-  .fp-item-name { font-size: 13px; color: var(--text); line-height: 1.35; word-break: break-word; }
+  .fp-item-name { font-size: 12.5px; color: var(--text); line-height: 1.35; word-break: break-word; }
   .fp-item-qty { font-size: 11px; color: var(--muted); white-space: nowrap; text-align: right; }
-  .fp-item-sum { font-size: 13px; font-weight: 700; color: var(--green); white-space: nowrap; text-align: right; }
+  .fp-item-sum { font-size: 12.5px; font-weight: 700; color: var(--green); white-space: nowrap; text-align: right; }
 
   .fp-empty {
     text-align: center; padding: 50px 20px; color: var(--muted);
@@ -3067,11 +3122,38 @@ const FINPLAN_CACHE_TIME_KEY = "medsklad_finplan_cache_time";
 
 // Hospital markers: ordered list of [hospital_label, [keywords...]].
 // Matching is case-insensitive substring on normalized МВО name.
-// "Пантелеймон" → "Пан" is intentional: МВО often abbreviates as "Пан".
-// "СВ.Луки" / "Лук" → св.Луки. Same logic for св.Миколая, св.Анни.
-// Лабораторія: literal substring "лаборат".
-// Поліклініки: substrings "поліклін" / "поліклініка".
-// IMPORTANT: longer/more specific markers MUST appear earlier so they win.
+//
+// Classification rules (checked in this exact order):
+//   1. EXCLUDES — МВО containing these patterns ALWAYS go to "Інші підрозділи",
+//      regardless of any hospital marker also present in the name.
+//      Examples: "Березова Л.М. міський центр служби крові Пан" — has "Пан"
+//      but is a city blood center, not a hospital department; goes to "Інші".
+//      "Михаленич О.Р.паталогоанатом.центр Пан" — same logic.
+//   2. LAB markers — anything matching "лаборат" or "реагент" goes to
+//      "Лабораторія", outranking hospital markers. This handles cases like
+//      "Склад лабораторії реагенти" inside a hospital — it's a lab unit, not
+//      a regular hospital storage.
+//   3. HOSPITAL markers — finally the per-hospital substring check.
+//
+// Within hospitals: longer/more specific markers MUST appear earlier so they
+// win over shorter ones (e.g., "пантелеймон" before " пан", "миколай" before
+// "мик").
+
+// МВО patterns that ALWAYS go to "Інші підрозділи" (override hospital match)
+const FINPLAN_EXCLUDE_PATTERNS = [
+  /центр\s+служби\s+кров/i,    // Міський центр служби крові
+  /служб(и|а)\s+кров/i,         // Generic blood-service variant
+  /паталогоанатом/i,            // Patanatomy center
+  /патологоанатом/i,            // Standard spelling
+  /центр\s+пато/i,              // Patanatomy center variants
+];
+
+// LAB patterns — outrank hospital markers
+const FINPLAN_LAB_PATTERNS = [
+  /лаборатор/i,
+  /реагент/i,
+];
+
 const HOSPITALS = [
   { id: "pantelejmon", label: "Лікарня св. Пантелеймона", icon: "🏥",
     markers: ["пантелеймон", "св.пан", "св пан", " пан", "(пан"] },
@@ -3082,21 +3164,31 @@ const HOSPITALS = [
   { id: "anny",        label: "Лікарня св. Анни",        icon: "🏥",
     markers: ["св.ан", "св ан", "вп ан", "(ан"] },
   { id: "lab",         label: "Лабораторія",             icon: "🧪",
-    markers: ["лаборат"] },
+    markers: [] }, // matched via FINPLAN_LAB_PATTERNS
   { id: "polic",       label: "Поліклініки",             icon: "🏨",
     markers: ["поліклін"] },
   { id: "other",       label: "Інші підрозділи",         icon: "📦",
-    markers: [] }, // catch-all
+    markers: [] }, // catch-all + EXCLUDE matches
 ];
 
 let _finplanData = null;       // { months: { "Січень": { mvos: [...], total: N }, ... }, loadedAt: Date }
 let _finplanCurrentMonth = null;
 let _finplanSort = "sum";      // "sum" | "name"
+let _finplanItemSort = "sum";  // sort inside an opened storage: "sum" | "qty" | "name"
 
 function _classifyHospital(mvoName) {
   const lc = (mvoName || "").toLowerCase();
+  // 1. Excludes win first — these go to "other" no matter what other markers say
+  for (const re of FINPLAN_EXCLUDE_PATTERNS) {
+    if (re.test(mvoName)) return "other";
+  }
+  // 2. Lab patterns outrank hospitals
+  for (const re of FINPLAN_LAB_PATTERNS) {
+    if (re.test(mvoName)) return "lab";
+  }
+  // 3. Hospital markers
   for (const h of HOSPITALS) {
-    if (h.id === "other") continue; // skip catch-all in loop
+    if (h.id === "other" || h.id === "lab") continue;
     for (const m of h.markers) {
       if (lc.includes(m)) return h.id;
     }
@@ -3504,33 +3596,37 @@ function renderFinplan() {
     return;
   }
 
-  // Aggregate items per hospital across МВО (group by item name)
-  listEl.innerHTML = ordered.map((bucket, idx) => {
-    const itemMap = new Map();
-    for (const mvo of bucket.mvos) {
-      for (const it of mvo.items) {
-        const k = it.name;
-        const cur = itemMap.get(k);
-        if (cur) {
-          cur.qty += it.qty;
-          cur.sum += it.sum;
-        } else {
-          itemMap.set(k, { name: it.name, qty: it.qty, sum: it.sum });
-        }
-      }
-    }
-    let aggItems = Array.from(itemMap.values());
-    if (_finplanSort === "sum") aggItems.sort((a, b) => b.sum - a.sum);
-    else aggItems.sort((a, b) => a.name.localeCompare(b.name, "uk"));
+  // Render the two-level tree: Hospital → Storages (МВО) → (lazy) Items.
+  // Items are rendered on-demand when a storage is opened (renderFpStorageItems)
+  // so that opening a hospital with many МВО stays cheap.
+  // We index МВО by stable IDs (hospitalIdx + mvoIdx) so we can refer to them
+  // from inline onclick handlers without escaping the entire МВО name.
+  listEl.innerHTML = ordered.map((bucket, hIdx) => {
+    // Sort МВО within the hospital: most-spent first by default (mirrors hospital sort)
+    const mvoList = bucket.mvos.slice();
+    if (_finplanSort === "sum") mvoList.sort((a, b) => b.sum - a.sum);
+    else mvoList.sort((a, b) => a.name.localeCompare(b.name, "uk"));
 
-    const cardId = `fp-card-${idx}`;
-    const itemsHtml = aggItems.map(it => `
-      <div class="fp-item-row">
-        <div class="fp-item-name">${esc(it.name)}</div>
-        <div class="fp-item-qty">${fmtFinplanQty(it.qty)}</div>
-        <div class="fp-item-sum">${fmtFinplanMoney(it.sum)}</div>
-      </div>
-    `).join("");
+    const itemsTotal = mvoList.reduce((s, m) => s + m.items.length, 0);
+    const cardId = `fp-card-${hIdx}`;
+
+    const storagesHtml = mvoList.map((mvo, mIdx) => {
+      const storeId = `${cardId}-mvo-${mIdx}`;
+      return `
+        <div class="fp-storage">
+          <div class="fp-storage-head" onclick="toggleFpStorage('${storeId}', ${hIdx}, ${mIdx})">
+            <div class="fp-storage-ico">📦</div>
+            <div class="fp-storage-body">
+              <div class="fp-storage-name">${esc(mvo.name)}</div>
+              <div class="fp-storage-meta">${mvo.items.length} позицій</div>
+            </div>
+            <div class="fp-storage-sum">${fmtFinplanMoney(mvo.sum)}</div>
+            <div class="fp-storage-arrow" id="${storeId}-arrow">›</div>
+          </div>
+          <div class="fp-storage-content" id="${storeId}-body" style="display:none;"></div>
+        </div>
+      `;
+    }).join("");
 
     return `
       <div class="fp-hospital-card">
@@ -3538,17 +3634,26 @@ function renderFinplan() {
           <div class="fp-hospital-ico">${bucket.icon}</div>
           <div class="fp-hospital-body">
             <div class="fp-hospital-name">${esc(bucket.label)}</div>
-            <div class="fp-hospital-meta">${aggItems.length} позицій${bucket.mvos.length > 1 ? " · " + bucket.mvos.length + " МВО" : ""}</div>
+            <div class="fp-hospital-meta">${mvoList.length} складів · ${itemsTotal} позицій</div>
           </div>
           <div class="fp-hospital-sum">${fmtFinplanMoney(bucket.total)}</div>
           <div class="fp-hospital-arrow" id="${cardId}-arrow">›</div>
         </div>
         <div class="fp-items-list" id="${cardId}-body" style="display:none;">
-          ${itemsHtml}
+          ${storagesHtml}
         </div>
       </div>
     `;
   }).join("");
+
+  // Stash the ordered hospital → mvo mapping so that toggleFpStorage can
+  // resolve hIdx/mIdx back to the actual МВО object.
+  _finplanRenderedMvoMap = ordered.map(bucket => {
+    const mvoList = bucket.mvos.slice();
+    if (_finplanSort === "sum") mvoList.sort((a, b) => b.sum - a.sum);
+    else mvoList.sort((a, b) => a.name.localeCompare(b.name, "uk"));
+    return mvoList;
+  });
 
   // Updated stamp
   if (_finplanData.loadedAt) {
@@ -3567,6 +3672,118 @@ function toggleFinplanCard(cardId) {
   body.style.display = open ? "none" : "block";
   if (arrow) arrow.classList.toggle("expanded", !open);
   if (head)  head.classList.toggle("expanded",  !open);
+}
+
+// Storage map: index → MVO object. Filled in renderFinplan.
+// We use indices to avoid encoding МВО names through HTML attributes.
+let _finplanRenderedMvoMap = [];
+// Per-storage sort preference, keyed by "hIdx-mIdx".
+const _finplanStorageSort = {};
+
+function toggleFpStorage(storeId, hIdx, mIdx) {
+  const body  = document.getElementById(storeId + "-body");
+  const arrow = document.getElementById(storeId + "-arrow");
+  if (!body) return;
+  const open = body.style.display !== "none";
+  if (open) {
+    body.style.display = "none";
+    if (arrow) arrow.classList.remove("expanded");
+    return;
+  }
+  // Render items lazily on first open
+  body.style.display = "block";
+  if (arrow) arrow.classList.add("expanded");
+  renderFpStorageItems(hIdx, mIdx);
+}
+
+function renderFpStorageItems(hIdx, mIdx) {
+  const mvo = _finplanRenderedMvoMap[hIdx] && _finplanRenderedMvoMap[hIdx][mIdx];
+  if (!mvo) return;
+  const key = `${hIdx}-${mIdx}`;
+  const sort = _finplanStorageSort[key] || "sum";
+  const storeId = `fp-card-${hIdx}-mvo-${mIdx}`;
+  const body = document.getElementById(storeId + "-body");
+  if (!body) return;
+
+  // Sort items by selected mode
+  const items = mvo.items.slice();
+  if (sort === "sum") items.sort((a, b) => b.sum - a.sum);
+  else if (sort === "qty") items.sort((a, b) => b.qty - a.qty);
+  else items.sort((a, b) => a.name.localeCompare(b.name, "uk"));
+
+  const itemsHtml = items.map(it => `
+    <div class="fp-item-row">
+      <div class="fp-item-name">${esc(it.name)}</div>
+      <div class="fp-item-qty">${fmtFinplanQty(it.qty)}</div>
+      <div class="fp-item-sum">${fmtFinplanMoney(it.sum)}</div>
+    </div>
+  `).join("");
+
+  body.innerHTML = `
+    <div class="fp-storage-toolbar">
+      <div class="fp-storage-toolbar-label">Сортування:</div>
+      <button class="fp-mini-btn ${sort === 'sum' ? 'active' : ''}"
+              onclick="setFpStorageSort(${hIdx}, ${mIdx}, 'sum')">↓ Сума</button>
+      <button class="fp-mini-btn ${sort === 'qty' ? 'active' : ''}"
+              onclick="setFpStorageSort(${hIdx}, ${mIdx}, 'qty')">↓ Кількість</button>
+      <button class="fp-mini-btn ${sort === 'name' ? 'active' : ''}"
+              onclick="setFpStorageSort(${hIdx}, ${mIdx}, 'name')">А-Я</button>
+      <button class="fp-mini-btn export"
+              onclick="exportFpStorageXlsx(${hIdx}, ${mIdx})">📥 Excel</button>
+    </div>
+    ${itemsHtml || '<div style="text-align:center;color:var(--muted);padding:14px 0;font-size:12px;">Нема позицій</div>'}
+  `;
+}
+
+function setFpStorageSort(hIdx, mIdx, mode) {
+  _finplanStorageSort[`${hIdx}-${mIdx}`] = mode;
+  renderFpStorageItems(hIdx, mIdx);
+}
+
+function exportFpStorageXlsx(hIdx, mIdx) {
+  const mvo = _finplanRenderedMvoMap[hIdx] && _finplanRenderedMvoMap[hIdx][mIdx];
+  if (!mvo) return;
+  const monthName = _finplanCurrentMonth || "";
+  const monthData = _finplanData.months[monthName];
+  const periodStr = (monthData && monthData.period)
+    ? `${monthData.period.from}_${monthData.period.to}`
+    : monthName;
+
+  // Sort items same as currently displayed
+  const sort = _finplanStorageSort[`${hIdx}-${mIdx}`] || "sum";
+  const items = mvo.items.slice();
+  if (sort === "sum") items.sort((a, b) => b.sum - a.sum);
+  else if (sort === "qty") items.sort((a, b) => b.qty - a.qty);
+  else items.sort((a, b) => a.name.localeCompare(b.name, "uk"));
+
+  // Build sheet: header rows with МВО context, then items
+  const rows = [
+    ["МВО / Склад:", mvo.name],
+    ["Період:", monthName + (monthData && monthData.period ? ` (${monthData.period.from} – ${monthData.period.to})` : "")],
+    ["Напрям:", "03-НСЗУ"],
+    ["Рахунок:", "202"],
+    [],
+    ["№", "Назва позиції", "Кількість", "Сума (з ПДВ, ₴)"],
+  ];
+  let totalSum = 0;
+  let totalQty = 0;
+  items.forEach((it, i) => {
+    rows.push([i + 1, it.name, +it.qty.toFixed(3), +it.sum.toFixed(2)]);
+    totalSum += it.sum;
+    totalQty += it.qty;
+  });
+  rows.push([]);
+  rows.push(["", "ВСЬОГО:", +totalQty.toFixed(3), +totalSum.toFixed(2)]);
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws["!cols"] = [{ wch: 5 }, { wch: 60 }, { wch: 14 }, { wch: 18 }];
+  XLSX.utils.book_append_sheet(wb, ws, "Склад");
+
+  // Sanitise МВО name for filename
+  const safeName = mvo.name.replace(/[^а-яА-ЯіїєґІЇЄҐa-zA-Z0-9_-]+/g, "_").slice(0, 50);
+  const filename = `Финплан_${safeName}_${periodStr}.xlsx`;
+  XLSX.writeFile(wb, filename);
 }
 
 function fmtFinplanMoney(v) {
@@ -3599,60 +3816,62 @@ function exportFinplanXlsx() {
 
   // Sheet 1: summary by hospital
   const summaryRows = [
-    ["Лікарня / підрозділ", "Кількість позицій", "Кількість МВО", "Сума закупівель (₴)"]
+    ["Лікарня / підрозділ", "Кількість позицій", "Кількість складів", "Сума закупівель (₴)"]
   ];
   let grandTotal = 0;
   HOSPITALS.forEach(h => {
     const b = byHospital[h.id];
     if (!b.mvos.length) return;
     let itemCount = 0;
-    const seen = new Set();
-    for (const mvo of b.mvos) for (const it of mvo.items) {
-      if (!seen.has(it.name)) { seen.add(it.name); itemCount++; }
-    }
+    for (const mvo of b.mvos) itemCount += mvo.items.length;
     summaryRows.push([h.label, itemCount, b.mvos.length, +b.total.toFixed(2)]);
     grandTotal += b.total;
   });
   summaryRows.push([]);
   summaryRows.push(["ВСЬОГО", "", "", +grandTotal.toFixed(2)]);
 
-  // Sheet 2: detailed (one row per item, with hospital column)
-  const detailRows = [
-    ["Лікарня / підрозділ", "МВО", "Назва позиції", "Кількість", "Сума (₴)"]
+  // Sheet 2: by storage (МВО) — one row per МВО with its hospital + total
+  const storageRows = [
+    ["Лікарня / підрозділ", "Склад / МВО", "Кількість позицій", "Сума (₴)"]
   ];
   HOSPITALS.forEach(h => {
     const b = byHospital[h.id];
     if (!b.mvos.length) return;
-    // Aggregate items per hospital
-    const itemMap = new Map();
-    for (const mvo of b.mvos) {
-      for (const it of mvo.items) {
-        const k = it.name;
-        const cur = itemMap.get(k);
-        if (cur) {
-          cur.qty += it.qty;
-          cur.sum += it.sum;
-          cur.mvos.add(mvo.name);
-        } else {
-          itemMap.set(k, { name: it.name, qty: it.qty, sum: it.sum, mvos: new Set([mvo.name]) });
-        }
-      }
+    const sortedMvos = b.mvos.slice().sort((a, b) => b.sum - a.sum);
+    for (const mvo of sortedMvos) {
+      storageRows.push([h.label, mvo.name, mvo.items.length, +mvo.sum.toFixed(2)]);
     }
-    const aggItems = Array.from(itemMap.values()).sort((a, b) => b.sum - a.sum);
-    for (const it of aggItems) {
-      const mvoStr = Array.from(it.mvos).join("; ");
-      detailRows.push([h.label, mvoStr, it.name, +it.qty.toFixed(3), +it.sum.toFixed(2)]);
+  });
+
+  // Sheet 3: detailed — one row per (МВО, item) pair, no aggregation across МВО.
+  // This preserves the per-МВО breakdown so the user can filter / pivot by storage.
+  const detailRows = [
+    ["Лікарня / підрозділ", "Склад / МВО", "Назва позиції", "Кількість", "Сума (₴)"]
+  ];
+  HOSPITALS.forEach(h => {
+    const b = byHospital[h.id];
+    if (!b.mvos.length) return;
+    const sortedMvos = b.mvos.slice().sort((a, b) => b.sum - a.sum);
+    for (const mvo of sortedMvos) {
+      const items = mvo.items.slice().sort((a, b) => b.sum - a.sum);
+      for (const it of items) {
+        detailRows.push([h.label, mvo.name, it.name, +it.qty.toFixed(3), +it.sum.toFixed(2)]);
+      }
     }
   });
 
   const wb = XLSX.utils.book_new();
   const ws1 = XLSX.utils.aoa_to_sheet(summaryRows);
-  ws1["!cols"] = [{ wch: 32 }, { wch: 18 }, { wch: 14 }, { wch: 18 }];
+  ws1["!cols"] = [{ wch: 32 }, { wch: 18 }, { wch: 16 }, { wch: 18 }];
   XLSX.utils.book_append_sheet(wb, ws1, "Підсумок");
 
-  const ws2 = XLSX.utils.aoa_to_sheet(detailRows);
-  ws2["!cols"] = [{ wch: 30 }, { wch: 30 }, { wch: 50 }, { wch: 12 }, { wch: 16 }];
-  XLSX.utils.book_append_sheet(wb, ws2, "Деталізація");
+  const ws2 = XLSX.utils.aoa_to_sheet(storageRows);
+  ws2["!cols"] = [{ wch: 30 }, { wch: 50 }, { wch: 16 }, { wch: 16 }];
+  XLSX.utils.book_append_sheet(wb, ws2, "По складах");
+
+  const ws3 = XLSX.utils.aoa_to_sheet(detailRows);
+  ws3["!cols"] = [{ wch: 30 }, { wch: 40 }, { wch: 50 }, { wch: 12 }, { wch: 16 }];
+  XLSX.utils.book_append_sheet(wb, ws3, "Деталізація");
 
   const periodStr = monthData.period
     ? `${monthData.period.from}_${monthData.period.to}`
