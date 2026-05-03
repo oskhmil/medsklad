@@ -494,6 +494,54 @@
   }
   .fp-empty-ico { font-size: 44px; margin-bottom: 12px; }
 
+  /* ─── Per-hospital month selector bar (inside expanded hospital) ─── */
+  .fp-hospital-month-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .fp-mini-select {
+    background: var(--card2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 7px;
+    padding: 4px 8px; font-size: 12px; font-weight: 600;
+    outline: none; cursor: pointer;
+  }
+  .fp-mini-select:focus { border-color: var(--accent); }
+
+  /* ─── Diagnostics panel ─── */
+  .fp-diag-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; margin: 0 4px; overflow: hidden;
+  }
+  .fp-diag-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; cursor: pointer;
+    font-size: 13px; font-weight: 700; color: var(--muted);
+    transition: background .15s;
+  }
+  .fp-diag-head:hover { background: var(--card2); color: var(--text); }
+  .fp-diag-section {
+    padding: 8px 14px 10px;
+    border-top: 1px solid rgba(37,43,68,.6);
+  }
+  .fp-diag-hospital {
+    font-size: 12px; font-weight: 700; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .fp-diag-count {
+    color: var(--muted); font-weight: 500; font-size: 11px;
+  }
+  .fp-diag-mvo {
+    font-size: 11.5px; color: var(--muted);
+    padding: 3px 0 3px 18px;
+    line-height: 1.4;
+    border-bottom: 1px dashed rgba(37,43,68,.4);
+    word-break: break-word;
+  }
+  .fp-diag-mvo:last-child { border-bottom: none; }
+
   .back-btn {
     background: none; border: 1px solid var(--border); color: var(--muted);
     border-radius: 10px; padding: 7px 14px; font-size: 13px; cursor: pointer;
@@ -978,6 +1026,8 @@
         </div>
 
         <div id="fp-hospitals-list"></div>
+
+        <div id="fp-diagnostics" style="margin-top:14px;"></div>
 
         <div style="text-align:center;font-size:11px;color:var(--muted);padding:18px 0;" id="fp-updated"></div>
       </div>
@@ -3124,20 +3174,38 @@ const FINPLAN_CACHE_TIME_KEY = "medsklad_finplan_cache_time";
 // Matching is case-insensitive substring on normalized МВО name.
 //
 // Classification rules (checked in this exact order):
-//   1. EXCLUDES — МВО containing these patterns ALWAYS go to "Інші підрозділи",
-//      regardless of any hospital marker also present in the name.
-//      Examples: "Березова Л.М. міський центр служби крові Пан" — has "Пан"
-//      but is a city blood center, not a hospital department; goes to "Інші".
-//      "Михаленич О.Р.паталогоанатом.центр Пан" — same logic.
-//   2. LAB markers — anything matching "лаборат" or "реагент" goes to
-//      "Лабораторія", outranking hospital markers. This handles cases like
-//      "Склад лабораторії реагенти" inside a hospital — it's a lab unit, not
-//      a regular hospital storage.
-//   3. HOSPITAL markers — finally the per-hospital substring check.
+//   1. OVERRIDES — hard rules for specific МВО patterns that don't follow the
+//      generic markers. These win over everything else, including excludes.
+//      Used when a particular person/storage is known to belong to a specific
+//      hospital regardless of what the name might suggest.
+//   2. EXCLUDES — patterns that ALWAYS go to "Інші підрозділи".
+//   3. LAB markers — anything matching "лаборат" or "реагент" → "Лабораторія",
+//      outranking hospital markers.
+//   4. HOSPITAL markers — per-hospital substring check.
 //
 // Within hospitals: longer/more specific markers MUST appear earlier so they
 // win over shorter ones (e.g., "пантелеймон" before " пан", "миколай" before
 // "мик").
+
+// HARD OVERRIDES — checked FIRST, win over all other rules.
+// Each entry: { test: regex, target: hospitalId }
+// Use these for known specific people/storages whose hospital is fixed
+// regardless of what generic markers might match.
+const FINPLAN_OVERRIDES = [
+  // Войтович Маріана — складач Склад 18 і 19, належить до Миколая
+  // (irrespective of any other hospital marker that might appear in the name)
+  { test: /войтович.*маріан|маріан.*войтович/i, target: "mykolaja" },
+  { test: /склад\s*(№\s*)?(18|19)\b/i,          target: "mykolaja" },
+  // Романчукевич з киснем — завжди в "Інші підрозділи"
+  // (in January was misclassified to Mykolaja; this override fixes it)
+  { test: /романчукевич/i, target: "other" },
+  // Склад лабораторні реагенти — окремий склад св. Пантелеймона на тому ж
+  // рівні що Склад №4. Він має йти в Лабораторію, незалежно від орфографії
+  // (різні місяці можуть писати по-різному: "лабораторні", "лабораторної",
+  // "лаборатории", з опечатками).
+  { test: /(склад|відділ).*(лаборатор|реагент)/i, target: "lab" },
+  { test: /(лаборатор|реагент).*(склад|відділ)/i, target: "lab" },
+];
 
 // МВО patterns that ALWAYS go to "Інші підрозділи" (override hospital match)
 const FINPLAN_EXCLUDE_PATTERNS = [
@@ -3164,29 +3232,36 @@ const HOSPITALS = [
   { id: "anny",        label: "Лікарня св. Анни",        icon: "🏥",
     markers: ["св.ан", "св ан", "вп ан", "(ан"] },
   { id: "lab",         label: "Лабораторія",             icon: "🧪",
-    markers: [] }, // matched via FINPLAN_LAB_PATTERNS
-  { id: "polic",       label: "Поліклініки",             icon: "🏨",
-    markers: ["поліклін"] },
+    markers: [] }, // matched via FINPLAN_LAB_PATTERNS / OVERRIDES
+  { id: "polic",       label: "Лаб-діагност. центри",    icon: "🔬",
+    markers: ["поліклін", "лаб-діагност", "діагностичн.центр", "діагност.центр"] },
   { id: "other",       label: "Інші підрозділи",         icon: "📦",
     markers: [] }, // catch-all + EXCLUDE matches
 ];
 
-let _finplanData = null;       // { months: { "Січень": { mvos: [...], total: N }, ... }, loadedAt: Date }
+let _finplanData = null;
 let _finplanCurrentMonth = null;
-let _finplanSort = "sum";      // "sum" | "name"
-let _finplanItemSort = "sum";  // sort inside an opened storage: "sum" | "qty" | "name"
+let _finplanSort = "sum";
+let _finplanItemSort = "sum";
+// Per-hospital month override (when user picks a different month inside an
+// expanded hospital card to compare). Keyed by hospital id.
+const _finplanHospitalMonth = {};
 
 function _classifyHospital(mvoName) {
-  const lc = (mvoName || "").toLowerCase();
-  // 1. Excludes win first — these go to "other" no matter what other markers say
+  // 1. OVERRIDES — hard rules first (before any other check)
+  for (const ov of FINPLAN_OVERRIDES) {
+    if (ov.test.test(mvoName)) return ov.target;
+  }
+  // 2. Excludes — automatic "other" for blood-center / patanatomy
   for (const re of FINPLAN_EXCLUDE_PATTERNS) {
     if (re.test(mvoName)) return "other";
   }
-  // 2. Lab patterns outrank hospitals
+  // 3. Lab patterns outrank hospitals
   for (const re of FINPLAN_LAB_PATTERNS) {
     if (re.test(mvoName)) return "lab";
   }
-  // 3. Hospital markers
+  // 4. Hospital markers
+  const lc = (mvoName || "").toLowerCase();
   for (const h of HOSPITALS) {
     if (h.id === "other" || h.id === "lab") continue;
     for (const m of h.markers) {
@@ -3601,53 +3676,18 @@ function renderFinplan() {
   // so that opening a hospital with many МВО stays cheap.
   // We index МВО by stable IDs (hospitalIdx + mvoIdx) so we can refer to them
   // from inline onclick handlers without escaping the entire МВО name.
+  //
+  // Each hospital body has its own month selector — by default it shows the
+  // globally-selected month (_finplanCurrentMonth), but the user can switch
+  // a single hospital to a different month for comparison.
   listEl.innerHTML = ordered.map((bucket, hIdx) => {
-    // Sort МВО within the hospital: most-spent first by default (mirrors hospital sort)
-    const mvoList = bucket.mvos.slice();
-    if (_finplanSort === "sum") mvoList.sort((a, b) => b.sum - a.sum);
-    else mvoList.sort((a, b) => a.name.localeCompare(b.name, "uk"));
-
-    const itemsTotal = mvoList.reduce((s, m) => s + m.items.length, 0);
-    const cardId = `fp-card-${hIdx}`;
-
-    const storagesHtml = mvoList.map((mvo, mIdx) => {
-      const storeId = `${cardId}-mvo-${mIdx}`;
-      return `
-        <div class="fp-storage">
-          <div class="fp-storage-head" onclick="toggleFpStorage('${storeId}', ${hIdx}, ${mIdx})">
-            <div class="fp-storage-ico">📦</div>
-            <div class="fp-storage-body">
-              <div class="fp-storage-name">${esc(mvo.name)}</div>
-              <div class="fp-storage-meta">${mvo.items.length} позицій</div>
-            </div>
-            <div class="fp-storage-sum">${fmtFinplanMoney(mvo.sum)}</div>
-            <div class="fp-storage-arrow" id="${storeId}-arrow">›</div>
-          </div>
-          <div class="fp-storage-content" id="${storeId}-body" style="display:none;"></div>
-        </div>
-      `;
-    }).join("");
-
-    return `
-      <div class="fp-hospital-card">
-        <div class="fp-hospital-head" onclick="toggleFinplanCard('${cardId}')">
-          <div class="fp-hospital-ico">${bucket.icon}</div>
-          <div class="fp-hospital-body">
-            <div class="fp-hospital-name">${esc(bucket.label)}</div>
-            <div class="fp-hospital-meta">${mvoList.length} складів · ${itemsTotal} позицій</div>
-          </div>
-          <div class="fp-hospital-sum">${fmtFinplanMoney(bucket.total)}</div>
-          <div class="fp-hospital-arrow" id="${cardId}-arrow">›</div>
-        </div>
-        <div class="fp-items-list" id="${cardId}-body" style="display:none;">
-          ${storagesHtml}
-        </div>
-      </div>
-    `;
+    return _renderHospitalCard(bucket, hIdx);
   }).join("");
 
   // Stash the ordered hospital → mvo mapping so that toggleFpStorage can
   // resolve hIdx/mIdx back to the actual МВО object.
+  // For per-hospital month overrides we recompute this map inside
+  // _renderHospitalBody, so we initialise it here just for the default case.
   _finplanRenderedMvoMap = ordered.map(bucket => {
     const mvoList = bucket.mvos.slice();
     if (_finplanSort === "sum") mvoList.sort((a, b) => b.sum - a.sum);
@@ -3655,12 +3695,182 @@ function renderFinplan() {
     return mvoList;
   });
 
+  // ─── Diagnostic panel ────────────────────────────────────────────────────
+  // Lists every МВО name + its assigned hospital, so the user can verify
+  // classification and report misclassified entries. Hidden by default.
+  _renderFinplanDiagnostics();
+
   // Updated stamp
   if (_finplanData.loadedAt) {
     const d = new Date(_finplanData.loadedAt);
     document.getElementById("fp-updated").textContent =
       "Оновлено: " + d.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
   }
+}
+
+// Build a single hospital card. Used by initial render AND when the user
+// changes the per-hospital month selector inside an expanded card.
+function _renderHospitalCard(bucket, hIdx) {
+  const cardId = `fp-card-${hIdx}`;
+  const sumStr = fmtFinplanMoney(bucket.total);
+  const mvoCount = bucket.mvos.length;
+  const itemCount = bucket.mvos.reduce((s, m) => s + m.items.length, 0);
+  return `
+    <div class="fp-hospital-card" data-hospital-id="${esc(bucket.id)}">
+      <div class="fp-hospital-head" onclick="toggleFinplanCard('${cardId}')">
+        <div class="fp-hospital-ico">${bucket.icon}</div>
+        <div class="fp-hospital-body">
+          <div class="fp-hospital-name">${esc(bucket.label)}</div>
+          <div class="fp-hospital-meta" id="${cardId}-meta">${mvoCount} складів · ${itemCount} позицій</div>
+        </div>
+        <div class="fp-hospital-sum" id="${cardId}-sum">${sumStr}</div>
+        <div class="fp-hospital-arrow" id="${cardId}-arrow">›</div>
+      </div>
+      <div class="fp-items-list" id="${cardId}-body" style="display:none;">
+        ${_renderHospitalBody(bucket.id, hIdx)}
+      </div>
+    </div>
+  `;
+}
+
+// Build the body of a hospital card: per-hospital month selector + storages.
+// Reads _finplanHospitalMonth[hospitalId] to know which month to show.
+function _renderHospitalBody(hospitalId, hIdx) {
+  const cardId = `fp-card-${hIdx}`;
+  // Active month for THIS hospital (defaults to global month)
+  const month = _finplanHospitalMonth[hospitalId] || _finplanCurrentMonth;
+  const monthData = _finplanData.months[month];
+  if (!monthData) return "";
+
+  // Filter МВО for this hospital
+  const mvoList = monthData.mvos.filter(m => m.hospitalId === hospitalId);
+  if (_finplanSort === "sum") mvoList.sort((a, b) => b.sum - a.sum);
+  else mvoList.sort((a, b) => a.name.localeCompare(b.name, "uk"));
+
+  // Update the saved map so toggleFpStorage / export still find the right МВО
+  _finplanRenderedMvoMap[hIdx] = mvoList;
+
+  const total = mvoList.reduce((s, m) => s + m.sum, 0);
+  const itemCount = mvoList.reduce((s, m) => s + m.items.length, 0);
+
+  // Month selector — list all months
+  const monthOpts = (_finplanData.sheetNames || Object.keys(_finplanData.months))
+    .map(n => `<option value="${esc(n)}" ${n === month ? "selected" : ""}>${esc(n)}</option>`)
+    .join("");
+
+  const isOverridden = _finplanHospitalMonth[hospitalId]
+    && _finplanHospitalMonth[hospitalId] !== _finplanCurrentMonth;
+
+  const storagesHtml = mvoList.length ? mvoList.map((mvo, mIdx) => {
+    const storeId = `${cardId}-mvo-${mIdx}`;
+    return `
+      <div class="fp-storage">
+        <div class="fp-storage-head" onclick="toggleFpStorage('${storeId}', ${hIdx}, ${mIdx})">
+          <div class="fp-storage-ico">📦</div>
+          <div class="fp-storage-body">
+            <div class="fp-storage-name">${esc(mvo.name)}</div>
+            <div class="fp-storage-meta">${mvo.items.length} позицій</div>
+          </div>
+          <div class="fp-storage-sum">${fmtFinplanMoney(mvo.sum)}</div>
+          <div class="fp-storage-arrow" id="${storeId}-arrow">›</div>
+        </div>
+        <div class="fp-storage-content" id="${storeId}-body" style="display:none;"></div>
+      </div>
+    `;
+  }).join("") : `
+    <div style="text-align:center;color:var(--muted);padding:20px;font-size:12px;">
+      Нема даних за ${esc(month)}
+    </div>
+  `;
+
+  return `
+    <div class="fp-hospital-month-bar">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;flex-shrink:0;">Місяць:</div>
+      <select class="fp-mini-select" onchange="setHospitalMonth('${esc(hospitalId)}', ${hIdx}, this.value)">
+        ${monthOpts}
+      </select>
+      ${isOverridden ? `<button class="fp-mini-btn" onclick="resetHospitalMonth('${esc(hospitalId)}', ${hIdx})" title="Повернути до загального місяця">↺</button>` : ""}
+      <div style="flex:1"></div>
+      <div style="font-size:11px;color:var(--muted);">${mvoList.length} скл. · ${itemCount} поз. · ${fmtFinplanMoney(total)}</div>
+    </div>
+    ${storagesHtml}
+  `;
+}
+
+// Change month for a single hospital and re-render its body in place.
+function setHospitalMonth(hospitalId, hIdx, month) {
+  if (month === _finplanCurrentMonth) {
+    delete _finplanHospitalMonth[hospitalId];
+  } else {
+    _finplanHospitalMonth[hospitalId] = month;
+  }
+  const cardId = `fp-card-${hIdx}`;
+  const body = document.getElementById(cardId + "-body");
+  if (body) body.innerHTML = _renderHospitalBody(hospitalId, hIdx);
+}
+
+function resetHospitalMonth(hospitalId, hIdx) {
+  delete _finplanHospitalMonth[hospitalId];
+  const cardId = `fp-card-${hIdx}`;
+  const body = document.getElementById(cardId + "-body");
+  if (body) body.innerHTML = _renderHospitalBody(hospitalId, hIdx);
+}
+
+// ─── Diagnostics: what was classified where ────────────────────────────────
+let _finplanDiagShown = false;
+
+function _renderFinplanDiagnostics() {
+  const el = document.getElementById("fp-diagnostics");
+  if (!el) return;
+  if (!_finplanData || !_finplanCurrentMonth) {
+    el.innerHTML = "";
+    return;
+  }
+  const monthData = _finplanData.months[_finplanCurrentMonth];
+  if (!monthData) { el.innerHTML = ""; return; }
+
+  // Group МВО names by hospital for the current month
+  const grouped = {};
+  HOSPITALS.forEach(h => grouped[h.id] = []);
+  for (const mvo of monthData.mvos) {
+    (grouped[mvo.hospitalId] || grouped.other).push(mvo.name);
+  }
+
+  // Sort names within each hospital
+  for (const id in grouped) grouped[id].sort((a, b) => a.localeCompare(b, "uk"));
+
+  const sectionsHtml = HOSPITALS
+    .filter(h => grouped[h.id].length)
+    .map(h => `
+      <div class="fp-diag-section">
+        <div class="fp-diag-hospital">${h.icon} ${esc(h.label)} <span class="fp-diag-count">(${grouped[h.id].length})</span></div>
+        ${grouped[h.id].map(n => `<div class="fp-diag-mvo">${esc(n)}</div>`).join("")}
+      </div>
+    `).join("");
+
+  el.innerHTML = `
+    <div class="fp-diag-card">
+      <div class="fp-diag-head" onclick="toggleFinplanDiag()">
+        <span>🔍 Діагностика класифікації · ${esc(_finplanCurrentMonth)}</span>
+        <span id="fp-diag-arrow" style="transition:transform .2s;${_finplanDiagShown ? 'transform:rotate(90deg)' : ''}">›</span>
+      </div>
+      <div id="fp-diag-body" style="display:${_finplanDiagShown ? 'block' : 'none'};">
+        <div style="font-size:11px;color:var(--muted);padding:0 14px 8px;">
+          Тут показано всі МВО за поточний місяць згруповані по лікарнях.
+          Якщо щось класифіковано неправильно — перешли мені точну назву МВО.
+        </div>
+        ${sectionsHtml}
+      </div>
+    </div>
+  `;
+}
+
+function toggleFinplanDiag() {
+  _finplanDiagShown = !_finplanDiagShown;
+  const body = document.getElementById("fp-diag-body");
+  const arrow = document.getElementById("fp-diag-arrow");
+  if (body) body.style.display = _finplanDiagShown ? "block" : "none";
+  if (arrow) arrow.style.transform = _finplanDiagShown ? "rotate(90deg)" : "";
 }
 
 function toggleFinplanCard(cardId) {
