@@ -534,13 +534,57 @@
     color: var(--muted); font-weight: 500; font-size: 11px;
   }
   .fp-diag-mvo {
-    font-size: 11.5px; color: var(--muted);
-    padding: 3px 0 3px 18px;
-    line-height: 1.4;
     border-bottom: 1px dashed rgba(37,43,68,.4);
-    word-break: break-word;
   }
   .fp-diag-mvo:last-child { border-bottom: none; }
+  .fp-diag-mvo-row {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 11.5px; color: var(--muted);
+    padding: 5px 4px 5px 8px;
+    line-height: 1.4;
+    cursor: pointer;
+    word-break: break-word;
+    transition: background .15s;
+  }
+  .fp-diag-mvo-row:hover { background: rgba(79,142,247,.08); }
+  .fp-diag-arrow {
+    color: var(--muted); flex-shrink: 0;
+    font-size: 10px; line-height: 1.4;
+    width: 12px; text-align: center;
+  }
+  .fp-diag-mvo-name { flex: 1; min-width: 0; }
+  .fp-diag-mvo-stats {
+    flex-shrink: 0; font-size: 11px;
+    color: var(--muted); white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .fp-diag-mvo-detail {
+    background: rgba(0,0,0,.18);
+    padding: 8px 14px 8px 28px;
+    border-top: 1px dashed rgba(37,43,68,.4);
+  }
+  .fp-diag-mvo-reason {
+    font-size: 10.5px; color: var(--muted);
+    margin-bottom: 6px; line-height: 1.5;
+  }
+  .fp-diag-mvo-reason code {
+    background: var(--card2);
+    padding: 1px 5px; border-radius: 4px;
+    color: var(--accent); font-size: 10px;
+    font-family: ui-monospace, monospace;
+  }
+  .fp-diag-item {
+    display: flex; gap: 8px;
+    font-size: 11px; line-height: 1.5;
+    padding: 2px 0;
+    border-bottom: 1px dotted rgba(37,43,68,.3);
+  }
+  .fp-diag-item:last-child { border-bottom: none; }
+  .fp-diag-item-name { flex: 1; min-width: 0; word-break: break-word; }
+  .fp-diag-item-stats {
+    flex-shrink: 0; color: var(--muted); white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
 
   .back-btn {
     background: none; border: 1px solid var(--border); color: var(--muted);
@@ -3222,21 +3266,56 @@ const FINPLAN_LAB_PATTERNS = [
   /реагент/i,
 ];
 
+// Hospitals with regex markers. Each marker must match a *contextual* mention
+// of the hospital — never just a bare suffix that could collide with patronymics
+// (e.g., "Миколайович" — patronymic — must NOT match "св.Миколая" hospital).
+//
+// All markers are regex literals, case-insensitive. We require either:
+//   - "св."/"св " prefix (variations: "свт.", "святого")
+//   - inside parentheses (e.g., "(Склад5 СВ.Пан)" or "( ВП Анни )")
+//   - explicit "Лікарня <name>"
+// Bare "пан"/"мик"/"лук"/"анн" anywhere in text is NOT a marker — it would
+// catch surnames and patronymics.
 const HOSPITALS = [
   { id: "pantelejmon", label: "Лікарня св. Пантелеймона", icon: "🏥",
-    markers: ["пантелеймон", "св.пан", "св пан", " пан", "(пан"] },
-  { id: "luky",        label: "Лікарня св. Луки",        icon: "🏥",
-    markers: ["св.лук", "св.лука", "св.луки", "св лук", "(лук", " луки", " лука", "св.лк"] },
-  { id: "mykolaja",    label: "Лікарня св. Миколая",     icon: "🏥",
-    markers: ["миколай", "св.мик", "св мик", "(мик"] },
-  { id: "anny",        label: "Лікарня св. Анни",        icon: "🏥",
-    markers: ["св.ан", "св ан", "вп ан", "(ан"] },
-  { id: "lab",         label: "Лабораторія",             icon: "🧪",
+    markers: [
+      /пантелеймон/i,                  // full name — safe (not a patronymic root)
+      /св[\.\s]*пан/i,                 // "св.Пан", "Св Пан", "св. Пан"
+      /святого\s*пан/i,                // "святого Пантелеймона"
+      /\(\s*[^)]*пан/i,                // any "(... пан..." inside parens
+    ] },
+  { id: "luky", label: "Лікарня св. Луки", icon: "🏥",
+    markers: [
+      /св[\.\s]*лук/i,
+      /святого\s*лук/i,
+      /лікарн[^\s]*\s*лук/i,
+      /\(\s*[^)]*лук/i,
+    ] },
+  { id: "mykolaja", label: "Лікарня св. Миколая", icon: "🏥",
+    markers: [
+      /св[\.\s]*мик/i,                 // "св.Миколая", "св Мик" — but NOT "Миколайович"
+      /святого\s*мик/i,
+      /лікарн[^\s]*\s*мик/i,
+      /\(\s*[^)]*мик/i,                // "(Склад15 СВ.Миколая)"
+    ] },
+  { id: "anny", label: "Лікарня св. Анни", icon: "🏥",
+    markers: [
+      /св[\.\s]*ан/i,                  // "св.Анни"
+      /святої?\s*ан/i,
+      /\bвп\s+ан/i,                    // "ВП Анни"
+      /\(\s*вп\s*ан/i,                 // "( ВП Анни )"
+      /лікарн[^\s]*\s*ан/i,
+    ] },
+  { id: "lab", label: "Лабораторія", icon: "🧪",
     markers: [] }, // matched via FINPLAN_LAB_PATTERNS / OVERRIDES
-  { id: "polic",       label: "Лаб-діагност. центри",    icon: "🔬",
-    markers: ["поліклін", "лаб-діагност", "діагностичн.центр", "діагност.центр"] },
-  { id: "other",       label: "Інші підрозділи",         icon: "📦",
-    markers: [] }, // catch-all + EXCLUDE matches
+  { id: "polic", label: "Лаб-діагност. центри", icon: "🔬",
+    markers: [
+      /поліклін/i,
+      /лаб[\-\s]*діагност/i,
+      /діагност[\.\s]*центр/i,
+    ] },
+  { id: "other", label: "Інші підрозділи", icon: "📦",
+    markers: [] },
 ];
 
 let _finplanData = null;
@@ -3247,28 +3326,38 @@ let _finplanItemSort = "sum";
 // expanded hospital card to compare). Keyed by hospital id.
 const _finplanHospitalMonth = {};
 
+// Returns just the hospital id. Use _classifyHospitalWithReason() if you
+// also need the rule that fired (for diagnostics).
 function _classifyHospital(mvoName) {
+  return _classifyHospitalWithReason(mvoName).hospitalId;
+}
+
+// Same logic as _classifyHospital but also returns *why* the row landed
+// in this bucket — used by the diagnostics panel to surface
+// misclassifications and false-positive storages.
+function _classifyHospitalWithReason(mvoName) {
   // 1. OVERRIDES — hard rules first (before any other check)
   for (const ov of FINPLAN_OVERRIDES) {
-    if (ov.test.test(mvoName)) return ov.target;
+    if (ov.test.test(mvoName)) {
+      return { hospitalId: ov.target, reason: `override ${ov.test}` };
+    }
   }
   // 2. Excludes — automatic "other" for blood-center / patanatomy
   for (const re of FINPLAN_EXCLUDE_PATTERNS) {
-    if (re.test(mvoName)) return "other";
+    if (re.test(mvoName)) return { hospitalId: "other", reason: `exclude ${re}` };
   }
   // 3. Lab patterns outrank hospitals
   for (const re of FINPLAN_LAB_PATTERNS) {
-    if (re.test(mvoName)) return "lab";
+    if (re.test(mvoName)) return { hospitalId: "lab", reason: `lab pattern ${re}` };
   }
-  // 4. Hospital markers
-  const lc = (mvoName || "").toLowerCase();
+  // 4. Hospital markers — markers are now regexes (case-insensitive)
   for (const h of HOSPITALS) {
     if (h.id === "other" || h.id === "lab") continue;
     for (const m of h.markers) {
-      if (lc.includes(m)) return h.id;
+      if (m.test(mvoName)) return { hospitalId: h.id, reason: `marker ${m}` };
     }
   }
-  return "other";
+  return { hospitalId: "other", reason: "no marker matched (default → other)" };
 }
 
 // Save / load cache. Same TTL as other caches.
@@ -3480,10 +3569,13 @@ function _parseFinplanSheet(ws) {
     const isDirection = (indent === 2) ||
       (indent === null && /^\d{2}\s*-\s*/.test(aText));
 
-    // Account: indent==4 OR text is a 3-digit number (201, 202, 203, ...)
+    // Account: indent==4 OR text is a bare number (201, 202, 1531, ...)
+    // 1С uses both 3-digit standard accounts (20x) and 4+ digit subaccounts
+    // (e.g., 1531 in some directions). Anything that's purely digits at
+    // this level is an account header, NOT a product row.
     // Must be inside a direction block (not a stray) — caller checks.
     const isAccount = (indent === 4) ||
-      (indent === null && /^\d{3}$/.test(aText));
+      (indent === null && /^\d{3,5}$/.test(aText));
 
     if (isDirection) {
       currentDirection = aText;
@@ -3533,12 +3625,13 @@ function _parseFinplanSheet(ws) {
     let isItem = !isMvo;
 
     if (isMvo) {
-      const hospitalId = _classifyHospital(aText);
+      const cls = _classifyHospitalWithReason(aText);
       currentMvo = mvoByName.get(aText);
       if (!currentMvo) {
         currentMvo = {
           name: aText,
-          hospitalId,
+          hospitalId: cls.hospitalId,
+          classifyReason: cls.reason,
           qty: qty || 0,
           sum: sum || 0,
           items: [],
@@ -3579,45 +3672,37 @@ function _parseFpNum(v) {
 // This is the SINGLE source of truth — used during parsing to split rows
 // into МВО parents vs goods underneath them.
 //
-// Storage rows look like one of:
-//   A. "Прізвище І." or "Прізвище І.О."             — person with initials
-//   B. "Прізвище Ім'я" or "Прізвище Ім'я По-батькові" — full Cyrillic name
-//      (with a guard: if 3rd word is lowercase, it's a product description
-//      like "Дексаметазону Фосфат розчин ...", NOT a person)
-//   C. Starts with "Склад" / "Відділ" / "Лаборант"
-//   D. Contains "Склад N" / "Склад №N" / "ВП " / "комірник"
-//   E. Contains "поліклін" / "діагност"
-//   F. Contains "центр" + a hospital marker
+// We only trigger on patterns that products in the НСЗУ-202 (medications)
+// block reliably DON'T have. Drug names can have two capitalized words
+// (e.g., "Дексаметазону Фосфат розчин..."), so we never fire on bare
+// "two capital words". We require one of the highly specific signals below.
 //
-// IMPORTANT: We DO NOT trigger on bare "лаборатор" or "реагент" alone, because
-// those words also appear inside item names ("Реагент A", "Лабораторне скло").
-// Real lab storages always have a structural hint too — they either start with
-// "Склад" / "Відділ" / "Лаборант" (caught by C) or match the OVERRIDE
-// "Склад ... лабораторні реагенти" inside _classifyHospital.
+// Signals that mean "this is a storage row":
+//   A. "Прізвище І." or "Прізвище І.О."      — initials with dots
+//   B. Word ending in patronymic suffix       — "Іванович", "Ігорівна" etc.
+//   C. Two capital words followed by a paren  — "Петрів Іван (Склад...)"
+//   D. Starts with structural keyword         — "Склад", "Відділ", "Лаборант"
+//   E. Storage role keywords                  — "комірник", "ВП ", "поліклін", "діагност"
+//   F. "центр" paired with a hospital marker  — bloodbanks, patanatomy
 //
-// Item rows are everything else (drugs, food, materials).
-// NB: \b doesn't work with Cyrillic in JS regex without /u flag, so we use \s.
+// Item rows are everything else.
 function _looksLikeStorage(text) {
   if (!text) return false;
-  // A: Surname + Initial(s) like "Прізвище І." or "Прізвище І.О."
+  // A: "Прізвище І." or "Прізвище І.О." — initials with dots (most reliable)
   if (/^[А-ЯІЇЄҐ][а-яіїєґ']+\s+[А-ЯІЇЄҐ]\.\s*[А-ЯІЇЄҐ]?\.?(\s|,|\(|$)/.test(text)) return true;
-  // B: Full Surname + Name [+ Patronymic] without initials
-  const m = text.match(/^([А-ЯІЇЄҐ][а-яіїєґ']{2,})\s+([А-ЯІЇЄҐ][а-яіїєґ']{2,})(\s+([А-ЯІЇЄҐа-яіїєґ'][а-яіїєґ']{2,}))?(\s|,|\(|$|\.)/);
-  if (m) {
-    const firstWord = m[1];
-    const thirdWord = m[4]; // optional
-    if (!firstWord.includes('-')) {
-      const thirdIsLower = thirdWord && /^[а-яіїєґ]/.test(thirdWord);
-      if (!thirdIsLower) return true;
-    }
-  }
-  // C, D, E, F — keyword-based storage detection
+  // B: Any capitalized word ending in patronymic suffix
+  // ("Олег Ігорович", "Маріана Іванівна", etc.)
+  if (/(^|\s)[А-ЯІЇЄҐ][а-яіїєґ']*(ович|евич|йович|ївна|овна|івна|инична)(\s|,|\(|$|\.)/i.test(text)) return true;
+  // C: Two capitalized words followed IMMEDIATELY by a parenthesis
+  // ("Петрів Іван (Склад5)", "Хміль Я.Я. ( лабораторія )")
+  if (/^[А-ЯІЇЄҐ][а-яіїєґ']{2,}\s+[А-ЯІЇЄҐ][а-яіїєґ']{2,}\s*\(/.test(text)) return true;
+  // D, E, F — structural keywords
   if (/комірник/i.test(text)) return true;
-  if (/^склад(\s|$)/i.test(text)) return true;     // "Склад ..." or just "Склад"
-  if (/склад\s*[№\d]/i.test(text)) return true;    // "Склад N" or "Склад №N"
+  if (/^склад(\s|$)/i.test(text)) return true;
+  if (/склад\s*[№\d]/i.test(text)) return true;
   if (/^відділ/i.test(text)) return true;
-  if (/^лаборант/i.test(text)) return true;        // "Лаборант П.П. ..."
-  if (/\bвп\s/i.test(text)) return true;            // "ВП "
+  if (/^лаборант/i.test(text)) return true;
+  if (/\bвп\s/i.test(text)) return true;
   if (/поліклін/i.test(text)) return true;
   if (/діагност/i.test(text)) return true;
   if (/центр/i.test(text) && /(пан|лук|мик|анн)/i.test(text)) return true;
@@ -3851,7 +3936,13 @@ function resetHospitalMonth(hospitalId, hIdx) {
 }
 
 // ─── Diagnostics: what was classified where ────────────────────────────────
+// This panel exposes the FULL list of МВО the parser detected, grouped by
+// hospital, with sum/items count and an option to expand each one to see
+// its items and the classification rule that fired. Use this to find
+// false-positive storages (rows that look like products) or suspicious
+// items (rows that should have been a separate storage).
 let _finplanDiagShown = false;
+const _finplanDiagExpanded = new Set(); // mvoIds opened in diag
 
 function _renderFinplanDiagnostics() {
   const el = document.getElementById("fp-diagnostics");
@@ -3863,24 +3954,60 @@ function _renderFinplanDiagnostics() {
   const monthData = _finplanData.months[_finplanCurrentMonth];
   if (!monthData) { el.innerHTML = ""; return; }
 
-  // Group МВО names by hospital for the current month
+  // Group full МВО objects by hospital. We index globally by position in
+  // monthData.mvos so onclick handlers can find them by index without
+  // encoding the name into HTML.
   const grouped = {};
   HOSPITALS.forEach(h => grouped[h.id] = []);
-  for (const mvo of monthData.mvos) {
-    (grouped[mvo.hospitalId] || grouped.other).push(mvo.name);
-  }
-
-  // Sort names within each hospital
-  for (const id in grouped) grouped[id].sort((a, b) => a.localeCompare(b, "uk"));
+  monthData.mvos.forEach((mvo, idx) => {
+    const target = grouped[mvo.hospitalId] || grouped.other;
+    target.push({ mvo, idx });
+  });
+  // Sort: largest sum first within each hospital — easiest to scan
+  for (const id in grouped) grouped[id].sort((a, b) => b.mvo.sum - a.mvo.sum);
 
   const sectionsHtml = HOSPITALS
     .filter(h => grouped[h.id].length)
-    .map(h => `
-      <div class="fp-diag-section">
-        <div class="fp-diag-hospital">${h.icon} ${esc(h.label)} <span class="fp-diag-count">(${grouped[h.id].length})</span></div>
-        ${grouped[h.id].map(n => `<div class="fp-diag-mvo">${esc(n)}</div>`).join("")}
-      </div>
-    `).join("");
+    .map(h => {
+      const total = grouped[h.id].reduce((s, x) => s + x.mvo.sum, 0);
+      const mvosHtml = grouped[h.id].map(({ mvo, idx }) => {
+        const isOpen = _finplanDiagExpanded.has(idx);
+        const itemsHtml = isOpen
+          ? `
+            <div class="fp-diag-mvo-detail">
+              <div class="fp-diag-mvo-reason">📐 правило: <code>${esc(mvo.classifyReason || "—")}</code></div>
+              ${mvo.items.length
+                ? mvo.items.map(it => `
+                    <div class="fp-diag-item">
+                      <span class="fp-diag-item-name">${esc(it.name)}</span>
+                      <span class="fp-diag-item-stats">${fmtFinplanQty(it.qty)} · ${fmtFinplanMoney(it.sum)}</span>
+                    </div>
+                  `).join("")
+                : `<div class="fp-diag-item" style="color:var(--muted);">— немає товарів —</div>`}
+            </div>
+          `
+          : "";
+        return `
+          <div class="fp-diag-mvo">
+            <div class="fp-diag-mvo-row" onclick="toggleFinplanDiagMvo(${idx})">
+              <span class="fp-diag-arrow">${isOpen ? "▾" : "▸"}</span>
+              <span class="fp-diag-mvo-name">${esc(mvo.name)}</span>
+              <span class="fp-diag-mvo-stats">${mvo.items.length} поз. · ${fmtFinplanMoney(mvo.sum)}</span>
+            </div>
+            ${itemsHtml}
+          </div>
+        `;
+      }).join("");
+      return `
+        <div class="fp-diag-section">
+          <div class="fp-diag-hospital">
+            ${h.icon} ${esc(h.label)}
+            <span class="fp-diag-count">(${grouped[h.id].length} МВО · ${fmtFinplanMoney(total)})</span>
+          </div>
+          ${mvosHtml}
+        </div>
+      `;
+    }).join("");
 
   el.innerHTML = `
     <div class="fp-diag-card">
@@ -3889,14 +4016,21 @@ function _renderFinplanDiagnostics() {
         <span id="fp-diag-arrow" style="transition:transform .2s;${_finplanDiagShown ? 'transform:rotate(90deg)' : ''}">›</span>
       </div>
       <div id="fp-diag-body" style="display:${_finplanDiagShown ? 'block' : 'none'};">
-        <div style="font-size:11px;color:var(--muted);padding:0 14px 8px;">
-          Тут показано всі МВО за поточний місяць згруповані по лікарнях.
-          Якщо щось класифіковано неправильно — перешли мені точну назву МВО.
+        <div style="font-size:11px;color:var(--muted);padding:0 14px 8px;line-height:1.5;">
+          Натисни на будь-який МВО щоб побачити його товари та правило класифікації.
+          Якщо в "Інших підрозділах" бачиш товар який мав потрапити в склад — натисни на нього,
+          скопіюй точну назву і перешли мені.
         </div>
         ${sectionsHtml}
       </div>
     </div>
   `;
+}
+
+function toggleFinplanDiagMvo(idx) {
+  if (_finplanDiagExpanded.has(idx)) _finplanDiagExpanded.delete(idx);
+  else _finplanDiagExpanded.add(idx);
+  _renderFinplanDiagnostics();
 }
 
 function toggleFinplanDiag() {
