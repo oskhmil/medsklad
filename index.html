@@ -3507,45 +3507,30 @@ function _parseFinplanSheet(ws) {
     // Skip param/header rows that may slip through (no qty/sum)
     if (qty == null && sum == null) continue;
 
-    // МВО vs item:
-    //   indent==6 → МВО
-    //   indent==8 → item
-    //   fallback: МВО is detected by row that starts a new sub-section AND
-    //   typically has both qty and sum that exactly equal the sum of
-    //   subsequent items. Hard to detect without looking ahead. Simpler
-    //   heuristic for fallback: if previous row was a direction/account
-    //   header OR the current row name has a comma + parenthesis or
-    //   contains "(" or "Склад" or "комірник" or "центр" — likely МВО.
-    //   Otherwise it's an item.
-    let isMvo = false;
-    let isItem = false;
-    if (indent === 6) isMvo = true;
-    else if (indent === 8) isItem = true;
-    else if (indent === null) {
-      // Fallback heuristic — used when SheetJS didn't preserve alignment.indent
-      // (this is, in practice, almost always the case for Google-Sheets-exported
-      // xlsx files: GS strips style metadata that 1С originally encoded).
-      //
-      // Strategy: МВО rows reliably look like:
-      //   "Прізвище І.О. ..."  ← person/storage name with initials
-      //   "...комірник..."       ← keyword
-      //   "...Склад N..." / "...ВП ..."
-      //   "...лаборатор..." / "...поліклін..."
-      //   "...центр..." (paired with hospital marker)
-      //
-      // Item rows rarely match these patterns. Critically, an item like
-      // "Анальгін-Дарниця ... №10 (5х2)" has parentheses but does NOT start
-      // with a Surname-Initial-Initial pattern, so we don't flag it as МВО.
-      isMvo =
-        /^[А-ЯІЇЄҐ][а-яіїєґ']+\s+[А-ЯІЇЄҐ]\.\s*[А-ЯІЇЄҐ]?\.?(\s|,|\(|$)/.test(aText)
-        || /комірник/i.test(aText)
-        || /склад\s*[№\d]/i.test(aText)
-        || /\bвп\b/i.test(aText)
-        || /лаборатор/i.test(aText)
-        || /поліклін/i.test(aText)
-        || (/центр/i.test(aText) && /(пан|лук|мик|анн)/i.test(aText));
-      isItem = !isMvo;
-    }
+    // ─── Determine row type by CONTENT, not by indent ─────────────────
+    // We previously trusted alignment.indent (6=МВО, 8=item), but the real
+    // file has МВО rows at BOTH indent levels — e.g., "Склад №4 ... Хміль"
+    // on indent=6, and "Склад Св. Пантелеймона (лабораторні реагенти)" on
+    // indent=8 as a SIBLING storage, not a child. Treating indent=8 as
+    // "item" caused sibling МВО to be swallowed inside another МВО as if
+    // they were goods.
+    //
+    // So we now classify by content patterns in column A:
+    //   - Storage rows ALWAYS look like one of these:
+    //       • "Прізвище І.О. ..." / "Прізвище І. ..."  (МВО with initials)
+    //       • "...комірник..." (storeman keyword)
+    //       • "Склад N" / "Склад №N" / "Склад Св."     (depot)
+    //       • "Відділ ..." / "ВП ..."
+    //       • "...лаборатор..." / "...реагент..."
+    //       • "...поліклін..." / "...діагност..."
+    //       • Centers: "центр + (пан|лук|мик|анн)"
+    //   - Item rows are everything else (drug/food/material names).
+    //
+    // The trickiest false-positive is items containing "(" like
+    // "Анальгін №10 (5х2)" — these don't START with Surname-Initials and
+    // don't match the storage keywords, so they're correctly treated as items.
+    let isMvo = _looksLikeStorage(aText);
+    let isItem = !isMvo;
 
     if (isMvo) {
       const hospitalId = _classifyHospital(aText);
@@ -3588,6 +3573,55 @@ function _parseFpNum(v) {
   const s = String(v).replace(/\s/g, "").replace(",", ".");
   const n = parseFloat(s);
   return isNaN(n) ? null : n;
+}
+
+// Decide whether a column-A text looks like a storage/МВО header (vs an item).
+// This is the SINGLE source of truth — used during parsing to split rows
+// into МВО parents vs goods underneath them.
+//
+// Storage rows look like one of:
+//   A. "Прізвище І." or "Прізвище І.О."             — person with initials
+//   B. "Прізвище Ім'я" or "Прізвище Ім'я По-батькові" — full Cyrillic name
+//      (with a guard: if 3rd word is lowercase, it's a product description
+//      like "Дексаметазону Фосфат розчин ...", NOT a person)
+//   C. Starts with "Склад" / "Відділ" / "Лаборант"
+//   D. Contains "Склад N" / "Склад №N" / "ВП " / "комірник"
+//   E. Contains "поліклін" / "діагност"
+//   F. Contains "центр" + a hospital marker
+//
+// IMPORTANT: We DO NOT trigger on bare "лаборатор" or "реагент" alone, because
+// those words also appear inside item names ("Реагент A", "Лабораторне скло").
+// Real lab storages always have a structural hint too — they either start with
+// "Склад" / "Відділ" / "Лаборант" (caught by C) or match the OVERRIDE
+// "Склад ... лабораторні реагенти" inside _classifyHospital.
+//
+// Item rows are everything else (drugs, food, materials).
+// NB: \b doesn't work with Cyrillic in JS regex without /u flag, so we use \s.
+function _looksLikeStorage(text) {
+  if (!text) return false;
+  // A: Surname + Initial(s) like "Прізвище І." or "Прізвище І.О."
+  if (/^[А-ЯІЇЄҐ][а-яіїєґ']+\s+[А-ЯІЇЄҐ]\.\s*[А-ЯІЇЄҐ]?\.?(\s|,|\(|$)/.test(text)) return true;
+  // B: Full Surname + Name [+ Patronymic] without initials
+  const m = text.match(/^([А-ЯІЇЄҐ][а-яіїєґ']{2,})\s+([А-ЯІЇЄҐ][а-яіїєґ']{2,})(\s+([А-ЯІЇЄҐа-яіїєґ'][а-яіїєґ']{2,}))?(\s|,|\(|$|\.)/);
+  if (m) {
+    const firstWord = m[1];
+    const thirdWord = m[4]; // optional
+    if (!firstWord.includes('-')) {
+      const thirdIsLower = thirdWord && /^[а-яіїєґ]/.test(thirdWord);
+      if (!thirdIsLower) return true;
+    }
+  }
+  // C, D, E, F — keyword-based storage detection
+  if (/комірник/i.test(text)) return true;
+  if (/^склад(\s|$)/i.test(text)) return true;     // "Склад ..." or just "Склад"
+  if (/склад\s*[№\d]/i.test(text)) return true;    // "Склад N" or "Склад №N"
+  if (/^відділ/i.test(text)) return true;
+  if (/^лаборант/i.test(text)) return true;        // "Лаборант П.П. ..."
+  if (/\bвп\s/i.test(text)) return true;            // "ВП "
+  if (/поліклін/i.test(text)) return true;
+  if (/діагност/i.test(text)) return true;
+  if (/центр/i.test(text) && /(пан|лук|мик|анн)/i.test(text)) return true;
+  return false;
 }
 
 function _initFinplanUI() {
