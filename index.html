@@ -494,6 +494,145 @@
   }
   .fp-empty-ico { font-size: 44px; margin-bottom: 12px; }
 
+  /* ─── Analytics panel (collapsible, above hospital list) ─── */
+  .fp-an-panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin: 0 4px 14px;
+    overflow: hidden;
+  }
+  .fp-an-panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 16px; cursor: pointer;
+    font-size: 14px; font-weight: 700; color: var(--text);
+    background: linear-gradient(135deg, rgba(52,211,153,.08), rgba(16,185,129,.04));
+    transition: background .15s;
+  }
+  .fp-an-panel-head:hover { background: linear-gradient(135deg, rgba(52,211,153,.14), rgba(16,185,129,.08)); }
+  .fp-an-arrow {
+    color: var(--muted); font-size: 18px;
+    transition: transform .2s;
+  }
+  .fp-an-arrow.expanded { transform: rotate(90deg); }
+  .fp-an-body {
+    padding: 8px 8px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── Analytics widgets ─── */
+  .fp-an-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin: 0 4px 12px;
+    padding: 14px 16px;
+  }
+  .fp-an-card-title {
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 10px;
+  }
+  .fp-an-toolbar {
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .fp-an-toolbar .fp-mini-select { flex: 1; min-width: 120px; }
+
+  /* KPI row */
+  .fp-kpi-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin-bottom: 12px;
+  }
+  .fp-kpi {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  .fp-kpi-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .fp-kpi-value { font-size: 17px; font-weight: 800; color: var(--text); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .fp-kpi-delta { font-size: 11px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .fp-kpi-delta.up { color: var(--green); }
+  .fp-kpi-delta.down { color: var(--danger); }
+  .fp-kpi-delta.neutral { color: var(--muted); }
+
+  /* Bars chart (horizontal hospital totals) */
+  .fp-bars { display: flex; flex-direction: column; gap: 8px; }
+  .fp-bar-row {
+    display: grid; grid-template-columns: 100px 1fr auto; gap: 8px;
+    align-items: center; font-size: 11.5px;
+  }
+  .fp-bar-label { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fp-bar-track {
+    height: 18px; background: var(--card2); border-radius: 4px; position: relative; overflow: hidden;
+  }
+  .fp-bar-fill {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    background: linear-gradient(90deg, #34d399, #10b981);
+    border-radius: 4px;
+    transition: width .3s ease;
+  }
+  .fp-bar-value { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--text); font-size: 11px; }
+
+  /* Top-N list */
+  .fp-top {
+    display: flex; flex-direction: column;
+  }
+  .fp-top-group {
+    margin-bottom: 14px;
+    background: var(--card2);
+    border-radius: 10px;
+    padding: 8px 12px 10px;
+  }
+  .fp-top-group:last-child { margin-bottom: 0; }
+  .fp-top-group-title {
+    font-size: 12px; font-weight: 700; color: var(--text);
+    padding: 4px 0 8px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .fp-top-row {
+    display: grid; grid-template-columns: 22px 1fr auto; gap: 8px;
+    padding: 7px 0; align-items: flex-start;
+    border-bottom: 1px dashed rgba(37,43,68,.4);
+    font-size: 12px;
+  }
+  .fp-top-row:last-child { border-bottom: none; }
+  .fp-top-rank { color: var(--muted); font-weight: 700; font-size: 11px; text-align: center; }
+  .fp-top-rank.gold { color: #fbbf24; }
+  .fp-top-rank.silver { color: #d1d5db; }
+  .fp-top-rank.bronze { color: #d97706; }
+  .fp-top-name { color: var(--text); line-height: 1.4; word-break: break-word; }
+  .fp-top-name-sub { font-size: 10.5px; color: var(--muted); margin-top: 1px; }
+  .fp-top-value { font-weight: 700; color: var(--green); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  /* SVG charts */
+  .fp-svg-wrap { width: 100%; overflow: hidden; }
+  .fp-chart-legend {
+    display: flex; flex-wrap: wrap; gap: 8px 12px;
+    margin-top: 10px; font-size: 11px;
+  }
+  .fp-chart-legend-item { display: flex; gap: 6px; align-items: center; color: var(--muted); }
+  .fp-chart-legend-dot {
+    width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+  }
+
+  /* Comparison rows */
+  .fp-cmp {
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px;
+    align-items: center; padding: 8px 0;
+    border-bottom: 1px dashed rgba(37,43,68,.4);
+    font-size: 12px;
+  }
+  .fp-cmp:last-child { border-bottom: none; }
+  .fp-cmp-name { color: var(--text); }
+  .fp-cmp-base, .fp-cmp-cur {
+    color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums;
+    font-size: 11px;
+  }
+  .fp-cmp-delta {
+    font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums;
+    text-align: right; min-width: 70px;
+  }
+  .fp-cmp-delta.up { color: var(--green); }
+  .fp-cmp-delta.down { color: var(--danger); }
+  .fp-cmp-delta.neutral { color: var(--muted); }
+
   /* ─── Per-hospital month selector bar (inside expanded hospital) ─── */
   .fp-hospital-month-bar {
     display: flex; align-items: center; gap: 8px;
@@ -1062,6 +1201,17 @@
         </div>
 
         <div class="fp-summary" id="fp-summary"></div>
+
+        <!-- ═══════════ ANALYTICS PANEL (collapsible, above hospital list) ═══════════ -->
+        <div id="fp-analytics-panel" class="fp-an-panel">
+          <div class="fp-an-panel-head" onclick="toggleFpAnalytics()">
+            <span>📊 Аналітика</span>
+            <span id="fp-an-arrow" class="fp-an-arrow">›</span>
+          </div>
+          <div id="fp-an-body" class="fp-an-body" style="display:none">
+            <div id="fp-analytics-content"></div>
+          </div>
+        </div>
 
         <div class="fp-toolbar" style="margin-bottom:10px;">
           <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600;flex:1;">Сортування:</div>
@@ -4186,6 +4336,411 @@ function fmtFinplanQty(v) {
     return v.toLocaleString("uk-UA", { maximumFractionDigits: 0 });
   }
   return v.toLocaleString("uk-UA", { maximumFractionDigits: 3 });
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FINPLAN ANALYTICS MODULE
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// All analytics widgets render against `_finplanData.months` — the same
+// month-keyed МВО list that powers the hospital view. We compute the
+// aggregated values on-demand each render (data is small enough — typically
+// a few hundred МВО per month, dozens of items each).
+//
+// Layout: a single collapsible panel placed above the hospital list. When
+// expanded it shows four cards in this priority order:
+//   1. Two-month comparison (KPIs + per-hospital deltas)
+//   2. Bar chart — totals per month, broken down by hospital
+//   3. Line chart — dynamics for one chosen hospital across months
+//   4. Top-10 ТМО — either "all hospitals combined" or "per-hospital lists"
+
+let _finplanAnExpanded = false;       // collapsible state
+let _finplanAnState = {
+  lineHospital: "all",     // hospital id for the line chart, "all" = total
+  topPerHospital: false,   // false = aggregate across all, true = list per hospital
+  cmpBase: null,           // base month for comparison
+  cmpCur: null,            // compared-against month
+};
+
+function toggleFpAnalytics() {
+  _finplanAnExpanded = !_finplanAnExpanded;
+  document.getElementById("fp-an-body").style.display = _finplanAnExpanded ? "block" : "none";
+  document.getElementById("fp-an-arrow").classList.toggle("expanded", _finplanAnExpanded);
+  if (_finplanAnExpanded) renderFinplanAnalytics();
+}
+
+// Aggregate sum per hospital for a given month → { [hospitalId]: number }
+function _finplanHospitalSums(monthName) {
+  const out = {};
+  HOSPITALS.forEach(h => out[h.id] = 0);
+  const md = _finplanData && _finplanData.months[monthName];
+  if (!md) return out;
+  for (const mvo of md.mvos) out[mvo.hospitalId] = (out[mvo.hospitalId] || 0) + mvo.sum;
+  return out;
+}
+
+// Total sum for a month
+function _finplanMonthTotal(monthName) {
+  const md = _finplanData && _finplanData.months[monthName];
+  if (!md) return 0;
+  return md.mvos.reduce((s, m) => s + m.sum, 0);
+}
+
+// Hospital colors — used in stacked bar / line chart / legend.
+const HOSPITAL_COLORS = {
+  pantelejmon: "#4f8ef7",
+  luky:        "#a78bfa",
+  mykolaja:    "#34d399",
+  anny:        "#f472b6",
+  lab:         "#fbbf24",
+  polic:       "#38bdf8",
+  other:       "#6b7a99",
+};
+
+function renderFinplanAnalytics() {
+  if (!_finplanData) return;
+  const months = _finplanData.sheetNames || Object.keys(_finplanData.months);
+  if (!months.length) {
+    document.getElementById("fp-analytics-content").innerHTML = `
+      <div class="fp-empty"><div class="fp-empty-ico">📊</div>
+        <div style="font-size:14px;font-weight:600;">Нема даних для аналітики</div></div>`;
+    return;
+  }
+
+  // Default: most recent non-empty month as cmpCur, previous month as cmpBase.
+  // We only auto-pick if state is empty or invalid; once user picks something
+  // it sticks across re-renders.
+  if (!_finplanAnState.cmpCur || !months.includes(_finplanAnState.cmpCur)) {
+    for (let i = months.length - 1; i >= 0; i--) {
+      if (_finplanMonthTotal(months[i]) > 0) { _finplanAnState.cmpCur = months[i]; break; }
+    }
+    _finplanAnState.cmpCur = _finplanAnState.cmpCur || months[months.length - 1];
+  }
+  if (!_finplanAnState.cmpBase || !months.includes(_finplanAnState.cmpBase)) {
+    const curIdx = months.indexOf(_finplanAnState.cmpCur);
+    _finplanAnState.cmpBase = months[Math.max(0, curIdx - 1)];
+  }
+
+  const html = `
+    ${_renderAnComparisonCard(months)}
+    ${_renderAnStackedBarsCard(months)}
+    ${_renderAnLineCard(months)}
+    ${_renderAnTopItemsCard()}
+  `;
+  document.getElementById("fp-analytics-content").innerHTML = html;
+}
+
+// ─── Card 1: Two-month comparison (KPIs + per-hospital deltas) ─────────────
+function _renderAnComparisonCard(months) {
+  const base = _finplanAnState.cmpBase;
+  const cur = _finplanAnState.cmpCur;
+  const baseTotal = _finplanMonthTotal(base);
+  const curTotal = _finplanMonthTotal(cur);
+  const delta = curTotal - baseTotal;
+  const deltaPct = baseTotal > 0 ? (delta / baseTotal * 100) : 0;
+  const deltaCls = delta > 0 ? "up" : delta < 0 ? "down" : "neutral";
+  const arrow = delta > 0 ? "▲" : delta < 0 ? "▼" : "→";
+
+  const baseSums = _finplanHospitalSums(base);
+  const curSums = _finplanHospitalSums(cur);
+
+  // Per-hospital comparison rows
+  const cmpRows = HOSPITALS
+    .map(h => {
+      const b = baseSums[h.id] || 0;
+      const c = curSums[h.id] || 0;
+      if (b === 0 && c === 0) return null;
+      const d = c - b;
+      const dPct = b > 0 ? (d / b * 100) : (c > 0 ? 100 : 0);
+      const cls = d > 0 ? "up" : d < 0 ? "down" : "neutral";
+      const sign = d > 0 ? "+" : "";
+      const dStr = d === 0 ? "—" : `${sign}${fmtFinplanMoney(d).replace(" ₴", "")}`;
+      const pctStr = b > 0 && d !== 0 ? `${sign}${dPct.toFixed(1)}%` : "";
+      return `
+        <div class="fp-cmp">
+          <div class="fp-cmp-name">${h.icon} ${esc(h.label)}</div>
+          <div class="fp-cmp-base">${fmtFinplanMoney(b)}</div>
+          <div class="fp-cmp-cur">${fmtFinplanMoney(c)}</div>
+          <div class="fp-cmp-delta ${cls}">${dStr}${pctStr ? `<br><span style="font-size:10px;font-weight:600;">${pctStr}</span>` : ""}</div>
+        </div>
+      `;
+    })
+    .filter(Boolean)
+    .join("");
+
+  return `
+    <div class="fp-an-card">
+      <div class="fp-an-card-title">📈 Порівняння місяців</div>
+      <div class="fp-an-toolbar">
+        <select class="fp-mini-select" onchange="setFpAnCmp('base', this.value)">
+          ${months.map(m => `<option value="${esc(m)}" ${m === base ? "selected" : ""}>${esc(m)}</option>`).join("")}
+        </select>
+        <span style="color:var(--muted);font-size:14px;">→</span>
+        <select class="fp-mini-select" onchange="setFpAnCmp('cur', this.value)">
+          ${months.map(m => `<option value="${esc(m)}" ${m === cur ? "selected" : ""}>${esc(m)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="fp-kpi-row">
+        <div class="fp-kpi">
+          <div class="fp-kpi-label">База · ${esc(base)}</div>
+          <div class="fp-kpi-value">${fmtFinplanMoney(baseTotal)}</div>
+        </div>
+        <div class="fp-kpi">
+          <div class="fp-kpi-label">Поточний · ${esc(cur)}</div>
+          <div class="fp-kpi-value">${fmtFinplanMoney(curTotal)}</div>
+          <div class="fp-kpi-delta ${deltaCls}">${arrow} ${baseTotal > 0 ? deltaPct.toFixed(1) + "%" : "—"}</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding-bottom:6px;border-bottom:1px solid var(--border);">
+          <div>Лікарня</div><div>${esc(base)}</div><div>${esc(cur)}</div><div style="text-align:right;">Δ</div>
+        </div>
+        ${cmpRows || '<div style="text-align:center;color:var(--muted);font-size:12px;padding:14px 0;">Немає даних для порівняння</div>'}
+      </div>
+    </div>
+  `;
+}
+
+function setFpAnCmp(which, value) {
+  _finplanAnState[which === "base" ? "cmpBase" : "cmpCur"] = value;
+  renderFinplanAnalytics();
+}
+
+// ─── Card 2: Stacked bar chart — sum per month, broken down by hospital ───
+function _renderAnStackedBarsCard(months) {
+  // Only include months that have data
+  const data = months.map(m => ({
+    month: m,
+    total: _finplanMonthTotal(m),
+    sums: _finplanHospitalSums(m),
+  })).filter(d => d.total > 0);
+
+  if (!data.length) return "";
+
+  const maxTotal = Math.max(...data.map(d => d.total));
+  const W = 360, H = 200, padL = 50, padR = 6, padT = 8, padB = 22;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const barGap = 6;
+  const barW = Math.max(8, (chartW - barGap * (data.length - 1)) / data.length);
+
+  // Stacked bars — segment heights are proportional to maxTotal, not to bar's
+  // own total, so visually you see how each month compares to the peak.
+  let barsSvg = "";
+  data.forEach((d, i) => {
+    const x = padL + i * (barW + barGap);
+    let yCursor = padT + chartH;
+    HOSPITALS.forEach(h => {
+      const v = d.sums[h.id] || 0;
+      if (v <= 0) return;
+      const segH = (v / maxTotal) * chartH;
+      yCursor -= segH;
+      barsSvg += `<rect x="${x}" y="${yCursor}" width="${barW}" height="${segH}" fill="${HOSPITAL_COLORS[h.id]}" opacity="0.92"><title>${esc(h.label)}: ${fmtFinplanMoney(v)} (${esc(d.month)})</title></rect>`;
+    });
+    // Month label below each bar
+    const lblX = x + barW / 2;
+    barsSvg += `<text x="${lblX}" y="${padT + chartH + 14}" font-size="9" fill="#6b7a99" text-anchor="middle">${esc(d.month.slice(0, 3))}</text>`;
+  });
+
+  // Y-axis: 4 horizontal grid lines + value labels
+  let gridSvg = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (chartH * i / 4);
+    const v = maxTotal * (1 - i / 4);
+    gridSvg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#252b44" stroke-width="0.5" stroke-dasharray="2,2"/>`;
+    const lbl = v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : v >= 1e3 ? Math.round(v / 1e3) + "K" : Math.round(v);
+    gridSvg += `<text x="${padL - 4}" y="${y + 3}" font-size="9" fill="#6b7a99" text-anchor="end">${lbl}</text>`;
+  }
+
+  // Only include hospitals that actually contribute in any month — keeps
+  // the legend tight. Empty hospitals (e.g., Поліклініки in some months) are
+  // hidden from the legend entirely.
+  const presentHospitals = HOSPITALS.filter(h =>
+    data.some(d => (d.sums[h.id] || 0) > 0)
+  );
+  const legend = presentHospitals.map(h => `
+    <div class="fp-chart-legend-item">
+      <span class="fp-chart-legend-dot" style="background:${HOSPITAL_COLORS[h.id]}"></span>
+      ${esc(h.label)}
+    </div>
+  `).join("");
+
+  return `
+    <div class="fp-an-card">
+      <div class="fp-an-card-title">📊 Сума по місяцях (розбивка по лікарнях)</div>
+      <div class="fp-svg-wrap">
+        <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="xMidYMid meet">
+          ${gridSvg}
+          ${barsSvg}
+        </svg>
+      </div>
+      <div class="fp-chart-legend">${legend}</div>
+    </div>
+  `;
+}
+
+// ─── Card 3: Line chart — dynamics for one hospital (or all) over months ──
+function _renderAnLineCard(months) {
+  const sel = _finplanAnState.lineHospital;
+  // Build series of (month, value) points for the selected hospital.
+  // "all" = whole-month total across every hospital.
+  const points = months.map(m => {
+    if (sel === "all") return { month: m, v: _finplanMonthTotal(m) };
+    const sums = _finplanHospitalSums(m);
+    return { month: m, v: sums[sel] || 0 };
+  });
+  const maxV = Math.max(1, ...points.map(p => p.v));
+
+  const W = 360, H = 180, padL = 50, padR = 10, padT = 10, padB = 22;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const stepX = points.length > 1 ? chartW / (points.length - 1) : 0;
+  const lineColor = sel === "all" ? "#4f8ef7" : (HOSPITAL_COLORS[sel] || "#4f8ef7");
+
+  // Build the line path + dots + month labels
+  let path = "";
+  let dotsSvg = "";
+  let labelsSvg = "";
+  points.forEach((p, i) => {
+    const x = padL + i * stepX;
+    const y = padT + chartH - (p.v / maxV) * chartH;
+    path += (i === 0 ? "M" : "L") + ` ${x.toFixed(1)} ${y.toFixed(1)} `;
+    dotsSvg += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${lineColor}"><title>${esc(p.month)}: ${fmtFinplanMoney(p.v)}</title></circle>`;
+    labelsSvg += `<text x="${x.toFixed(1)}" y="${padT + chartH + 14}" font-size="9" fill="#6b7a99" text-anchor="middle">${esc(p.month.slice(0, 3))}</text>`;
+  });
+
+  // Grid + Y labels
+  let gridSvg = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (chartH * i / 4);
+    const v = maxV * (1 - i / 4);
+    gridSvg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#252b44" stroke-width="0.5" stroke-dasharray="2,2"/>`;
+    const lbl = v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : v >= 1e3 ? Math.round(v / 1e3) + "K" : Math.round(v);
+    gridSvg += `<text x="${padL - 4}" y="${y + 3}" font-size="9" fill="#6b7a99" text-anchor="end">${lbl}</text>`;
+  }
+
+  // Hospital selector options
+  const hospitalOpts = [
+    `<option value="all" ${sel === "all" ? "selected" : ""}>Всі лікарні (загальна сума)</option>`,
+    ...HOSPITALS.map(h => `<option value="${esc(h.id)}" ${sel === h.id ? "selected" : ""}>${esc(h.label)}</option>`),
+  ].join("");
+
+  return `
+    <div class="fp-an-card">
+      <div class="fp-an-card-title">📉 Динаміка по місяцях</div>
+      <div class="fp-an-toolbar">
+        <select class="fp-mini-select" onchange="setFpAnLineHospital(this.value)">
+          ${hospitalOpts}
+        </select>
+      </div>
+      <div class="fp-svg-wrap">
+        <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="xMidYMid meet">
+          ${gridSvg}
+          <path d="${path}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          ${dotsSvg}
+          ${labelsSvg}
+        </svg>
+      </div>
+    </div>
+  `;
+}
+
+function setFpAnLineHospital(id) {
+  _finplanAnState.lineHospital = id;
+  renderFinplanAnalytics();
+}
+
+// ─── Card 4: Top-10 ТМО — either combined or per-hospital ─────────────────
+//
+// Two modes via toggle:
+//   "По всіх разом" — single ranked Top-10 list across all hospitals
+//   "Всередині лікарні" — separate Top-10 list for each hospital that has data
+//
+// Items are aggregated by name (same item across multiple МВО is summed).
+function _renderAnTopItemsCard() {
+  const month = _finplanAnState.cmpCur;
+  const md = _finplanData.months[month];
+  if (!md) return "";
+
+  const perHospital = _finplanAnState.topPerHospital;
+  const N = 10;
+
+  let bodyHtml = "";
+  if (!perHospital) {
+    // Combined: aggregate all items across all hospitals
+    const top = _aggregateAndTopN(md.mvos, N);
+    bodyHtml = _renderTopList(top);
+  } else {
+    // Per-hospital: separate Top-N for each hospital that has any data
+    const sections = HOSPITALS.map(h => {
+      const mvos = md.mvos.filter(m => m.hospitalId === h.id);
+      if (!mvos.length) return null;
+      const top = _aggregateAndTopN(mvos, N);
+      if (!top.length) return null;
+      return `
+        <div class="fp-top-group">
+          <div class="fp-top-group-title">
+            ${h.icon} ${esc(h.label)}
+          </div>
+          ${_renderTopList(top)}
+        </div>
+      `;
+    }).filter(Boolean).join("");
+    bodyHtml = sections || `<div style="text-align:center;color:var(--muted);font-size:12px;padding:14px 0;">Нема даних</div>`;
+  }
+
+  return `
+    <div class="fp-an-card">
+      <div class="fp-an-card-title">🏆 Топ-${N} ТМО · ${esc(month)}</div>
+      <div class="fp-an-toolbar">
+        <button class="fp-mini-btn ${!perHospital ? 'active' : ''}" onclick="setFpAnTopMode(false)">По всіх разом</button>
+        <button class="fp-mini-btn ${perHospital ? 'active' : ''}" onclick="setFpAnTopMode(true)">Всередині лікарень</button>
+      </div>
+      ${bodyHtml}
+    </div>
+  `;
+}
+
+// Aggregate items across given МВО list, return top-N by sum.
+function _aggregateAndTopN(mvos, N) {
+  const itemMap = new Map();
+  for (const m of mvos) {
+    for (const it of m.items) {
+      const cur = itemMap.get(it.name) || { name: it.name, qty: 0, sum: 0, mvos: new Set() };
+      cur.qty += it.qty;
+      cur.sum += it.sum;
+      cur.mvos.add(m.name);
+      itemMap.set(it.name, cur);
+    }
+  }
+  return Array.from(itemMap.values())
+    .sort((a, b) => b.sum - a.sum)
+    .slice(0, N)
+    .map(it => ({
+      name: it.name,
+      sub: `${it.mvos.size} ${it.mvos.size === 1 ? "склад" : "склади"} · ${fmtFinplanQty(it.qty)} од.`,
+      sum: it.sum,
+    }));
+}
+
+function _renderTopList(rows) {
+  if (!rows.length) return `<div style="text-align:center;color:var(--muted);font-size:12px;padding:8px 0;">—</div>`;
+  const rankClass = i => i === 0 ? "gold" : i === 1 ? "silver" : i === 2 ? "bronze" : "";
+  return `<div class="fp-top">${rows.map((r, i) => `
+    <div class="fp-top-row">
+      <div class="fp-top-rank ${rankClass(i)}">${i + 1}</div>
+      <div>
+        <div class="fp-top-name">${esc(r.name)}</div>
+        ${r.sub ? `<div class="fp-top-name-sub">${esc(r.sub)}</div>` : ""}
+      </div>
+      <div class="fp-top-value">${fmtFinplanMoney(r.sum)}</div>
+    </div>
+  `).join("")}</div>`;
+}
+
+function setFpAnTopMode(perHospital) {
+  _finplanAnState.topPerHospital = perHospital;
+  renderFinplanAnalytics();
 }
 
 function exportFinplanXlsx() {
