@@ -3693,9 +3693,11 @@ function _looksLikeStorage(text) {
   // B: Any capitalized word ending in patronymic suffix
   // ("Олег Ігорович", "Маріана Іванівна", etc.)
   if (/(^|\s)[А-ЯІЇЄҐ][а-яіїєґ']*(ович|евич|йович|ївна|овна|івна|инична)(\s|,|\(|$|\.)/i.test(text)) return true;
-  // C: Two capitalized words followed IMMEDIATELY by a parenthesis
-  // ("Петрів Іван (Склад5)", "Хміль Я.Я. ( лабораторія )")
-  if (/^[А-ЯІЇЄҐ][а-яіїєґ']{2,}\s+[А-ЯІЇЄҐ][а-яіїєґ']{2,}\s*\(/.test(text)) return true;
+  // (Pattern C — "two capitals + paren" — was deliberately removed because it
+  // mis-fired on lab reagents with chemical labels in parentheses, e.g.
+  // "Стандарт Залізо (Fe)", "Електрод Кальцій (Ca)". Real storage rows that
+  // had only this signal are extremely rare; in 1С export every МВО has
+  // either initials, a patronymic, or a structural keyword like "Склад".)
   // D, E, F — structural keywords
   if (/комірник/i.test(text)) return true;
   if (/^склад(\s|$)/i.test(text)) return true;
