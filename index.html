@@ -393,6 +393,11 @@
   .fp-summary-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
   .fp-summary-total { font-size: 22px; font-weight: 800; color: var(--accent); margin-top: 4px; }
   .fp-summary-period { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .fp-summary-updated {
+    font-size: 11px; color: var(--muted);
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px dashed var(--border);
+  }
 
   .fp-hospital-card {
     background: var(--card); border: 1px solid var(--border);
@@ -3932,10 +3937,21 @@ function renderFinplan() {
   if (monthData.period) {
     periodStr = `${fmtShortDate(monthData.period.from)} – ${fmtShortDate(monthData.period.to)}`;
   }
+  // Format last-updated stamp once and reuse: shown both in the summary
+  // card (as a freshness hint) and at the bottom of the screen for visibility.
+  let updatedStr = "";
+  if (_finplanData.loadedAt) {
+    const d = new Date(_finplanData.loadedAt);
+    updatedStr = d.toLocaleString("uk-UA", {
+      day: "2-digit", month: "2-digit", year: "numeric",
+      hour: "2-digit", minute: "2-digit",
+    });
+  }
   summaryEl.innerHTML = `
     <div class="fp-summary-label">Всього закупівель (НСЗУ, рах. 202)</div>
     <div class="fp-summary-total">${fmtFinplanMoney(monthData.total)}</div>
     <div class="fp-summary-period">${esc(_finplanCurrentMonth)}${periodStr ? " · " + esc(periodStr) : ""}</div>
+    ${updatedStr ? `<div class="fp-summary-updated">🔄 Дані оновлено ${esc(updatedStr)}</div>` : ""}
   `;
 
   // Hospital cards
