@@ -1356,7 +1356,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.65";
+const APP_VERSION = "v.66";
 
 let allItems = [];
 let currentQuery = "";
@@ -4461,32 +4461,60 @@ function renderFinplanAnalytics() {
   document.getElementById("fp-analytics-content").innerHTML = html;
 }
 
-// Compute month-end forecast for an in-progress month using linear extrapolation:
-// scale current spend by (total days in period / days elapsed so far).
-// Returns null if forecasting doesn't make sense:
-//   - period info missing
-//   - today is past the period's end (month already closed → "actual" == final)
-//   - today is before the period's start (month hasn't begun)
-//   - elapsed days is zero (would divide by zero)
-// The math counts days inclusively: a 31-day month has 31 days, day 1 is the first day.
-function _finplanMonthForecast(monthData) {
-  if (!monthData || !monthData.period || !monthData.period.from || !monthData.period.to) return null;
+// Map Ukrainian month names (as they appear on xlsx tabs) to month index 0..11.
+// Used as a fallback when monthData.period is missing or fails to parse —
+// we still want the forecast to work when the user looks at "Травень" even
+// if the period header inside the sheet is malformed.
+const _UA_MONTH_INDEX = {
+  "січень": 0, "лютий": 1, "березень": 2, "квітень": 3,
+  "травень": 4, "червень": 5, "липень": 6, "серпень": 7,
+  "вересень": 8, "жовтень": 9, "листопад": 10, "грудень": 11,
+};
+
+// Compute month-end forecast using linear extrapolation.
+// Returns one of:
+//   - { state: "closed",   fact, totalDays }                    — month already closed
+//   - { state: "future",   totalDays }                          — month hasn't started yet
+//   - { state: "active",   forecast, fact, elapsed, totalDays } — in-progress, valid forecast
+//   - null                                                       — couldn't determine month at all
+//
+// We try monthData.period first (most reliable, comes from "Період: dd.mm.yyyy - dd.mm.yyyy"
+// inside the sheet). If that fails, we fall back to parsing the tab name
+// ("Травень" → May of the current year).
+function _finplanMonthForecast(monthData, monthName) {
+  if (!monthData) return null;
   const total = monthData.mvos.reduce((s, m) => s + m.sum, 0);
-  if (total <= 0) return null;
-  const from = new Date(monthData.period.from);
-  const to   = new Date(monthData.period.to);
-  if (isNaN(from) || isNaN(to)) return null;
+
+  let from = null, to = null;
+  if (monthData.period && monthData.period.from && monthData.period.to) {
+    from = new Date(monthData.period.from);
+    to   = new Date(monthData.period.to);
+    if (isNaN(from) || isNaN(to)) { from = null; to = null; }
+  }
+  // Fallback: derive month bounds from the sheet name (e.g., "Травень")
+  if ((!from || !to) && monthName) {
+    const lc = monthName.toLowerCase().trim();
+    const monthIdx = _UA_MONTH_INDEX[lc];
+    if (monthIdx != null) {
+      const year = new Date().getFullYear();
+      from = new Date(year, monthIdx, 1);
+      to   = new Date(year, monthIdx + 1, 0); // last day of month
+    }
+  }
+  if (!from || !to) return null;
+
   const today = new Date();
   // Strip time component so day-level math is consistent regardless of clock drift
   today.setHours(0, 0, 0, 0); from.setHours(0, 0, 0, 0); to.setHours(0, 0, 0, 0);
-  if (today < from) return null;
-  if (today >= to)  return null; // month closed → no forecast
   const MS_PER_DAY = 86400000;
   const totalDays = Math.round((to - from) / MS_PER_DAY) + 1;
-  const elapsed   = Math.round((today - from) / MS_PER_DAY) + 1;
-  if (elapsed <= 0 || totalDays <= elapsed) return null;
+
+  if (today < from) return { state: "future", totalDays };
+  if (today >= to)  return { state: "closed", fact: total, totalDays };
+  const elapsed = Math.round((today - from) / MS_PER_DAY) + 1;
+  if (elapsed <= 0 || total <= 0) return null;
   const forecast = total * totalDays / elapsed;
-  return { forecast, elapsed, totalDays, fact: total };
+  return { state: "active", forecast, fact: total, elapsed, totalDays };
 }
 
 // ─── Card 1: Two-month comparison (KPIs + per-hospital deltas) ─────────────
@@ -4503,12 +4531,13 @@ function _renderAnComparisonCard(months) {
   const baseSums = _finplanHospitalSums(base);
   const curSums = _finplanHospitalSums(cur);
 
-  // Forecast is only meaningful for the current/in-progress month
+  // Forecast block — appears for active months (extrapolation), and shows
+  // a status hint for closed/future months too so the user always understands
+  // why a number isn't being projected.
   const curMd = _finplanData.months[cur];
-  const fc = _finplanMonthForecast(curMd);
+  const fc = _finplanMonthForecast(curMd, cur);
   let forecastHtml = "";
-  if (fc) {
-    // Compare forecast against base month for context
+  if (fc && fc.state === "active") {
     const fcDelta = fc.forecast - baseTotal;
     const fcPct = baseTotal > 0 ? (fcDelta / baseTotal * 100) : 0;
     const fcCls = fcDelta > 0 ? "up" : fcDelta < 0 ? "down" : "neutral";
@@ -4519,6 +4548,20 @@ function _renderAnComparisonCard(months) {
         <div class="fp-kpi-value">${fmtFinplanMoney(fc.forecast)}</div>
         <div class="fp-kpi-delta ${fcCls}">${fcArrow} ${baseTotal > 0 ? fcPct.toFixed(1) + "% vs база" : "—"}</div>
         <div class="fp-kpi-sub">факт за ${fc.elapsed} з ${fc.totalDays} днів</div>
+      </div>
+    `;
+  } else if (fc && fc.state === "closed") {
+    forecastHtml = `
+      <div class="fp-kpi fp-kpi-forecast">
+        <div class="fp-kpi-label">📅 Прогноз на кінець місяця</div>
+        <div class="fp-kpi-sub" style="margin-top:4px;">Місяць закритий — показано фактичну суму вище</div>
+      </div>
+    `;
+  } else if (fc && fc.state === "future") {
+    forecastHtml = `
+      <div class="fp-kpi fp-kpi-forecast">
+        <div class="fp-kpi-label">📅 Прогноз на кінець місяця</div>
+        <div class="fp-kpi-sub" style="margin-top:4px;">Місяць ще не почався</div>
       </div>
     `;
   }
