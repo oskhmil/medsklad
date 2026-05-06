@@ -557,13 +557,14 @@
   .fp-kpi-delta.neutral { color: var(--muted); }
   .fp-kpi-sub { font-size: 10px; color: var(--muted); margin-top: 4px; }
 
-  /* Forecast KPI: 3rd cell of the comparison grid, highlighted in accent color */
+  /* Forecast KPI: full-width row below the База/Поточний pair */
   .fp-kpi-forecast {
     background: linear-gradient(135deg, rgba(79,142,247,.10), rgba(56,189,248,.05));
     border-color: rgba(79,142,247,.40);
   }
   .fp-kpi-forecast .fp-kpi-label { color: var(--accent); }
   .fp-kpi-forecast .fp-kpi-value { color: var(--accent); }
+  .fp-kpi-full { margin-top: 8px; }
 
   /* Bars chart (horizontal hospital totals) */
   .fp-bars { display: flex; flex-direction: column; gap: 8px; }
@@ -1355,7 +1356,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.67";
+const APP_VERSION = "v.68";
 
 let allItems = [];
 let currentQuery = "";
@@ -4500,30 +4501,37 @@ function _finplanResolveYear(monthData) {
 //   - { state: "active",   forecast, fact, elapsed, totalDays } — in-progress, valid forecast
 //   - null                                                       — couldn't determine month at all
 //
-// We try monthData.period first (most reliable, comes from "Період: dd.mm.yyyy - dd.mm.yyyy"
-// inside the sheet). If that fails, we fall back to parsing the tab name
-// ("Травень" → May of the year derived from other months in the data).
+// IMPORTANT: We deliberately do NOT use period.to from the data, because the
+// data file often reports period.to as the last date of the *report*, not the
+// last day of the calendar month. Example: a May report exported on May 6th
+// shows "Період: 01.05.2026 - 06.05.2026" — but for forecasting purposes the
+// month still ends on May 31. We take period.from (or month name) to figure
+// out the year+month, then compute the calendar month end ourselves.
 function _finplanMonthForecast(monthData, monthName) {
   if (!monthData) return null;
   const total = monthData.mvos.reduce((s, m) => s + m.sum, 0);
 
-  let from = null, to = null;
-  if (monthData.period && monthData.period.from && monthData.period.to) {
-    from = new Date(monthData.period.from);
-    to   = new Date(monthData.period.to);
-    if (isNaN(from) || isNaN(to)) { from = null; to = null; }
+  // Step 1: figure out which (year, monthIndex) we're forecasting.
+  // Priority: period.from (most reliable, includes year) → tab name (with year
+  // resolved from any other month in the file) → null.
+  let year = null, monthIdx = null;
+  if (monthData.period && monthData.period.from) {
+    const d = new Date(monthData.period.from);
+    if (!isNaN(d)) { year = d.getFullYear(); monthIdx = d.getMonth(); }
   }
-  // Fallback: derive month bounds from the sheet name (e.g., "Травень")
-  if ((!from || !to) && monthName) {
+  if (year == null && monthName) {
     const lc = monthName.toLowerCase().trim();
-    const monthIdx = _UA_MONTH_INDEX[lc];
-    if (monthIdx != null) {
-      const year = _finplanResolveYear(monthData);
-      from = new Date(year, monthIdx, 1);
-      to   = new Date(year, monthIdx + 1, 0); // last day of month
+    const idx = _UA_MONTH_INDEX[lc];
+    if (idx != null) {
+      year = _finplanResolveYear(monthData);
+      monthIdx = idx;
     }
   }
-  if (!from || !to) return null;
+  if (year == null || monthIdx == null) return null;
+
+  // Step 2: compute calendar bounds of THE MONTH (not from period.to).
+  const from = new Date(year, monthIdx, 1);
+  const to   = new Date(year, monthIdx + 1, 0); // last day of the month
 
   const today = new Date();
   // Strip time component so day-level math is consistent regardless of clock drift
@@ -4532,9 +4540,28 @@ function _finplanMonthForecast(monthData, monthName) {
   const totalDays = Math.round((to - from) / MS_PER_DAY) + 1;
 
   if (today < from) return { state: "future", totalDays };
-  if (today >= to)  return { state: "closed", fact: total, totalDays };
-  const elapsed = Math.round((today - from) / MS_PER_DAY) + 1;
+  if (today > to)   return { state: "closed", fact: total, totalDays };
+
+  // Active month: extrapolate based on data freshness.
+  // We use period.to (if available) as "elapsed" — this is the date through
+  // which the data covers, which may lag behind today by 1-2 days. If period.to
+  // is missing, fall back to (today - from + 1).
+  let elapsed;
+  if (monthData.period && monthData.period.to) {
+    const dataTo = new Date(monthData.period.to);
+    if (!isNaN(dataTo)) {
+      dataTo.setHours(0, 0, 0, 0);
+      elapsed = Math.round((dataTo - from) / MS_PER_DAY) + 1;
+    }
+  }
+  if (elapsed == null || elapsed <= 0) {
+    elapsed = Math.round((today - from) / MS_PER_DAY) + 1;
+  }
+  // Guard: elapsed must not exceed totalDays (data shouldn't overshoot the month)
+  if (elapsed > totalDays) elapsed = totalDays;
   if (elapsed <= 0 || total <= 0) return null;
+  if (elapsed >= totalDays) return { state: "closed", fact: total, totalDays };
+
   const forecast = total * totalDays / elapsed;
   return { state: "active", forecast, fact: total, elapsed, totalDays };
 }
@@ -4553,44 +4580,46 @@ function _renderAnComparisonCard(months) {
   const baseSums = _finplanHospitalSums(base);
   const curSums = _finplanHospitalSums(cur);
 
-  // Forecast block — appears for active months (extrapolation), and shows
-  // a status hint for closed/future months too so the user always understands
-  // why a number isn't being projected. Renders inline as a 3rd KPI card
-  // alongside База/Поточний.
+  // Forecast — appears for active months (extrapolation), and shows
+  // a status hint for closed/future months too. Renders as a full-width
+  // card BELOW the База/Поточний pair (kept as 2-column on its own row).
   const curMd = _finplanData.months[cur];
   const fc = _finplanMonthForecast(curMd, cur);
-  let forecastKpi = "";
-  let kpiCols = "1fr 1fr";
+  let forecastHtml = "";
   if (fc && fc.state === "active") {
     const fcDelta = fc.forecast - baseTotal;
     const fcPct = baseTotal > 0 ? (fcDelta / baseTotal * 100) : 0;
     const fcCls = fcDelta > 0 ? "up" : fcDelta < 0 ? "down" : "neutral";
     const fcArrow = fcDelta > 0 ? "▲" : fcDelta < 0 ? "▼" : "→";
-    forecastKpi = `
-      <div class="fp-kpi fp-kpi-forecast">
-        <div class="fp-kpi-label">📅 Прогноз</div>
-        <div class="fp-kpi-value">${fmtFinplanMoney(fc.forecast)}</div>
-        <div class="fp-kpi-delta ${fcCls}">${fcArrow} ${baseTotal > 0 ? fcPct.toFixed(1) + "%" : "—"}</div>
-        <div class="fp-kpi-sub">${fc.elapsed} з ${fc.totalDays} днів</div>
+    forecastHtml = `
+      <div class="fp-kpi fp-kpi-forecast fp-kpi-full">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+          <div>
+            <div class="fp-kpi-label">📅 Прогноз на кінець місяця</div>
+            <div class="fp-kpi-value">${fmtFinplanMoney(fc.forecast)}</div>
+            <div class="fp-kpi-sub">факт за ${fc.elapsed} з ${fc.totalDays} днів</div>
+          </div>
+          <div class="fp-kpi-delta ${fcCls}" style="text-align:right;font-size:13px;">
+            ${fcArrow} ${baseTotal > 0 ? fcPct.toFixed(1) + "%" : "—"}
+            <div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">vs база</div>
+          </div>
+        </div>
       </div>
     `;
-    kpiCols = "1fr 1fr 1fr";
   } else if (fc && fc.state === "closed") {
-    forecastKpi = `
-      <div class="fp-kpi fp-kpi-forecast">
-        <div class="fp-kpi-label">📅 Прогноз</div>
-        <div class="fp-kpi-sub" style="margin-top:6px;">Місяць закритий</div>
+    forecastHtml = `
+      <div class="fp-kpi fp-kpi-forecast fp-kpi-full">
+        <div class="fp-kpi-label">📅 Прогноз на кінець місяця</div>
+        <div class="fp-kpi-sub" style="margin-top:4px;">Місяць закритий — показано фактичну суму вище</div>
       </div>
     `;
-    kpiCols = "1fr 1fr 1fr";
   } else if (fc && fc.state === "future") {
-    forecastKpi = `
-      <div class="fp-kpi fp-kpi-forecast">
-        <div class="fp-kpi-label">📅 Прогноз</div>
-        <div class="fp-kpi-sub" style="margin-top:6px;">Не почався</div>
+    forecastHtml = `
+      <div class="fp-kpi fp-kpi-forecast fp-kpi-full">
+        <div class="fp-kpi-label">📅 Прогноз на кінець місяця</div>
+        <div class="fp-kpi-sub" style="margin-top:4px;">Місяць ще не почався</div>
       </div>
     `;
-    kpiCols = "1fr 1fr 1fr";
   }
 
   // Per-hospital comparison rows
@@ -4629,7 +4658,7 @@ function _renderAnComparisonCard(months) {
           ${months.map(m => `<option value="${esc(m)}" ${m === cur ? "selected" : ""}>${esc(m)}</option>`).join("")}
         </select>
       </div>
-      <div class="fp-kpi-row" style="grid-template-columns: ${kpiCols};">
+      <div class="fp-kpi-row">
         <div class="fp-kpi">
           <div class="fp-kpi-label">База · ${esc(base)}</div>
           <div class="fp-kpi-value">${fmtFinplanMoney(baseTotal)}</div>
@@ -4639,8 +4668,8 @@ function _renderAnComparisonCard(months) {
           <div class="fp-kpi-value">${fmtFinplanMoney(curTotal)}</div>
           <div class="fp-kpi-delta ${deltaCls}">${arrow} ${baseTotal > 0 ? deltaPct.toFixed(1) + "%" : "—"}</div>
         </div>
-        ${forecastKpi}
       </div>
+      ${forecastHtml}
       <div style="margin-top:10px;">
         <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding-bottom:6px;border-bottom:1px solid var(--border);">
           <div>Лікарня</div><div>${esc(base)}</div><div>${esc(cur)}</div><div style="text-align:right;">Δ</div>
