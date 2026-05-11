@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liki.on!</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -2398,10 +2399,13 @@ const ANALYTICS_HOSPITALS = [
   {
     id:    "panteleimon",
     name:  "Лікарня св. Пантелеймона",
-    sub:   "Фінансовий рух, оборотність, порівняння місяців",
+    sub:   "Відділення, МВО, рух, оборотність",
     ico:   "🏥",
     theme: "analytics",
-    url:   "data/panteleimon/analytics.json",
+    // Google Drive xlsx export URL — parsed in-browser (no JSON in repo).
+    // To swap files: replace the document ID below.
+    url:   "https://docs.google.com/spreadsheets/d/PANTELEIMON_FILE_ID/export?format=xlsx",
+    source: "xlsx",
   },
   {
     id:    "vzlz",
@@ -2410,6 +2414,7 @@ const ANALYTICS_HOSPITALS = [
     ico:   "💊",
     theme: "",
     url:   null, // not connected yet
+    source: "xlsx",
   },
 ];
 
@@ -2557,6 +2562,405 @@ async function loadAnalytics(forceRefresh) {
   if (analyticsData) setState("ready");
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+//                    XLSX → Analytics parser (in-browser)
+// ═══════════════════════════════════════════════════════════════════════════
+// Direct parsing of 1C-exported xlsx into the same `analyticsData` shape the
+// renderer already expects. We need column-A `indent` to detect hierarchy, so
+// we read the xlsx as a zip and parse `xl/styles.xml` ourselves (SheetJS
+// community build does not expose indent in cellStyles output). JSZip + a
+// handful of regexes does the job; profiling shows ~1-3s per workbook on
+// modern phones.
+//
+// Hierarchy used (simplified, single-hospital file):
+//   indent=4  → "group" (the hospital itself — exactly one)
+//   indent=6  → department  ("Відділення ...")
+//   indent=8  → MVO / person ("Прізвище І.П. ...")
+//   indent=0, col A empty, col B filled → item
+//   indent=12 → operation row (skipped; "Списання..." date is captured for
+//               "last write-off" badge per subdivision)
+//
+// Output mirrors `parse.py`'s schema (months / names / paths) so the existing
+// renderer works without changes.
+
+const AN_DOC_PREFIX_RE = /^(Списання|Переміщення|Надходження|Коригування|Реалізація|Повернення|Оприбуткування|Інвентариза)/;
+const AN_MONTH_UK_TO_NUM = {
+  "Січень":"01","Лютий":"02","Березень":"03","Квітень":"04","Травень":"05","Червень":"06",
+  "Липень":"07","Серпень":"08","Вересень":"09","Жовтень":"10","Листопад":"11","Грудень":"12",
+};
+
+function _anDecodeXml(s) {
+  return s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,"&");
+}
+function _anColLetterToIdx(letter) {
+  let n = 0;
+  for (let i = 0; i < letter.length; i++) n = n * 26 + (letter.charCodeAt(i) - 64);
+  return n - 1;
+}
+function _anParseRef(ref) {
+  const m = ref.match(/^([A-Z]+)(\d+)$/);
+  return m ? { col: _anColLetterToIdx(m[1]), row: parseInt(m[2], 10) } : null;
+}
+
+// Parse xl/styles.xml — build [xfIdx] -> indent (0 by default).
+function _anParseStyles(stylesXml) {
+  const m = stylesXml.match(/<cellXfs[^>]*>([\s\S]*?)<\/cellXfs>/);
+  if (!m) return [];
+  const xfs = m[1].match(/<xf[^/]*\/>|<xf[^>]*>[\s\S]*?<\/xf>/g) || [];
+  return xfs.map(xf => {
+    const im = xf.match(/indent="(\d+)"/);
+    return im ? parseInt(im[1], 10) : 0;
+  });
+}
+
+// Parse xl/sharedStrings.xml — return array of decoded strings, including
+// rich-text (which is split across multiple <t> children inside a single <si>).
+function _anParseSharedStrings(xml) {
+  const out = [];
+  if (!xml) return out;
+  const siRe = /<si[^>]*>([\s\S]*?)<\/si>/g;
+  let m;
+  while ((m = siRe.exec(xml)) !== null) {
+    const inner = m[1];
+    let combined = "";
+    const tRe = /<t[^>]*>([\s\S]*?)<\/t>/g;
+    let tm;
+    while ((tm = tRe.exec(inner)) !== null) combined += tm[1];
+    out.push(_anDecodeXml(combined));
+  }
+  return out;
+}
+
+// Generator over one sheet's <row> elements; yields { row, cells: { colIdx → {value, indent, isString} } }
+function* _anIterRows(sheetXml, sharedStrings, xfToIndent) {
+  const rowRe = /<row[^>]*r="(\d+)"[^>]*>([\s\S]*?)<\/row>/g;
+  let rm;
+  while ((rm = rowRe.exec(sheetXml)) !== null) {
+    const rowNum = parseInt(rm[1], 10);
+    const rowContent = rm[2];
+    const cells = {};
+    // <c r="A5" s="17" t="s"><v>0</v></c>  | <c r="A5" s="17"/>  | <c r="A5"><v>1.23</v></c>
+    const cellRe = /<c\s+r="([A-Z]+\d+)"(?:\s+s="(\d+)")?(?:\s+t="([^"]+)")?[^/>]*(?:\/>|>([\s\S]*?)<\/c>)/g;
+    let cm;
+    while ((cm = cellRe.exec(rowContent)) !== null) {
+      const ref = cm[1];
+      const s = cm[2] ? parseInt(cm[2], 10) : 0;
+      const t = cm[3] || "n";
+      const inner = cm[4] || "";
+      const parsed = _anParseRef(ref);
+      if (!parsed) continue;
+      let val = null;
+      const vm = inner.match(/<v[^>]*>([\s\S]*?)<\/v>/);
+      if (vm) {
+        const raw = vm[1];
+        if (t === "s") val = sharedStrings[parseInt(raw, 10)] || "";
+        else if (t === "str" || t === "inlineStr") val = _anDecodeXml(raw);
+        else val = raw;
+      } else if (t === "inlineStr") {
+        const isM = inner.match(/<is[^>]*>([\s\S]*?)<\/is>/);
+        if (isM) {
+          const tM = isM[1].match(/<t[^>]*>([\s\S]*?)<\/t>/);
+          if (tM) val = _anDecodeXml(tM[1]);
+        }
+      }
+      cells[parsed.col] = {
+        value: val,
+        indent: xfToIndent[s] || 0,
+        isString: t === "s" || t === "str" || t === "inlineStr",
+      };
+    }
+    yield { row: rowNum, cells };
+  }
+}
+
+function _anIsDocumentRow(text) {
+  if (!text) return false;
+  return AN_DOC_PREFIX_RE.test(String(text).replace(/^\s+/, ""));
+}
+function _anParseDocDate(text) {
+  if (!text) return null;
+  const m = String(text).match(/від\s+(\d{2})\.(\d{2})\.(\d{4})/);
+  if (!m) return null;
+  return `${m[3]}-${m[2]}-${m[1]}`;
+}
+function _anNum(v) {
+  if (v === null || v === undefined || v === "") return null;
+  const n = Number(v);
+  if (isNaN(n)) return null;
+  return n === 0 ? 0 : Math.round(n * 100) / 100;
+}
+function _anExtractNumbers(cells) {
+  // Cols D..K (0-indexed 3..10)
+  return {
+    oq: _anNum(cells[3]  && cells[3].value),
+    os: _anNum(cells[4]  && cells[4].value),
+    rq: _anNum(cells[5]  && cells[5].value),
+    rs: _anNum(cells[6]  && cells[6].value),
+    eq: _anNum(cells[7]  && cells[7].value),
+    es: _anNum(cells[8]  && cells[8].value),
+    cq: _anNum(cells[9]  && cells[9].value),
+    cs: _anNum(cells[10] && cells[10].value),
+  };
+}
+function _anHasAnyNumber(n) {
+  for (const k in n) if (n[k] !== null && n[k] !== 0) return true;
+  return false;
+}
+function _anStripNone(d) {
+  if (!d) return {};
+  const out = {};
+  for (const k in d) if (d[k] !== null && d[k] !== undefined) out[k] = d[k];
+  return out;
+}
+function _anParsePeriod(sheetXml, sharedStrings, xfToIndent) {
+  // Scan first ~20 rows for a cell containing "Період: dd.mm.yyyy - dd.mm.yyyy"
+  let n = 0;
+  for (const { cells } of _anIterRows(sheetXml, sharedStrings, xfToIndent)) {
+    n++;
+    if (n > 20) break;
+    for (const col in cells) {
+      const v = cells[col].value;
+      if (v && typeof v === "string" && v.indexOf("Період") !== -1) {
+        const m = v.match(/(\d{2})\.(\d{2})\.(\d{4})\s*-\s*(\d{2})\.(\d{2})\.(\d{4})/);
+        if (m) return { from: `${m[3]}-${m[2]}-${m[1]}`, to: `${m[6]}-${m[5]}-${m[4]}` };
+      }
+    }
+  }
+  return null;
+}
+
+// Parse one sheet — returns { groups: [...], period, stats }
+function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
+  let currentGroup = null;
+  let currentDept = null;
+  let currentPerson = null;
+  const groups = {};
+  const stats = {
+    rows_scanned: 0, items_captured: 0, skipped_empty: 0, unknown_levels: 0,
+    departments: 0, persons: 0,
+  };
+  const deptSet = new Set();
+  const personSet = new Set();
+
+  for (const { cells } of _anIterRows(sheetXml, sharedStrings, xfToIndent)) {
+    stats.rows_scanned++;
+    const aCell = cells[0];
+    const bCell = cells[1];
+    const cCell = cells[2];
+    const aVal = aCell && aCell.value != null ? String(aCell.value).trim() : "";
+    const bVal = bCell && bCell.value != null ? String(bCell.value).trim() : "";
+    const cVal = cCell && cCell.value != null ? String(cCell.value).trim() : "";
+    const indent = aCell ? aCell.indent : 0;
+
+    // Hospital row (indent=4)
+    if (indent === 4 && aVal) {
+      if (!groups[aVal]) groups[aVal] = { name: aVal, totals: _anExtractNumbers(cells), subdivisions: {} };
+      currentGroup = groups[aVal];
+      currentDept = null;
+      currentPerson = null;
+      continue;
+    }
+    // Department (indent=6)
+    if (indent === 6 && aVal) {
+      if (!currentGroup) continue;
+      currentDept = aVal;
+      currentPerson = null;
+      deptSet.add(aVal);
+      continue;
+    }
+    // Person / МВО (indent=8)
+    if (indent === 8 && aVal) {
+      if (!currentGroup || !currentDept) continue;
+      currentPerson = aVal;
+      personSet.add(aVal);
+      continue;
+    }
+    // Document/op rows — skip; only capture latest "Списання" date for the
+    // current subdivision so the renderer can show "last write-off N days ago".
+    if (aVal && _anIsDocumentRow(aVal)) {
+      if (aVal.startsWith("Списання")) {
+        const d = _anParseDocDate(aVal);
+        if (d && currentGroup && currentDept && currentPerson) {
+          const key = currentDept + "|" + currentPerson;
+          let sub = currentGroup.subdivisions[key];
+          if (!sub) {
+            sub = currentGroup.subdivisions[key] = {
+              path: [currentDept, currentPerson], items: [], itemsByName: {}, lastWriteoff: null,
+            };
+          }
+          if (!sub.lastWriteoff || d > sub.lastWriteoff) sub.lastWriteoff = d;
+        }
+      }
+      continue;
+    }
+    // Defensive: any other deep-indented row → skip
+    if (indent >= 10) continue;
+
+    // Item row: indent=0, col A empty, col B filled
+    if (indent === 0 && !aVal && bVal) {
+      if (!currentGroup || !currentDept || !currentPerson) { stats.unknown_levels++; continue; }
+      const nums = _anExtractNumbers(cells);
+      if (!_anHasAnyNumber(nums)) { stats.skipped_empty++; continue; }
+      const key = currentDept + "|" + currentPerson;
+      let sub = currentGroup.subdivisions[key];
+      if (!sub) {
+        sub = currentGroup.subdivisions[key] = {
+          path: [currentDept, currentPerson], items: [], itemsByName: {}, lastWriteoff: null,
+        };
+      }
+      // Aggregate same-named items (different series of the same drug = one row)
+      const existIdx = sub.itemsByName[bVal];
+      if (existIdx !== undefined) {
+        const existing = sub.items[existIdx];
+        for (const k of ["oq","os","rq","rs","eq","es","cq","cs"]) {
+          if (nums[k] !== null && nums[k] !== 0) {
+            existing[k] = Math.round(((existing[k] || 0) + nums[k]) * 100) / 100;
+          }
+        }
+        if (cVal) {
+          if (!existing.series_list) existing.series_list = existing.s ? [existing.s] : [];
+          if (existing.series_list.indexOf(cVal) === -1) existing.series_list.push(cVal);
+        }
+      } else {
+        const item = { n: bVal };
+        if (cVal) item.s = cVal;
+        for (const k of ["oq","os","rq","rs","eq","es","cq","cs"]) {
+          if (nums[k] !== null) item[k] = nums[k];
+        }
+        sub.items.push(item);
+        sub.itemsByName[bVal] = sub.items.length - 1;
+        stats.items_captured++;
+      }
+      continue;
+    }
+    if (aVal || bVal) stats.unknown_levels++;
+  }
+
+  // Finalize: aggregate subdivision totals, drop internal index
+  const groupsOut = [];
+  for (const gname in groups) {
+    const g = groups[gname];
+    const subs = Object.values(g.subdivisions).map(sub => {
+      const totals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
+      for (const it of sub.items) {
+        for (const k in totals) if (typeof it[k] === "number") totals[k] += it[k];
+      }
+      const totalsOut = {};
+      for (const k in totals) if (totals[k] !== 0) totalsOut[k] = Math.round(totals[k] * 100) / 100;
+      delete sub.itemsByName;
+      const rec = { path: sub.path, totals: totalsOut, items: sub.items };
+      if (sub.lastWriteoff) rec.last_writeoff = sub.lastWriteoff;
+      return rec;
+    });
+    groupsOut.push({ name: g.name, totals: _anStripNone(g.totals), subdivisions: subs });
+  }
+  stats.departments = deptSet.size;
+  stats.persons = personSet.size;
+  return { groups: groupsOut, stats };
+}
+
+// Top-level entry: parse a workbook ArrayBuffer into the same shape as
+// `data/panteleimon/analytics.json` used to provide. Returns { meta, names,
+// paths, months } where each month has `directions` of length 1 wrapping the
+// hospital — this preserves backward compatibility with the existing renderer
+// while we present a single hospital per "lvкарня" picker.
+async function parseAnalyticsXlsx(arrayBuffer) {
+  if (typeof JSZip === "undefined") {
+    throw new Error("JSZip не завантажився. Перевірте інтернет.");
+  }
+  const t0 = performance.now();
+  const zip = await JSZip.loadAsync(arrayBuffer);
+
+  const stylesXml = await zip.file("xl/styles.xml").async("string");
+  const xfToIndent = _anParseStyles(stylesXml);
+
+  const ssFile = zip.file("xl/sharedStrings.xml");
+  const sharedStrings = ssFile ? _anParseSharedStrings(await ssFile.async("string")) : [];
+
+  // Read workbook to get sheet names IN ORDER (zip dir order isn't reliable)
+  const wbXml = await zip.file("xl/workbook.xml").async("string");
+  const sheetNames = [];
+  const sheetRe = /<sheet\s+name="([^"]+)"/g;
+  let sm;
+  while ((sm = sheetRe.exec(wbXml)) !== null) sheetNames.push(_anDecodeXml(sm[1]));
+
+  const result = {
+    meta: {
+      generated_at: new Date().toISOString(),
+      source_file: "xlsx",
+      periods: [],
+      format_version: 1,
+    },
+    names: [],
+    paths: [],
+    months: {},
+  };
+  const nameIdx = new Map();
+  const pathIdx = new Map();
+  function internName(s) {
+    if (nameIdx.has(s)) return nameIdx.get(s);
+    const i = result.names.length;
+    nameIdx.set(s, i);
+    result.names.push(s);
+    return i;
+  }
+  function internPath(s) {
+    if (pathIdx.has(s)) return pathIdx.get(s);
+    const i = result.paths.length;
+    pathIdx.set(s, i);
+    result.paths.push(s);
+    return i;
+  }
+
+  for (let i = 0; i < sheetNames.length; i++) {
+    const sheetIdx = i + 1;
+    const sheetFile = zip.file(`xl/worksheets/sheet${sheetIdx}.xml`);
+    if (!sheetFile) continue;
+    const sheetXml = await sheetFile.async("string");
+    const period = _anParsePeriod(sheetXml, sharedStrings, xfToIndent);
+    const parsed = _anParseSheet(sheetXml, sharedStrings, xfToIndent);
+    // Skip empty sheets (e.g. current month with only a header row)
+    if (!parsed.groups.length || parsed.stats.items_captured === 0) continue;
+
+    // Build month key (prefer period.from YYYY-MM; fallback to sheet name)
+    let key;
+    if (period && period.from) key = period.from.substring(0, 7);
+    else {
+      const mm = AN_MONTH_UK_TO_NUM[sheetNames[i]];
+      key = mm ? `${new Date().getFullYear()}-${mm}` : sheetNames[i];
+    }
+
+    // Intern names/paths in-place
+    for (const g of parsed.groups) {
+      for (const sub of g.subdivisions) {
+        sub.path = sub.path.map(p => internPath(p));
+        for (const it of sub.items) it.n = internName(it.n);
+      }
+    }
+
+    result.meta.periods.push({ key, sheet: sheetNames[i], period });
+    // Wrap the single group as the single "direction" — renderer expects this.
+    // The hospital name itself isn't shown (we strip the direction layer in
+    // the renderer when there's only one), so the inner group name "ВП ..."
+    // is what surfaces at the top of the hierarchy view.
+    result.months[key] = {
+      period,
+      org_totals: parsed.groups[0] ? parsed.groups[0].totals : {},
+      directions: [{
+        name: parsed.groups[0] ? parsed.groups[0].name : "(Без напряму)",
+        totals: parsed.groups[0] ? parsed.groups[0].totals : {},
+        groups: parsed.groups, // direction.groups = the same hospital group
+      }],
+    };
+  }
+
+  result.meta.parse_ms = Math.round(performance.now() - t0);
+  return result;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                    fetchAnalytics — load + parse from Drive
+// ═══════════════════════════════════════════════════════════════════════════
 async function fetchAnalytics({ silent }) {
   const progressEl = document.getElementById("an-progress");
   const textEl     = document.getElementById("an-loading-text");
@@ -2576,13 +2980,23 @@ async function fetchAnalytics({ silent }) {
     }
     return;
   }
+  // Detect unconfigured placeholder URL (id never replaced)
+  if (hospital.url.indexOf("PANTELEIMON_FILE_ID") !== -1 || hospital.url.indexOf("FILE_ID") !== -1) {
+    if (!silent) {
+      loadingEl.classList.remove("on");
+      errorEl.classList.add("on");
+      if (errDetails) errDetails.textContent =
+        "URL Google Drive ще не налаштовано. Замініть PANTELEIMON_FILE_ID у index.html на ID файлу з Drive.";
+    }
+    return;
+  }
   const baseUrl  = hospital.url;
   const cacheKey = analyticsHospitalCacheKey(hospital.id);
 
   try {
     // Cache-bust to avoid stale CDN copy when user clicks refresh
-    const url = baseUrl + (silent ? "" : ("?t=" + Date.now()));
-    if (!silent) textEl.textContent = "Завантажуємо дані аналітики...";
+    const url = baseUrl + (silent ? "" : (baseUrl.indexOf("?") >= 0 ? "&t=" : "?t=") + Date.now());
+    if (!silent) textEl.textContent = "Завантажуємо файл з Google Диску...";
 
     const resp = await fetch(url);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
@@ -2592,7 +3006,7 @@ async function fetchAnalytics({ silent }) {
 
     // Stream with progress bar when Content-Length is available
     const total = parseInt(resp.headers.get("Content-Length") || "0", 10);
-    let parsedData;
+    let buf;
     if (!silent && total > 0 && resp.body && resp.body.getReader) {
       const reader = resp.body.getReader();
       const chunks = [];
@@ -2602,22 +3016,28 @@ async function fetchAnalytics({ silent }) {
         if (done) break;
         chunks.push(value);
         received += value.length;
-        const pct = Math.round(received / total * 100);
+        const pct = Math.min(80, Math.round(received / total * 80)); // reserve 20% for parsing
         progressEl.style.width = pct + "%";
         textEl.textContent = `Завантажуємо: ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
       }
       let size = 0; chunks.forEach(c => size += c.length);
       const merged = new Uint8Array(size);
       let off = 0; chunks.forEach(c => { merged.set(c, off); off += c.length; });
-      if (!silent) textEl.textContent = "Обробка...";
-      await new Promise(r => setTimeout(r, 10)); // let UI repaint
-      const jsonText = new TextDecoder("utf-8").decode(merged);
-      parsedData = JSON.parse(jsonText);
+      buf = merged.buffer;
     } else {
-      // Fallback: whole-response json
-      if (!silent) textEl.textContent = "Обробка...";
-      parsedData = await resp.json();
+      buf = await resp.arrayBuffer();
     }
+
+    if (!silent) {
+      textEl.textContent = "Розбираємо файл...";
+      progressEl.style.width = "85%";
+      // Let the UI repaint before the heavy parse blocks the main thread
+      await new Promise(r => setTimeout(r, 10));
+    }
+
+    const parsedData = await parseAnalyticsXlsx(buf);
+
+    if (!silent) progressEl.style.width = "100%";
 
     // Ignore stale response if user switched hospitals while we were loading
     if (requestedHospital !== currentHospitalId) {
@@ -2633,8 +3053,8 @@ async function fetchAnalytics({ silent }) {
         data: analyticsData,
       }));
     } catch (e) {
-      // Quota exceeded — the JSON might be too big for localStorage on this device.
-      // Everything still works in-memory; we just won't cache.
+      // Quota exceeded — the parsed object might be too big for localStorage
+      // on this device. Everything still works in-memory; we just won't cache.
       try { localStorage.removeItem(cacheKey); } catch(_) {}
     }
 
@@ -3046,6 +3466,19 @@ let _anTree = null;  // cached reference to { directions } of current month
 function renderHierarchy(m) {
   _anTree = m;
   const root = document.getElementById("an-hierarchy");
+
+  // Hide the "напрям" level entirely when there's only one direction — happens
+  // for single-hospital files (e.g. Panteleimon) where the wrapper adds noise.
+  // We jump straight to rendering the groups of that direction.
+  if (m.directions.length === 1) {
+    const only = m.directions[0];
+    const dIdx = 0;
+    root.innerHTML = only.groups
+      .map((g, gi) => renderGroupNode(g, `d${dIdx}-g${gi}`))
+      .join("");
+    return;
+  }
+
   // Sort directions by size (closing sum desc); "(Без напряму)" last
   const dirs = m.directions.slice().sort((a, b) => {
     if (a.name === "(Без напряму)") return 1;
@@ -3362,6 +3795,20 @@ function onHierSearch(val) {
 function _renderHierarchyTree(m, expandAll) {
   _anTree = m;
   const root = document.getElementById("an-hierarchy");
+
+  // Mirror the single-direction skip used by renderHierarchy()
+  if (m.directions.length === 1) {
+    const only = m.directions[0];
+    root.innerHTML = only.groups
+      .map((g, gi) => renderGroupNode(g, `d0-g${gi}`))
+      .join("");
+    if (expandAll) {
+      root.querySelectorAll(".an-node-body").forEach(b => b.classList.add("open"));
+      root.querySelectorAll(".an-node-arrow").forEach(a => a.classList.add("open"));
+    }
+    return;
+  }
+
   const dirs = m.directions.slice().sort((a, b) => {
     if (a.name === "(Без напряму)") return 1;
     if (b.name === "(Без напряму)") return -1;
