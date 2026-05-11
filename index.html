@@ -748,6 +748,49 @@
   .back-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   /* ═══════════════════════════════════════════════════════════════════ */
+  /*                       HOSPITAL PICKER SCREEN                        */
+  /* ═══════════════════════════════════════════════════════════════════ */
+  #hospital-picker-screen { display: none; padding: 8px 0 0; }
+  .hp-back-row { padding: 10px 0 6px; }
+  .hp-hero { text-align: center; margin: 18px 0 22px; }
+  .hp-hero-ico { font-size: 44px; margin-bottom: 10px; }
+  .hp-hero-title { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+  .hp-hero-sub { font-size: 13px; color: var(--muted); }
+  .hp-choice-btn.disabled {
+    opacity: .55; cursor: not-allowed;
+  }
+  .hp-choice-btn.disabled:hover { border-color: var(--border); background: var(--card); }
+  .hp-pending-tag {
+    display: inline-block; margin-left: 8px;
+    font-size: 10px; font-weight: 700; color: var(--warn);
+    background: rgba(245,158,11,.13);
+    border: 1px solid rgba(245,158,11,.3);
+    border-radius: 6px; padding: 1px 6px;
+    vertical-align: middle;
+  }
+  .an-hospital-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 12px; padding: 8px 10px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .an-hospital-label {
+    font-size: 11px; color: var(--muted); font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .an-hospital-select {
+    flex: 1; min-width: 0;
+    padding: 7px 10px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card2); color: var(--text);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+  }
+  .an-hospital-select:focus { outline: none; border-color: var(--accent); }
+
+  /* ═══════════════════════════════════════════════════════════════════ */
   /*                         ANALYTICS SCREEN                             */
   /* ═══════════════════════════════════════════════════════════════════ */
   #analytics-screen { display: none; padding: 0; }
@@ -1075,11 +1118,32 @@
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  HOSPITAL PICKER                              -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="hospital-picker-screen">
+      <div class="hp-back-row">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
+      </div>
+      <div class="hp-hero">
+        <div class="hp-hero-ico">🏥</div>
+        <div class="hp-hero-title">Аналіз відділень</div>
+        <div class="hp-hero-sub">Оберіть лікарню для перегляду аналітики</div>
+      </div>
+      <div class="choice-wrap" id="hospital-picker-list"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
     <!--                  ANALYTICS                                   -->
     <!-- ════════════════════════════════════════════════════════════ -->
     <div id="analytics-screen">
       <div class="an-back-row">
-        <button class="back-btn" onclick="goStart()">← До розділів</button>
+        <button class="back-btn" onclick="backToHospitalPicker()">← До вибору лікарні</button>
+      </div>
+
+      <div class="an-hospital-bar">
+        <span class="an-hospital-label">Лікарня</span>
+        <select class="an-hospital-select" id="an-hospital-select"
+                onchange="selectHospital(this.value)"></select>
       </div>
 
       <div id="analytics-loading">
@@ -1681,15 +1745,16 @@ function statusLabel(st, days) {
 
 // ── ui ────────────────────────────────────────────────────────────────────────
 function show(screen) {
-  document.getElementById("section-screen").style.display    = screen==="sections" ? "block" : "none";
-  document.getElementById("analytics-screen").style.display  = screen==="analytics"? "block" : "none";
-  document.getElementById("sub-detail-screen").style.display = screen==="subdetail"? "block" : "none";
-  document.getElementById("finplan-screen").style.display    = screen==="finplan"  ? "block" : "none";
-  document.getElementById("start-screen").style.display      = screen==="start"    ? "block" : "none";
-  document.getElementById("loader").style.display            = screen==="loader"   ? "block" : "none";
-  document.getElementById("home-screen").style.display       = screen==="home"     ? "block" : "none";
-  document.getElementById("results-screen").style.display    = screen==="results"  ? "block" : "none";
-  document.getElementById("new-items-screen").style.display  = screen==="newitems" ? "block" : "none";
+  document.getElementById("section-screen").style.display          = screen==="sections" ? "block" : "none";
+  document.getElementById("hospital-picker-screen").style.display  = screen==="hospitalpicker" ? "block" : "none";
+  document.getElementById("analytics-screen").style.display        = screen==="analytics"? "block" : "none";
+  document.getElementById("sub-detail-screen").style.display       = screen==="subdetail"? "block" : "none";
+  document.getElementById("finplan-screen").style.display          = screen==="finplan"  ? "block" : "none";
+  document.getElementById("start-screen").style.display            = screen==="start"    ? "block" : "none";
+  document.getElementById("loader").style.display                  = screen==="loader"   ? "block" : "none";
+  document.getElementById("home-screen").style.display             = screen==="home"     ? "block" : "none";
+  document.getElementById("results-screen").style.display          = screen==="results"  ? "block" : "none";
+  document.getElementById("new-items-screen").style.display        = screen==="newitems" ? "block" : "none";
   // Header: search bar + refresh buttons only on medsearch data screens
   const showHeader = screen==="home" || screen==="results" || screen==="newitems";
   document.getElementById("search-wrap").style.display       = showHeader ? "block" : "none";
@@ -1697,7 +1762,7 @@ function show(screen) {
   // Update logo subtitle based on section
   const logoSub = document.querySelector(".logo-sub");
   if (logoSub) {
-    if (screen === "analytics" || screen === "subdetail") logoSub.textContent = "Аналіз відділень";
+    if (screen === "analytics" || screen === "subdetail" || screen === "hospitalpicker") logoSub.textContent = "Аналіз відділень";
     else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
     else if (screen === "sections") logoSub.textContent = `Оберіть розділ · ${APP_VERSION}`;
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
@@ -1778,8 +1843,7 @@ function _isFinplanAuthorized() {
 function openAnalytics() {
   _pwdTarget = "analytics";
   if (_isAnalyticsAuthorized()) {
-    show("analytics");
-    loadAnalytics(false);
+    openHospitalPicker();
     return;
   }
   _showPwdOverlay("Введіть пароль для перегляду аналітики", "numeric");
@@ -1839,8 +1903,7 @@ async function submitAnalyticsPassword() {
       show("finplan");
       loadFinplan(false);
     } else {
-      show("analytics");
-      loadAnalytics(false);
+      openHospitalPicker();
     }
   } else {
     if (err) err.textContent = "Невірний пароль";
@@ -2318,14 +2381,126 @@ function toggleNewItem(idx) {
 //   eq/es = expense  (видаток)    quantity/sum
 //   cq/cs = closing  (кінцевий)   quantity/sum
 
-const ANALYTICS_URL       = "data/analytics.json";
-const ANALYTICS_CACHE_KEY = "medsklad_analytics_cache_v1";
+// ─── Hospital registry (Analytics section) ─────────────────────────────────
+// NOTE: do NOT confuse with the `HOSPITALS` array used in Finplan — that one
+// holds regex markers for parsing supplier names and is structurally
+// different. This list drives the analytics hospital picker / selector.
+//
+// To add a new hospital: append an entry below. The picker, selector and
+// caching all read from this single source of truth.
+//   id      — short stable slug (used in cache key + folder name)
+//   name    — UI label
+//   sub     — short subtitle for picker card
+//   ico     — emoji
+//   theme   — CSS theme class for picker card icon ("analytics" | "finplan" | "")
+//   url     — relative path to analytics.json, or null if data not yet available
+const ANALYTICS_HOSPITALS = [
+  {
+    id:    "panteleimon",
+    name:  "Лікарня св. Пантелеймона",
+    sub:   "Фінансовий рух, оборотність, порівняння місяців",
+    ico:   "🏥",
+    theme: "analytics",
+    url:   "data/panteleimon/analytics.json",
+  },
+  {
+    id:    "vzlz",
+    name:  "Відділ забезпечення ЛЗ та ВМП",
+    sub:   "Аналітика буде доступна після підключення даних",
+    ico:   "💊",
+    theme: "",
+    url:   null, // not connected yet
+  },
+];
+
+function getAnalyticsHospital(id) {
+  return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
+}
+function analyticsHospitalCacheKey(id) {
+  return "medsklad_analytics_cache_v1__" + id;
+}
+
+let currentHospitalId = null;
+
 const ANALYTICS_CACHE_TTL = 30 * 60 * 1000; // 30 min silent refresh
 
 let analyticsData = null;
 let currentMonthKey = null;
 let compareMonthKey = null;  // for month-vs-month comparison
 let analyticsView = "all";
+
+// ─── Hospital picker ────────────────────────────────────────────────────────
+function openHospitalPicker() {
+  renderHospitalPicker();
+  show("hospitalpicker");
+}
+
+function renderHospitalPicker() {
+  const el = document.getElementById("hospital-picker-list");
+  if (!el) return;
+  el.innerHTML = ANALYTICS_HOSPITALS.map(h => {
+    const disabled = !h.url;
+    const themeCls = h.theme ? (" " + h.theme) : "";
+    const disabledCls = disabled ? " disabled" : "";
+    const pendingTag = disabled ? `<span class="hp-pending-tag">Скоро</span>` : "";
+    const onClick = disabled
+      ? `onclick="alertHospitalPending('${h.id}')"`
+      : `onclick="selectHospital('${h.id}')"`;
+    return `
+      <button class="choice-btn hp-choice-btn${themeCls}${disabledCls}" ${onClick}>
+        <div class="choice-ico">${h.ico}</div>
+        <div class="choice-body">
+          <div class="choice-title">${esc(h.name)}${pendingTag}</div>
+          <div class="choice-sub">${esc(h.sub)}</div>
+        </div>
+        <div class="choice-arrow">›</div>
+      </button>`;
+  }).join("");
+}
+
+function alertHospitalPending(id) {
+  const h = getAnalyticsHospital(id);
+  if (!h) return;
+  alert(`«${h.name}» — дані для цієї лікарні ще не підключені.\n\nЯк тільки буде готовий файл аналітики, розділ стане активним.`);
+}
+
+function backToHospitalPicker() {
+  // Keep auth; just go back to the picker. Drop in-memory analytics so the
+  // user can't see one hospital's data leaking into another's view briefly.
+  analyticsData = null;
+  currentMonthKey = null;
+  compareMonthKey = null;
+  _expenseByItemPerMonth = null;
+  openHospitalPicker();
+}
+
+function selectHospital(id) {
+  const h = getAnalyticsHospital(id);
+  if (!h) return;
+  if (!h.url) { alertHospitalPending(id); return; }
+  // Switching hospitals: reset analytics state so old data doesn't render
+  if (currentHospitalId !== id) {
+    analyticsData = null;
+    currentMonthKey = null;
+    compareMonthKey = null;
+    _expenseByItemPerMonth = null;
+  }
+  currentHospitalId = id;
+  renderHospitalSelect();
+  show("analytics");
+  loadAnalytics(false);
+}
+
+function renderHospitalSelect() {
+  const sel = document.getElementById("an-hospital-select");
+  if (!sel) return;
+  sel.innerHTML = ANALYTICS_HOSPITALS.map(h => {
+    const disabled = !h.url ? " disabled" : "";
+    const sel2 = h.id === currentHospitalId ? " selected" : "";
+    const tag  = !h.url ? " (скоро)" : "";
+    return `<option value="${esc(h.id)}"${sel2}${disabled}>${esc(h.name)}${tag}</option>`;
+  }).join("");
+}
 
 // ── Loader ──────────────────────────────────────────────────────────────────
 async function loadAnalytics(forceRefresh) {
@@ -2340,10 +2515,22 @@ async function loadAnalytics(forceRefresh) {
     contentEl.style.display = s === "ready" ? "block" : "none";
   };
 
+  // Guard: must have a hospital selected
+  const hospital = getAnalyticsHospital(currentHospitalId);
+  if (!hospital || !hospital.url) {
+    setState("error");
+    const errDetails = document.getElementById("an-error-details");
+    if (errDetails) errDetails.textContent = hospital
+      ? "Дані для цієї лікарні ще не підключені."
+      : "Лікарню не обрано.";
+    return;
+  }
+  const cacheKey = analyticsHospitalCacheKey(hospital.id);
+
   // Try cache first
   if (!forceRefresh) {
     try {
-      const raw = localStorage.getItem(ANALYTICS_CACHE_KEY);
+      const raw = localStorage.getItem(cacheKey);
       if (raw) {
         const cached = JSON.parse(raw);
         if (cached && cached.data) {
@@ -2361,7 +2548,7 @@ async function loadAnalytics(forceRefresh) {
       }
     } catch (e) {
       // cache corrupted / quota — ignore and fall through to network
-      try { localStorage.removeItem(ANALYTICS_CACHE_KEY); } catch (_) {}
+      try { localStorage.removeItem(cacheKey); } catch (_) {}
     }
   }
 
@@ -2377,16 +2564,35 @@ async function fetchAnalytics({ silent }) {
   const loadingEl  = document.getElementById("analytics-loading");
   const errDetails = document.getElementById("an-error-details");
 
+  // Guard: need a hospital with data URL
+  const hospital = getAnalyticsHospital(currentHospitalId);
+  if (!hospital || !hospital.url) {
+    if (!silent) {
+      loadingEl.classList.remove("on");
+      errorEl.classList.add("on");
+      if (errDetails) errDetails.textContent = hospital
+        ? "Дані для цієї лікарні ще не підключені."
+        : "Лікарню не обрано.";
+    }
+    return;
+  }
+  const baseUrl  = hospital.url;
+  const cacheKey = analyticsHospitalCacheKey(hospital.id);
+
   try {
     // Cache-bust to avoid stale CDN copy when user clicks refresh
-    const url = ANALYTICS_URL + (silent ? "" : ("?t=" + Date.now()));
+    const url = baseUrl + (silent ? "" : ("?t=" + Date.now()));
     if (!silent) textEl.textContent = "Завантажуємо дані аналітики...";
 
     const resp = await fetch(url);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
 
+    // Snapshot hospital we asked for; if user switches mid-flight we discard
+    const requestedHospital = hospital.id;
+
     // Stream with progress bar when Content-Length is available
     const total = parseInt(resp.headers.get("Content-Length") || "0", 10);
+    let parsedData;
     if (!silent && total > 0 && resp.body && resp.body.getReader) {
       const reader = resp.body.getReader();
       const chunks = [];
@@ -2400,38 +2606,42 @@ async function fetchAnalytics({ silent }) {
         progressEl.style.width = pct + "%";
         textEl.textContent = `Завантажуємо: ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
       }
-      // Concatenate — we'll decode manually
       let size = 0; chunks.forEach(c => size += c.length);
       const merged = new Uint8Array(size);
       let off = 0; chunks.forEach(c => { merged.set(c, off); off += c.length; });
       if (!silent) textEl.textContent = "Обробка...";
       await new Promise(r => setTimeout(r, 10)); // let UI repaint
       const jsonText = new TextDecoder("utf-8").decode(merged);
-      analyticsData = JSON.parse(jsonText);
-      _expenseByItemPerMonth = null; // invalidate cached index
+      parsedData = JSON.parse(jsonText);
     } else {
       // Fallback: whole-response json
       if (!silent) textEl.textContent = "Обробка...";
-      analyticsData = await resp.json();
-      _expenseByItemPerMonth = null;
+      parsedData = await resp.json();
     }
+
+    // Ignore stale response if user switched hospitals while we were loading
+    if (requestedHospital !== currentHospitalId) {
+      return;
+    }
+    analyticsData = parsedData;
+    _expenseByItemPerMonth = null;
 
     // Persist cache
     try {
-      localStorage.setItem(ANALYTICS_CACHE_KEY, JSON.stringify({
+      localStorage.setItem(cacheKey, JSON.stringify({
         ts: Date.now(),
         data: analyticsData,
       }));
     } catch (e) {
       // Quota exceeded — the JSON might be too big for localStorage on this device.
       // Everything still works in-memory; we just won't cache.
-      try { localStorage.removeItem(ANALYTICS_CACHE_KEY); } catch(_) {}
+      try { localStorage.removeItem(cacheKey); } catch(_) {}
     }
 
     if (!silent) {
       initAnalyticsUI();
     } else {
-      // Silent refresh: only update if UI is visible
+      // Silent refresh: only update if UI is visible AND still same hospital
       const screen = document.getElementById("analytics-screen");
       if (screen && screen.style.display !== "none") {
         initAnalyticsUI();
