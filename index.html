@@ -3723,6 +3723,7 @@ function renderHierarchy(m) {
     root.innerHTML = only.groups
       .map((g, gi) => renderGroupNode(g, `d${dIdx}-g${gi}`))
       .join("");
+    renderHiddenMvoSection(m);
     return;
   }
 
