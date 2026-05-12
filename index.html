@@ -1016,7 +1016,6 @@
     text-transform: uppercase; letter-spacing: .03em;
   }
   .an-badge.dead { background: rgba(107,122,153,.15); color: #8fa0c2; }
-  .an-badge.excess { background: rgba(245,158,11,.15); color: var(--warn); }
   .an-badge.fast { background: rgba(52,211,153,.15); color: var(--green); }
   .an-badge.deficit { background: rgba(248,113,113,.15); color: var(--danger); }
   .an-badge.new { background: rgba(167,139,250,.15); color: #a78bfa; }
@@ -1244,9 +1243,8 @@
         <div class="an-filter-row">
           <button class="filter-btn active" onclick="setAnalyticsView('all', this)">Все</button>
           <button class="filter-btn" onclick="setAnalyticsView('dead', this)">💀 Без руху</button>
-          <button class="filter-btn" onclick="setAnalyticsView('excess', this)">📦 Надлишок</button>
           <button class="filter-btn" onclick="setAnalyticsView('fast', this)">⚡ Оборотні</button>
-          <button class="filter-btn" onclick="setAnalyticsView('new', this)">🆕 Нові</button>
+          <button class="filter-btn" onclick="setAnalyticsView('newItems', this)">🆕 Нові</button>
         </div>
         <div id="an-analytics-summary"></div>
 
@@ -3470,7 +3468,6 @@ function renderAnalyticsSummary(m) {
     containerEl.innerHTML = `
       <div class="an-kpi-grid">
         <div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${items.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.dead, "cs"))}</div></div>
-        <div class="an-kpi"><div class="an-kpi-lbl">📦 Надлишок (>90 дн запасу)</div><div class="an-kpi-val">${items.excess.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.excess, "cs"))}</div></div>
         <div class="an-kpi"><div class="an-kpi-lbl">⚡ Швидкий рух</div><div class="an-kpi-val">${items.fast.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.fast, "es"))} видано</div></div>
         <div class="an-kpi"><div class="an-kpi-lbl">🆕 Нові позиції</div><div class="an-kpi-val">${items.newItems.length}</div><div class="an-kpi-sub">${fmtMoney(sumField(items.newItems, "rs"))}</div></div>
       </div>
@@ -3481,7 +3478,7 @@ function renderAnalyticsSummary(m) {
 
   // Show item list for selected category
   const list = items[analyticsView] || [];
-  const titleMap = { dead: "Без руху (0 видатку)", excess: "Надлишок (>90 днів запасу)", fast: "Швидкий рух (<30 днів запасу)", newItems: "Нові в цьому місяці" };
+  const titleMap = { dead: "Без руху (0 видатку)", fast: "Швидкий рух (<30 днів запасу)", newItems: "Нові в цьому місяці" };
   if (list.length === 0) {
     containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">У категорії "${esc(titleMap[analyticsView])}" нічого немає</div></div>`;
     return;
@@ -3506,7 +3503,7 @@ function renderAnalyticsSummary(m) {
 
 function classifyAllItems(m) {
   // Walk all items once, returning buckets
-  const dead = [], excess = [], fast = [], newItems = [];
+  const dead = [], fast = [], newItems = [];
   for (const d of m.directions) {
     for (const g of d.groups) {
       for (const sub of g.subdivisions) {
@@ -3515,21 +3512,19 @@ function classifyAllItems(m) {
           const cat = classifyItem(it, sub, m.period);
           const entry = { item: it, sub, path: sub.path, direction: d.name, cat };
           if (cat.dead)     dead.push(entry);
-          if (cat.excess)   excess.push(entry);
           if (cat.fast)     fast.push(entry);
           if (cat.newItem)  newItems.push(entry);
         }
       }
     }
   }
-  return { dead, excess, fast, newItems };
+  return { dead, fast, newItems };
 }
 
 // ── Item analytics: classification, turnover, days-of-supply ──────────────
 // All thresholds applied in monetary terms (sum), so we don't fight unit
 // inconsistencies between receipt and expense for the same item.
 
-const DAYS_OF_SUPPLY_EXCESS_THRESHOLD = 90;  // > N days of supply → excess
 const DAYS_OF_SUPPLY_FAST_THRESHOLD   = 30;  // < N days of supply → fast turnover
 
 // Days of supply = closing balance / (expense per day in current period).
@@ -3594,6 +3589,35 @@ function daysWithoutMovement(itemKey, currentMonthKey) {
   return totalDays;
 }
 
+// Returns the most recent month key where this item had non-zero expense,
+// scanning backwards from the current month. Returns null if no movement is
+// found in any month we have data for (truly "never moved" in our window).
+function lastMovementMonth(itemKey, currentMonthKey) {
+  if (!analyticsData || !analyticsData.months) return null;
+  const monthKeys = Object.keys(analyticsData.months).sort();
+  const curIdx = monthKeys.indexOf(currentMonthKey);
+  if (curIdx < 0) return null;
+  // Walk backwards — skip current (dead means current month is zero already).
+  for (let i = curIdx - 1; i >= 0; i--) {
+    const mk = monthKeys[i];
+    const m = analyticsData.months[mk];
+    if (_itemHadExpenseInMonth(itemKey, m)) return mk;
+  }
+  return null;
+}
+
+// Format a "YYYY-MM" month key into Ukrainian "квітень 2026".
+const _UK_MONTHS = ["січень","лютий","березень","квітень","травень","червень",
+                    "липень","серпень","вересень","жовтень","листопад","грудень"];
+function fmtMonthKey(mk) {
+  if (!mk) return "—";
+  const m = String(mk).match(/^(\d{4})-(\d{2})/);
+  if (!m) return mk;
+  const idx = parseInt(m[2], 10) - 1;
+  if (idx < 0 || idx >= 12) return mk;
+  return `${_UK_MONTHS[idx]} ${m[1]}`;
+}
+
 // Build a fast lookup of "items with movement" per month for the dead-days
 // computation. Cached per analyticsData load.
 let _expenseByItemPerMonth = null;
@@ -3641,11 +3665,9 @@ function classifyItem(it, sub, period) {
   // Dead: has stock at close, zero expense in this period, was there at start.
   const dead = (os > 0) && (es === 0) && (cs > 0);
 
-  // Excess: closing covers more than threshold days of supply.
-  // Skip items with no expense (those are "dead", not "excess").
-  const excess = (es > 0) && (dos > DAYS_OF_SUPPLY_EXCESS_THRESHOLD);
-
   // Fast: closing covers less than threshold days — running out soon.
+  // (We dropped the "Надлишок" category — it gave too many false positives
+  // for newly-arrived items where the burn rate isn't representative yet.)
   const fast = (es > 0) && (cs > 0) && (dos < DAYS_OF_SUPPLY_FAST_THRESHOLD);
 
   // Brand new: nothing at start of period, received stock during it.
@@ -3654,7 +3676,7 @@ function classifyItem(it, sub, period) {
   // Out of stock: had it at start, zero at close.
   const outOfStock = (os > 0) && (cs === 0);
 
-  return { dead, excess, fast, newItem, outOfStock, dos, dosQty };
+  return { dead, fast, newItem, outOfStock, dos, dosQty };
 }
 
 function sumField(entries, field) {
@@ -3995,7 +4017,6 @@ function renderSubDetail() {
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Залишок на кінець</div><div class="an-kpi-val">${fmtMoney(t.cs || 0)}</div><div class="an-kpi-sub">${sub.items.length} позицій</div></div>`);
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Оборотність</div><div class="an-kpi-val">${fmtDaysOfSupply(dos)}</div><div class="an-kpi-sub">днів запасу при поточному видатку</div></div>`);
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${buckets.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.dead, "cs"))}</div></div>`);
-  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">📦 Надлишок &gt;90 дн</div><div class="an-kpi-val">${buckets.excess.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.excess, "cs"))}</div></div>`);
   document.getElementById("sub-detail-kpis").innerHTML = kpis.join("");
 
   // Flow box
@@ -4023,7 +4044,6 @@ function renderSubDetail() {
   document.getElementById("sub-detail-filters").innerHTML =
     fb("all",     "Усі",         sub.items.length) +
     fb("dead",    "💀 Без руху",  buckets.dead.length) +
-    fb("excess",  "📦 Надлишок",  buckets.excess.length) +
     fb("fast",    "⚡ Швидкий",   buckets.fast.length) +
     fb("new",     "🆕 Нові",      buckets.newItems.length) +
     fb("deficit", "🚨 Закінчилось", buckets.outOfStock.length);
@@ -4032,17 +4052,16 @@ function renderSubDetail() {
 }
 
 function _classifySubItems(sub, m) {
-  const dead = [], excess = [], fast = [], newItems = [], outOfStock = [];
+  const dead = [], fast = [], newItems = [], outOfStock = [];
   for (const it of sub.items) {
     const cat = classifyItem(it, sub, m.period);
     const entry = { item: it, sub, cat };
     if (cat.dead)       dead.push(entry);
-    if (cat.excess)     excess.push(entry);
     if (cat.fast)       fast.push(entry);
     if (cat.newItem)    newItems.push(entry);
     if (cat.outOfStock) outOfStock.push(entry);
   }
-  return { dead, excess, fast, newItems, outOfStock };
+  return { dead, fast, newItems, outOfStock };
 }
 
 function setSubFilter(key) {
@@ -4061,7 +4080,6 @@ function renderSubItems() {
   let entries;
   switch (subDetailFilter) {
     case "dead":    entries = buckets.dead; break;
-    case "excess":  entries = buckets.excess; break;
     case "fast":    entries = buckets.fast; break;
     case "new":     entries = buckets.newItems; break;
     case "deficit": entries = buckets.outOfStock; break;
@@ -4382,15 +4400,22 @@ function _flowCell(qty, sum, unit) {
   return parts.join(" · ");
 }
 
-function _itemBadges(cat, deadDays) {
+function _itemBadges(cat, deadDays, lastMovedMonthKey) {
   const badges = [];
   if (cat.dead) {
-    const txt = (deadDays != null && deadDays > 0)
-      ? `💀 без руху ${deadDays} дн`
-      : "💀 без руху";
+    // Prefer "Останній рух: квітень" — more actionable than "120 днів".
+    // Falls back to days count if we don't have prior-month history (e.g.
+    // very first month of data).
+    let txt;
+    if (lastMovedMonthKey) {
+      txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}`;
+    } else if (deadDays != null && deadDays > 0) {
+      txt = `💀 без руху ${deadDays} дн`;
+    } else {
+      txt = "💀 без руху";
+    }
     badges.push(`<span class="an-badge dead">${txt}</span>`);
   }
-  if (cat.excess)  badges.push(`<span class="an-badge excess">📦 надлишок ${fmtDaysOfSupply(cat.dos)}</span>`);
   if (cat.fast)    badges.push(`<span class="an-badge fast">⚡ швидкий ${fmtDaysOfSupply(cat.dos)}</span>`);
   if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
   if (cat.outOfStock) badges.push('<span class="an-badge deficit">🚨 закінчився</span>');
@@ -4407,8 +4432,10 @@ function renderAnItemRow(it, sub, period) {
     ? null
     : `<div style="color:var(--muted);font-size:10px;">≈ ${fmtDaysOfSupply(cat.dos)} запасу</div>`;
 
-  const deadDays = cat.dead ? daysWithoutMovement(itemKey(it, sub), currentMonthKey) : null;
-  const badges = _itemBadges(cat, deadDays);
+  const itKey   = itemKey(it, sub);
+  const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
+  const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
+  const badges = _itemBadges(cat, deadDays, lastMov);
 
   // Flow rows: each stage gets qty (left) + sum (right) on one line
   const flowBits = [];
@@ -4451,8 +4478,10 @@ function renderAnItemCard(entry) {
   const pathStr = (entry.path || []).map(i => analyticsData.paths[i]).join(" › ");
   const period = analyticsData.months[currentMonthKey].period;
   const cat = entry.cat || classifyItem(it, sub, period);
-  const deadDays = cat.dead ? daysWithoutMovement(itemKey(it, sub), currentMonthKey) : null;
-  const badges = _itemBadges(cat, deadDays);
+  const itKey   = itemKey(it, sub);
+  const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
+  const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
+  const badges = _itemBadges(cat, deadDays, lastMov);
 
   const flowBits = [];
   const ec = (lbl, qty, sum, cls) => {
