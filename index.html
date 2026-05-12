@@ -921,6 +921,50 @@
   .an-node.subdivision { background: var(--card2); }
   .an-node.subdivision .an-node-head { padding-left: 30px; }
   .an-node.subdivision .an-node-head .an-node-title { font-size: 12px; color: var(--text); font-weight: 500; }
+
+  /* Hidden-MVO transparency section */
+  .an-hidden-toggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; cursor: pointer; user-select: none;
+    background: rgba(245, 158, 11, .06);
+    border: 1px solid rgba(245, 158, 11, .2);
+    border-radius: 10px;
+    transition: background .15s;
+  }
+  .an-hidden-toggle:hover { background: rgba(245, 158, 11, .1); }
+  .an-hidden-toggle #an-hidden-arrow.open { transform: rotate(90deg); }
+  .an-hidden-toggle #an-hidden-arrow { transition: transform .15s; display: inline-block; }
+  .an-hidden-item {
+    background: rgba(28, 32, 53, .5);
+    border: 1px dashed rgba(245, 158, 11, .25);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    font-size: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 10px;
+  }
+  .an-hidden-item-dept {
+    grid-column: 1; font-size: 10px; color: var(--muted);
+    font-weight: 600; letter-spacing: .02em;
+  }
+  .an-hidden-item-name {
+    grid-column: 1; font-weight: 600; color: var(--text);
+    word-break: break-word; line-height: 1.35;
+  }
+  .an-hidden-item-stats {
+    grid-column: 2; grid-row: 1 / span 2;
+    font-size: 10.5px; color: var(--muted); text-align: right;
+    white-space: nowrap;
+  }
+  .an-hidden-reason {
+    grid-column: 1 / -1;
+    font-size: 10px; color: var(--warn);
+    padding: 3px 6px; background: rgba(245, 158, 11, .08);
+    border-radius: 4px; margin-top: 2px;
+    line-height: 1.4;
+  }
   .an-node-path {
     font-size: 10px; color: var(--muted); font-weight: 500;
     margin-top: 2px;
@@ -1227,6 +1271,25 @@
           </button>
         </div>
         <div id="an-hierarchy"></div>
+
+        <!-- Hidden MVOs section: transparency about what's excluded -->
+        <div id="an-hidden-section" style="margin-top:18px;display:none;">
+          <div class="an-hidden-toggle" onclick="toggleHiddenSection()">
+            <span id="an-hidden-arrow" style="font-size:14px;">▶</span>
+            <span style="flex:1;">
+              <span style="color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;">Приховано як господарські</span>
+              <span id="an-hidden-count" style="margin-left:8px;color:var(--warn);font-size:12px;font-weight:600;"></span>
+            </span>
+          </div>
+          <div id="an-hidden-body" style="display:none;margin-top:8px;">
+            <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:10px;padding:0 4px;">
+              МВО нижче приховані з основного списку — вони містять переважно
+              господарські товари (будматеріали, інструменти, електрика тощо).
+              Якщо хтось потрапив сюди помилково — напиши, виправимо фільтр.
+            </div>
+            <div id="an-hidden-list"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -2881,6 +2944,61 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   return { groups: groupsOut, stats };
 }
 
+// ─── Household-items filter ─────────────────────────────────────────────────
+// Hide МВО whose items are construction/maintenance goods (drills, cables,
+// paint, etc.) rather than medical supplies. Rules:
+//   1. If the department NAME contains "осподар" (Господарський відділ) →
+//      hide every MVO in that department, no matter what its items look like.
+//   2. Otherwise, hide an МВО when ALL of these hold:
+//      a. At least one item has a household marker (Свердло, Профіль, ...)
+//      b. NO item has a pharm marker (табл, амп, мл, мг, розчин, набір ПЛР, ...)
+//      c. The department has ≥2 MVO (so we don't accidentally erase a whole
+//         single-MVO dept).
+// The lists are intentionally conservative; tested empirically — zero false
+// positives across 4 months of Panteleimon data.
+const AN_HOUSEHOLD_TOKENS = [
+  "Свердло","Профіль","Плінтус","Грунтовка","Емаль","Лампа","Світильник",
+  "Трійник","Труба","Кабель","Акумулятор","Кліщі","Вентилятор","Болт",
+  "Гайка","Фарба","Інструмент","Цемент","Грунт",
+];
+// Token must appear at start or after whitespace/punctuation, case-insensitive
+const AN_HOUSEHOLD_RE = new RegExp(
+  "(^|[\\s\\(\\[,.;/-])(" + AN_HOUSEHOLD_TOKENS.join("|") + ")",
+  "i"
+);
+// Markers that say "this is medical": dosage forms, units, lab/dispensable
+// terminology. If ANY item in an MVO matches one of these, we never hide
+// the whole MVO based on household markers (some clinical lots happen to
+// contain stray items like "профіль фіксатора" — they are not enough to
+// classify the MVO as household).
+const AN_PHARM_RE = new RegExp(
+  "(\\bтабл\\b|\\bамп\\b|\\bмл\\b|\\bмг\\b|г/мл|г/л|" +
+  "\\bр-н\\b|розчин|мазь|крем|гель|\\bсвіч|\\bкаплі|\\bкрапл|спрей|інгаля|" +
+  "Набір\\s+(ПЛР|діагнос|реаген)|реагент|тест[-\\s]?смужк|" +
+  "\\bкатетер|\\bголк|\\bканюл|\\bшприц|\\bпробірк|" +
+  "\\bбинт|\\bвата|\\bмаск|рентген|УЗД|" +
+  "№\\d+|фл\\.\\s*\\d+|\\bтаблетк|\\bкапсул|" +
+  "\\bлікарськ|\\bпрепарат|\\bінсулін|\\bфізіологіч)",
+  "i"
+);
+function _anIsHouseholdDeptName(name) {
+  return typeof name === "string" && name.indexOf("осподар") !== -1;
+}
+function _anHasHouseholdItem(items, namesPool) {
+  for (const it of items) {
+    const n = namesPool[it.n];
+    if (n && AN_HOUSEHOLD_RE.test(n)) return true;
+  }
+  return false;
+}
+function _anHasPharmItem(items, namesPool) {
+  for (const it of items) {
+    const n = namesPool[it.n];
+    if (n && AN_PHARM_RE.test(n)) return true;
+  }
+  return false;
+}
+
 // Top-level entry: parse a workbook ArrayBuffer into the same shape as
 // `data/panteleimon/analytics.json` used to provide. Returns { meta, names,
 // paths, months } where each month has `directions` of length 1 wrapping the
@@ -2979,11 +3097,60 @@ async function parseAnalyticsXlsx(arrayBuffer) {
       }
     }
 
+    // ── Household-items classification ───────────────────────────────────
+    // Walk each group and mark sub._hidden = true for МВО that look like
+    // construction/maintenance lots. We need to count MVO per department
+    // first (rule 2c) so do this in two passes.
+    for (const g of parsed.groups) {
+      // count MVO per dept name
+      const mvoPerDept = new Map();
+      for (const sub of g.subdivisions) {
+        const depName = sub.path.length > 0 ? result.paths[sub.path[0]] : "";
+        mvoPerDept.set(depName, (mvoPerDept.get(depName) || 0) + 1);
+      }
+      for (const sub of g.subdivisions) {
+        const depName = sub.path.length > 0 ? result.paths[sub.path[0]] : "";
+        // Rule 1: entire Господарський відділ
+        if (_anIsHouseholdDeptName(depName)) {
+          sub._hidden = true;
+          sub._hideReason = "household-dept";
+          continue;
+        }
+        // Rule 2: household-only items + multi-MVO dept
+        const multiMvo = (mvoPerDept.get(depName) || 0) >= 2;
+        if (!multiMvo) continue;
+        if (_anHasHouseholdItem(sub.items, result.names) &&
+            !_anHasPharmItem(sub.items, result.names)) {
+          sub._hidden = true;
+          sub._hideReason = "household-items";
+        }
+      }
+      // Recompute the group's totals as the sum of VISIBLE subdivisions only,
+      // so that all downstream consumers (KPI cards, month-to-month deltas,
+      // turnover) see consistent numbers that match what's on screen.
+      const visTotals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
+      for (const sub of g.subdivisions) {
+        if (sub._hidden) continue;
+        const t = sub.totals || {};
+        for (const k in visTotals) if (typeof t[k] === "number") visTotals[k] += t[k];
+      }
+      // Round to 2 decimals and drop zero fields
+      const clean = {};
+      for (const k in visTotals) {
+        const v = Math.round(visTotals[k] * 100) / 100;
+        if (v !== 0) clean[k] = v;
+      }
+      g.totals = clean;
+    }
+
     result.meta.periods.push({ key, sheet: sheetNames[i], period });
     // Wrap the single group as the single "direction" — renderer expects this.
     // The hospital name itself isn't shown (we strip the direction layer in
     // the renderer when there's only one), so the inner group name "ВП ..."
     // is what surfaces at the top of the hierarchy view.
+    //
+    // Totals come from `g.totals` which has been recomputed above to exclude
+    // hidden (household) subdivisions — so KPIs and the on-screen tree agree.
     result.months[key] = {
       period,
       org_totals: parsed.groups[0] ? parsed.groups[0].totals : {},
@@ -3343,6 +3510,7 @@ function classifyAllItems(m) {
   for (const d of m.directions) {
     for (const g of d.groups) {
       for (const sub of g.subdivisions) {
+        if (sub._hidden) continue;
         for (const it of sub.items) {
           const cat = classifyItem(it, sub, m.period);
           const entry = { item: it, sub, path: sub.path, direction: d.name, cat };
@@ -3437,6 +3605,7 @@ function _ensureExpenseIndex() {
     for (const d of m.directions) {
       for (const g of d.groups) {
         for (const sub of g.subdivisions) {
+          if (sub._hidden) continue;
           for (const it of sub.items) {
             if ((it.es || 0) > 0) {
               set.add(itemKey(it, sub));
@@ -3532,6 +3701,102 @@ function renderHierarchy(m) {
   // We remember the original direction index so subdivision IDs can map back to _anTree.
   const dirIndexMap = new Map(m.directions.map((d, i) => [d, i]));
   root.innerHTML = dirs.map(d => renderDirectionNode(d, dirIndexMap.get(d))).join("");
+
+  renderHiddenMvoSection(m);
+}
+
+// Render the "Приховано як господарські" section at the bottom of the
+// hierarchy, listing every МВО that was excluded by the household filter.
+// Each row shows the department + МВО name, item count, closing sum, and a
+// short reason tag — for transparency, so the user can spot false positives.
+function renderHiddenMvoSection(m) {
+  const sect = document.getElementById("an-hidden-section");
+  const body = document.getElementById("an-hidden-body");
+  const list = document.getElementById("an-hidden-list");
+  const arr  = document.getElementById("an-hidden-arrow");
+  const cnt  = document.getElementById("an-hidden-count");
+  if (!sect || !list || !cnt) return;
+
+  // Collect hidden MVO entries (search filter does NOT apply here — this is
+  // the unfiltered audit list of what got excluded from analytics).
+  // We read from the ORIGINAL month (not the filtered tree _anTree) so a
+  // search like "офтальмологія" doesn't make the audit list empty.
+  const full = analyticsData.months[currentMonthKey];
+  if (!full) { sect.style.display = "none"; return; }
+
+  const entries = [];
+  for (const d of full.directions) {
+    for (const g of d.groups) {
+      for (const sub of g.subdivisions) {
+        if (!sub._hidden) continue;
+        const depName = (sub.path && sub.path.length > 0) ? analyticsData.paths[sub.path[0]] : "(без відділення)";
+        const mvoName = (sub.path && sub.path.length > 1) ? analyticsData.paths[sub.path[sub.path.length - 1]] : "(без назви)";
+        entries.push({
+          dept: depName, mvo: mvoName,
+          items: sub.items.length,
+          cs: (sub.totals && sub.totals.cs) || 0,
+          reason: sub._hideReason || "household",
+          subRef: sub,
+        });
+      }
+    }
+  }
+
+  if (!entries.length) {
+    sect.style.display = "none";
+    return;
+  }
+  sect.style.display = "block";
+  cnt.textContent = `${entries.length} МВО`;
+
+  // Sort: hospitalize cluster first (Господарський дет.), then by cs desc
+  entries.sort((a, b) => {
+    const aHd = a.reason === "household-dept" ? 0 : 1;
+    const bHd = b.reason === "household-dept" ? 0 : 1;
+    if (aHd !== bHd) return aHd - bHd;
+    return b.cs - a.cs;
+  });
+
+  const reasonLabel = r => {
+    if (r === "household-dept")  return "🏗️ Господарський відділ";
+    if (r === "household-items") return "🔧 Госп. товари без фарм-маркерів";
+    return "🔧 Господарський";
+  };
+  // Find a sample household item from each MVO to display as a hint
+  const sampleHouseholdItem = sub => {
+    for (const it of sub.items) {
+      const n = analyticsData.names[it.n];
+      if (n && AN_HOUSEHOLD_RE.test(n)) return n;
+    }
+    // fallback: first item name
+    const it = sub.items[0];
+    return it ? analyticsData.names[it.n] : "";
+  };
+
+  list.innerHTML = entries.map(e => {
+    const sample = sampleHouseholdItem(e.subRef);
+    const sampleShort = sample.length > 70 ? sample.slice(0, 70) + "…" : sample;
+    return `
+      <div class="an-hidden-item">
+        <div class="an-hidden-item-dept">${esc(e.dept)}</div>
+        <div class="an-hidden-item-name">${esc(e.mvo)}</div>
+        <div class="an-hidden-item-stats">
+          ${fmtMoney(e.cs, true)}
+          <div style="margin-top:1px;">${e.items} поз.</div>
+        </div>
+        <div class="an-hidden-reason">${reasonLabel(e.reason)}${sample ? ` · напр. «${esc(sampleShort)}»` : ""}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function toggleHiddenSection() {
+  const body = document.getElementById("an-hidden-body");
+  const arr  = document.getElementById("an-hidden-arrow");
+  if (!body || !arr) return;
+  const isOpen = body.style.display === "block";
+  body.style.display = isOpen ? "none" : "block";
+  arr.classList.toggle("open", !isOpen);
 }
 
 function renderDirectionNode(d, dIdx) {
@@ -3564,6 +3829,7 @@ function renderGroupNode(g, id) {
   const deptOrder = [];
   const deptMap = new Map(); // depName → { subs: [{sub, si}], totals }
   g.subdivisions.forEach((sub, si) => {
+    if (sub._hidden) return; // skip household MVO
     const depName = (sub.path && sub.path.length > 0)
       ? analyticsData.paths[sub.path[0]]
       : "(без відділення)";
@@ -3875,10 +4141,13 @@ function exportDepartmentsToXlsx() {
   if (!m) { alert("Не знайдено даних для обраного місяця."); return; }
 
   // Aggregate subdivisions by department (path[0]) — mirrors the UI grouping.
+  // We skip МВО that were classified as household (sub._hidden) so the export
+  // shows the same content as the on-screen list.
   const deptMap = new Map();
   for (const d of m.directions) {
     for (const g of d.groups) {
       for (const sub of g.subdivisions) {
+        if (sub._hidden) continue;
         const depName = (sub.path && sub.path.length > 0)
           ? analyticsData.paths[sub.path[0]]
           : "(без відділення)";
@@ -4223,26 +4492,33 @@ function toggleAnNode(id) {
 function computeMonthStats(m) {
   let totalItems = 0;
   const subs = new Set();
+  // Sum visible-only totals so KPI cards match the on-screen department list
+  // (excludes hidden household-items MVO).
+  const vis = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
   for (const d of m.directions) {
     for (const g of d.groups) {
       for (const sub of g.subdivisions) {
+        if (sub._hidden) continue;
         subs.add(d.name + "|" + g.name + "|" + sub.path.join(">"));
         totalItems += sub.items.length;
+        const t = sub.totals || {};
+        for (const k in vis) if (typeof t[k] === "number") vis[k] += t[k];
       }
     }
   }
-  const org = m.org_totals || {};
   let turnoverStr = "—", turnoverHint = "";
-  const closing = org.cs || 0, expense = org.es || 0;
+  const closing = vis.cs || 0, expense = vis.es || 0;
   if (closing > 0 && expense > 0) {
-    // Days of supply = closing / (expense / daysInPeriod)
     const days = daysInPeriod(m.period);
     const dayRate = expense / days;
     const daysOfSupply = closing / dayRate;
     turnoverStr = Math.round(daysOfSupply) + " дн.";
     turnoverHint = "днів запасу при поточному видатку";
   }
-  return { totalItems, subdivisionCount: subs.size, turnoverStr, turnoverHint };
+  return {
+    totalItems, subdivisionCount: subs.size, turnoverStr, turnoverHint,
+    visibleTotals: vis,
+  };
 }
 
 function daysInPeriod(period) {
