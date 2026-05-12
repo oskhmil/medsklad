@@ -915,9 +915,12 @@
   .an-node.direction > .an-node-head .an-node-title { color: var(--accent); font-size: 14px; }
   .an-node.group .an-node-head { padding-left: 18px; }
   .an-node.group .an-node-head .an-node-title { font-size: 12px; color: #a78bfa; }
+  .an-node.department .an-node-head { padding-left: 22px; background: rgba(56,189,248,.04); }
+  .an-node.department .an-node-head .an-node-title { font-size: 13px; color: #38bdf8; font-weight: 700; }
+  .an-node.department > .an-node-body { padding-left: 8px; }
   .an-node.subdivision { background: var(--card2); }
-  .an-node.subdivision .an-node-head { padding-left: 26px; }
-  .an-node.subdivision .an-node-head .an-node-title { font-size: 12px; color: #38bdf8; }
+  .an-node.subdivision .an-node-head { padding-left: 30px; }
+  .an-node.subdivision .an-node-head .an-node-title { font-size: 12px; color: var(--text); font-weight: 500; }
   .an-node-path {
     font-size: 10px; color: var(--muted); font-weight: 500;
     margin-top: 2px;
@@ -3515,24 +3518,89 @@ function renderDirectionNode(d, dIdx) {
 function renderGroupNode(g, id) {
   const itemsCount = g.subdivisions.reduce((s, sub) => s + sub.items.length, 0);
   const t = g.totals || {};
+
+  // Group subdivisions by department (path[0]) so the user sees a two-level
+  // tree: Department → list of МВО. Preserves each subdivision's ORIGINAL
+  // index `si` so existing IDs (used by openSubDetail / _lookupSubdivision /
+  // search / detail-screen back navigation) keep working unchanged.
+  const deptOrder = [];
+  const deptMap = new Map(); // depName → { subs: [{sub, si}], totals }
+  g.subdivisions.forEach((sub, si) => {
+    const depName = (sub.path && sub.path.length > 0)
+      ? analyticsData.paths[sub.path[0]]
+      : "(без відділення)";
+    let entry = deptMap.get(depName);
+    if (!entry) {
+      entry = {
+        name: depName,
+        subs: [],
+        totals: { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 },
+        itemsCount: 0,
+      };
+      deptMap.set(depName, entry);
+      deptOrder.push(depName);
+    }
+    entry.subs.push({ sub, si });
+    entry.itemsCount += sub.items.length;
+    const st = sub.totals || {};
+    for (const k of ["oq","os","rq","rs","eq","es","cq","cs"]) {
+      if (typeof st[k] === "number") entry.totals[k] += st[k];
+    }
+  });
+
+  // Sort departments by closing sum desc; "(без відділення)" last
+  deptOrder.sort((a, b) => {
+    if (a === "(без відділення)") return 1;
+    if (b === "(без відділення)") return -1;
+    return (deptMap.get(b).totals.cs || 0) - (deptMap.get(a).totals.cs || 0);
+  });
+
   return `
     <div class="an-node group">
       <div class="an-node-head" onclick="toggleAnNode('${id}')">
         <span class="an-node-arrow" id="arr-${id}">▶</span>
         <div class="an-node-title">${esc(g.name)}</div>
-        <div class="an-node-sum">${fmtMoney(t.cs || 0)}<div class="an-node-sum-sub">${g.subdivisions.length} підрозд., ${itemsCount} поз.</div></div>
+        <div class="an-node-sum">${fmtMoney(t.cs || 0)}<div class="an-node-sum-sub">${deptOrder.length} відд., ${itemsCount} поз.</div></div>
       </div>
       <div class="an-node-body" id="body-${id}">
-        ${g.subdivisions.map((sub, si) => renderSubdivisionShell(sub, `${id}-s${si}`)).join("")}
+        ${deptOrder.map((depName, depIdx) => renderDepartmentNode(deptMap.get(depName), `${id}-dep${depIdx}`, id)).join("")}
       </div>
     </div>
   `;
 }
 
-// Subdivision SHELL — clicking it now opens a full detail screen.
+// Department node — expandable; clicking it reveals the list of МВО.
+// Each МВО is still rendered via renderSubdivisionShell with its original
+// `d{di}-g{gi}-s{si}` ID so detail navigation / search / lookup keep working.
+function renderDepartmentNode(dep, depId, groupId) {
+  const period = analyticsData.months[currentMonthKey].period;
+  const dos = daysOfSupply(dep.totals, period);
+  const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
+  return `
+    <div class="an-node department">
+      <div class="an-node-head" onclick="toggleAnNode('${depId}')">
+        <span class="an-node-arrow" id="arr-${depId}">▶</span>
+        <div class="an-node-title">${esc(dep.name)}<div class="an-node-path">${dep.subs.length} МВО · ${dep.itemsCount} поз.</div></div>
+        <div class="an-node-sum">
+          ${fmtMoney(dep.totals.cs || 0)}
+          <div class="an-node-sum-sub">${dosLabel} запасу</div>
+        </div>
+      </div>
+      <div class="an-node-body" id="body-${depId}">
+        ${dep.subs.map(({ sub, si }) => renderSubdivisionShell(sub, `${groupId}-s${si}`)).join("")}
+      </div>
+    </div>
+  `;
+}
+
+// Subdivision SHELL — clicking it opens the full detail screen. Now that
+// the parent node already displays the department name, this card shows
+// only the МВО (last path element) as the title, without the department path.
 function renderSubdivisionShell(sub, id) {
   const t = sub.totals || {};
-  const leaf = sub.path.length > 0 ? analyticsData.paths[sub.path[sub.path.length - 1]] : "(без назви)";
+  const leaf = sub.path.length > 0
+    ? analyticsData.paths[sub.path[sub.path.length - 1]]
+    : "(без назви)";
   const period = analyticsData.months[currentMonthKey].period;
   const dos = daysOfSupply(t, period);
   const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
@@ -3540,10 +3608,7 @@ function renderSubdivisionShell(sub, id) {
     <div class="an-node subdivision" data-sub-id="${id}">
       <div class="an-node-head" onclick="openSubDetail('${id}')">
         <span class="an-node-arrow">›</span>
-        <div class="an-node-title">
-          ${esc(leaf)}
-          ${sub.path.length > 1 ? `<div class="an-node-path">${esc(sub.path.slice(0, -1).map(i => analyticsData.paths[i]).join(" › "))}</div>` : ""}
-        </div>
+        <div class="an-node-title">${esc(leaf)}</div>
         <div class="an-node-sum">
           ${fmtMoney(t.cs || 0)}
           <div class="an-node-sum-sub">${sub.items.length} поз. · ${dosLabel} запасу</div>
