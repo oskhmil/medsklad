@@ -944,6 +944,17 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 4px 10px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .an-hidden-item:hover {
+    background: rgba(28, 32, 53, .85);
+    border-color: rgba(245, 158, 11, .45);
+    border-style: solid;
+  }
+  .an-hidden-item:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
   .an-hidden-item-dept {
     grid-column: 1; font-size: 10px; color: var(--muted);
@@ -1298,6 +1309,10 @@
       <div class="an-back-row">
         <button class="back-btn" onclick="closeSubDetail()">← Назад до напрямів</button>
       </div>
+
+      <!-- Month switcher (mirrors the main analytics month tabs so users can
+           switch period without leaving the subdivision detail view) -->
+      <div class="an-month-tabs" id="sub-detail-month-tabs" style="margin-bottom:12px;"></div>
 
       <!-- Subdivision header -->
       <div id="sub-detail-header" class="an-flow" style="margin-bottom:12px;"></div>
@@ -3747,9 +3762,12 @@ function renderHiddenMvoSection(m) {
   if (!full) { sect.style.display = "none"; return; }
 
   const entries = [];
-  for (const d of full.directions) {
-    for (const g of d.groups) {
-      for (const sub of g.subdivisions) {
+  for (let di = 0; di < full.directions.length; di++) {
+    const d = full.directions[di];
+    for (let gi = 0; gi < d.groups.length; gi++) {
+      const g = d.groups[gi];
+      for (let si = 0; si < g.subdivisions.length; si++) {
+        const sub = g.subdivisions[si];
         if (!sub._hidden) continue;
         const depName = (sub.path && sub.path.length > 0) ? analyticsData.paths[sub.path[0]] : "(без відділення)";
         const mvoName = (sub.path && sub.path.length > 1) ? analyticsData.paths[sub.path[sub.path.length - 1]] : "(без назви)";
@@ -3759,6 +3777,7 @@ function renderHiddenMvoSection(m) {
           cs: (sub.totals && sub.totals.cs) || 0,
           reason: sub._hideReason || "household",
           subRef: sub,
+          id: `d${di}-g${gi}-s${si}`,
         });
       }
     }
@@ -3799,12 +3818,13 @@ function renderHiddenMvoSection(m) {
     const sample = sampleHouseholdItem(e.subRef);
     const sampleShort = sample.length > 70 ? sample.slice(0, 70) + "…" : sample;
     return `
-      <div class="an-hidden-item">
+      <div class="an-hidden-item" onclick="openSubDetail('${e.id}')" role="button" tabindex="0">
         <div class="an-hidden-item-dept">${esc(e.dept)}</div>
         <div class="an-hidden-item-name">${esc(e.mvo)}</div>
         <div class="an-hidden-item-stats">
           ${fmtMoney(e.cs, true)}
           <div style="margin-top:1px;">${e.items} поз.</div>
+          <div style="margin-top:2px;color:var(--accent);font-size:14px;">›</div>
         </div>
         <div class="an-hidden-reason">${reasonLabel(e.reason)}${sample ? ` · напр. «${esc(sampleShort)}»` : ""}</div>
       </div>
@@ -3947,7 +3967,8 @@ function renderSubdivisionShell(sub, id) {
 // ── Subdivision detail page ────────────────────────────────────────────────
 let _currentSubdivision = null;
 let _currentSubId = null;
-let subDetailFilter = "all";  // all | dead | excess | fast | new | deficit
+let _currentSubPath = null; // snapshot of path indices for cross-month resolution
+let subDetailFilter = "all";  // all | dead | fast | new | deficit
 
 function openSubDetail(id) {
   const sub = _lookupSubdivision(id);
@@ -3957,6 +3978,10 @@ function openSubDetail(id) {
   }
   _currentSubdivision = sub;
   _currentSubId = id;
+  // Snapshot the path (department + МВО name indices) so we can re-locate
+  // this same МВО after the user switches months — indices in subdivisions[]
+  // are not stable across months but the path is.
+  _currentSubPath = sub.path ? sub.path.slice() : null;
   subDetailFilter = "all";
   // Reset search/sort
   const ss = document.getElementById("sub-search");
@@ -3972,9 +3997,93 @@ function closeSubDetail() {
   show("analytics");
 }
 
+// Switch month inside the subdivision detail view. Re-resolves the current
+// МВО by path in the newly-selected month so the screen stays on the same
+// МВО. If that МВО doesn't exist in the target month (e.g. department was
+// reorganized) we show a friendly notice with a "go back" button.
+function selectSubDetailMonth(monthKey) {
+  if (!monthKey || monthKey === currentMonthKey) return;
+  currentMonthKey = monthKey;
+  // Drop a stale compare selection if it now equals current
+  if (compareMonthKey === currentMonthKey) compareMonthKey = null;
+  // Re-resolve current МВО in the new month
+  const m = analyticsData.months[currentMonthKey];
+  if (!m) { renderSubDetail(); return; }
+  const matched = _findSubdivisionByPath(m, _currentSubPath);
+  if (matched) {
+    _currentSubdivision = matched.sub;
+    _currentSubId = matched.id;
+  } else {
+    // Mark as missing — renderSubDetail will show the empty-state notice
+    _currentSubdivision = null;
+    _currentSubId = null;
+  }
+  renderSubDetail();
+}
+
+// Find a subdivision whose `path` matches the given path (array of name
+// indices). Returns { sub, id: "d{di}-g{gi}-s{si}" } or null.
+//
+// Hidden (household-classified) subdivisions ARE included in the search — the
+// audit list shows them too, so the user must be able to drill into one and
+// switch between months without it being silently filtered out here.
+function _findSubdivisionByPath(m, path) {
+  if (!path || !path.length) return null;
+  const target = path.join(",");
+  for (let di = 0; di < m.directions.length; di++) {
+    const d = m.directions[di];
+    for (let gi = 0; gi < d.groups.length; gi++) {
+      const g = d.groups[gi];
+      for (let si = 0; si < g.subdivisions.length; si++) {
+        const sub = g.subdivisions[si];
+        if (sub.path && sub.path.join(",") === target) {
+          return { sub, id: `d${di}-g${gi}-s${si}` };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+// Render month tabs inside the sub-detail screen — same look as the main
+// analytics month tabs, but each tab calls selectSubDetailMonth so the МВО
+// stays in view as the user switches between months.
+function renderSubDetailMonthTabs() {
+  const el = document.getElementById("sub-detail-month-tabs");
+  if (!el || !analyticsData || !analyticsData.months) return;
+  const monthKeys = Object.keys(analyticsData.months).sort();
+  if (monthKeys.length <= 1) { el.innerHTML = ""; return; }
+  const MONTHS_UK = { "01":"Січень","02":"Лютий","03":"Березень","04":"Квітень","05":"Травень","06":"Червень","07":"Липень","08":"Серпень","09":"Вересень","10":"Жовтень","11":"Листопад","12":"Грудень" };
+  el.innerHTML = monthKeys.map(k => {
+    const mm = k.slice(5, 7);
+    const label = MONTHS_UK[mm] || k;
+    const active = k === currentMonthKey ? " active" : "";
+    return `<button class="an-month-tab${active}" onclick="selectSubDetailMonth('${k}')">${label}</button>`;
+  }).join("");
+}
+
 function renderSubDetail() {
+  renderSubDetailMonthTabs();
   const sub = _currentSubdivision;
-  if (!sub) return;
+  if (!sub) {
+    // МВО not found in this month (e.g. reorganized, renamed)
+    const m = analyticsData.months[currentMonthKey];
+    const leaf = (_currentSubPath && _currentSubPath.length)
+      ? analyticsData.paths[_currentSubPath[_currentSubPath.length - 1]]
+      : "цей підрозділ";
+    document.getElementById("sub-detail-header").innerHTML = `
+      <div style="text-align:center;padding:40px 20px;">
+        <div style="font-size:44px;margin-bottom:12px;">🔍</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px;">«${esc(leaf)}» відсутній</div>
+        <div style="font-size:13px;color:var(--muted);">У вибраному місяці цей МВО не знайдено.<br>Можливо, його було перейменовано або переведено.</div>
+      </div>
+    `;
+    document.getElementById("sub-detail-kpis").innerHTML = "";
+    document.getElementById("sub-detail-flow").innerHTML = "";
+    document.getElementById("sub-detail-filters").innerHTML = "";
+    document.getElementById("sub-items-container").innerHTML = "";
+    return;
+  }
   const m = analyticsData.months[currentMonthKey];
   const period = m.period;
   const t = sub.totals || {};
@@ -4001,7 +4110,25 @@ function renderSubDetail() {
     writeoffLine = `<div style="font-size:12px;margin-top:8px;color:var(--muted)">📅 Списань не виявлено</div>`;
   }
 
-  document.getElementById("sub-detail-header").innerHTML = `
+  // If this is a hidden (household-classified) МВО, prepend an informational
+  // banner so the user understands why this МВО isn't in the main analytics —
+  // it's accessible only from the audit list at the bottom.
+  let hiddenBanner = "";
+  if (sub._hidden) {
+    const reasonText = sub._hideReason === "household-dept"
+      ? "увесь Господарський відділ"
+      : "позиції містять переважно господарські товари без фарм-маркерів";
+    hiddenBanner = `
+      <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);
+                  border-radius:8px;padding:8px 12px;margin-bottom:10px;
+                  font-size:12px;line-height:1.5;color:var(--warn);">
+        🔧 <b>Прихований МВО</b> — не враховується в підсумках аналітики,
+        бо ${reasonText}.
+      </div>
+    `;
+  }
+
+  document.getElementById("sub-detail-header").innerHTML = hiddenBanner + `
     <div class="an-flow-title">Підрозділ</div>
     <div style="font-size:15px;font-weight:700;line-height:1.3;margin-bottom:4px;">${esc(leaf)}</div>
     <div style="font-size:11px;color:var(--muted);line-height:1.4;">${esc(pathFull)}</div>
