@@ -4545,16 +4545,26 @@ function _flowCell(qty, sum, unit) {
 function _itemBadges(cat, deadDays, lastMovedMonthKey) {
   const badges = [];
   if (cat.dead) {
-    // Prefer "Останній рух: квітень" — more actionable than "120 днів".
-    // Falls back to days count if we don't have prior-month history (e.g.
-    // very first month of data).
+    // Prefer concrete month — that's actionable. Three cases:
+    //  1. Item had expense in some prior month → "рух востаннє: квітень 2026"
+    //  2. Item exists across all our months but never had expense → "не рухався
+    //     з {earliest month}" (says we have no movement throughout the window)
+    //  3. No history at all (only current month) → plain "без руху"
     let txt;
     if (lastMovedMonthKey) {
       txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}`;
-    } else if (deadDays != null && deadDays > 0) {
-      txt = `💀 без руху ${deadDays} дн`;
     } else {
-      txt = "💀 без руху";
+      // No movement found in any month before current — say since when we've
+      // been watching it. Far more meaningful than abstract days.
+      const monthKeys = analyticsData && analyticsData.months
+        ? Object.keys(analyticsData.months).sort()
+        : [];
+      const earliest = monthKeys[0];
+      if (earliest && earliest !== currentMonthKey) {
+        txt = `💀 не рухався з ${fmtMonthKey(earliest)}`;
+      } else {
+        txt = "💀 без руху";
+      }
     }
     badges.push(`<span class="an-badge dead">${txt}</span>`);
   }
