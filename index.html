@@ -2832,6 +2832,10 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   let currentGroup = null;
   let currentDept = null;
   let currentPerson = null;
+  // The most recently encountered item — operation rows (indent=12) that
+  // appear directly after an item belong to it. We use this to attach
+  // write-off dates to the item itself, not just the subdivision.
+  let lastItem = null;
   const groups = {};
   const stats = {
     rows_scanned: 0, items_captured: 0, skipped_empty: 0, unknown_levels: 0,
@@ -2856,6 +2860,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
       currentGroup = groups[aVal];
       currentDept = null;
       currentPerson = null;
+      lastItem = null;
       continue;
     }
     // Department (indent=6)
@@ -2863,6 +2868,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
       if (!currentGroup) continue;
       currentDept = aVal;
       currentPerson = null;
+      lastItem = null;
       deptSet.add(aVal);
       continue;
     }
@@ -2870,23 +2876,32 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     if (indent === 8 && aVal) {
       if (!currentGroup || !currentDept) continue;
       currentPerson = aVal;
+      lastItem = null;
       personSet.add(aVal);
       continue;
     }
-    // Document/op rows — skip; only capture latest "Списання" date for the
-    // current subdivision so the renderer can show "last write-off N days ago".
+    // Document/op rows — extract date and attach it to the LAST item we saw.
+    // This works because in 1C exports the operation rows for a given
+    // position appear directly beneath that position's row.
     if (aVal && _anIsDocumentRow(aVal)) {
       if (aVal.startsWith("Списання")) {
         const d = _anParseDocDate(aVal);
-        if (d && currentGroup && currentDept && currentPerson) {
-          const key = currentDept + "|" + currentPerson;
-          let sub = currentGroup.subdivisions[key];
-          if (!sub) {
-            sub = currentGroup.subdivisions[key] = {
-              path: [currentDept, currentPerson], items: [], itemsByName: {}, lastWriteoff: null,
-            };
+        if (d) {
+          // Update per-МВО latest write-off (used in the subdivision header)
+          if (currentGroup && currentDept && currentPerson) {
+            const key = currentDept + "|" + currentPerson;
+            let sub = currentGroup.subdivisions[key];
+            if (!sub) {
+              sub = currentGroup.subdivisions[key] = {
+                path: [currentDept, currentPerson], items: [], itemsByName: {}, lastWriteoff: null,
+              };
+            }
+            if (!sub.lastWriteoff || d > sub.lastWriteoff) sub.lastWriteoff = d;
           }
-          if (!sub.lastWriteoff || d > sub.lastWriteoff) sub.lastWriteoff = d;
+          // Update per-item latest write-off (used in the "Без руху" badge)
+          if (lastItem) {
+            if (!lastItem.lw || d > lastItem.lw) lastItem.lw = d;
+          }
         }
       }
       continue;
@@ -2919,6 +2934,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
           if (!existing.series_list) existing.series_list = existing.s ? [existing.s] : [];
           if (existing.series_list.indexOf(cVal) === -1) existing.series_list.push(cVal);
         }
+        lastItem = existing;
       } else {
         const item = { n: bVal };
         if (cVal) item.s = cVal;
@@ -2928,6 +2944,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
         sub.items.push(item);
         sub.itemsByName[bVal] = sub.items.length - 1;
         stats.items_captured++;
+        lastItem = item;
       }
       continue;
     }
@@ -3626,6 +3643,34 @@ function lastMovementMonth(itemKey, currentMonthKey) {
   return null;
 }
 
+// Find the most recent write-off date for an item across all months in the
+// dataset. Items in the current (dead) month have no write-off — but we need
+// to look back to earlier months where the same item DID have a write-off.
+// Returns ISO date "YYYY-MM-DD" or null.
+function _findLatestWriteoffAcrossMonths(it, sub) {
+  if (!analyticsData || !analyticsData.months) return null;
+  const targetName = it.n;
+  const targetPath = sub.path.join(",");
+  let best = null;
+  // We need to look up the SAME item (same name + same dept/person path) in
+  // every month. Items aren't keyed by id, so we walk subdivisions matching
+  // the path and look for the same name index.
+  for (const [mk, m] of Object.entries(analyticsData.months)) {
+    for (const d of m.directions) {
+      for (const g of d.groups) {
+        for (const sub2 of g.subdivisions) {
+          if (sub2.path.join(",") !== targetPath) continue;
+          for (const it2 of sub2.items) {
+            if (it2.n !== targetName) continue;
+            if (it2.lw && (!best || it2.lw > best)) best = it2.lw;
+          }
+        }
+      }
+    }
+  }
+  return best;
+}
+
 // Format a "YYYY-MM" month key into Ukrainian "квітень 2026".
 const _UK_MONTHS = ["січень","лютий","березень","квітень","травень","червень",
                     "липень","серпень","вересень","жовтень","листопад","грудень"];
@@ -3685,13 +3730,14 @@ function classifyItem(it, sub, period) {
   // Dead: has stock at close, zero expense in this period, was there at start.
   const dead = (os > 0) && (es === 0) && (cs > 0);
 
-  // Fast: closing covers less than threshold days — running out soon.
-  // (We dropped the "Надлишок" category — it gave too many false positives
-  // for newly-arrived items where the burn rate isn't representative yet.)
-  const fast = (es > 0) && (cs > 0) && (dos < DAYS_OF_SUPPLY_FAST_THRESHOLD);
-
   // Brand new: nothing at start of period, received stock during it.
   const newItem = (os === 0) && (rs > 0);
+
+  // Fast: closing covers less than threshold days — running out soon.
+  // We deliberately EXCLUDE brand-new items: their daily-burn rate is computed
+  // from a partial month (1-N days), so the resulting DOS is misleading. The
+  // "Надлишок" category was dropped earlier for the same reason.
+  const fast = (es > 0) && (cs > 0) && !newItem && (dos < DAYS_OF_SUPPLY_FAST_THRESHOLD);
 
   // Out of stock: had it at start, zero at close.
   const outOfStock = (os > 0) && (cs === 0);
@@ -4542,20 +4588,27 @@ function _flowCell(qty, sum, unit) {
   return parts.join(" · ");
 }
 
-function _itemBadges(cat, deadDays, lastMovedMonthKey) {
+function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
   const badges = [];
   if (cat.dead) {
-    // Prefer concrete month — that's actionable. Three cases:
-    //  1. Item had expense in some prior month → "рух востаннє: квітень 2026"
-    //  2. Item exists across all our months but never had expense → "не рухався
-    //     з {earliest month}" (says we have no movement throughout the window)
-    //  3. No history at all (only current month) → plain "без руху"
+    // Prefer the exact last write-off date if we have it — that's actionable
+    // and accurate. Falls back to month-of-last-movement, then to a generic
+    // "since {earliest month in data}" message.
     let txt;
-    if (lastMovedMonthKey) {
+    if (lastWriteoffDate) {
+      // "💀 не списано з 21.02.2026 (54 дн)"
+      const today = new Date();
+      const wd = new Date(lastWriteoffDate);
+      let suffix = "";
+      if (!isNaN(wd)) {
+        const days = Math.max(0, Math.round((today - wd) / 86400000));
+        if (days > 0) suffix = ` (${days} дн)`;
+      }
+      txt = `💀 не списано з ${fmtShortDate(lastWriteoffDate)}${suffix}`;
+    } else if (lastMovedMonthKey) {
       txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}`;
     } else {
-      // No movement found in any month before current — say since when we've
-      // been watching it. Far more meaningful than abstract days.
+      // No movement found in any month — say since when we've been watching.
       const monthKeys = analyticsData && analyticsData.months
         ? Object.keys(analyticsData.months).sort()
         : [];
@@ -4568,7 +4621,12 @@ function _itemBadges(cat, deadDays, lastMovedMonthKey) {
     }
     badges.push(`<span class="an-badge dead">${txt}</span>`);
   }
-  if (cat.fast)    badges.push(`<span class="an-badge fast">⚡ швидкий ${fmtDaysOfSupply(cat.dos)}</span>`);
+  // For brand-new items, days-of-supply is misleading (the rate is based on
+  // 1-N days of data, not a full month), so we skip the "fast" badge entirely
+  // and instead show only the "new" label below.
+  if (cat.fast && !cat.newItem) {
+    badges.push(`<span class="an-badge fast">⚡ швидкий ${fmtDaysOfSupply(cat.dos)}</span>`);
+  }
   if (cat.newItem) badges.push('<span class="an-badge new">🆕 нова</span>');
   if (cat.outOfStock) badges.push('<span class="an-badge deficit">🚨 закінчився</span>');
   return badges;
@@ -4580,14 +4638,15 @@ function renderAnItemRow(it, sub, period) {
   const unit = it.u >= 0 ? null : null; // unit not stored in items; we'll show qty bare
   // Item unit is not in current JSON schema; we display qty as plain numbers.
 
-  const dosLine = (cat.dead || cat.outOfStock || it.es == 0)
+  const dosLine = (cat.dead || cat.outOfStock || cat.newItem || it.es == 0)
     ? null
     : `<div style="color:var(--muted);font-size:10px;">≈ ${fmtDaysOfSupply(cat.dos)} запасу</div>`;
 
   const itKey   = itemKey(it, sub);
   const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
   const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
-  const badges = _itemBadges(cat, deadDays, lastMov);
+  const lwDate = cat.dead ? _findLatestWriteoffAcrossMonths(it, sub) : null;
+  const badges = _itemBadges(cat, deadDays, lastMov, lwDate);
 
   // Flow rows: each stage gets qty (left) + sum (right) on one line
   const flowBits = [];
@@ -4633,7 +4692,8 @@ function renderAnItemCard(entry) {
   const itKey   = itemKey(it, sub);
   const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
   const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
-  const badges = _itemBadges(cat, deadDays, lastMov);
+  const lwDate = cat.dead ? _findLatestWriteoffAcrossMonths(it, sub) : null;
+  const badges = _itemBadges(cat, deadDays, lastMov, lwDate);
 
   const flowBits = [];
   const ec = (lbl, qty, sum, cls) => {
@@ -4645,7 +4705,7 @@ function renderAnItemCard(entry) {
   ec("− ",    it.eq, it.es, "minus");
   ec("кін: ", it.cq, it.cs, "");
 
-  const dosLine = (cat.dead || cat.outOfStock || (it.es || 0) === 0)
+  const dosLine = (cat.dead || cat.outOfStock || cat.newItem || (it.es || 0) === 0)
     ? ""
     : `<div style="font-size:11px;color:var(--muted);margin-top:3px;">≈ ${fmtDaysOfSupply(cat.dos)} запасу</div>`;
 
