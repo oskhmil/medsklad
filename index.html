@@ -2922,7 +2922,7 @@ async function parseAnalyticsXlsx(arrayBuffer) {
     const sheetFile = zip.file(`xl/worksheets/sheet${sheetIdx}.xml`);
     if (!sheetFile) continue;
     const sheetXml = await sheetFile.async("string");
-    const period = _anParsePeriod(sheetXml, sharedStrings, xfToIndent);
+    let period = _anParsePeriod(sheetXml, sharedStrings, xfToIndent);
     const parsed = _anParseSheet(sheetXml, sharedStrings, xfToIndent);
     // Skip empty sheets (e.g. current month with only a header row)
     if (!parsed.groups.length || parsed.stats.items_captured === 0) continue;
@@ -2933,6 +2933,25 @@ async function parseAnalyticsXlsx(arrayBuffer) {
     else {
       const mm = AN_MONTH_UK_TO_NUM[sheetNames[i]];
       key = mm ? `${new Date().getFullYear()}-${mm}` : sheetNames[i];
+    }
+
+    // Always provide a non-null `period` — the renderer reads `period.to` /
+    // `period.from` in many places (days-of-supply, "last write-off ago",
+    // etc.) and would crash on null. If xlsx had no "Період: dd.mm.yyyy -
+    // dd.mm.yyyy" line, synthesize from the month key (first → last day of
+    // that month).
+    if (!period) {
+      const ym = key.match(/^(\d{4})-(\d{2})$/);
+      if (ym) {
+        const year = parseInt(ym[1], 10);
+        const month = parseInt(ym[2], 10);
+        const lastDay = new Date(year, month, 0).getDate(); // 0 → last day of prev month with `month` 1-based
+        const mm = ym[2];
+        period = {
+          from: `${year}-${mm}-01`,
+          to:   `${year}-${mm}-${String(lastDay).padStart(2, "0")}`,
+        };
+      }
     }
 
     // Intern names/paths in-place
