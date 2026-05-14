@@ -1522,7 +1522,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.70";
+const APP_VERSION = "v.71";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -1746,9 +1746,13 @@ async function loadFromDrive(isRefresh) {
       document.getElementById("search-input").value = "";
       renderHome();
       show("home");
-      // No background refresh — cache shown as-is; user taps 🔄 when they
-      // want fresh data. This keeps open instant and avoids redundant
-      // network traffic / parse cycles on every open.
+      // Background auto-refresh if cache is older than MEDSEARCH_TTL_MS.
+      // Fresh cache → skip (saves the 5–10 s parse). Stale cache → quietly
+      // pull fresh data; "Оновлено:" timestamp in header will update.
+      const cacheAge = Date.now() - (cache.time ? cache.time.getTime() : 0);
+      if (cacheAge > MEDSEARCH_TTL_MS) {
+        fetchAndUpdate(false);
+      }
       return;
     }
   }
@@ -1993,12 +1997,10 @@ function goStart() {
   show("sections");
 }
 
-// Manual "🔄 Оновити" button always forces a refresh.
-// We deliberately do NOT auto-refresh in the background on open — that was
-// causing redundant network/parse on every screen entry. Users tap 🔄 when
-// they want fresh data. (Old MEDSEARCH_TTL_MS kept as a marker in case
-// we want to bring back conditional auto-refresh later.)
-const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // (currently unused)
+// Auto-refresh the medsearch dataset only if cache is older than this.
+// Below the threshold we trust the cache fully (no network at open).
+// Manual "🔄 Оновити" button always forces a refresh regardless.
+const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 function openMedsearch() {
   // If cached medsearch data exists → jump straight to home, else entry screen
@@ -2011,7 +2013,12 @@ function openMedsearch() {
     document.getElementById("search-input").value = "";
     renderHome();
     show("home");
-    // No background auto-refresh — user taps 🔄 when they want fresh data.
+    // Auto-refresh in the background ONLY when cache is older than the TTL.
+    // For fresh-enough cache, we save bandwidth and skip the 5–10 s parse.
+    const cacheAge = Date.now() - (cache.time ? cache.time.getTime() : 0);
+    if (cacheAge > MEDSEARCH_TTL_MS) {
+      fetchAndUpdate(false);
+    }
   } else {
     show("start");
   }
@@ -2636,7 +2643,7 @@ function analyticsHospitalCacheKey(id) {
 
 let currentHospitalId = null;
 
-const ANALYTICS_CACHE_TTL = 30 * 60 * 1000; // 30 min silent refresh
+const ANALYTICS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours silent refresh
 
 let analyticsData = null;
 let currentMonthKey = null;
@@ -2752,7 +2759,11 @@ async function loadAnalytics(forceRefresh) {
           _expenseByItemPerMonth = null;
           initAnalyticsUI();
           setState("ready");
-          // No background auto-refresh — user taps 🔄 when they want fresh data.
+          // Silent background refresh if cache is older than TTL
+          const age = Date.now() - (cached.ts || 0);
+          if (age > ANALYTICS_CACHE_TTL) {
+            fetchAnalytics({ silent: true });
+          }
           return;
         }
       }
@@ -5317,7 +5328,11 @@ async function loadFinplan(forceRefresh) {
       loadingEl.style.display = "none";
       errorEl.style.display = "none";
       contentEl.style.display = "block";
-      // No background auto-refresh — user taps 🔄 when they want fresh data.
+      // Background refresh if cache is older than TTL
+      const age = Date.now() - cache.time.getTime();
+      if (age > FINPLAN_TTL_MS) {
+        _fetchFinplanInBackground();
+      }
       return;
     }
   }
