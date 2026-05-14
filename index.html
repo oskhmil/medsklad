@@ -2518,9 +2518,9 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
-  // v4 = Google Sheets export parser fallback (sheet-name attrs + no-indent hierarchy).
-  // Bumping invalidates older empty parses cached in the browser.
-  return "medsklad_analytics_cache_v4__" + id;
+  // v6 = normalized hospital name after Google Sheets hierarchy fixes.
+  // Bumping invalidates older malformed hierarchy cached in the browser.
+  return "medsklad_analytics_cache_v6__" + id;
 }
 
 let currentHospitalId = null;
@@ -2784,7 +2784,14 @@ function _anParseDocDate(text) {
 
 function _anLooksLikeGroupName(text) {
   const s = String(text || "").trim().toLowerCase();
-  return s.startsWith("вп ") || s.indexOf("лікарня") !== -1 || s.indexOf("пантелеймона") !== -1 && s.indexOf("від") === -1;
+  return s.startsWith("вп ") || s.indexOf("лікарня") !== -1;
+}
+
+function _anNormalizeGroupName(text) {
+  const s = String(text || "").trim();
+  const low = s.toLowerCase();
+  if (low.indexOf("пантелеймон") !== -1) return "Лікарня св. Пантелеймона";
+  return s;
 }
 
 function _anLooksLikeDepartmentName(text) {
@@ -2808,7 +2815,15 @@ function _anLooksLikeDepartmentName(text) {
 
 function _anFallbackLevel(aVal, bVal, currentGroup, currentDept) {
   if (!aVal || bVal) return 0;
-  if (!currentGroup || _anLooksLikeGroupName(aVal)) return 4;
+  const s = String(aVal || "").trim().toLowerCase();
+  if (
+    s === "організація" ||
+    s === "склад/підрозділ" ||
+    s === "реєстратор" ||
+    s.indexOf("документ надходження") === 0
+  ) return 0;
+  if (_anLooksLikeGroupName(aVal)) return 4;
+  if (!currentGroup) return 0;
   if (!currentDept || _anLooksLikeDepartmentName(aVal)) return 6;
   return 8;
 }
@@ -2893,8 +2908,9 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
 
     // Hospital row (indent=4)
     if (indent === 4 && aVal) {
-      if (!groups[aVal]) groups[aVal] = { name: aVal, totals: _anExtractNumbers(cells), subdivisions: {} };
-      currentGroup = groups[aVal];
+      const groupName = _anNormalizeGroupName(aVal);
+      if (!groups[groupName]) groups[groupName] = { name: groupName, totals: _anExtractNumbers(cells), subdivisions: {} };
+      currentGroup = groups[groupName];
       currentDept = null;
       currentPerson = null;
       lastItem = null;
