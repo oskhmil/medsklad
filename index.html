@@ -1522,7 +1522,114 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.68";
+const APP_VERSION = "v.70";
+
+// Cache schema version — bump ONLY when we need to force-clear all users'
+// localStorage caches (e.g. data format changed, suspect cache corruption,
+// or quota overflow reports from users). Different from APP_VERSION because
+// most UI changes don't need to wipe user data — we only do it when really
+// needed. On bump, every browser will detect the mismatch on next open and
+// silently wipe all medsklad_* keys.
+const CACHE_VERSION = 1;
+const CACHE_VERSION_KEY = "medsklad_cache_version";
+
+// Run BEFORE any cache reads. If user's stored version differs from current,
+// wipe every medsklad_* localStorage key (any block: medsearch, analytics,
+// finplan, snapshots, new-names). Then write the new version. This is the
+// emergency-eject mechanism: bump CACHE_VERSION in code → all users reset
+// next time they open the app, transparently and without user action.
+(function enforceCacheVersion() {
+  try {
+    const stored = localStorage.getItem(CACHE_VERSION_KEY);
+    if (stored === String(CACHE_VERSION)) return;
+    // Mismatch (or first run with versioning). Sweep every key whose name
+    // starts with "medsklad" — covers all current and future caches.
+    const toDelete = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("medsklad") && k !== CACHE_VERSION_KEY) {
+        toDelete.push(k);
+      }
+    }
+    toDelete.forEach(k => { try { localStorage.removeItem(k); } catch(_) {} });
+    localStorage.setItem(CACHE_VERSION_KEY, String(CACHE_VERSION));
+    if (toDelete.length > 0) {
+      console.info("[medsklad] cache version bumped to", CACHE_VERSION,
+                   "— cleared", toDelete.length, "stale entries");
+    }
+  } catch (e) {
+    // localStorage unavailable (private mode, full disk) — nothing we can do.
+    console.warn("[medsklad] enforceCacheVersion failed:", e.message);
+  }
+})();
+
+// ── Remote cache version check ─────────────────────────────────────────────
+// In addition to the in-code CACHE_VERSION above (which requires a code
+// deploy), we ALSO poll a Google Sheet on every app open. The sheet has a
+// single cell A1 holding a number. When that number changes, every browser
+// detects the mismatch on next open, wipes all medsklad_* keys, and reloads.
+//
+// This means: to force-clear caches on every user's device, just open the
+// Sheet in your browser/phone and change the number. No code edit, no deploy.
+//
+// Sheet must be shared as "Anyone with the link — Viewer". URL format:
+//   https://docs.google.com/spreadsheets/d/[SHEET_ID]/export?format=csv
+//
+// Failure modes (network down, sheet unreachable, malformed value): we log
+// and fall through. App keeps working with whatever local cache it has.
+// ──────────────────────────────────────────────────────────────────────────
+const REMOTE_CACHE_VERSION_URL = "https://docs.google.com/spreadsheets/d/1n54-LrdfJTp6bplm4qUHYzJ60h_otmNN2ocFzxqQwoE/export?format=csv";
+const REMOTE_CACHE_VERSION_KEY = "medsklad_remote_cache_version";
+
+async function checkRemoteCacheVersion() {
+  try {
+    // cache: "no-store" prevents the browser from serving a stale copy of the
+    // CSV itself — otherwise a CDN cache could make the bump invisible.
+    const resp = await fetch(REMOTE_CACHE_VERSION_URL, { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const text = (await resp.text()).trim();
+    // CSV from a 1-cell sheet is just the number. Strip quotes/whitespace.
+    const remote = text.replace(/["'\s]/g, "").split(/[,\n\r]/)[0];
+    if (!remote || !/^\d+$/.test(remote)) {
+      console.warn("[medsklad] remote cache version: invalid value", JSON.stringify(text));
+      return;
+    }
+    const stored = localStorage.getItem(REMOTE_CACHE_VERSION_KEY);
+    if (stored === remote) return; // versions match, nothing to do
+    if (stored === null) {
+      // First run with remote versioning enabled — just record current
+      // version without wiping. (Wiping on first run would punish users
+      // who already have valid caches.)
+      localStorage.setItem(REMOTE_CACHE_VERSION_KEY, remote);
+      console.info("[medsklad] remote cache version: initial sync", remote);
+      return;
+    }
+    // Version actually changed — sweep all medsklad_* keys and reload.
+    console.info("[medsklad] remote cache version changed:", stored, "→", remote, "— clearing caches");
+    const toDelete = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      // Keep the version markers themselves so we don't loop.
+      if (k && k.startsWith("medsklad")
+            && k !== REMOTE_CACHE_VERSION_KEY
+            && k !== CACHE_VERSION_KEY) {
+        toDelete.push(k);
+      }
+    }
+    toDelete.forEach(k => { try { localStorage.removeItem(k); } catch(_) {} });
+    localStorage.setItem(REMOTE_CACHE_VERSION_KEY, remote);
+    // Reload so the fresh state is reflected everywhere in the UI.
+    location.reload();
+  } catch (e) {
+    // Offline, sheet not shared, CORS, etc — non-fatal. Log and move on.
+    console.warn("[medsklad] remote cache version check failed:", e.message);
+  }
+}
+
+// Fire and forget — runs in parallel with the rest of app init, doesn't
+// block first paint. If it triggers a reload, that's fine; if not, the app
+// continues with whatever local state it had.
+checkRemoteCacheVersion();
 
 let allItems = [];
 let currentQuery = "";
@@ -1639,7 +1746,9 @@ async function loadFromDrive(isRefresh) {
       document.getElementById("search-input").value = "";
       renderHome();
       show("home");
-      fetchAndUpdate(false);
+      // No background refresh — cache shown as-is; user taps 🔄 when they
+      // want fresh data. This keeps open instant and avoids redundant
+      // network traffic / parse cycles on every open.
       return;
     }
   }
@@ -1884,10 +1993,12 @@ function goStart() {
   show("sections");
 }
 
-// Auto-refresh the medsearch dataset only if cache is older than this.
-// Below the threshold we trust the cache fully (no network at open).
-// Manual "🔄 Оновити" button always forces a refresh regardless.
-const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
+// Manual "🔄 Оновити" button always forces a refresh.
+// We deliberately do NOT auto-refresh in the background on open — that was
+// causing redundant network/parse on every screen entry. Users tap 🔄 when
+// they want fresh data. (Old MEDSEARCH_TTL_MS kept as a marker in case
+// we want to bring back conditional auto-refresh later.)
+const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // (currently unused)
 
 function openMedsearch() {
   // If cached medsearch data exists → jump straight to home, else entry screen
@@ -1900,12 +2011,7 @@ function openMedsearch() {
     document.getElementById("search-input").value = "";
     renderHome();
     show("home");
-    // Auto-refresh in the background ONLY when cache is older than the TTL.
-    // For fresh-enough cache, we save bandwidth and skip the 5–10 s parse.
-    const cacheAge = Date.now() - (cache.time ? cache.time.getTime() : 0);
-    if (cacheAge > MEDSEARCH_TTL_MS) {
-      fetchAndUpdate(false);
-    }
+    // No background auto-refresh — user taps 🔄 when they want fresh data.
   } else {
     show("start");
   }
@@ -2646,11 +2752,7 @@ async function loadAnalytics(forceRefresh) {
           _expenseByItemPerMonth = null;
           initAnalyticsUI();
           setState("ready");
-          // Silent background refresh if cache is older than TTL
-          const age = Date.now() - (cached.ts || 0);
-          if (age > ANALYTICS_CACHE_TTL) {
-            fetchAnalytics({ silent: true });
-          }
+          // No background auto-refresh — user taps 🔄 when they want fresh data.
           return;
         }
       }
@@ -5215,11 +5317,7 @@ async function loadFinplan(forceRefresh) {
       loadingEl.style.display = "none";
       errorEl.style.display = "none";
       contentEl.style.display = "block";
-      // Background refresh if stale
-      const age = Date.now() - cache.time.getTime();
-      if (age > FINPLAN_TTL_MS) {
-        _fetchFinplanInBackground();
-      }
+      // No background auto-refresh — user taps 🔄 when they want fresh data.
       return;
     }
   }
