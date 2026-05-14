@@ -2518,9 +2518,9 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
-  // v6 = normalized hospital name after Google Sheets hierarchy fixes.
+  // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
   // Bumping invalidates older malformed hierarchy cached in the browser.
-  return "medsklad_analytics_cache_v6__" + id;
+  return "medsklad_analytics_cache_v7__" + id;
 }
 
 let currentHospitalId = null;
@@ -2827,6 +2827,71 @@ function _anFallbackLevel(aVal, bVal, currentGroup, currentDept) {
   if (!currentDept || _anLooksLikeDepartmentName(aVal)) return 6;
   return 8;
 }
+
+function _anIsStructuralHeader(text) {
+  const s = String(text || "").trim().toLowerCase();
+  return (
+    s === "організація" ||
+    s === "склад/підрозділ" ||
+    s === "реєстратор" ||
+    s.indexOf("документ надходження") === 0
+  );
+}
+
+function _anInferNoIndentLevels(rows) {
+  const levels = new Map();
+  const sig = [];
+
+  for (const rec of rows) {
+    const cells = rec.cells || {};
+    const aCell = cells[0];
+    const bCell = cells[1];
+    const aVal = aCell && aCell.value != null ? String(aCell.value).trim() : "";
+    const bVal = bCell && bCell.value != null ? String(bCell.value).trim() : "";
+    const indent = aCell ? aCell.indent : 0;
+    if (indent !== 0) continue;
+
+    if (aVal && !bVal && !_anIsDocumentRow(aVal) && !_anIsStructuralHeader(aVal)) {
+      sig.push({
+        row: rec.row,
+        type: "aonly",
+        name: aVal,
+        cells,
+        isGroup: _anLooksLikeGroupName(aVal),
+      });
+    } else if (!aVal && bVal) {
+      sig.push({ row: rec.row, type: "item" });
+    }
+  }
+
+  let haveGroup = false;
+  for (let i = 0; i < sig.length; i++) {
+    const cur = sig[i];
+    if (cur.type !== "aonly") continue;
+
+    if (cur.isGroup) {
+      levels.set(cur.row, 4);
+      haveGroup = true;
+      continue;
+    }
+    if (!haveGroup) continue;
+
+    const next = sig[i + 1];
+    const nums = _anExtractNumbers(cur.cells);
+    if (next && next.type === "aonly" && !next.isGroup) {
+      // In Google Sheets exports indentation is lost. A department row is
+      // followed by its МВО row; an МВО row is followed by item rows.
+      levels.set(cur.row, 6);
+    } else if (!next && _anHasAnyNumber(nums)) {
+      // Final aggregate-only department (e.g. central sterilization) can have
+      // totals but no МВО/details underneath.
+      levels.set(cur.row, 6);
+    } else {
+      levels.set(cur.row, 8);
+    }
+  }
+  return levels;
+}
 function _anNum(v) {
   if (v === null || v === undefined || v === "") return null;
   const n = Number(v);
@@ -2889,8 +2954,26 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   };
   const deptSet = new Set();
   const personSet = new Set();
+  const parsedRows = Array.from(_anIterRows(sheetXml, sharedStrings, xfToIndent));
+  const inferredLevels = _anInferNoIndentLevels(parsedRows);
+  let currentDeptTotals = null;
+  let currentDeptHasPerson = false;
 
-  for (const { cells } of _anIterRows(sheetXml, sharedStrings, xfToIndent)) {
+  function finalizeEmptyDept() {
+    if (!currentGroup || !currentDept || currentDeptHasPerson || !_anHasAnyNumber(currentDeptTotals)) return;
+    const key = currentDept + "|(без МВО)";
+    if (!currentGroup.subdivisions[key]) {
+      currentGroup.subdivisions[key] = {
+        path: [currentDept, "(без МВО)"],
+        totalsOverride: _anStripNone(currentDeptTotals),
+        items: [],
+        itemsByName: {},
+        lastWriteoff: null,
+      };
+    }
+  }
+
+  for (const { row, cells } of parsedRows) {
     stats.rows_scanned++;
     const aCell = cells[0];
     const bCell = cells[1];
@@ -2903,15 +2986,18 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     // Google Sheets export often strips Excel indentation. When all hierarchy
     // rows come through with indent=0, infer the level from the row shape/name.
     if (indent === 0 && aVal && !bVal && !_anIsDocumentRow(aVal)) {
-      indent = _anFallbackLevel(aVal, bVal, currentGroup, currentDept);
+      indent = inferredLevels.get(row) || _anFallbackLevel(aVal, bVal, currentGroup, currentDept);
     }
 
     // Hospital row (indent=4)
     if (indent === 4 && aVal) {
+      finalizeEmptyDept();
       const groupName = _anNormalizeGroupName(aVal);
       if (!groups[groupName]) groups[groupName] = { name: groupName, totals: _anExtractNumbers(cells), subdivisions: {} };
       currentGroup = groups[groupName];
       currentDept = null;
+      currentDeptTotals = null;
+      currentDeptHasPerson = false;
       currentPerson = null;
       lastItem = null;
       continue;
@@ -2919,7 +3005,10 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     // Department (indent=6)
     if (indent === 6 && aVal) {
       if (!currentGroup) continue;
+      finalizeEmptyDept();
       currentDept = aVal;
+      currentDeptTotals = _anExtractNumbers(cells);
+      currentDeptHasPerson = false;
       currentPerson = null;
       lastItem = null;
       deptSet.add(aVal);
@@ -2929,6 +3018,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     if (indent === 8 && aVal) {
       if (!currentGroup || !currentDept) continue;
       currentPerson = aVal;
+      currentDeptHasPerson = true;
       lastItem = null;
       personSet.add(aVal);
       continue;
@@ -3004,18 +3094,26 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     if (aVal || bVal) stats.unknown_levels++;
   }
 
+  finalizeEmptyDept();
+
   // Finalize: aggregate subdivision totals, drop internal index
   const groupsOut = [];
   for (const gname in groups) {
     const g = groups[gname];
     const subs = Object.values(g.subdivisions).map(sub => {
-      const totals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
-      for (const it of sub.items) {
-        for (const k in totals) if (typeof it[k] === "number") totals[k] += it[k];
+      let totalsOut;
+      if (sub.totalsOverride) {
+        totalsOut = _anStripNone(sub.totalsOverride);
+      } else {
+        const totals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
+        for (const it of sub.items) {
+          for (const k in totals) if (typeof it[k] === "number") totals[k] += it[k];
+        }
+        totalsOut = {};
+        for (const k in totals) if (totals[k] !== 0) totalsOut[k] = Math.round(totals[k] * 100) / 100;
       }
-      const totalsOut = {};
-      for (const k in totals) if (totals[k] !== 0) totalsOut[k] = Math.round(totals[k] * 100) / 100;
       delete sub.itemsByName;
+      delete sub.totalsOverride;
       const rec = { path: sub.path, totals: totalsOut, items: sub.items };
       if (sub.lastWriteoff) rec.last_writeoff = sub.lastWriteoff;
       return rec;
