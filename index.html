@@ -106,10 +106,11 @@
   .loader-ico { font-size: 44px; margin-bottom: 14px; }
 
   #home-screen { display: none; }
-  .stats-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .stats-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .stat-card {
-    flex: 1; background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 12px 8px; text-align: center;
+    flex: 1 1 calc(33.333% - 6px); min-width: 80px;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 6px; text-align: center;
   }
   .stat-num { font-size: 22px; font-weight: 800; color: var(--accent); }
   .stat-num.cyan { color: #38bdf8; }
@@ -350,6 +351,10 @@
           <div class="stat-num green" id="stat-soon">0</div>
           <div class="stat-lbl">&lt;90 днів</div>
         </div>
+        <div class="stat-card" onclick="showNewItems()" style="cursor:pointer">
+          <div class="stat-num warn" id="stat-new">0</div>
+          <div class="stat-lbl">🆕 Нове</div>
+        </div>
       </div>
       <div class="section-lbl" onclick="toggleDepts()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
         <span>Відділення у файлі</span>
@@ -360,6 +365,15 @@
         <span style="font-size:17px;font-weight:800;background:linear-gradient(90deg,#4f8ef7,#38bdf8,#a78bfa,#f472b6,#4f8ef7);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 3s linear infinite;letter-spacing:.06em;">Developed by Ostap Khmil</span>
       </div>
       <div class="hint-box">💡 Введіть назву препарату у рядок пошуку вгорі</div>
+      <div style="text-align:center;font-size:10px;color:var(--muted);margin-top:14px;opacity:.6">Liki.on! v<span id="app-version-home"></span></div>
+    </div>
+
+    <div id="new-screen" style="display:none">
+      <div class="results-header">
+        <div class="section-lbl">🆕 Нові позиції</div>
+        <span class="result-count" id="new-count">0 нових</span>
+      </div>
+      <div id="new-items-list"></div>
     </div>
 
     <div id="results-screen">
@@ -385,6 +399,9 @@ let lastLoaded = null;
 let searchMode = 'name';
 let selectedDepts = [];
 let currentDeptSuggestions = [];
+let newItemNames = [];
+
+const APP_VERSION = "2.0";
 
 // TODO: замінити на новий URL Google Drive файлу, коли буде готовий
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
@@ -417,12 +434,69 @@ function loadCache() {
   return null;
 }
 
+// ── Snapshot для "Нове" ───────────────────────────────────────────────────────
+const SNAPSHOT_KEY = "medsklad_snapshot_" + CACHE_VERSION;
+const NEW_NAMES_KEY = "medsklad_new_names_" + CACHE_VERSION;
+
+function getUniqueNames(items) {
+  return [...new Set(items.map(it => normalize(it.name)))];
+}
+
+function loadSnapshot() {
+  try {
+    const data = localStorage.getItem(SNAPSHOT_KEY);
+    if (data) return { names: JSON.parse(data) };
+  } catch(e) {}
+  return null;
+}
+
+function saveSnapshot(names) {
+  try { localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(names)); } catch(e) {}
+}
+
+function saveNewNames(names) {
+  try { localStorage.setItem(NEW_NAMES_KEY, JSON.stringify(names)); } catch(e) {}
+}
+
+function loadNewNames() {
+  try {
+    const data = localStorage.getItem(NEW_NAMES_KEY);
+    if (data) return JSON.parse(data);
+  } catch(e) {}
+  return [];
+}
+
+// Обчислити які назви з'явилися порівняно з останнім підтвердженим знімком.
+// НЕ перезаписує снапшот — він оновлюється тільки при натисканні "Переглянуто".
+function computeNewItems() {
+  const currentNames = getUniqueNames(allItems);
+  const prev = loadSnapshot();
+  if (!prev) {
+    // Перший запуск — зберігаємо знімок, нових немає
+    saveSnapshot(currentNames);
+    newItemNames = [];
+  } else {
+    const prevSet = new Set(prev.names);
+    newItemNames = currentNames.filter(n => !prevSet.has(n));
+  }
+  saveNewNames(newItemNames);
+}
+
+function markNewAsReviewed() {
+  saveSnapshot(getUniqueNames(allItems));
+  newItemNames = [];
+  saveNewNames(newItemNames);
+  renderHome();
+  show("home");
+}
+
 async function loadFromDrive(isRefresh) {
   if (!isRefresh) {
     const cache = loadCache();
     if (cache) {
       allItems = cache.items;
       lastLoaded = cache.time;
+      newItemNames = loadNewNames();
       currentQuery = "";
       document.getElementById("search-input").value = "";
       renderHome();
@@ -446,6 +520,7 @@ async function fetchAndUpdate(showLoader) {
     allItems = newItems;
     lastLoaded = new Date();
     saveCache(newItems);
+    computeNewItems();
     currentQuery = "";
     document.getElementById("search-input").value = "";
     renderHome();
@@ -472,6 +547,7 @@ function handleFile(file) {
       allItems = parseWorkbook(e.target.result);
       lastLoaded = new Date();
       saveCache(allItems);
+      computeNewItems();
       currentQuery = "";
       document.getElementById("search-input").value = "";
       renderHome();
@@ -583,7 +659,8 @@ function show(screen) {
   document.getElementById("loader").style.display          = screen==="loader"  ? "block" : "none";
   document.getElementById("home-screen").style.display     = screen==="home"    ? "block" : "none";
   document.getElementById("results-screen").style.display  = screen==="results" ? "block" : "none";
-  const showHeader = screen==="home" || screen==="results";
+  document.getElementById("new-screen").style.display      = screen==="new"     ? "block" : "none";
+  const showHeader = screen==="home" || screen==="results" || screen==="new";
   document.getElementById("search-wrap").style.display     = showHeader ? "block" : "none";
   document.getElementById("header-btns").style.display     = showHeader ? "flex"  : "none";
 }
@@ -605,6 +682,14 @@ function renderHome() {
   const soonEl = document.getElementById("stat-soon");
   soonEl.textContent = soon;
   soonEl.className = "stat-num " + (soon>0?"warn":"green");
+  // 🆕 Нове
+  const newEl = document.getElementById("stat-new");
+  const newCount = newItemNames.length;
+  newEl.textContent = newCount;
+  newEl.className = "stat-num " + (newCount>0?"warn":"green");
+  // Версія
+  const verEl = document.getElementById("app-version-home");
+  if (verEl) verEl.textContent = APP_VERSION;
   document.getElementById("dept-chips").innerHTML = Object.entries(deptMap)
     .sort((a,b)=>b[1]-a[1])
     .map(([d,c])=>`<div class="chip"><span style="color:#38bdf8">🏥</span><span class="chip-name">${esc(d)}</span><span class="chip-cnt">${c}</span></div>`)
@@ -832,7 +917,7 @@ function renderGroup(g, idx) {
   const detailsHtml = g.items.map(it => renderDetailCard(it)).join("");
   const warnBadge = g.soon > 0 ? `<span class="group-warn">⚠️ ${g.soon}</span>` : "";
   const dangerBadge = g.expired > 0 ? `<span class="group-danger">⛔ ${g.expired}</span>` : "";
-  return `<div class="group-card${isOpen?' open':''}">
+  return `<div class="group-card${isOpen?' open':''}" id="group-${idx}">
     <div class="group-head" onclick="toggleGroup(${idx})">
       <div class="group-info">
         <div class="group-name">${esc(g.name)}</div>
@@ -869,9 +954,11 @@ function renderDetailCard(item) {
 }
 
 function toggleGroup(idx) {
-  if (openGroups.has(idx)) openGroups.delete(idx);
-  else openGroups.add(idx);
-  renderResults();
+  const card = document.getElementById("group-" + idx);
+  if (!card) return;
+  card.classList.toggle("open");
+  if (card.classList.contains("open")) openGroups.add(idx);
+  else openGroups.delete(idx);
 }
 
 function showMore() {
@@ -889,6 +976,26 @@ function showMore() {
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
   renderResultsList(res);
+}
+
+// ── "🆕 Нове" ─────────────────────────────────────────────────────────────────
+function showNewItems() {
+  show("new");
+  document.getElementById("new-count").textContent =
+    newItemNames.length + (newItemNames.length===1 ? " нова" : " нових");
+  const list = document.getElementById("new-items-list");
+  if (!newItemNames.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-ico">✨</div><div class="empty-title">Нових позицій немає</div><div class="empty-sub">Усе вже переглянуто</div></div>`;
+    return;
+  }
+  // Знаходимо всі позиції з нормалізованими назвами зі списку newItemNames
+  const newSet = new Set(newItemNames);
+  const matched = allItems.filter(it => newSet.has(normalize(it.name)));
+  openGroups = new Set();
+  const groups = groupItems(matched);
+  let html = groups.map((g, idx) => renderGroup(g, idx)).join("");
+  html += `<button class="show-more-btn" style="background:linear-gradient(135deg,#34d399,#10b981);color:#fff;border-color:#10b981;margin-top:14px;" onclick="markNewAsReviewed()">✅ Переглянуто</button>`;
+  list.innerHTML = html;
 }
 
 function esc(s) {
