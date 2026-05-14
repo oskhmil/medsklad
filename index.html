@@ -3201,6 +3201,90 @@ async function parseAnalyticsXlsx(arrayBuffer) {
 // ═══════════════════════════════════════════════════════════════════════════
 //                    fetchAnalytics — load + parse from Drive
 // ═══════════════════════════════════════════════════════════════════════════
+function _anExtractDriveId(url) {
+  if (!url) return "";
+  const s = String(url).trim();
+  const patterns = [
+    /\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/,
+    /\/file\/d\/([a-zA-Z0-9_-]+)/,
+    /[?&]id=([a-zA-Z0-9_-]+)/,
+  ];
+  for (const re of patterns) {
+    const m = s.match(re);
+    if (m) return m[1];
+  }
+  return "";
+}
+
+function _anBuildDriveDownloadUrls(baseUrl) {
+  const raw = String(baseUrl || "").trim();
+  const id = _anExtractDriveId(raw);
+  const urls = [];
+  if (raw) urls.push(raw);
+  if (id) {
+    // Google Sheet converted/exported as xlsx.
+    urls.push(`https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx`);
+    // Uploaded .xlsx stored on Google Drive.
+    urls.push(`https://drive.google.com/uc?export=download&id=${id}`);
+    urls.push(`https://drive.usercontent.google.com/download?id=${id}&export=download&confirm=t`);
+  }
+  return Array.from(new Set(urls));
+}
+
+async function _anReadResponseArrayBuffer(resp, { silent, progressEl, textEl }) {
+  const total = parseInt(resp.headers.get("Content-Length") || "0", 10);
+  if (!silent && total > 0 && resp.body && resp.body.getReader) {
+    const reader = resp.body.getReader();
+    const chunks = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      received += value.length;
+      const pct = Math.min(80, Math.round(received / total * 80));
+      if (progressEl) progressEl.style.width = pct + "%";
+      if (textEl) textEl.textContent = `Дані завантажуються... ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
+    }
+    let size = 0;
+    chunks.forEach(c => size += c.length);
+    const merged = new Uint8Array(size);
+    let off = 0;
+    chunks.forEach(c => { merged.set(c, off); off += c.length; });
+    return merged.buffer;
+  }
+  return await resp.arrayBuffer();
+}
+
+async function _anFetchAnalyticsWorkbook(baseUrl, { silent, progressEl, textEl }) {
+  const urls = _anBuildDriveDownloadUrls(baseUrl);
+  const errors = [];
+  for (const candidate of urls) {
+    const url = candidate + (silent ? "" : (candidate.indexOf("?") >= 0 ? "&t=" : "?t=") + Date.now());
+    try {
+      if (!silent && textEl) textEl.textContent = "Дані завантажуються з Google Диску...";
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      const buf = await _anReadResponseArrayBuffer(resp, { silent, progressEl, textEl });
+      const head = new Uint8Array(buf, 0, Math.min(4, buf.byteLength));
+      if (head[0] === 0x50 && head[1] === 0x4B) return buf;
+
+      let snippet = "";
+      try {
+        snippet = new TextDecoder("utf-8").decode(new Uint8Array(buf, 0, Math.min(300, buf.byteLength)));
+      } catch (_) {}
+      const looksHtml = /<!doctype|<html/i.test(snippet);
+      throw new Error(looksHtml ? "Google Диск повернув HTML-сторінку замість xlsx" : "відповідь не є xlsx");
+    } catch (err) {
+      errors.push((err && err.message) ? err.message : String(err));
+    }
+  }
+  throw new Error(
+    "Не вдалося завантажити xlsx з Google Диску. Перевірте, що файл відкритий для «Усі, хто має посилання», і що у полі url вказано посилання на Google Sheet або Drive-файл. Остання помилка: " +
+    (errors[errors.length - 1] || "невідома")
+  );
+}
+
 async function fetchAnalytics({ silent }) {
   const progressEl = document.getElementById("an-progress");
   const textEl     = document.getElementById("an-loading-text");
@@ -3234,60 +3318,9 @@ async function fetchAnalytics({ silent }) {
   const cacheKey = analyticsHospitalCacheKey(hospital.id);
 
   try {
-    // Cache-bust to avoid stale CDN copy when user clicks refresh
-    const url = baseUrl + (silent ? "" : (baseUrl.indexOf("?") >= 0 ? "&t=" : "?t=") + Date.now());
-    if (!silent) textEl.textContent = "Дані завантажуються...";
-
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
-
     // Snapshot hospital we asked for; if user switches mid-flight we discard
     const requestedHospital = hospital.id;
-
-    // Stream with progress bar when Content-Length is available
-    const total = parseInt(resp.headers.get("Content-Length") || "0", 10);
-    let buf;
-    if (!silent && total > 0 && resp.body && resp.body.getReader) {
-      const reader = resp.body.getReader();
-      const chunks = [];
-      let received = 0;
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        received += value.length;
-        const pct = Math.min(80, Math.round(received / total * 80)); // reserve 20% for parsing
-        progressEl.style.width = pct + "%";
-        textEl.textContent = `Дані завантажуються... ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
-      }
-      let size = 0; chunks.forEach(c => size += c.length);
-      const merged = new Uint8Array(size);
-      let off = 0; chunks.forEach(c => { merged.set(c, off); off += c.length; });
-      buf = merged.buffer;
-    } else {
-      buf = await resp.arrayBuffer();
-    }
-
-    // Sanity-check that we got an xlsx (PKZip magic = 0x50 0x4B at start).
-    // Drive occasionally serves an HTML interstitial ("can't scan for viruses",
-    // permission redirect, etc.) instead of the file — JSZip would then fail
-    // with an opaque "End of central directory not found" error. Detect early
-    // and give a clear, actionable message.
-    const head = new Uint8Array(buf, 0, Math.min(4, buf.byteLength));
-    const isZip = head[0] === 0x50 && head[1] === 0x4B;
-    if (!isZip) {
-      // Try to read a snippet for context
-      let snippet = "";
-      try {
-        snippet = new TextDecoder("utf-8").decode(new Uint8Array(buf, 0, Math.min(200, buf.byteLength)));
-      } catch (_) {}
-      const looksHtml = /<!doctype|<html/i.test(snippet);
-      throw new Error(
-        looksHtml
-          ? "Google Диск повернув HTML-сторінку замість файлу. Можливо, файл щойно замінено і йде сканування — спробуйте ще раз за хвилину. Або перевірте, що файл досі доступний за посиланням «Усі, хто має посилання»."
-          : "Файл має невідомий формат (не xlsx). Перевірте посилання на Google Диску."
-      );
-    }
+    const buf = await _anFetchAnalyticsWorkbook(baseUrl, { silent, progressEl, textEl });
 
     if (!silent) {
       textEl.textContent = "Обробка даних...";
