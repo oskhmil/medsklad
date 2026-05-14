@@ -1218,7 +1218,7 @@
         <div style="font-size:44px;margin-bottom:14px;">📊</div>
         <div style="font-size:15px;" id="an-loading-text">Завантажуємо дані аналітики...</div>
         <div class="an-progress-bar"><div class="an-progress-fill" id="an-progress"></div></div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="an-loading-hint">Файл близько 900 КБ, секунда на мобільному</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="an-loading-hint">Зачекайте кілька секунд</div>
       </div>
 
       <div id="analytics-error">
@@ -2518,9 +2518,10 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
-  // v2 = xlsx-parsed format (in-browser). v1 was the old static-JSON cache;
-  // bumping the key invalidates stale caches automatically.
-  return "medsklad_analytics_cache_v2__" + id;
+  // v3 = no household filter applied (oxygen/nitrogen in Господарський are
+  // medical — we keep everything). v2 had the filter. Bumping invalidates
+  // old caches automatically.
+  return "medsklad_analytics_cache_v3__" + id;
 }
 
 let currentHospitalId = null;
@@ -3127,12 +3128,16 @@ async function parseAnalyticsXlsx(arrayBuffer) {
       }
     }
 
-    // ── Household-items classification ───────────────────────────────────
-    // Walk each group and mark sub._hidden = true for МВО that look like
-    // construction/maintenance lots. We need to count MVO per department
-    // first (rule 2c) so do this in two passes.
+    // ── Household-items classification (DISABLED) ────────────────────────
+    // Previously we hid МВО with construction/maintenance items. Disabled
+    // because the Господарський відділ actually stores medical-grade gases
+    // (oxygen, nitrogen) and other supplies that need to be counted. The
+    // classifier code (_anHasHouseholdItem etc.) is kept for future use if
+    // we want a togglable filter, but no _hidden flags are set right now.
+    //
+    // If you ever want to re-enable it, uncomment the block below.
+    /*
     for (const g of parsed.groups) {
-      // count MVO per dept name
       const mvoPerDept = new Map();
       for (const sub of g.subdivisions) {
         const depName = sub.path.length > 0 ? result.paths[sub.path[0]] : "";
@@ -3140,31 +3145,28 @@ async function parseAnalyticsXlsx(arrayBuffer) {
       }
       for (const sub of g.subdivisions) {
         const depName = sub.path.length > 0 ? result.paths[sub.path[0]] : "";
-        // Rule 1: entire Господарський відділ
         if (_anIsHouseholdDeptName(depName)) {
-          sub._hidden = true;
-          sub._hideReason = "household-dept";
-          continue;
+          sub._hidden = true; sub._hideReason = "household-dept"; continue;
         }
-        // Rule 2: household-only items + multi-MVO dept
         const multiMvo = (mvoPerDept.get(depName) || 0) >= 2;
         if (!multiMvo) continue;
         if (_anHasHouseholdItem(sub.items, result.names) &&
             !_anHasPharmItem(sub.items, result.names)) {
-          sub._hidden = true;
-          sub._hideReason = "household-items";
+          sub._hidden = true; sub._hideReason = "household-items";
         }
       }
-      // Recompute the group's totals as the sum of VISIBLE subdivisions only,
-      // so that all downstream consumers (KPI cards, month-to-month deltas,
-      // turnover) see consistent numbers that match what's on screen.
+    }
+    */
+    // Group totals reflect ALL subdivisions (no hidden ones to exclude).
+    // We still recompute them here defensively so g.totals is always
+    // consistent with the sum of its subs.
+    for (const g of parsed.groups) {
       const visTotals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
       for (const sub of g.subdivisions) {
         if (sub._hidden) continue;
         const t = sub.totals || {};
         for (const k in visTotals) if (typeof t[k] === "number") visTotals[k] += t[k];
       }
-      // Round to 2 decimals and drop zero fields
       const clean = {};
       for (const k in visTotals) {
         const v = Math.round(visTotals[k] * 100) / 100;
@@ -3234,7 +3236,7 @@ async function fetchAnalytics({ silent }) {
   try {
     // Cache-bust to avoid stale CDN copy when user clicks refresh
     const url = baseUrl + (silent ? "" : (baseUrl.indexOf("?") >= 0 ? "&t=" : "?t=") + Date.now());
-    if (!silent) textEl.textContent = "Завантажуємо файл з Google Диску...";
+    if (!silent) textEl.textContent = "Дані завантажуються...";
 
     const resp = await fetch(url);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
@@ -3256,7 +3258,7 @@ async function fetchAnalytics({ silent }) {
         received += value.length;
         const pct = Math.min(80, Math.round(received / total * 80)); // reserve 20% for parsing
         progressEl.style.width = pct + "%";
-        textEl.textContent = `Завантажуємо: ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
+        textEl.textContent = `Дані завантажуються... ${Math.round(received / 1024)} / ${Math.round(total / 1024)} КБ`;
       }
       let size = 0; chunks.forEach(c => size += c.length);
       const merged = new Uint8Array(size);
@@ -3266,8 +3268,29 @@ async function fetchAnalytics({ silent }) {
       buf = await resp.arrayBuffer();
     }
 
+    // Sanity-check that we got an xlsx (PKZip magic = 0x50 0x4B at start).
+    // Drive occasionally serves an HTML interstitial ("can't scan for viruses",
+    // permission redirect, etc.) instead of the file — JSZip would then fail
+    // with an opaque "End of central directory not found" error. Detect early
+    // and give a clear, actionable message.
+    const head = new Uint8Array(buf, 0, Math.min(4, buf.byteLength));
+    const isZip = head[0] === 0x50 && head[1] === 0x4B;
+    if (!isZip) {
+      // Try to read a snippet for context
+      let snippet = "";
+      try {
+        snippet = new TextDecoder("utf-8").decode(new Uint8Array(buf, 0, Math.min(200, buf.byteLength)));
+      } catch (_) {}
+      const looksHtml = /<!doctype|<html/i.test(snippet);
+      throw new Error(
+        looksHtml
+          ? "Google Диск повернув HTML-сторінку замість файлу. Можливо, файл щойно замінено і йде сканування — спробуйте ще раз за хвилину. Або перевірте, що файл досі доступний за посиланням «Усі, хто має посилання»."
+          : "Файл має невідомий формат (не xlsx). Перевірте посилання на Google Диску."
+      );
+    }
+
     if (!silent) {
-      textEl.textContent = "Розбираємо файл...";
+      textEl.textContent = "Обробка даних...";
       progressEl.style.width = "85%";
       // Let the UI repaint before the heavy parse blocks the main thread
       await new Promise(r => setTimeout(r, 10));
