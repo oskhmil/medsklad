@@ -173,6 +173,59 @@
     border-radius: 8px; padding: 3px 8px; font-size: 11px; font-weight: 600;
     white-space: normal; word-break: break-word;
   }
+
+  /* group accordion */
+  .group-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 10px; overflow: hidden;
+  }
+  .group-head {
+    padding: 12px 14px; cursor: pointer; display: flex;
+    align-items: center; gap: 10px; user-select: none;
+  }
+  .group-head:hover { background: rgba(79,142,247,.05); }
+  .group-info { flex: 1; min-width: 0; }
+  .group-name { font-size: 14px; font-weight: 700; line-height: 1.35; }
+  .group-mnn { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .group-meta { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .group-total {
+    background: rgba(52,211,153,.15); color: var(--green);
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 700;
+  }
+  .group-depts {
+    background: rgba(56,189,248,.13); color: #38bdf8;
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600;
+  }
+  .group-warn {
+    background: rgba(245,158,11,.15); color: var(--warn);
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600;
+  }
+  .group-danger {
+    background: rgba(248,113,113,.15); color: var(--danger);
+    border-radius: 6px; padding: 2px 8px; font-size: 11px; font-weight: 600;
+  }
+  .group-arrow {
+    color: var(--muted); font-size: 14px; flex-shrink: 0;
+    transition: transform .2s;
+  }
+  .group-card.open .group-arrow { transform: rotate(180deg); }
+  .group-details { display: none; border-top: 1px solid var(--border); padding: 10px 12px; }
+  .group-card.open .group-details { display: block; }
+  .detail-card {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
+  }
+  .detail-card:last-child { margin-bottom: 0; }
+  .detail-card.expired { border-color: rgba(248,113,113,.35); }
+  .detail-dept { font-size: 12px; font-weight: 600; color: #38bdf8; margin-bottom: 6px; }
+
+  .show-more-btn {
+    width: 100%; padding: 10px; margin-top: 8px;
+    background: var(--card); border: 1px solid var(--accent);
+    border-radius: 12px; color: var(--accent); font-size: 13px;
+    font-weight: 600; cursor: pointer;
+  }
+  .show-more-btn:hover { background: rgba(79,142,247,.1); }
   .card-body { padding: 10px 14px 12px; }
   .data-row {
     display: flex; justify-content: space-between; align-items: center;
@@ -239,8 +292,9 @@
         <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : debouncedSearch(this.value)">
         <span class="search-ico">🔍</span>
       </div>
-      <div style="display:flex;gap:6px;margin-top:8px;">
-        <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою/МНН</button>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+        <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="mode-mnn" onclick="setSearchMode('mnn',this)" style="font-size:11px;padding:4px 10px;">За МНН</button>
         <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
         <button class="filter-btn" id="mode-dept" onclick="setSearchMode('dept',this)" style="font-size:11px;padding:4px 10px;">За відділенням</button>
       </div>
@@ -565,7 +619,10 @@ function setSearchMode(mode, btn) {
   searchMode = mode;
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  const ph = mode === 'series' ? 'Введіть серію...' : mode === 'dept' ? 'Введіть назву відділення...' : 'Введіть назву або МНН...';
+  const ph = mode === 'series' ? 'Введіть серію...'
+           : mode === 'dept'   ? 'Введіть назву відділення...'
+           : mode === 'mnn'    ? 'Введіть МНН (латиною)...'
+           : 'Введіть назву препарату...';
   document.getElementById("search-input").placeholder = ph;
   document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
   document.getElementById("search-input").value = "";
@@ -675,6 +732,7 @@ function quickFilter(type) {
 function onSearch(val) {
   currentQuery = val.trim();
   if (!currentQuery) { show("home"); return; }
+  if (currentQuery.length < 2) return;
   show("results");
   renderResults();
 }
@@ -686,39 +744,151 @@ function setFilter(val, btn) {
   renderResults();
 }
 
+let displayLimit = 50;
+let openGroups = new Set();
+
+function multiWordMatch(text, words) {
+  const t = normalize(text);
+  return words.every(w => t.includes(w));
+}
+
 function renderResults() {
   const q = normalize(currentQuery);
-  let res = allItems.filter(it=>{
-    if (searchMode === 'dept') return selectedDepts.includes(it.dept);
+  const words = q.split(/\s+/).filter(w => w.length > 0);
+  let res = allItems.filter(it => {
+    if (searchMode === 'dept')   return selectedDepts.includes(it.dept);
     if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
-    if (currentQuery === '*') return true;
-    // У режимі 'name' — шукаємо і по торговій назві (M), і по МНН (E)
-    return normalize(it.name).includes(q) || (it.mnn && normalize(it.mnn).includes(q));
+    if (searchMode === 'mnn')    return it.mnn && multiWordMatch(it.mnn, words);
+    if (currentQuery === '*')    return true;
+    return multiWordMatch(it.name, words);
   });
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
-  document.getElementById("result-count").textContent = res.length + " записів";
+  displayLimit = 50;
+  openGroups = new Set();
+  renderResultsList(res);
+}
+
+// Групуємо позиції за торговою назвою
+function groupItems(items) {
+  const map = new Map();
+  for (const it of items) {
+    let g = map.get(it.name);
+    if (!g) {
+      g = {
+        name: it.name,
+        mnn: it.mnn || null,
+        items: [],
+        totalQty: 0,
+        depts: new Set(),
+        units: {},
+        expired: 0,
+        soon: 0,
+      };
+      map.set(it.name, g);
+    }
+    g.items.push(it);
+    if (it.qty !== null && !isNaN(it.qty)) g.totalQty += it.qty;
+    g.depts.add(it.dept);
+    if (it.unit) g.units[it.unit] = (g.units[it.unit] || 0) + 1;
+    if (!g.mnn && it.mnn) g.mnn = it.mnn;
+    const st = expiryStatus(it.expiry);
+    if (st === "expired") g.expired++;
+    if (st === "soon") g.soon++;
+  }
+  return [...map.values()].sort((a,b) => a.name.localeCompare(b.name, 'uk'));
+}
+
+// Найчастіша одиниця у групі
+function mostCommonUnit(units) {
+  let best = "", max = 0;
+  for (const [u, c] of Object.entries(units)) {
+    if (c > max) { max = c; best = u; }
+  }
+  return best;
+}
+
+function renderResultsList(res) {
+  const groups = groupItems(res);
+  document.getElementById("result-count").textContent =
+    groups.length + (groups.length===1 ? " позиція" : " позицій");
   const list = document.getElementById("results-list");
-  if (!res.length) {
+  if (!groups.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
     return;
   }
-  list.innerHTML = res.map(item => {
-    const st = expiryStatus(item.expiry);
-    return `<div class="result-card${st==="expired"?" expired":""}">
-      <div class="card-head">
-        <div class="drug-name">${esc(item.name)}</div>
-        ${item.mnn?`<div class="drug-mnn">${esc(item.mnn)}</div>`:""}
-        <div class="dept-tag">🏥 ${esc(item.dept)}</div>
+  const visible = groups.slice(0, displayLimit);
+  let html = visible.map((g, idx) => renderGroup(g, idx)).join("");
+  if (groups.length > displayLimit) {
+    const remaining = groups.length - displayLimit;
+    html += `<button class="show-more-btn" onclick="showMore()">Показати ще (${remaining})</button>`;
+  }
+  list.innerHTML = html;
+}
+
+function renderGroup(g, idx) {
+  const unit = mostCommonUnit(g.units);
+  const isOpen = openGroups.has(idx);
+  const detailsHtml = g.items.map(it => renderDetailCard(it)).join("");
+  const warnBadge = g.soon > 0 ? `<span class="group-warn">⚠️ ${g.soon}</span>` : "";
+  const dangerBadge = g.expired > 0 ? `<span class="group-danger">⛔ ${g.expired}</span>` : "";
+  return `<div class="group-card${isOpen?' open':''}">
+    <div class="group-head" onclick="toggleGroup(${idx})">
+      <div class="group-info">
+        <div class="group-name">${esc(g.name)}</div>
+        ${g.mnn?`<div class="group-mnn">${esc(g.mnn)}</div>`:""}
+        <div class="group-meta">
+          <span class="group-total">${formatQty(g.totalQty)} ${esc(unit)}</span>
+          <span class="group-depts">🏥 ${g.depts.size} ${g.depts.size===1?'відд.':'відд.'}</span>
+          ${dangerBadge}
+          ${warnBadge}
+        </div>
       </div>
-      <div class="card-body">
-        ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
-        ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
-        ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
-        ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
-      </div>
-    </div>`;
-  }).join("");
+      <span class="group-arrow">▼</span>
+    </div>
+    <div class="group-details">${detailsHtml}</div>
+  </div>`;
+}
+
+function formatQty(n) {
+  // Округляємо до 2 знаків і прибираємо хвостові нулі (фіксить float-артефакти)
+  const rounded = Math.round(n * 100) / 100;
+  if (rounded === Math.floor(rounded)) return rounded.toLocaleString('uk-UA');
+  return rounded.toFixed(2).replace(/\.?0+$/,'');
+}
+
+function renderDetailCard(item) {
+  const st = expiryStatus(item.expiry);
+  return `<div class="detail-card${st==="expired"?" expired":""}">
+    <div class="detail-dept">🏥 ${esc(item.dept)}</div>
+    ${item.qty!==null?`<div class="data-row"><span class="data-lbl">Залишок</span><span class="data-val">${item.qty} ${esc(item.unit||"")}</span></div>`:""}
+    ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
+    ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
+    ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+  </div>`;
+}
+
+function toggleGroup(idx) {
+  if (openGroups.has(idx)) openGroups.delete(idx);
+  else openGroups.add(idx);
+  renderResults();
+}
+
+function showMore() {
+  displayLimit += 50;
+  // Перерахувати без скиду openGroups
+  const q = normalize(currentQuery);
+  const words = q.split(/\s+/).filter(w => w.length > 0);
+  let res = allItems.filter(it => {
+    if (searchMode === 'dept')   return selectedDepts.includes(it.dept);
+    if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
+    if (searchMode === 'mnn')    return it.mnn && multiWordMatch(it.mnn, words);
+    if (currentQuery === '*')    return true;
+    return multiWordMatch(it.name, words);
+  });
+  if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
+  if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
+  renderResultsList(res);
 }
 
 function esc(s) {
