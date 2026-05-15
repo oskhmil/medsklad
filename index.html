@@ -1143,6 +1143,9 @@
       <div id="dept-search-wrap" style="display:none">
         <div class="selected-depts" id="selected-depts"></div>
         <div class="dept-suggestions" id="dept-suggestions" style="display:none"></div>
+        <div id="dept-item-filter-wrap" style="display:none;margin-top:8px;position:relative;">
+          <input id="dept-item-filter" type="text" placeholder="🔎 Фільтр по назві в обраних відділеннях..." oninput="onDeptItemFilter(this.value)" style="width:100%;background:#1c2035;border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:#fff;font-size:13px;outline:none;">
+        </div>
       </div>
     </div>
   </div>
@@ -1638,9 +1641,10 @@ let lastLoaded = null;
 let searchMode = 'name';
 let selectedDepts = [];
 let currentDeptSuggestions = [];
+let deptItemFilter = "";
 let _cacheFailedThisSession = false;
 
-const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1maaNU2S25URIB3UEN59fudPekcsE1FTcjb4PqM6fEv8/export?format=xlsx";
+const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1uAByiAlSotEn1Y7fO1_fN72vOZ8lcu1z/export?format=xlsx";
 
 // ── cache ────────────────────────────────────────────────────────────────────
 // localStorage on mobile is small (5 MB on iOS Safari). The medsearch dataset
@@ -1862,17 +1866,19 @@ function handleFile(file) {
 }
 
 // ── parse ────────────────────────────────────────────────────────────────────
-const SKIP_HEADERS = ["артикул","параметри","відомість по","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний"];
+const SKIP_HEADERS = ["артикул","параметри","відомість","кількість товарів","сегодня","номенклатура","характеристика","серія","придатний","відбір","разом","од. вим"];
+const SKIP_EXACT_HEADERS = ["склад"];
 
 function isDeptHeader(row, col) {
   const a = String(row[col.A] ?? "").trim();
-  const h = String(row[col.H] ?? "").trim();
+  const m = String(row[col.M] ?? "").trim();
   if (!a || a.length < 3) return false;
-  // Data rows always have col H (drug/item name); dept headers don't
-  if (h) return false;
-  // Article codes start with a digit
-  if (/^\d/.test(a)) return false;
+  // Data rows always have col M (drug/item name); dept headers don't
+  if (m) return false;
+  // Article codes are pure digits ("202")
+  if (/^\d+$/.test(a)) return false;
   const lc = a.toLowerCase();
+  if (SKIP_EXACT_HEADERS.includes(lc)) return false;
   if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
   return true;
 }
@@ -1884,10 +1890,10 @@ function parseWorkbook(arrayBuffer) {
   const items = [];
   let currentDept = "—";
 
-  // ── Column mapping (new format with MNN) ──
-  // A(0)  = Артикул
+  // ── Column mapping (cleaned file: name in M instead of H) ──
+  // A(0)  = Артикул ("202" in data rows, dept name in header rows)
   // E(4)  = Номенклатура.МНН
-  // H(7)  = Номенклатура (drug/item name)
+  // M(12) = Номенклатура (drug/item name)
   // N(13) = Характеристика
   // O(14) = Серія
   // P(15) = Придатний до (expiry date)
@@ -1895,18 +1901,18 @@ function parseWorkbook(arrayBuffer) {
   // R(17) = Од. вим.
   // S(18) = Початковий залишок
   // V(21) = Кінцевий залишок
-  const col = { A:0, E:4, H:7, N:13, O:14, P:15, Q:16, R:17, S:18, V:21 };
+  const col = { A:0, E:4, M:12, N:13, O:14, P:15, Q:16, R:17, S:18, V:21 };
 
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
-    const h = String(row[col.H] ?? "").trim().replace(/\s+/g, ' ');
+    const m = String(row[col.M] ?? "").trim().replace(/\s+/g, ' ');
 
     // Detect department header rows
-    if (isDeptHeader(row, col)) { currentDept = a; }
+    if (isDeptHeader(row, col)) { currentDept = a; continue; }
 
-    // Skip rows without a drug/item name in column H
-    if (!h || h.toLowerCase() === "номенклатура") continue;
+    // Skip rows without a drug/item name in column M
+    if (!m || m.toLowerCase() === "номенклатура") continue;
 
     const mnn = String(row[col.E] ?? "").trim() || null;
     // Prefer final balance (V), fall back to initial (S)
@@ -1915,7 +1921,7 @@ function parseWorkbook(arrayBuffer) {
 
     items.push({
       dept:   currentDept,
-      name:   h,
+      name:   m,
       mnn:    mnn,
       series: String(row[col.O] || "").trim() || null,
       expiry: String(row[col.P] || "").trim() || null,
@@ -2178,6 +2184,10 @@ function setSearchMode(mode, btn) {
   document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
   document.getElementById("search-input").value = "";
   currentQuery = "";
+  // Reset item-name filter when switching modes
+  deptItemFilter = "";
+  const _df = document.getElementById("dept-item-filter");
+  if (_df) _df.value = "";
   if (mode === 'dept') {
     renderSelectedDepts();
     if (selectedDepts.length > 0) { show("results"); renderResults(); }
@@ -2242,6 +2252,25 @@ function renderSelectedDepts() {
       ${esc(d)} <span>✕</span>
     </div>`
   ).join("");
+  // Show item-name filter only when at least one dept is selected
+  const filterWrap = document.getElementById("dept-item-filter-wrap");
+  if (filterWrap) {
+    filterWrap.style.display = selectedDepts.length > 0 ? "block" : "none";
+    if (selectedDepts.length === 0) {
+      const inp = document.getElementById("dept-item-filter");
+      if (inp) inp.value = "";
+      deptItemFilter = "";
+    }
+  }
+}
+
+let _deptFilterTimer = null;
+function onDeptItemFilter(val) {
+  clearTimeout(_deptFilterTimer);
+  _deptFilterTimer = setTimeout(() => {
+    deptItemFilter = val.trim();
+    if (selectedDepts.length > 0) renderResults();
+  }, 250);
 }
 
 let _searchTimer = null;
@@ -2255,8 +2284,11 @@ function goHome() {
   currentFilter = "all";
   searchMode = "name";
   selectedDepts = [];
+  deptItemFilter = "";
   document.getElementById("search-input").value = "";
   document.getElementById("search-input").placeholder = "Введіть назву препарату...";
+  const _df2 = document.getElementById("dept-item-filter");
+  if (_df2) _df2.value = "";
   document.getElementById("dept-search-wrap").style.display = "none";
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
@@ -2312,8 +2344,15 @@ function multiWordMatch(text, words) {
 function renderResults() {
   const q = normalize(currentQuery);
   const words = q.split(/\s+/).filter(w => w.length > 0);
+  const deptFilterWords = normalize(deptItemFilter).split(/\s+/).filter(w => w.length > 0);
   let res = allItems.filter(it => {
-    if (searchMode === 'dept')   return selectedDepts.includes(it.dept);
+    if (searchMode === 'dept') {
+      if (!selectedDepts.includes(it.dept)) return false;
+      // If additional name-filter is set in dept mode, narrow by name/MNN
+      if (deptFilterWords.length === 0) return true;
+      return multiWordMatch(it.name, deptFilterWords)
+          || (it.mnn && multiWordMatch(it.mnn, deptFilterWords));
+    }
     if (searchMode === 'series') return it.series && normalize(it.series).includes(q);
     if (searchMode === 'mnn')    return it.mnn && multiWordMatch(it.mnn, words);
     if (currentQuery === '*')    return true;
