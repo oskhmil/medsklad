@@ -1245,23 +1245,6 @@
         <!-- Warnings (if any) -->
         <div id="an-warnings"></div>
 
-        <!-- KPI overview -->
-        <div class="an-section-title">Огляд</div>
-        <div class="an-kpi-grid" id="an-kpis"></div>
-
-        <!-- Flow box for selected month -->
-        <div class="an-flow" id="an-flow"></div>
-
-        <!-- Analytics highlights: dead stock, excess, deficit -->
-        <div class="an-section-title">Аналітика</div>
-        <div class="an-filter-row">
-          <button class="filter-btn active" onclick="setAnalyticsView('all', this)">Все</button>
-          <button class="filter-btn" onclick="setAnalyticsView('dead', this)">💀 Без руху</button>
-          <button class="filter-btn" onclick="setAnalyticsView('fast', this)">⚡ Оборотні</button>
-          <button class="filter-btn" onclick="setAnalyticsView('newItems', this)">🆕 Нові</button>
-        </div>
-        <div id="an-analytics-summary"></div>
-
         <!-- Hierarchy (directions → groups → subdivisions → items) -->
         <div class="an-section-title">Напрями діяльності</div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">
@@ -1307,6 +1290,23 @@
             <div id="an-hidden-list"></div>
           </div>
         </div>
+
+        <!-- KPI overview -->
+        <div class="an-section-title">Огляд</div>
+        <div class="an-kpi-grid" id="an-kpis"></div>
+
+        <!-- Flow box for selected month -->
+        <div class="an-flow" id="an-flow"></div>
+
+        <!-- Analytics highlights: dead stock, excess, deficit -->
+        <div class="an-section-title">Аналітика</div>
+        <div class="an-filter-row">
+          <button class="filter-btn active" onclick="setAnalyticsView('all', this)">Все</button>
+          <button class="filter-btn" onclick="setAnalyticsView('dead', this)">💀 Без руху</button>
+          <button class="filter-btn" onclick="setAnalyticsView('fast', this)">⚡ Оборотні</button>
+          <button class="filter-btn" onclick="setAnalyticsView('newItems', this)">🆕 Нові</button>
+        </div>
+        <div id="an-analytics-summary"></div>
       </div>
     </div>
 
