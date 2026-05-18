@@ -3841,10 +3841,9 @@ function renderKPIs(m, mCompare) {
   };
 
   const cards = [];
-  cards.push(card("Залишок на кінець", fmtMoney(org.cs || 0), `${stats.totalItems} позицій, ${stats.subdivisionCount} підрозділів`, deltaFor(org.cs || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.cs || 0) : null)));
-  cards.push(card("Прихід за місяць", fmtMoney(org.rs || 0), "", deltaFor(org.rs || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.rs || 0) : null)));
-  cards.push(card("Видаток за місяць", fmtMoney(org.es || 0), "", deltaFor(org.es || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.es || 0) : null)));
-  cards.push(card("Дні запасу", stats.turnoverStr, stats.turnoverHint));
+  const countSub = `${stats.totalItems} позицій, ${stats.subdivisionCount} підрозділів`;
+  const daysSub = stats.turnoverHint ? `${countSub} · ${stats.turnoverHint}` : countSub;
+  cards.push(card("Дні запасу", stats.turnoverStr, daysSub));
   cards.push(card("Період обороту", stats.cycleDaysStr, stats.cycleDaysHint));
 
   document.getElementById("an-kpis").innerHTML = cards.join("");
