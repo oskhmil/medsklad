@@ -3844,7 +3844,8 @@ function renderKPIs(m, mCompare) {
   cards.push(card("Залишок на кінець", fmtMoney(org.cs || 0), `${stats.totalItems} позицій, ${stats.subdivisionCount} підрозділів`, deltaFor(org.cs || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.cs || 0) : null)));
   cards.push(card("Прихід за місяць", fmtMoney(org.rs || 0), "", deltaFor(org.rs || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.rs || 0) : null)));
   cards.push(card("Видаток за місяць", fmtMoney(org.es || 0), "", deltaFor(org.es || 0, mCompare && mCompare.org_totals ? (mCompare.org_totals.es || 0) : null)));
-  cards.push(card("Оборотність (видаток/залишок)", stats.turnoverStr, stats.turnoverHint));
+  cards.push(card("Дні запасу", stats.turnoverStr, stats.turnoverHint));
+  cards.push(card("Період обороту", stats.cycleDaysStr, stats.cycleDaysHint));
 
   document.getElementById("an-kpis").innerHTML = cards.join("");
 }
@@ -4591,9 +4592,18 @@ function renderSubDetail() {
   const buckets = _classifySubItems(sub, m);
   const sumQty = (arr, field) => arr.reduce((s, e) => s + (e.item[field] || 0), 0);
   const sumSum = (arr, field) => arr.reduce((s, e) => s + (e.item[field] || 0), 0);
+  // Cycle days for this subdivision: (середній залишок × днів) / видаток.
+  // Дивиться назад — як швидко крутився запас за період.
+  const _periodDays = daysInPeriod(period);
+  let cycleStr = "—";
+  const _os = t.os || 0, _cs = t.cs || 0, _es = t.es || 0;
+  if (_es > 0 && (_os > 0 || _cs > 0)) {
+    cycleStr = Math.round(((_os + _cs) / 2 * _periodDays) / _es) + " дн.";
+  }
   const kpis = [];
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Залишок на кінець</div><div class="an-kpi-val">${fmtMoney(t.cs || 0)}</div><div class="an-kpi-sub">${sub.items.length} позицій</div></div>`);
-  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Оборотність</div><div class="an-kpi-val">${fmtDaysOfSupply(dos)}</div><div class="an-kpi-sub">днів запасу при поточному видатку</div></div>`);
+  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Дні запасу</div><div class="an-kpi-val">${fmtDaysOfSupply(dos)}</div><div class="an-kpi-sub">вистачить на цю кількість днів при поточному видатку</div></div>`);
+  kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Період обороту</div><div class="an-kpi-val">${cycleStr}</div><div class="an-kpi-sub">у середньому одиниця лежить на складі стільки днів</div></div>`);
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${buckets.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.dead, "cs"))}</div></div>`);
   document.getElementById("sub-detail-kpis").innerHTML = kpis.join("");
 
@@ -5146,17 +5156,31 @@ function computeMonthStats(m) {
       }
     }
   }
+  // Days of Supply: на скільки днів вистачить кінцевого залишку
+  // при поточному темпі видатку. Дивиться вперед.
   let turnoverStr = "—", turnoverHint = "";
-  const closing = vis.cs || 0, expense = vis.es || 0;
+  // Cycle Days: класичний період обороту запасів. Середній залишок ділиться
+  // на денний видаток. Показує, скільки днів у середньому одиниця товару
+  // лежала на складі за період. Дивиться назад.
+  let cycleDaysStr = "—", cycleDaysHint = "";
+  const closing = vis.cs || 0, opening = vis.os || 0, expense = vis.es || 0;
+  const days = daysInPeriod(m.period);
   if (closing > 0 && expense > 0) {
-    const days = daysInPeriod(m.period);
     const dayRate = expense / days;
     const daysOfSupply = closing / dayRate;
     turnoverStr = Math.round(daysOfSupply) + " дн.";
-    turnoverHint = "днів запасу при поточному видатку";
+    turnoverHint = "вистачить на цю кількість днів при поточному видатку";
+  }
+  if (expense > 0 && (opening > 0 || closing > 0)) {
+    const avgStock = (opening + closing) / 2;
+    const cycleDays = (avgStock * days) / expense;
+    cycleDaysStr = Math.round(cycleDays) + " дн.";
+    cycleDaysHint = "у середньому одиниця лежить на складі стільки днів";
   }
   return {
-    totalItems, subdivisionCount: subs.size, turnoverStr, turnoverHint,
+    totalItems, subdivisionCount: subs.size,
+    turnoverStr, turnoverHint,
+    cycleDaysStr, cycleDaysHint,
     visibleTotals: vis,
   };
 }
