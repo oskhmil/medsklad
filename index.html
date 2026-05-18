@@ -853,6 +853,44 @@
   .an-kpi-delta.flat { color: var(--muted); }
   .an-kpi.wide { grid-column: 1 / -1; }
 
+  /* ranking rows (top subdivisions) */
+  .an-rank-row {
+    display: grid; grid-template-columns: 28px 1fr auto;
+    gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
+    cursor: pointer; transition: background .15s, border-color .15s;
+  }
+  .an-rank-row:hover { background: rgba(79,142,247,.06); border-color: var(--accent); }
+  .an-rank-num {
+    font-size: 16px; font-weight: 800; color: var(--accent);
+    text-align: center;
+  }
+  .an-rank-info { min-width: 0; }
+  .an-rank-dept {
+    font-size: 13px; font-weight: 700; color: var(--text);
+    line-height: 1.3; margin-bottom: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .an-rank-mvo {
+    font-size: 11px; color: var(--muted); line-height: 1.3;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .an-rank-sub {
+    font-size: 10px; color: var(--muted); margin-top: 2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .an-rank-val { text-align: right; flex-shrink: 0; }
+  .an-rank-val-main {
+    font-size: 13px; font-weight: 700; color: var(--text);
+    white-space: nowrap;
+  }
+  .an-rank-val-lbl {
+    font-size: 10px; color: var(--muted); margin-top: 2px;
+  }
+  .an-rank-delta.up { color: var(--green); }
+  .an-rank-delta.down { color: var(--danger); }
+
   /* flow box (open → receipt → expense → close) */
   .an-flow {
     background: var(--card); border: 1px solid var(--border);
@@ -1307,6 +1345,19 @@
           <button class="filter-btn" onclick="setAnalyticsView('newItems', this)">🆕 Нові</button>
         </div>
         <div id="an-analytics-summary"></div>
+
+        <!-- Rankings: top by stock / expense / growth / decline -->
+        <div class="an-section-title">🏆 Рангові підрозділи</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">
+          ТОП підрозділів за різними показниками. Спад/Ріст порівнює видаток поточного місяця з обраним для порівняння.
+        </div>
+        <div class="an-filter-row">
+          <button class="filter-btn active" onclick="setRankingView('stock', this)">💰 За залишком</button>
+          <button class="filter-btn" onclick="setRankingView('expense', this)">📤 За видатком</button>
+          <button class="filter-btn" onclick="setRankingView('growth', this)">📈 Ріст видатку</button>
+          <button class="filter-btn" onclick="setRankingView('decline', this)">📉 Спад видатку</button>
+        </div>
+        <div id="an-rankings"></div>
       </div>
     </div>
 
@@ -2034,7 +2085,7 @@ function openMedsearch() {
 // NOTE: This is a *symbolic* barrier — anyone with browser dev tools can bypass it.
 // It's intended only to discourage casual access while we work on the section.
 // The expected password is stored as SHA-256 hash, not plain text.
-const ANALYTICS_PWD_HASH = "1b6a7bf29d58d165fe92eb80a3d7d94b0945089aff904f5a5284a8d14b4c16ab"; // sha256("0321")
+const ANALYTICS_PWD_HASH = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
 const FINPLAN_PWD_HASH   = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
 const ANALYTICS_AUTH_KEY = "medsklad_analytics_auth";
 const FINPLAN_AUTH_KEY   = "medsklad_finplan_auth";
@@ -3811,6 +3862,7 @@ function renderAnalyticsMonth() {
   renderKPIs(m, mCompare);
   renderFlow(m, mCompare);
   renderAnalyticsSummary(m);
+  renderRankings(m);
   renderHierarchy(m);
 }
 
@@ -3935,6 +3987,195 @@ function renderAnalyticsSummary(m) {
   }
 
   containerEl.innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// RANKINGS: top subdivisions by stock / expense / month-over-month delta
+// ════════════════════════════════════════════════════════════════════════════
+let rankingView = "stock"; // 'stock' | 'expense' | 'growth' | 'decline'
+const RANKING_LIMIT = 10;
+
+function setRankingView(view, btn) {
+  rankingView = view;
+  if (btn) {
+    btn.parentElement.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+  const m = analyticsData.months[currentMonthKey];
+  if (m) renderRankings(m);
+}
+
+// Walk hierarchy and collect one entry per subdivision (МВО), summing items.
+// Skips hidden (household-classified) subdivisions.
+function _collectSubdivisions(m) {
+  const subs = [];
+  for (let di = 0; di < m.directions.length; di++) {
+    const d = m.directions[di];
+    for (let gi = 0; gi < d.groups.length; gi++) {
+      const g = d.groups[gi];
+      for (let si = 0; si < g.subdivisions.length; si++) {
+        const sub = g.subdivisions[si];
+        if (sub._hidden) continue;
+        const t = sub.totals || {};
+        subs.push({
+          id:        `d${di}-g${gi}-s${si}`,
+          path:      sub.path || [],
+          direction: d.name,
+          groupName: g.name,
+          itemCount: (sub.items || []).length,
+          cs: t.cs || 0,
+          rs: t.rs || 0,
+          es: t.es || 0,
+          os: t.os || 0,
+        });
+      }
+    }
+  }
+  return subs;
+}
+
+// Build a map: path-key → subdivision totals, so we can look up the same МВО
+// in a comparison month efficiently.
+function _buildSubMapByPath(m) {
+  const map = new Map();
+  for (const d of m.directions || []) {
+    for (const g of d.groups || []) {
+      for (const sub of g.subdivisions || []) {
+        if (sub._hidden) continue;
+        const key = (sub.path || []).join("|");
+        map.set(key, sub.totals || {});
+      }
+    }
+  }
+  return map;
+}
+
+function _displayDeptName(path) {
+  if (!path || path.length === 0) return "(без відділення)";
+  return analyticsData.paths[path[0]] || "(?)";
+}
+function _displayMvoName(path) {
+  if (!path || path.length === 0) return "—";
+  return analyticsData.paths[path[path.length - 1]] || "(?)";
+}
+
+function renderRankings(m) {
+  const containerEl = document.getElementById("an-rankings");
+  if (!containerEl) return;
+
+  const subs = _collectSubdivisions(m);
+
+  if (rankingView === "stock" || rankingView === "expense") {
+    const field = rankingView === "stock" ? "cs" : "es";
+    const label = rankingView === "stock" ? "Залишок на кінець" : "Видаток";
+    const sorted = subs.slice().sort((a, b) => (b[field] || 0) - (a[field] || 0));
+    const top = sorted.slice(0, RANKING_LIMIT).filter(s => (s[field] || 0) > 0);
+    if (top.length === 0) {
+      containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Немає підрозділів з даними у цій категорії</div></div>`;
+      return;
+    }
+    const totalSum = subs.reduce((s, x) => s + (x[field] || 0), 0);
+    const topSum = top.reduce((s, x) => s + (x[field] || 0), 0);
+    const sharePct = totalSum > 0 ? (topSum / totalSum * 100).toFixed(0) : "0";
+    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Топ-${top.length} тримає ${sharePct}% від загального</div>`;
+    html += top.map((s, i) => _renderRankingRow(s, i + 1, field, label)).join("");
+    containerEl.innerHTML = html;
+    return;
+  }
+
+  // growth / decline — need a comparison month
+  if (!compareMonthKey || !analyticsData.months[compareMonthKey]) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Оберіть місяць для порівняння</div><div class="empty-sub">У селекторі місяців вгорі виберіть місяць, з яким порівнювати поточний</div></div>`;
+    return;
+  }
+  const mPrev = analyticsData.months[compareMonthKey];
+  const prevMap = _buildSubMapByPath(mPrev);
+  const withDeltas = [];
+  for (const s of subs) {
+    const prev = prevMap.get(s.path.join("|"));
+    if (!prev) continue; // didn't exist in the comparison month
+    const prevEs = prev.es || 0;
+    const curEs  = s.es || 0;
+    if (prevEs === 0 && curEs === 0) continue;
+    const diff = curEs - prevEs;
+    let pct;
+    if (prevEs === 0) pct = curEs > 0 ? Infinity : 0;
+    else if (curEs === 0) pct = -100;
+    else pct = (diff / prevEs) * 100;
+    withDeltas.push({ sub: s, prevEs, curEs, diff, pct });
+  }
+
+  if (rankingView === "growth") {
+    const growing = withDeltas.filter(x => x.diff > 0);
+    growing.sort((a, b) => b.diff - a.diff);
+    const top = growing.slice(0, RANKING_LIMIT);
+    if (top.length === 0) {
+      containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жоден підрозділ не показав росту видатку порівняно з обраним місяцем</div></div>`;
+      return;
+    }
+    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Хто почав активніше витрачати порівняно з обраним місяцем</div>`;
+    html += top.map((x, i) => _renderRankingDeltaRow(x, i + 1, "growth")).join("");
+    containerEl.innerHTML = html;
+    return;
+  }
+
+  if (rankingView === "decline") {
+    const declining = withDeltas.filter(x => x.diff < 0);
+    declining.sort((a, b) => a.diff - b.diff); // most negative first
+    const top = declining.slice(0, RANKING_LIMIT);
+    if (top.length === 0) {
+      containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жоден підрозділ не показав спаду видатку порівняно з обраним місяцем</div></div>`;
+      return;
+    }
+    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Скорочення активності або проблема з постачанням</div>`;
+    html += top.map((x, i) => _renderRankingDeltaRow(x, i + 1, "decline")).join("");
+    containerEl.innerHTML = html;
+    return;
+  }
+}
+
+function _renderRankingRow(s, rank, field, label) {
+  const dept = esc(_displayDeptName(s.path));
+  const mvo  = esc(_displayMvoName(s.path));
+  const val  = fmtMoney(s[field] || 0);
+  return `<div class="an-rank-row" onclick="openSubDetail('${s.id}')">
+    <div class="an-rank-num">${rank}</div>
+    <div class="an-rank-info">
+      <div class="an-rank-dept">${dept}</div>
+      <div class="an-rank-mvo">${mvo}</div>
+      <div class="an-rank-sub">${s.itemCount} позицій · ${esc(s.direction)}</div>
+    </div>
+    <div class="an-rank-val">
+      <div class="an-rank-val-main">${val}</div>
+      <div class="an-rank-val-lbl">${esc(label)}</div>
+    </div>
+  </div>`;
+}
+
+function _renderRankingDeltaRow(x, rank, kind) {
+  const s = x.sub;
+  const dept = esc(_displayDeptName(s.path));
+  const mvo  = esc(_displayMvoName(s.path));
+  const cur  = fmtMoney(x.curEs);
+  const prev = fmtMoney(x.prevEs);
+  const sign = x.diff >= 0 ? "▲" : "▼";
+  const cls  = kind === "growth" ? "up" : "down";
+  let pctStr;
+  if (x.pct === Infinity) pctStr = "новий";
+  else if (x.pct === -100) pctStr = "−100%";
+  else pctStr = (x.diff >= 0 ? "+" : "") + x.pct.toFixed(0) + "%";
+  return `<div class="an-rank-row" onclick="openSubDetail('${s.id}')">
+    <div class="an-rank-num">${rank}</div>
+    <div class="an-rank-info">
+      <div class="an-rank-dept">${dept}</div>
+      <div class="an-rank-mvo">${mvo}</div>
+      <div class="an-rank-sub">${prev} → ${cur}</div>
+    </div>
+    <div class="an-rank-val">
+      <div class="an-rank-val-main an-rank-delta ${cls}">${sign} ${fmtMoney(Math.abs(x.diff), true)}</div>
+      <div class="an-rank-val-lbl">${pctStr}</div>
+    </div>
+  </div>`;
 }
 
 function classifyAllItems(m) {
