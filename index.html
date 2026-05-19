@@ -2,6 +2,11 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<!-- Prevent aggressive HTML caching on mobile browsers so users always get
+     the latest build. Data caching (localStorage) is handled separately. -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -853,15 +858,13 @@
   .an-kpi-delta.flat { color: var(--muted); }
   .an-kpi.wide { grid-column: 1 / -1; }
 
-  /* ranking rows (top subdivisions) */
+  /* ranking rows (top subdivisions) — display-only, not clickable */
   .an-rank-row {
     display: grid; grid-template-columns: 28px 1fr auto;
     gap: 10px; align-items: center;
     background: var(--card); border: 1px solid var(--border);
     border-radius: 12px; padding: 10px 12px; margin-bottom: 8px;
-    cursor: pointer; transition: background .15s, border-color .15s;
   }
-  .an-rank-row:hover { background: rgba(79,142,247,.06); border-color: var(--accent); }
   .an-rank-num {
     font-size: 16px; font-weight: 800; color: var(--accent);
     text-align: center;
@@ -1496,7 +1499,7 @@
     <div id="home-screen">
       <div class="last-updated" id="last-updated"></div>
       <div class="refresh-indicator" id="refresh-indicator">
-        <span class="spinner">⟳</span>Оновлюємо дані з Google Диску...
+        <span class="spinner">⟳</span>Оновлення даних...
       </div>
       <div class="stats-bar" id="stats-bar">
         <div class="stat-card">
@@ -1561,7 +1564,7 @@
     <div class="pwd-ico">🔒</div>
     <div class="pwd-title">Доступ обмежено</div>
     <div class="pwd-sub">Введіть пароль для перегляду аналітики</div>
-    <input id="pwd-input" class="pwd-input" type="password" inputmode="numeric"
+    <input id="pwd-input" class="pwd-input" type="password" inputmode="text"
            autocomplete="off" maxlength="32"
            onkeydown="if (event.key === 'Enter') submitAnalyticsPassword()">
     <div class="pwd-error" id="pwd-error"></div>
@@ -1813,7 +1816,7 @@ async function loadFromDrive(isRefresh) {
   }
   show("loader");
   document.getElementById("loader-text").textContent = isRefresh
-    ? "Оновлюємо дані з Google Диску..." : "Завантажуємо дані з Google Диску...";
+    ? "Оновлення даних..." : "Завантаження даних...";
   await fetchAndUpdate(true);
 }
 
@@ -2118,7 +2121,7 @@ function openAnalytics() {
     openHospitalPicker();
     return;
   }
-  _showPwdOverlay("Введіть пароль для перегляду аналітики", "numeric");
+  _showPwdOverlay("Введіть пароль для перегляду аналітики", "text");
 }
 
 function openFinplan() {
@@ -3656,7 +3659,7 @@ async function _anFetchAnalyticsWorkbook(baseUrl, { silent, progressEl, textEl }
   for (const candidate of urls) {
     const url = candidate + (silent ? "" : (candidate.indexOf("?") >= 0 ? "&t=" : "?t=") + Date.now());
     try {
-      if (!silent && textEl) textEl.textContent = "Дані завантажуються з Google Диску...";
+      if (!silent && textEl) textEl.textContent = "Завантаження даних...";
       const resp = await fetch(url);
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       const buf = await _anReadResponseArrayBuffer(resp, { silent, progressEl, textEl });
@@ -4138,7 +4141,7 @@ function _renderRankingRow(s, rank, field, label) {
   const dept = esc(_displayDeptName(s.path));
   const mvo  = esc(_displayMvoName(s.path));
   const val  = fmtMoney(s[field] || 0);
-  return `<div class="an-rank-row" onclick="openSubDetail('${s.id}')">
+  return `<div class="an-rank-row">
     <div class="an-rank-num">${rank}</div>
     <div class="an-rank-info">
       <div class="an-rank-dept">${dept}</div>
@@ -4164,7 +4167,7 @@ function _renderRankingDeltaRow(x, rank, kind) {
   if (x.pct === Infinity) pctStr = "новий";
   else if (x.pct === -100) pctStr = "−100%";
   else pctStr = (x.diff >= 0 ? "+" : "") + x.pct.toFixed(0) + "%";
-  return `<div class="an-rank-row" onclick="openSubDetail('${s.id}')">
+  return `<div class="an-rank-row">
     <div class="an-rank-num">${rank}</div>
     <div class="an-rank-info">
       <div class="an-rank-dept">${dept}</div>
