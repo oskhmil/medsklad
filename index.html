@@ -894,6 +894,52 @@
   .an-rank-delta.up { color: var(--green); }
   .an-rank-delta.down { color: var(--danger); }
 
+  /* ABC summary cards (3 cards in a row showing class A/B/C totals) */
+  .an-abc-summary {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-bottom: 10px;
+  }
+  .an-abc-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 8px; text-align: center;
+    border-top-width: 3px;
+  }
+  .an-abc-card.abc-A { border-top-color: var(--danger); }
+  .an-abc-card.abc-B { border-top-color: var(--warn); }
+  .an-abc-card.abc-C { border-top-color: var(--muted); }
+  .an-abc-lbl {
+    font-size: 10px; font-weight: 800; letter-spacing: .08em;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .an-abc-num {
+    font-size: 22px; font-weight: 800; color: var(--text);
+    line-height: 1;
+  }
+  .an-abc-sub {
+    font-size: 9px; color: var(--muted); margin-top: 4px;
+    line-height: 1.3;
+  }
+  .an-abc-money {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    margin-top: 4px;
+  }
+  .an-abc-hint {
+    font-size: 11px; color: var(--muted); line-height: 1.5;
+    padding: 8px 10px; background: var(--card2);
+    border-radius: 8px; margin-bottom: 4px;
+  }
+  .an-abc-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 8px;
+    font-size: 10px; font-weight: 800; letter-spacing: .05em;
+  }
+  .an-abc-badge.abc-A { background: rgba(248,113,113,.15); color: var(--danger); }
+  .an-abc-badge.abc-B { background: rgba(245,158,11,.15); color: var(--warn); }
+  .an-abc-badge.abc-C { background: rgba(107,122,153,.15); color: var(--muted); }
+
+  @media (max-width: 400px) {
+    .an-abc-summary { grid-template-columns: 1fr; }
+  }
+
   /* flow box (open → receipt → expense → close) */
   .an-flow {
     background: var(--card); border: 1px solid var(--border);
@@ -1361,6 +1407,20 @@
           <button class="filter-btn" onclick="setRankingView('decline', this)">📉 Спад видатку</button>
         </div>
         <div id="an-rankings"></div>
+
+        <!-- Item-level analytics: ABC, top-30%, growth/decline, anomalies -->
+        <div class="an-section-title">📊 Аналіз позицій</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">
+          Класифікація позицій лікарні за вартістю видатку, динамікою попиту та аномальним списанням.
+        </div>
+        <div class="an-filter-row">
+          <button class="filter-btn active" onclick="setItemAnalyticsView('abc', this)">📊 ABC</button>
+          <button class="filter-btn" onclick="setItemAnalyticsView('top30', this)">💎 ТОП-30%</button>
+          <button class="filter-btn" onclick="setItemAnalyticsView('growth', this)">📈 Ріст попиту</button>
+          <button class="filter-btn" onclick="setItemAnalyticsView('decline', this)">📉 Спад попиту</button>
+          <button class="filter-btn" onclick="setItemAnalyticsView('anomaly', this)">⚠️ Аномалії</button>
+        </div>
+        <div id="an-item-analytics"></div>
       </div>
     </div>
 
@@ -3866,6 +3926,7 @@ function renderAnalyticsMonth() {
   renderFlow(m, mCompare);
   renderAnalyticsSummary(m);
   renderRankings(m);
+  renderItemAnalytics(m);
   renderHierarchy(m);
 }
 
@@ -4177,6 +4238,342 @@ function _renderRankingDeltaRow(x, rank, kind) {
     <div class="an-rank-val">
       <div class="an-rank-val-main an-rank-delta ${cls}">${sign} ${fmtMoney(Math.abs(x.diff), true)}</div>
       <div class="an-rank-val-lbl">${pctStr}</div>
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// ITEM-LEVEL ANALYTICS: ABC classification, top-30%, growth/decline, anomalies
+// All computed across the whole hospital (skipping _hidden subdivisions).
+// ════════════════════════════════════════════════════════════════════════════
+let itemAnalyticsView = "abc"; // abc | top30 | growth | decline | anomaly
+const ITEM_ANALYTICS_LIMIT = 30;
+const ANOMALY_THRESHOLD = 3;       // current expense / avg ≥ this → flagged
+const ANOMALY_HISTORY_MONTHS = 3;  // how many prior months to average
+
+function setItemAnalyticsView(view, btn) {
+  itemAnalyticsView = view;
+  if (btn) {
+    btn.parentElement.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+  const m = analyticsData.months[currentMonthKey];
+  if (m) renderItemAnalytics(m);
+}
+
+// Collect every non-hidden item in the hospital. One entry per (sub, item).
+function _collectAllItems(m) {
+  const out = [];
+  for (let di = 0; di < m.directions.length; di++) {
+    const d = m.directions[di];
+    for (let gi = 0; gi < d.groups.length; gi++) {
+      const g = d.groups[gi];
+      for (let si = 0; si < g.subdivisions.length; si++) {
+        const sub = g.subdivisions[si];
+        if (sub._hidden) continue;
+        for (const it of sub.items) {
+          out.push({ item: it, sub, path: sub.path || [], direction: d.name });
+        }
+      }
+    }
+  }
+  return out;
+}
+
+// Build a Map: `${pathKey}|${nameIndex}` → totals for the item in a month.
+// Used to find the same item (same МВО, same name) across months for
+// growth/decline and anomaly comparisons.
+function _buildItemMapByKey(m) {
+  const map = new Map();
+  for (const d of m.directions || []) {
+    for (const g of d.groups || []) {
+      for (const sub of g.subdivisions || []) {
+        if (sub._hidden) continue;
+        const pk = (sub.path || []).join("|");
+        for (const it of sub.items) {
+          map.set(pk + "|" + it.n, it);
+        }
+      }
+    }
+  }
+  return map;
+}
+
+// Get a sorted (ascending) list of month keys strictly before `currentKey`.
+function _monthsBefore(currentKey) {
+  return Object.keys(analyticsData.months || {})
+    .filter(k => k < currentKey)
+    .sort();
+}
+
+function renderItemAnalytics(m) {
+  const containerEl = document.getElementById("an-item-analytics");
+  if (!containerEl) return;
+  const view = itemAnalyticsView;
+
+  if (view === "abc")    return _renderAbcView(m, containerEl);
+  if (view === "top30")  return _renderTop30View(m, containerEl);
+  if (view === "growth") return _renderItemGrowthView(m, containerEl, "growth");
+  if (view === "decline")return _renderItemGrowthView(m, containerEl, "decline");
+  if (view === "anomaly")return _renderAnomalyView(m, containerEl);
+}
+
+// ── ABC ─────────────────────────────────────────────────────────────────────
+// Sort items by expense descending, compute cumulative %, assign classes:
+//   A — first items summing up to 80% of total expense
+//   B — next items summing 80% → 95%
+//   C — the rest (95% → 100%)
+// Items with zero expense are excluded (they don't participate in spending).
+function _computeAbc(m) {
+  const all = _collectAllItems(m);
+  const withExp = all.filter(e => (e.item.es || 0) > 0);
+  withExp.sort((a, b) => (b.item.es || 0) - (a.item.es || 0));
+  const totalExp = withExp.reduce((s, e) => s + (e.item.es || 0), 0);
+  let cumul = 0;
+  return withExp.map(e => {
+    cumul += e.item.es || 0;
+    const pct = totalExp > 0 ? cumul / totalExp : 0;
+    let cls;
+    if (pct <= 0.80) cls = "A";
+    else if (pct <= 0.95) cls = "B";
+    else cls = "C";
+    return { ...e, cumulPct: pct, cls, totalExp };
+  });
+}
+
+function _renderAbcView(m, containerEl) {
+  const classified = _computeAbc(m);
+  if (!classified.length) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">У цьому місяці немає видатку</div></div>`;
+    return;
+  }
+  const totalExp = classified[0].totalExp;
+  const buckets = { A: [], B: [], C: [] };
+  for (const e of classified) buckets[e.cls].push(e);
+  const sumOf = arr => arr.reduce((s, e) => s + (e.item.es || 0), 0);
+  const sumA = sumOf(buckets.A), sumB = sumOf(buckets.B), sumC = sumOf(buckets.C);
+  const total = classified.length;
+
+  let html = `
+    <div class="an-abc-summary">
+      <div class="an-abc-card abc-A">
+        <div class="an-abc-lbl">КЛАС A</div>
+        <div class="an-abc-num">${buckets.A.length}</div>
+        <div class="an-abc-sub">${(buckets.A.length / total * 100).toFixed(0)}% позицій · ${(sumA / totalExp * 100).toFixed(0)}% бюджету</div>
+        <div class="an-abc-money">${fmtMoney(sumA)}</div>
+      </div>
+      <div class="an-abc-card abc-B">
+        <div class="an-abc-lbl">КЛАС B</div>
+        <div class="an-abc-num">${buckets.B.length}</div>
+        <div class="an-abc-sub">${(buckets.B.length / total * 100).toFixed(0)}% позицій · ${(sumB / totalExp * 100).toFixed(0)}% бюджету</div>
+        <div class="an-abc-money">${fmtMoney(sumB)}</div>
+      </div>
+      <div class="an-abc-card abc-C">
+        <div class="an-abc-lbl">КЛАС C</div>
+        <div class="an-abc-num">${buckets.C.length}</div>
+        <div class="an-abc-sub">${(buckets.C.length / total * 100).toFixed(0)}% позицій · ${(sumC / totalExp * 100).toFixed(0)}% бюджету</div>
+        <div class="an-abc-money">${fmtMoney(sumC)}</div>
+      </div>
+    </div>
+    <div class="an-abc-hint">
+      <b>A</b> — контролювати пильно (топ 80% грошей). <b>B</b> — звичайний контроль. <b>C</b> — масовий, спрощений контроль.
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin:14px 0 8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;">
+      Позиції класу A (топ ${Math.min(buckets.A.length, ITEM_ANALYTICS_LIMIT)})
+    </div>`;
+  html += buckets.A.slice(0, ITEM_ANALYTICS_LIMIT).map((e, i) => _renderItemAbcRow(e, i + 1)).join("");
+  if (buckets.A.length > ITEM_ANALYTICS_LIMIT) {
+    html += `<div style="text-align:center;padding:8px;font-size:11px;color:var(--muted);">+ ще ${buckets.A.length - ITEM_ANALYTICS_LIMIT} позицій класу A</div>`;
+  }
+  containerEl.innerHTML = html;
+}
+
+function _renderItemAbcRow(e, rank) {
+  const name = esc(analyticsData.names[e.item.n] || "(?)");
+  const mvo = esc(_displayMvoName(e.path));
+  const dept = esc(_displayDeptName(e.path));
+  const exp = fmtMoney(e.item.es || 0);
+  const cumulPctStr = (e.cumulPct * 100).toFixed(1) + "%";
+  return `<div class="an-rank-row">
+    <div class="an-rank-num">${rank}</div>
+    <div class="an-rank-info">
+      <div class="an-rank-dept">${name}</div>
+      <div class="an-rank-mvo">${dept} · ${mvo}</div>
+      <div class="an-rank-sub">кумулятивно: ${cumulPctStr}</div>
+    </div>
+    <div class="an-rank-val">
+      <div class="an-rank-val-main">${exp}</div>
+      <div class="an-rank-val-lbl"><span class="an-abc-badge abc-${e.cls}">${e.cls}</span></div>
+    </div>
+  </div>`;
+}
+
+// ── ТОП-30% ─────────────────────────────────────────────────────────────────
+// Items that cumulatively form the first 30% of the hospital's monthly budget.
+function _renderTop30View(m, containerEl) {
+  const classified = _computeAbc(m);
+  if (!classified.length) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">У цьому місяці немає видатку</div></div>`;
+    return;
+  }
+  const top30 = [];
+  const totalExp = classified[0].totalExp;
+  let cumul = 0;
+  for (const e of classified) {
+    cumul += e.item.es || 0;
+    top30.push(e);
+    if (cumul / totalExp >= 0.30) break;
+  }
+  const topSum = top30.reduce((s, e) => s + (e.item.es || 0), 0);
+  let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+      <b>${top30.length}</b> позицій формують перші <b>${(topSum / totalExp * 100).toFixed(1)}%</b> бюджету видатку (${fmtMoney(topSum)} з ${fmtMoney(totalExp)})
+    </div>`;
+  html += top30.slice(0, ITEM_ANALYTICS_LIMIT).map((e, i) => _renderItemAbcRow(e, i + 1)).join("");
+  if (top30.length > ITEM_ANALYTICS_LIMIT) {
+    html += `<div style="text-align:center;padding:8px;font-size:11px;color:var(--muted);">+ ще ${top30.length - ITEM_ANALYTICS_LIMIT} позицій</div>`;
+  }
+  containerEl.innerHTML = html;
+}
+
+// ── Item growth / decline ──────────────────────────────────────────────────
+function _renderItemGrowthView(m, containerEl, kind) {
+  if (!compareMonthKey || !analyticsData.months[compareMonthKey]) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Оберіть місяць для порівняння</div><div class="empty-sub">У селекторі місяців вгорі виберіть місяць, з яким порівнювати поточний</div></div>`;
+    return;
+  }
+  const mPrev = analyticsData.months[compareMonthKey];
+  const prevMap = _buildItemMapByKey(mPrev);
+  const all = _collectAllItems(m);
+  const withDeltas = [];
+  for (const e of all) {
+    const pk = e.path.join("|") + "|" + e.item.n;
+    const prevIt = prevMap.get(pk);
+    if (!prevIt) continue; // didn't exist in compare month
+    const prevEs = prevIt.es || 0;
+    const curEs  = e.item.es || 0;
+    if (prevEs === 0 && curEs === 0) continue;
+    const diff = curEs - prevEs;
+    let pct;
+    if (prevEs === 0) pct = curEs > 0 ? Infinity : 0;
+    else if (curEs === 0) pct = -100;
+    else pct = (diff / prevEs) * 100;
+    withDeltas.push({ entry: e, prevEs, curEs, diff, pct });
+  }
+  if (kind === "growth") {
+    const grow = withDeltas.filter(x => x.diff > 0).sort((a, b) => b.diff - a.diff);
+    const top = grow.slice(0, ITEM_ANALYTICS_LIMIT);
+    if (!top.length) {
+      containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жодна позиція не показала росту видатку</div></div>`;
+      return;
+    }
+    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Позиції з найбільшим зростанням видатку порівняно з обраним місяцем</div>`;
+    html += top.map((x, i) => _renderItemDeltaRow(x, i + 1, "growth")).join("");
+    containerEl.innerHTML = html;
+  } else {
+    const decl = withDeltas.filter(x => x.diff < 0).sort((a, b) => a.diff - b.diff);
+    const top = decl.slice(0, ITEM_ANALYTICS_LIMIT);
+    if (!top.length) {
+      containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жодна позиція не показала спаду видатку</div></div>`;
+      return;
+    }
+    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Позиції зі скороченням видатку — можливі проблеми постачання або зниження потреби</div>`;
+    html += top.map((x, i) => _renderItemDeltaRow(x, i + 1, "decline")).join("");
+    containerEl.innerHTML = html;
+  }
+}
+
+function _renderItemDeltaRow(x, rank, kind) {
+  const name = esc(analyticsData.names[x.entry.item.n] || "(?)");
+  const dept = esc(_displayDeptName(x.entry.path));
+  const mvo  = esc(_displayMvoName(x.entry.path));
+  const cur  = fmtMoney(x.curEs);
+  const prev = fmtMoney(x.prevEs);
+  const sign = x.diff >= 0 ? "▲" : "▼";
+  const cls  = kind === "growth" ? "up" : "down";
+  let pctStr;
+  if (x.pct === Infinity) pctStr = "нова";
+  else if (x.pct === -100) pctStr = "−100%";
+  else pctStr = (x.diff >= 0 ? "+" : "") + x.pct.toFixed(0) + "%";
+  return `<div class="an-rank-row">
+    <div class="an-rank-num">${rank}</div>
+    <div class="an-rank-info">
+      <div class="an-rank-dept">${name}</div>
+      <div class="an-rank-mvo">${dept} · ${mvo}</div>
+      <div class="an-rank-sub">${prev} → ${cur}</div>
+    </div>
+    <div class="an-rank-val">
+      <div class="an-rank-val-main an-rank-delta ${cls}">${sign} ${fmtMoney(Math.abs(x.diff), true)}</div>
+      <div class="an-rank-val-lbl">${pctStr}</div>
+    </div>
+  </div>`;
+}
+
+// ── Anomalies ──────────────────────────────────────────────────────────────
+// For each item, average its expense over the last N months (excluding the
+// current one). If current expense ≥ 3× the average — flag it. We require
+// at least 2 historical months to call something an "average" reliably.
+function _renderAnomalyView(m, containerEl) {
+  const priorKeys = _monthsBefore(currentMonthKey).slice(-ANOMALY_HISTORY_MONTHS);
+  if (priorKeys.length < 2) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Потрібно більше історії</div><div class="empty-sub">Для виявлення аномалій потрібно мінімум 2 попередніх місяці. Зараз доступно: ${priorKeys.length}</div></div>`;
+    return;
+  }
+  // Build historical maps (one per month)
+  const priorMaps = priorKeys.map(k => _buildItemMapByKey(analyticsData.months[k]));
+  const all = _collectAllItems(m);
+  const anomalies = [];
+  for (const e of all) {
+    const curEs = e.item.es || 0;
+    if (curEs <= 0) continue;
+    const pk = e.path.join("|") + "|" + e.item.n;
+    let sum = 0, count = 0;
+    for (const pm of priorMaps) {
+      const prev = pm.get(pk);
+      if (prev) { sum += prev.es || 0; count++; }
+    }
+    // Require the item to exist in at least 2 prior months
+    if (count < 2) continue;
+    const avg = sum / count;
+    if (avg <= 0) continue; // avoid div-by-zero / meaningless ratios
+    const ratio = curEs / avg;
+    if (ratio >= ANOMALY_THRESHOLD) {
+      anomalies.push({ entry: e, avg, curEs, ratio, historyCount: count });
+    }
+  }
+  if (!anomalies.length) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">✅</div><div class="empty-title">Аномалій не виявлено</div><div class="empty-sub">Жодна позиція не виходить за межі ${ANOMALY_THRESHOLD}× від середнього за ${priorKeys.length} попередніх ${priorKeys.length === 1 ? "місяць" : "місяців"}</div></div>`;
+    return;
+  }
+  anomalies.sort((a, b) => b.ratio - a.ratio);
+  const top = anomalies.slice(0, ITEM_ANALYTICS_LIMIT);
+  const totalSum = anomalies.reduce((s, a) => s + a.curEs, 0);
+  let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+      <b>${anomalies.length}</b> позицій з видатком у ${ANOMALY_THRESHOLD}× або більше від середнього (за ${priorKeys.length} попередніх ${priorKeys.length === 1 ? "місяць" : "місяців"}). Сума: ${fmtMoney(totalSum)}
+    </div>`;
+  html += top.map((a, i) => _renderAnomalyRow(a, i + 1)).join("");
+  if (anomalies.length > ITEM_ANALYTICS_LIMIT) {
+    html += `<div style="text-align:center;padding:8px;font-size:11px;color:var(--muted);">+ ще ${anomalies.length - ITEM_ANALYTICS_LIMIT} аномалій</div>`;
+  }
+  containerEl.innerHTML = html;
+}
+
+function _renderAnomalyRow(a, rank) {
+  const name = esc(analyticsData.names[a.entry.item.n] || "(?)");
+  const dept = esc(_displayDeptName(a.entry.path));
+  const mvo  = esc(_displayMvoName(a.entry.path));
+  const cur  = fmtMoney(a.curEs);
+  const avg  = fmtMoney(a.avg);
+  const ratio = a.ratio === Infinity ? "∞" : a.ratio.toFixed(1) + "×";
+  return `<div class="an-rank-row">
+    <div class="an-rank-num">${rank}</div>
+    <div class="an-rank-info">
+      <div class="an-rank-dept">${name}</div>
+      <div class="an-rank-mvo">${dept} · ${mvo}</div>
+      <div class="an-rank-sub">середнє: ${avg} · цього місяця: ${cur}</div>
+    </div>
+    <div class="an-rank-val">
+      <div class="an-rank-val-main an-rank-delta down">⚠️ ${ratio}</div>
+      <div class="an-rank-val-lbl">від норми</div>
     </div>
   </div>`;
 }
