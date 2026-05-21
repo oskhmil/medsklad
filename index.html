@@ -2856,8 +2856,8 @@ let patientsData = null;
 // cost-per-patient where patient counts are maintained at ward level.
 let patientsDeptData = null;
 const PATIENTS_URL = "https://docs.google.com/spreadsheets/d/1fdiLhkahn5yuyQk3P7el7AgP3JyI2YzY/export?format=xlsx";
-const PATIENTS_CACHE_KEY = "patients_cache_v2";
-const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v2";
+const PATIENTS_CACHE_KEY = "patients_cache_v3";
+const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v3";
 const PATIENTS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
 
 // ─── Hospital picker ────────────────────────────────────────────────────────
@@ -3014,7 +3014,7 @@ async function loadPatientsData() {
   const statusEl = document.getElementById("an-patients-status");
   const setStatus = (text, color) => {
     if (statusEl) {
-      statusEl.style.display = "block";
+      statusEl.style.display = "none";
       statusEl.style.color = color || "var(--muted)";
       statusEl.innerHTML = text;
     }
@@ -3047,7 +3047,7 @@ async function _fetchPatientsInBackground() {
   const statusEl = document.getElementById("an-patients-status");
   const setStatus = (text, color) => {
     if (statusEl) {
-      statusEl.style.display = "block";
+      statusEl.style.display = "none";
       statusEl.style.color = color || "var(--muted)";
       statusEl.innerHTML = text;
     }
@@ -3107,8 +3107,15 @@ function _patientsDataStats() {
   return { mvoCount, deptCount, totalPatients: deptTotal || mvoTotal };
 }
 
+function _normalizePatientsHospital(hospital) {
+  return _normalizeMvoName(hospital || "")
+    .replace(/^вп/, "")
+    .replace(/лікарня/g, "")
+    .replace(/святого|святої|святий|свята|св/g, "");
+}
+
 function _patientsDeptKey(hospital, dept) {
-  return _normalizeMvoName(hospital || "") + "|" + _normalizeMvoName(dept || "");
+  return _normalizePatientsHospital(hospital || "") + "|" + _normalizeMvoName(dept || "");
 }
 
 function _parsePatientsCount(v) {
@@ -3116,6 +3123,31 @@ function _parsePatientsCount(v) {
   if (typeof v === "number") return v;
   const n = parseFloat(String(v).replace(/\s/g, "").replace(",", "."));
   return isNaN(n) ? 0 : n;
+}
+
+function _patientHeaderColumns(row) {
+  const header = row.map(c => String(c || "").toLowerCase().trim());
+  const findCol = (...keys) => {
+    for (let i = 0; i < header.length; i++) {
+      const h = header[i];
+      if (keys.some(k => h.includes(k))) return i;
+    }
+    return -1;
+  };
+  const mvoCol      = findCol("мво", "медсклад");
+  const patientsCol = findCol("пацієнт", "паціент", "patient", "пролікован");
+  const hospitalCol = findCol("лікарн", "hospital");
+  const deptCol     = findCol("відділ", "відділення", "department");
+  const noteCol     = findCol("приміт", "note");
+  return { mvoCol, patientsCol, hospitalCol, deptCol, noteCol };
+}
+
+function _isPatientsHospitalRow(row) {
+  const nonEmpty = row
+    .map(c => String(c || "").trim())
+    .filter(Boolean);
+  if (nonEmpty.length !== 1) return false;
+  return /(лікарн|^вп\s*["«]?|госпітал|hospital)/i.test(nonEmpty[0]);
 }
 
 // Parse the patients xlsx into:
@@ -3128,37 +3160,38 @@ function _parsePatientsXlsx(buf) {
   const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
   if (rows.length < 2) return { byMvo: [], byDept: [] };
 
-  const header = rows[0].map(c => String(c || "").toLowerCase().trim());
-  // Find column indices by substring match on header
-  const findCol = (...keys) => {
-    for (let i = 0; i < header.length; i++) {
-      const h = header[i];
-      if (keys.some(k => h.includes(k))) return i;
-    }
-    return -1;
-  };
-  const mvoCol      = findCol("мво", "медсклад");
-  const patientsCol = findCol("пацієнт", "паціент", "patient");
-  const hospitalCol = findCol("лікарн", "hospital");
-  const deptCol     = findCol("відділ", "department");
-  const noteCol     = findCol("приміт", "note");
-
-  if (patientsCol < 0 || (mvoCol < 0 && deptCol < 0)) {
-    console.warn("[medsklad] patients sheet: missing 'Пацієнтів' and МВО/Відділення column");
-    return { byMvo: [], byDept: [] };
-  }
-
   const byMvo = new Map();
   const byDept = new Map();
-  for (let i = 1; i < rows.length; i++) {
+  let currentHospital = "";
+  let cols = null;
+
+  for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
-    const mvo = mvoCol >= 0 ? String(row[mvoCol] || "").trim() : "";
-    const hospital = hospitalCol >= 0 ? String(row[hospitalCol] || "").trim() : "";
-    const dept = deptCol >= 0 ? String(row[deptCol] || "").trim() : "";
+    if (_isPatientsHospitalRow(row)) {
+      currentHospital = String(row.find(c => String(c || "").trim()) || "").trim();
+      cols = null;
+      continue;
+    }
+
+    const maybeCols = _patientHeaderColumns(row);
+    if (maybeCols.patientsCol >= 0 && (maybeCols.mvoCol >= 0 || maybeCols.deptCol >= 0)) {
+      cols = maybeCols;
+      continue;
+    }
+
+    if (!cols) continue;
+
+    const mvo = cols.mvoCol >= 0 ? String(row[cols.mvoCol] || "").trim() : "";
+    const rowHospital = cols.hospitalCol >= 0 ? String(row[cols.hospitalCol] || "").trim() : "";
+    const hospital = rowHospital || currentHospital;
+    const dept = cols.deptCol >= 0 ? String(row[cols.deptCol] || "").trim() : "";
     if (!mvo && !dept) continue;
-    const patients = _parsePatientsCount(row[patientsCol]);
+    if (/^(всього|усього|разом)$/i.test(dept)) continue;
+    if (/^(відділення|department)$/i.test(dept)) continue;
+
+    const patients = _parsePatientsCount(row[cols.patientsCol]);
     if (patients <= 0) continue; // skip rows with zero (e.g. secondary МВО of same dept)
-    const note = noteCol >= 0 ? String(row[noteCol] || "").trim() : "";
+    const note = cols.noteCol >= 0 ? String(row[cols.noteCol] || "").trim() : "";
     const rec = {
       mvo,
       patients,
@@ -3192,6 +3225,46 @@ function _normalizeMvoName(s) {
     .trim();
 }
 
+function _normalizeDeptLoose(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[ї]/g, "і")
+    .replace(/[є]/g, "е")
+    .replace(/[ґ]/g, "г")
+    .replace(/[«»"'`’ʼ.,;:()№\-–—]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function _deptTokens(s) {
+  const stop = new Set([
+    "від", "відд", "відділення", "центр", "центру", "для", "та", "і", "й", "з", "зі", "на",
+    "паціентів", "пацієнтів", "профілю", "спеціалізоване", "обласний",
+  ]);
+  return _normalizeDeptLoose(s)
+    .split(/\s+/)
+    .map(t => t.trim())
+    .filter(t => t.length > 2 && !stop.has(t));
+}
+
+function _deptMatchScore(a, b) {
+  const aNorm = _normalizeDeptLoose(a).replace(/\s+/g, "");
+  const bNorm = _normalizeDeptLoose(b).replace(/\s+/g, "");
+  if (!aNorm || !bNorm) return 0;
+  if (aNorm === bNorm) return 1;
+  if (aNorm.includes(bNorm) || bNorm.includes(aNorm)) return 0.92;
+
+  const aTokens = new Set(_deptTokens(a));
+  const bTokens = new Set(_deptTokens(b));
+  const minSize = Math.min(aTokens.size, bTokens.size);
+  if (minSize === 0) return 0;
+  let hits = 0;
+  for (const t of aTokens) {
+    if (bTokens.has(t)) hits++;
+  }
+  return hits / minSize;
+}
+
 // Look up patients count for a sub by name. Returns 0 if not in map.
 function _getPatientsForSub(sub) {
   if (!patientsData || !sub) return 0;
@@ -3211,18 +3284,34 @@ function _getPatientsForDept(depName) {
   const exact = patientsDeptData.get(_patientsDeptKey(hospitalName, depName));
   if (exact) return exact.patients || 0;
 
-  // Fallback for sheets where the hospital column is blank or written
-  // differently: use a unique department-name match.
+  const hospitalKey = _normalizePatientsHospital(hospitalName);
   const depKey = _normalizeMvoName(depName);
-  let found = null;
-  let matches = 0;
+  const candidates = [];
   for (const entry of patientsDeptData.values()) {
+    const entryHospitalKey = _normalizePatientsHospital(entry.hospital);
+    if (hospitalKey && entryHospitalKey && hospitalKey !== entryHospitalKey) continue;
+    candidates.push(entry);
     if (_normalizeMvoName(entry.dept) === depKey) {
-      found = entry;
-      matches++;
+      return entry.patients || 0;
     }
   }
-  return matches === 1 && found ? (found.patients || 0) : 0;
+
+  // Fallback for shortened 1C department names:
+  // "Від.гематологіі..." should match "Відділення гематології...".
+  let best = null;
+  let bestScore = 0;
+  let ties = 0;
+  for (const entry of candidates) {
+    const score = _deptMatchScore(depName, entry.dept);
+    if (score > bestScore + 0.001) {
+      best = entry;
+      bestScore = score;
+      ties = 1;
+    } else if (Math.abs(score - bestScore) <= 0.001) {
+      ties++;
+    }
+  }
+  return best && bestScore >= 0.6 && ties === 1 ? (best.patients || 0) : 0;
 }
 
 function _getDepartmentPatientCost(dep) {
