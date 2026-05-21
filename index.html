@@ -2839,6 +2839,14 @@ let currentMonthKey = null;
 let compareMonthKey = null;  // for month-vs-month comparison
 let analyticsView = "all";
 
+// Patients-per-MVO data, loaded from a separate Google Sheet.
+// Shape: Map<mvoNameNormalized, { hospital, dept, patients, note }>
+let patientsData = null;
+const PATIENTS_URL = "https://docs.google.com/spreadsheets/d/1fdiLhkahn5yuyQk3P7el7AgP3JyI2YzY/export?format=xlsx";
+const PATIENTS_CACHE_KEY = "patients_cache_v1";
+const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v1";
+const PATIENTS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
+
 // ─── Hospital picker ────────────────────────────────────────────────────────
 function openHospitalPicker() {
   renderHospitalPicker();
@@ -2965,7 +2973,145 @@ async function loadAnalytics(forceRefresh) {
   setState("loading");
   await fetchAnalytics({ silent: false });
   if (analyticsData) setState("ready");
+
+  // Patients data loads independently — it's optional, and we never block
+  // the main analytics flow on it. If it fails (private Sheet, network,
+  // bad structure) — we just don't show the cost-per-patient card.
+  loadPatientsData().catch(err => {
+    console.warn("[medsklad] patients data unavailable:", err.message);
+  });
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                    Patients data (cost-per-patient KPI)
+// ═══════════════════════════════════════════════════════════════════════════
+// A separate Google Sheet maps each МВО → number of patients treated in the
+// month. The structure is:
+//   row 1: header — "Лікарня", "Відділення", "МВО medsklad", "Пацієнтів", ...
+//   rows 2+: data
+// We look up columns by header (Ukrainian, case-insensitive), so the order
+// or extra columns don't matter as long as the keys are present.
+
+async function loadPatientsData() {
+  // Try cache first
+  try {
+    const cachedRaw = localStorage.getItem(PATIENTS_CACHE_KEY);
+    const cachedTs  = parseInt(localStorage.getItem(PATIENTS_CACHE_TIME_KEY) || "0", 10);
+    if (cachedRaw && cachedTs) {
+      const parsed = JSON.parse(cachedRaw);
+      patientsData = new Map(parsed);
+      // Silent refresh if stale
+      if (Date.now() - cachedTs > PATIENTS_CACHE_TTL) {
+        _fetchPatientsInBackground();
+      }
+      // Re-render current sub-detail (if open) so the card appears
+      _refreshSubDetailIfOpen();
+      return;
+    }
+  } catch (_) {}
+
+  await _fetchPatientsInBackground();
+}
+
+async function _fetchPatientsInBackground() {
+  try {
+    const resp = await fetch(PATIENTS_URL, { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const buf = await resp.arrayBuffer();
+    const map = _parsePatientsXlsx(buf);
+    patientsData = map;
+    try {
+      const arr = [...map.entries()];
+      localStorage.setItem(PATIENTS_CACHE_KEY, JSON.stringify(arr));
+      localStorage.setItem(PATIENTS_CACHE_TIME_KEY, Date.now().toString());
+    } catch (_) { /* quota — ignore */ }
+    _refreshSubDetailIfOpen();
+  } catch (err) {
+    console.warn("[medsklad] patients fetch failed:", err.message);
+  }
+}
+
+// Parse the patients xlsx into a Map<normalizedMvoName, {patients, hospital, dept, note}>.
+// Header detection is forgiving — looks for substrings in case-insensitive way.
+function _parsePatientsXlsx(buf) {
+  const wb = XLSX.read(buf, { type: "array", cellDates: false });
+  const ws = wb.Sheets[wb.SheetNames[0]];
+  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+  if (rows.length < 2) return new Map();
+
+  const header = rows[0].map(c => String(c || "").toLowerCase().trim());
+  // Find column indices by substring match on header
+  const findCol = (...keys) => {
+    for (let i = 0; i < header.length; i++) {
+      const h = header[i];
+      if (keys.some(k => h.includes(k))) return i;
+    }
+    return -1;
+  };
+  const mvoCol      = findCol("мво", "медсклад");
+  const patientsCol = findCol("пацієнт", "паціент", "patient");
+  const hospitalCol = findCol("лікарн", "hospital");
+  const deptCol     = findCol("відділ", "department");
+  const noteCol     = findCol("приміт", "note");
+
+  if (mvoCol < 0 || patientsCol < 0) {
+    console.warn("[medsklad] patients sheet: missing 'МВО' or 'Пацієнтів' column");
+    return new Map();
+  }
+
+  const map = new Map();
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const mvo = String(row[mvoCol] || "").trim();
+    if (!mvo) continue;
+    const patients = Number(row[patientsCol]) || 0;
+    if (patients <= 0) continue; // skip rows with zero (e.g. secondary МВО of same dept)
+    const key = _normalizeMvoName(mvo);
+    map.set(key, {
+      mvo,
+      patients,
+      hospital: hospitalCol >= 0 ? String(row[hospitalCol] || "").trim() : "",
+      dept:     deptCol >= 0     ? String(row[deptCol] || "").trim()     : "",
+      note:     noteCol >= 0     ? String(row[noteCol] || "").trim()     : "",
+    });
+  }
+  return map;
+}
+
+// Aggressive normalization so minor formatting differences (extra spaces,
+// punctuation, case, spaces around dots) don't break matching.
+function _normalizeMvoName(s) {
+  return String(s || "")
+    .toLowerCase()
+    .replace(/[«»"'`’ʼ]/g, "")
+    .replace(/\s+/g, "")        // collapse ALL whitespace
+    .replace(/[.,;:()№\-]/g, "") // strip common punctuation
+    .trim();
+}
+
+// Look up patients count for a sub by name. Returns 0 if not in map.
+function _getPatientsForSub(sub) {
+  if (!patientsData || !sub) return 0;
+  const name = (sub.path && sub.path.length > 0)
+    ? analyticsData.paths[sub.path[sub.path.length - 1]]
+    : "";
+  if (!name) return 0;
+  const key = _normalizeMvoName(name);
+  const entry = patientsData.get(key);
+  return entry ? entry.patients : 0;
+}
+
+// If the sub-detail screen is currently open, re-render it so the new card
+// appears as soon as patients data lands.
+function _refreshSubDetailIfOpen() {
+  try {
+    const screen = document.getElementById("sub-detail-screen");
+    if (screen && screen.style.display !== "none" && typeof openSubDetail === "function" && _currentSubId) {
+      openSubDetail(_currentSubId);
+    }
+  } catch (_) {}
+}
+
 
 // ═══════════════════════════════════════════════════════════════════════════
 //                    XLSX → Analytics parser (in-browser)
@@ -5245,6 +5391,13 @@ function renderSubDetail() {
   const _daysSub = `${_posSub} · вистачить на цю кількість днів при поточному видатку`;
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Дні запасу</div><div class="an-kpi-val">${fmtDaysOfSupply(dos)}</div><div class="an-kpi-sub">${_daysSub}</div></div>`);
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Період обороту</div><div class="an-kpi-val">${cycleStr}</div><div class="an-kpi-sub">у середньому одиниця лежить на складі стільки днів</div></div>`);
+  // Cost-per-patient: shown only if this МВО is mapped in the patients sheet.
+  // Hidden for laboratory/storage/support subdivisions that don't have patients.
+  const _patients = _getPatientsForSub(sub);
+  if (_patients > 0 && _es > 0) {
+    const _costPerPatient = _es / _patients;
+    kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💊 На пацієнта</div><div class="an-kpi-val">${fmtMoney(_costPerPatient)}</div><div class="an-kpi-sub">${_patients} пацієнтів · ${fmtMoney(_es)} видатку</div></div>`);
+  }
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${buckets.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.dead, "cs"))}</div></div>`);
   document.getElementById("sub-detail-kpis").innerHTML = kpis.join("");
 
