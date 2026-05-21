@@ -6133,6 +6133,7 @@ const HOSPITALS = [
     markers: [] }, // matched via FINPLAN_LAB_PATTERNS / OVERRIDES
   { id: "polic", label: "Лаб-діагност. центри", icon: "🔬",
     markers: [
+      /(^|\s|[-–—])лдц(\s|$|[-–—])/i,
       /поліклін/i,
       /лаб[\-\s]*діагност/i,
       /діагностичн\w*\s+центр/i,    // require word "центр" after — not bare "діагност"
@@ -6524,7 +6525,10 @@ function _looksLikeStorage(text) {
   // D, E, F — structural keywords
   if (/комірник/i.test(text)) return true;
   if (/^склад(\s|$)/i.test(text)) return true;
+  if (/^склади(\s|$)/i.test(text)) return true;
+  if (/^підрозділ(\s|$)/i.test(text)) return true;
   if (/склад\s*[№\d]/i.test(text)) return true;
+  if (/склади\s+лдц/i.test(text)) return true;
   if (/^відділ/i.test(text)) return true;
   if (/^лаборант/i.test(text)) return true;
   if (/\bвп\s/i.test(text)) return true;
