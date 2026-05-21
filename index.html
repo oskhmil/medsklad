@@ -2962,6 +2962,11 @@ async function loadAnalytics(forceRefresh) {
           if (age > ANALYTICS_CACHE_TTL) {
             fetchAnalytics({ silent: true });
           }
+          // Patients data also loads on cache-hit path (was previously
+          // unreachable due to the early return below).
+          loadPatientsData().catch(err => {
+            console.warn("[medsklad] patients data unavailable:", err.message);
+          });
           return;
         }
       }
