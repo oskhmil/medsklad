@@ -1331,6 +1331,7 @@
 
         <!-- Warnings (if any) -->
         <div id="an-warnings"></div>
+        <div id="an-patients-status" style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px;display:none;"></div>
 
         <!-- Hierarchy (directions → groups → subdivisions → items) -->
         <div class="an-section-title">Напрями діяльності</div>
@@ -2993,6 +2994,15 @@ async function loadAnalytics(forceRefresh) {
 // or extra columns don't matter as long as the keys are present.
 
 async function loadPatientsData() {
+  const statusEl = document.getElementById("an-patients-status");
+  const setStatus = (text, color) => {
+    if (statusEl) {
+      statusEl.style.display = "block";
+      statusEl.style.color = color || "var(--muted)";
+      statusEl.innerHTML = text;
+    }
+  };
+
   // Try cache first
   try {
     const cachedRaw = localStorage.getItem(PATIENTS_CACHE_KEY);
@@ -3000,6 +3010,8 @@ async function loadPatientsData() {
     if (cachedRaw && cachedTs) {
       const parsed = JSON.parse(cachedRaw);
       patientsData = new Map(parsed);
+      const totalP = [...patientsData.values()].reduce((s, e) => s + e.patients, 0);
+      setStatus(`💊 Пацієнти: ${patientsData.size} МВО, ${totalP} пацієнтів (з кешу)`, "var(--green)");
       // Silent refresh if stale
       if (Date.now() - cachedTs > PATIENTS_CACHE_TTL) {
         _fetchPatientsInBackground();
@@ -3010,16 +3022,34 @@ async function loadPatientsData() {
     }
   } catch (_) {}
 
+  setStatus("💊 Пацієнти: завантаження...", "var(--accent)");
   await _fetchPatientsInBackground();
 }
 
 async function _fetchPatientsInBackground() {
+  const statusEl = document.getElementById("an-patients-status");
+  const setStatus = (text, color) => {
+    if (statusEl) {
+      statusEl.style.display = "block";
+      statusEl.style.color = color || "var(--muted)";
+      statusEl.innerHTML = text;
+    }
+  };
   try {
     const resp = await fetch(PATIENTS_URL, { cache: "no-store" });
-    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    if (!resp.ok) {
+      setStatus(`💊 Пацієнти: помилка ${resp.status} (Sheet недоступний?)`, "var(--danger)");
+      throw new Error("HTTP " + resp.status);
+    }
     const buf = await resp.arrayBuffer();
     const map = _parsePatientsXlsx(buf);
     patientsData = map;
+    if (map.size === 0) {
+      setStatus("💊 Пацієнти: 0 рядків (неправильна структура файлу?)", "var(--warn)");
+    } else {
+      const totalP = [...map.values()].reduce((s, e) => s + e.patients, 0);
+      setStatus(`💊 Пацієнти: ${map.size} МВО, ${totalP} пацієнтів`, "var(--green)");
+    }
     try {
       const arr = [...map.entries()];
       localStorage.setItem(PATIENTS_CACHE_KEY, JSON.stringify(arr));
@@ -3028,6 +3058,7 @@ async function _fetchPatientsInBackground() {
     _refreshSubDetailIfOpen();
   } catch (err) {
     console.warn("[medsklad] patients fetch failed:", err.message);
+    setStatus(`💊 Пацієнти: ${err.message}`, "var(--danger)");
   }
 }
 
