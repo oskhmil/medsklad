@@ -1005,6 +1005,15 @@
   .an-node.department .an-node-head { padding-left: 22px; background: rgba(56,189,248,.04); }
   .an-node.department .an-node-head .an-node-title { font-size: 13px; color: #38bdf8; font-weight: 700; }
   .an-node.department > .an-node-body { padding-left: 8px; }
+  .an-dept-patient {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    margin: 0 0 8px 22px; padding: 8px 10px;
+    background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.22);
+    border-radius: 8px;
+  }
+  .an-dept-patient-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+  .an-dept-patient-val { font-size: 14px; color: var(--green); font-weight: 800; text-align: right; white-space: nowrap; }
+  .an-dept-patient-sub { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
   .an-node.subdivision { background: var(--card2); }
   .an-node.subdivision .an-node-head { padding-left: 30px; }
   .an-node.subdivision .an-node-head .an-node-title { font-size: 12px; color: var(--text); font-weight: 500; }
@@ -2843,9 +2852,12 @@ let analyticsView = "all";
 // Patients-per-MVO data, loaded from a separate Google Sheet.
 // Shape: Map<mvoNameNormalized, { hospital, dept, patients, note }>
 let patientsData = null;
+// Same source, indexed by hospital + department name. Used for department-level
+// cost-per-patient where patient counts are maintained at ward level.
+let patientsDeptData = null;
 const PATIENTS_URL = "https://docs.google.com/spreadsheets/d/1fdiLhkahn5yuyQk3P7el7AgP3JyI2YzY/export?format=xlsx";
-const PATIENTS_CACHE_KEY = "patients_cache_v1";
-const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v1";
+const PATIENTS_CACHE_KEY = "patients_cache_v2";
+const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v2";
 const PATIENTS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
 
 // ─── Hospital picker ────────────────────────────────────────────────────────
@@ -3014,15 +3026,15 @@ async function loadPatientsData() {
     const cachedTs  = parseInt(localStorage.getItem(PATIENTS_CACHE_TIME_KEY) || "0", 10);
     if (cachedRaw && cachedTs) {
       const parsed = JSON.parse(cachedRaw);
-      patientsData = new Map(parsed);
-      const totalP = [...patientsData.values()].reduce((s, e) => s + e.patients, 0);
-      setStatus(`💊 Пацієнти: ${patientsData.size} МВО, ${totalP} пацієнтів (з кешу)`, "var(--green)");
+      _installPatientsData(parsed);
+      const stats = _patientsDataStats();
+      setStatus(`💊 Пацієнти: ${stats.mvoCount} МВО, ${stats.deptCount} відд., ${stats.totalPatients} пацієнтів (з кешу)`, "var(--green)");
       // Silent refresh if stale
       if (Date.now() - cachedTs > PATIENTS_CACHE_TTL) {
         _fetchPatientsInBackground();
       }
-      // Re-render current sub-detail (if open) so the card appears
-      _refreshSubDetailIfOpen();
+      // Re-render visible analytics pieces so patient cards appear.
+      _refreshPatientsUi();
       return;
     }
   } catch (_) {}
@@ -3047,33 +3059,74 @@ async function _fetchPatientsInBackground() {
       throw new Error("HTTP " + resp.status);
     }
     const buf = await resp.arrayBuffer();
-    const map = _parsePatientsXlsx(buf);
-    patientsData = map;
-    if (map.size === 0) {
+    _installPatientsData(_parsePatientsXlsx(buf));
+    const stats = _patientsDataStats();
+    if (stats.mvoCount === 0 && stats.deptCount === 0) {
       setStatus("💊 Пацієнти: 0 рядків (неправильна структура файлу?)", "var(--warn)");
     } else {
-      const totalP = [...map.values()].reduce((s, e) => s + e.patients, 0);
-      setStatus(`💊 Пацієнти: ${map.size} МВО, ${totalP} пацієнтів`, "var(--green)");
+      setStatus(`💊 Пацієнти: ${stats.mvoCount} МВО, ${stats.deptCount} відд., ${stats.totalPatients} пацієнтів`, "var(--green)");
     }
     try {
-      const arr = [...map.entries()];
-      localStorage.setItem(PATIENTS_CACHE_KEY, JSON.stringify(arr));
+      localStorage.setItem(PATIENTS_CACHE_KEY, JSON.stringify(_patientsCachePayload()));
       localStorage.setItem(PATIENTS_CACHE_TIME_KEY, Date.now().toString());
     } catch (_) { /* quota — ignore */ }
-    _refreshSubDetailIfOpen();
+    _refreshPatientsUi();
   } catch (err) {
     console.warn("[medsklad] patients fetch failed:", err.message);
     setStatus(`💊 Пацієнти: ${err.message}`, "var(--danger)");
   }
 }
 
-// Parse the patients xlsx into a Map<normalizedMvoName, {patients, hospital, dept, note}>.
+function _installPatientsData(parsed) {
+  // Backward compatibility: older cache stored only [...mvoMap.entries()].
+  if (Array.isArray(parsed)) {
+    patientsData = new Map(parsed);
+    patientsDeptData = new Map();
+    return;
+  }
+  patientsData = new Map((parsed && parsed.byMvo) || []);
+  patientsDeptData = new Map((parsed && parsed.byDept) || []);
+}
+
+function _patientsCachePayload() {
+  return {
+    byMvo: [...(patientsData || new Map()).entries()],
+    byDept: [...(patientsDeptData || new Map()).entries()],
+  };
+}
+
+function _patientsDataStats() {
+  const mvoCount = patientsData ? patientsData.size : 0;
+  const deptCount = patientsDeptData ? patientsDeptData.size : 0;
+  const deptTotal = patientsDeptData
+    ? [...patientsDeptData.values()].reduce((s, e) => s + (e.patients || 0), 0)
+    : 0;
+  const mvoTotal = patientsData
+    ? [...patientsData.values()].reduce((s, e) => s + (e.patients || 0), 0)
+    : 0;
+  return { mvoCount, deptCount, totalPatients: deptTotal || mvoTotal };
+}
+
+function _patientsDeptKey(hospital, dept) {
+  return _normalizeMvoName(hospital || "") + "|" + _normalizeMvoName(dept || "");
+}
+
+function _parsePatientsCount(v) {
+  if (v == null || v === "") return 0;
+  if (typeof v === "number") return v;
+  const n = parseFloat(String(v).replace(/\s/g, "").replace(",", "."));
+  return isNaN(n) ? 0 : n;
+}
+
+// Parse the patients xlsx into:
+//   byMvo  — Map<normalizedMvoName, {patients, hospital, dept, note}>
+//   byDept — Map<normalizedHospital|normalizedDept, {patients, hospital, dept, note}>
 // Header detection is forgiving — looks for substrings in case-insensitive way.
 function _parsePatientsXlsx(buf) {
   const wb = XLSX.read(buf, { type: "array", cellDates: false });
   const ws = wb.Sheets[wb.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
-  if (rows.length < 2) return new Map();
+  if (rows.length < 2) return { byMvo: [], byDept: [] };
 
   const header = rows[0].map(c => String(c || "").toLowerCase().trim());
   // Find column indices by substring match on header
@@ -3090,28 +3143,42 @@ function _parsePatientsXlsx(buf) {
   const deptCol     = findCol("відділ", "department");
   const noteCol     = findCol("приміт", "note");
 
-  if (mvoCol < 0 || patientsCol < 0) {
-    console.warn("[medsklad] patients sheet: missing 'МВО' or 'Пацієнтів' column");
-    return new Map();
+  if (patientsCol < 0 || (mvoCol < 0 && deptCol < 0)) {
+    console.warn("[medsklad] patients sheet: missing 'Пацієнтів' and МВО/Відділення column");
+    return { byMvo: [], byDept: [] };
   }
 
-  const map = new Map();
+  const byMvo = new Map();
+  const byDept = new Map();
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    const mvo = String(row[mvoCol] || "").trim();
-    if (!mvo) continue;
-    const patients = Number(row[patientsCol]) || 0;
+    const mvo = mvoCol >= 0 ? String(row[mvoCol] || "").trim() : "";
+    const hospital = hospitalCol >= 0 ? String(row[hospitalCol] || "").trim() : "";
+    const dept = deptCol >= 0 ? String(row[deptCol] || "").trim() : "";
+    if (!mvo && !dept) continue;
+    const patients = _parsePatientsCount(row[patientsCol]);
     if (patients <= 0) continue; // skip rows with zero (e.g. secondary МВО of same dept)
-    const key = _normalizeMvoName(mvo);
-    map.set(key, {
+    const note = noteCol >= 0 ? String(row[noteCol] || "").trim() : "";
+    const rec = {
       mvo,
       patients,
-      hospital: hospitalCol >= 0 ? String(row[hospitalCol] || "").trim() : "",
-      dept:     deptCol >= 0     ? String(row[deptCol] || "").trim()     : "",
-      note:     noteCol >= 0     ? String(row[noteCol] || "").trim()     : "",
-    });
+      hospital,
+      dept,
+      note,
+    };
+    if (mvo) byMvo.set(_normalizeMvoName(mvo), rec);
+    if (dept) {
+      const deptKey = _patientsDeptKey(hospital, dept);
+      const cur = byDept.get(deptKey);
+      if (cur) {
+        cur.patients += patients;
+        cur.mvoCount += mvo ? 1 : 0;
+      } else {
+        byDept.set(deptKey, { hospital, dept, patients, note, mvoCount: mvo ? 1 : 0 });
+      }
+    }
   }
-  return map;
+  return { byMvo: [...byMvo.entries()], byDept: [...byDept.entries()] };
 }
 
 // Aggressive normalization so minor formatting differences (extra spaces,
@@ -3137,6 +3204,54 @@ function _getPatientsForSub(sub) {
   return entry ? entry.patients : 0;
 }
 
+function _getPatientsForDept(depName) {
+  if (!patientsDeptData || !depName) return 0;
+  const hospital = getAnalyticsHospital(currentHospitalId);
+  const hospitalName = hospital ? hospital.name : "";
+  const exact = patientsDeptData.get(_patientsDeptKey(hospitalName, depName));
+  if (exact) return exact.patients || 0;
+
+  // Fallback for sheets where the hospital column is blank or written
+  // differently: use a unique department-name match.
+  const depKey = _normalizeMvoName(depName);
+  let found = null;
+  let matches = 0;
+  for (const entry of patientsDeptData.values()) {
+    if (_normalizeMvoName(entry.dept) === depKey) {
+      found = entry;
+      matches++;
+    }
+  }
+  return matches === 1 && found ? (found.patients || 0) : 0;
+}
+
+function _getDepartmentPatientCost(dep) {
+  if (!dep) return null;
+  const patients = _getPatientsForDept(dep.name);
+  const expense = (dep.totals && dep.totals.es) || 0;
+  if (patients <= 0 || expense <= 0) return null;
+  return { patients, expense, cost: expense / patients };
+}
+
+function _getDepartmentPatientCostForSub(sub) {
+  if (!sub || !sub.path || !sub.path.length || !analyticsData || !currentMonthKey) return null;
+  const deptIdx = sub.path[0];
+  const depName = analyticsData.paths[deptIdx];
+  const m = analyticsData.months[currentMonthKey];
+  if (!depName || !m) return null;
+
+  const totals = { es: 0 };
+  for (const d of m.directions || []) {
+    for (const g of d.groups || []) {
+      for (const s of g.subdivisions || []) {
+        if (s._hidden || !s.path || s.path[0] !== deptIdx) continue;
+        totals.es += (s.totals && s.totals.es) || 0;
+      }
+    }
+  }
+  return _getDepartmentPatientCost({ name: depName, totals });
+}
+
 // If the sub-detail screen is currently open, re-render it so the new card
 // appears as soon as patients data lands.
 function _refreshSubDetailIfOpen() {
@@ -3144,6 +3259,17 @@ function _refreshSubDetailIfOpen() {
     const screen = document.getElementById("sub-detail-screen");
     if (screen && screen.style.display !== "none" && typeof openSubDetail === "function" && _currentSubId) {
       openSubDetail(_currentSubId);
+    }
+  } catch (_) {}
+}
+
+function _refreshPatientsUi() {
+  _refreshSubDetailIfOpen();
+  try {
+    const screen = document.getElementById("analytics-screen");
+    if (screen && screen.style.display !== "none" && analyticsData && currentMonthKey) {
+      const m = analyticsData.months[currentMonthKey];
+      if (m) renderHierarchy(m);
     }
   } catch (_) {}
 }
@@ -5196,6 +5322,18 @@ function renderDepartmentNode(dep, depId, groupId) {
   const period = analyticsData.months[currentMonthKey].period;
   const dos = daysOfSupply(dep.totals, period);
   const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
+  const patientCost = _getDepartmentPatientCost(dep);
+  const patientSub = patientCost
+    ? `${patientCost.patients} пацієнтів · ${fmtMoney(patientCost.cost)} / пац.`
+    : `${dosLabel} запасу`;
+  const patientCard = patientCost ? `
+        <div class="an-dept-patient">
+          <div>
+            <div class="an-dept-patient-title">Вартість лікування одного пацієнта</div>
+            <div class="an-dept-patient-sub">${patientCost.patients} пацієнтів · ${fmtMoney(patientCost.expense)} видатку</div>
+          </div>
+          <div class="an-dept-patient-val">${fmtMoney(patientCost.cost)}</div>
+        </div>` : "";
   return `
     <div class="an-node department">
       <div class="an-node-head" onclick="toggleAnNode('${depId}')">
@@ -5203,10 +5341,11 @@ function renderDepartmentNode(dep, depId, groupId) {
         <div class="an-node-title">${esc(dep.name)}<div class="an-node-path">${dep.subs.length} МВО · ${dep.itemsCount} поз.</div></div>
         <div class="an-node-sum">
           ${fmtMoney(dep.totals.cs || 0)}
-          <div class="an-node-sum-sub">${dosLabel} запасу</div>
+          <div class="an-node-sum-sub">${patientSub}</div>
         </div>
       </div>
       <div class="an-node-body" id="body-${depId}">
+        ${patientCard}
         ${dep.subs.map(({ sub, si }) => renderSubdivisionShell(sub, `${groupId}-s${si}`)).join("")}
       </div>
     </div>
@@ -5433,6 +5572,11 @@ function renderSubDetail() {
   if (_patients > 0 && _es > 0) {
     const _costPerPatient = _es / _patients;
     kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💊 На пацієнта</div><div class="an-kpi-val">${fmtMoney(_costPerPatient)}</div><div class="an-kpi-sub">${_patients} пацієнтів · ${fmtMoney(_es)} видатку</div></div>`);
+  } else {
+    const _deptPatientCost = _getDepartmentPatientCostForSub(sub);
+    if (_deptPatientCost) {
+      kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💊 На пацієнта у відділенні</div><div class="an-kpi-val">${fmtMoney(_deptPatientCost.cost)}</div><div class="an-kpi-sub">${_deptPatientCost.patients} пацієнтів · ${fmtMoney(_deptPatientCost.expense)} видатку відділення</div></div>`);
+    }
   }
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${buckets.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.dead, "cs"))}</div></div>`);
   document.getElementById("sub-detail-kpis").innerHTML = kpis.join("");
