@@ -840,6 +840,46 @@
     appearance: none; -webkit-appearance: none;
   }
 
+  /* period range selector (replaces simple month tabs) */
+  .an-period-bar {
+    padding: 4px 0 10px; margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .an-period-row { display: flex; align-items: center; gap: 8px; }
+  .an-period-lbl {
+    font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    color: var(--muted); text-transform: uppercase;
+    width: 86px; flex-shrink: 0;
+  }
+  .an-period-lbl.cmp { color: #38bdf8; }
+  .an-period-select {
+    flex: 1; min-width: 0;
+    padding: 7px 10px; border-radius: 10px;
+    border: 1px solid var(--accent); background: #2a3050;
+    color: #fff; font-size: 13px; font-weight: 600;
+    cursor: pointer; appearance: none; -webkit-appearance: none;
+    text-align: center;
+  }
+  .an-period-select.cmp { border-color: #2a4a66; background: var(--card); color: var(--text); }
+  .an-period-select.cmp-empty { color: var(--muted); font-weight: 600; }
+  .an-period-sep { color: var(--muted); font-size: 13px; flex-shrink: 0; }
+  .an-period-clear {
+    flex-shrink: 0; border: 1px solid var(--border); background: none;
+    color: var(--muted); border-radius: 10px; padding: 7px 9px;
+    font-size: 13px; cursor: pointer; line-height: 1;
+  }
+  .an-period-clear:hover { color: var(--danger); border-color: var(--danger); }
+  .an-period-hint {
+    font-size: 11px; color: var(--muted); margin-top: -2px;
+  }
+  .an-period-chip {
+    display: inline-block; flex-shrink: 0;
+    padding: 6px 12px; border-radius: 20px;
+    border: 1px solid var(--accent); background: rgba(79,142,247,.15);
+    color: var(--accent); font-size: 12px; font-weight: 700; white-space: nowrap;
+  }
+
   /* overview KPI grid */
   .an-kpi-grid {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -2919,8 +2959,162 @@ const ANALYTICS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours silent refresh
 
 let analyticsData = null;
 let currentMonthKey = null;
-let compareMonthKey = null;  // for month-vs-month comparison
+let compareMonthKey = null;  // legacy single-month compare key (kept in sync below)
 let analyticsView = "all";
+
+// ─── Period range selection ────────────────────────────────────────────────
+// The ACTIVE period is [rangeStartKey .. rangeEndKey] (real "YYYY-MM" keys).
+// When the two are equal the UI behaves exactly like a single month. We always
+// keep `currentMonthKey === rangeEndKey` so the timeline helpers (dead-stock
+// days, anomalies, "months before") and every `Object.keys(months).sort()`
+// keep operating on real calendar keys — they never see the synthetic aggregate.
+// The COMPARISON period is [cmpStartKey .. cmpEndKey] (null = no comparison).
+let rangeStartKey = null;
+let rangeEndKey   = null;
+let cmpStartKey   = null;
+let cmpEndKey     = null;
+
+// Synthesized aggregate months are memoised by "from..to" so repeated reads
+// during one render return the SAME object instance (identity is relied on for
+// direction-index mapping in the hierarchy). Cleared whenever data reloads.
+let _aggCache = {};
+
+function _allMonthKeys() {
+  return (analyticsData && analyticsData.months) ? Object.keys(analyticsData.months).sort() : [];
+}
+function _keysInRange(a, b) {
+  if (!a || !b) return [];
+  const lo = a <= b ? a : b, hi = a <= b ? b : a;
+  return _allMonthKeys().filter(k => k >= lo && k <= hi);
+}
+function _isRangeActive() { return rangeStartKey && rangeEndKey && rangeStartKey !== rangeEndKey; }
+
+// Merge the 8 movement fields for ONE logical node across the range:
+//   opening (oq/os) = value in the FIRST month of the range (0 if node absent)
+//   closing (cq/cs) = value in the LAST  month of the range (0 if node absent)
+//   receipt (rq/rs) + expense (eq/es) = SUM across every month in the range
+function _blankT() { return { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 }; }
+
+// Build a synthetic month object (same schema as a real month) spanning the
+// range, merging directions→groups→subdivisions→items by identity
+// (direction by name, group by name, subdivision by path, item by name index).
+function _buildAggregateMonth(fromKey, toKey) {
+  const keys = _keysInRange(fromKey, toKey);
+  if (keys.length === 0) return null;
+  if (keys.length === 1) return analyticsData.months[keys[0]];
+  const firstKey = keys[0], lastKey = keys[keys.length - 1];
+
+  const dirMap = new Map();
+  const ensureDir = (name) => {
+    if (!dirMap.has(name)) dirMap.set(name, { name, totals: _blankT(), groups: new Map() });
+    return dirMap.get(name);
+  };
+  const ensureGroup = (dir, name) => {
+    if (!dir.groups.has(name)) dir.groups.set(name, { name, totals: _blankT(), subs: new Map() });
+    return dir.groups.get(name);
+  };
+  const ensureSub = (grp, sub) => {
+    const pk = (sub.path || []).join("|");
+    if (!grp.subs.has(pk)) grp.subs.set(pk, {
+      path: (sub.path || []).slice(), totals: _blankT(), items: new Map(),
+      _hidden: false, _hideReason: null, last_writeoff: null,
+    });
+    return grp.subs.get(pk);
+  };
+  const ensureItem = (subAgg, it) => {
+    if (!subAgg.items.has(it.n)) subAgg.items.set(it.n, Object.assign(_blankT(), { n: it.n, s: it.s || null, lw: null }));
+    return subAgg.items.get(it.n);
+  };
+  const accRE = (dst, t) => { dst.rq += t.rq||0; dst.rs += t.rs||0; dst.eq += t.eq||0; dst.es += t.es||0; };
+  const setOpen  = (dst, t) => { dst.oq = t.oq||0; dst.os = t.os||0; };
+  const setClose = (dst, t) => { dst.cq = t.cq||0; dst.cs = t.cs||0; };
+
+  for (const k of keys) {
+    const isFirst = k === firstKey, isLast = k === lastKey;
+    const month = analyticsData.months[k];
+    if (!month) continue;
+    for (const d of month.directions || []) {
+      const dA = ensureDir(d.name);
+      accRE(dA.totals, d.totals || {});
+      if (isFirst) setOpen(dA.totals, d.totals || {});
+      if (isLast)  setClose(dA.totals, d.totals || {});
+      for (const g of d.groups || []) {
+        const gA = ensureGroup(dA, g.name);
+        accRE(gA.totals, g.totals || {});
+        if (isFirst) setOpen(gA.totals, g.totals || {});
+        if (isLast)  setClose(gA.totals, g.totals || {});
+        for (const sub of g.subdivisions || []) {
+          const sA = ensureSub(gA, sub);
+          if (sub._hidden) { sA._hidden = true; sA._hideReason = sA._hideReason || sub._hideReason || null; }
+          if (sub.last_writeoff && (!sA.last_writeoff || sub.last_writeoff > sA.last_writeoff)) sA.last_writeoff = sub.last_writeoff;
+          const st = sub.totals || {};
+          accRE(sA.totals, st);
+          if (isFirst) setOpen(sA.totals, st);
+          if (isLast)  setClose(sA.totals, st);
+          for (const it of sub.items || []) {
+            const iA = ensureItem(sA, it);
+            iA.rq += it.rq||0; iA.rs += it.rs||0; iA.eq += it.eq||0; iA.es += it.es||0;
+            if (isFirst) { iA.oq = it.oq||0; iA.os = it.os||0; }
+            if (isLast)  { iA.cq = it.cq||0; iA.cs = it.cs||0; }
+            if (it.lw && (!iA.lw || it.lw > iA.lw)) iA.lw = it.lw;
+          }
+        }
+      }
+    }
+  }
+
+  const org = _blankT();
+  const directions = [];
+  for (const dA of dirMap.values()) {
+    const groups = [];
+    for (const gA of dA.groups.values()) {
+      const subdivisions = [];
+      for (const sA of gA.subs.values()) {
+        subdivisions.push({
+          path: sA.path, totals: sA.totals, items: Array.from(sA.items.values()),
+          _hidden: sA._hidden, _hideReason: sA._hideReason, last_writeoff: sA.last_writeoff,
+        });
+      }
+      groups.push({ name: gA.name, totals: gA.totals, subdivisions });
+    }
+    for (const k in org) org[k] += dA.totals[k] || 0;
+    directions.push({ name: dA.name, totals: dA.totals, groups });
+  }
+
+  const fromP = (analyticsData.months[firstKey].period || {}).from || null;
+  const toP   = (analyticsData.months[lastKey].period  || {}).to   || null;
+  return {
+    period: { from: fromP, to: toP },
+    org_totals: org,
+    directions,
+    _isAggregate: true, _rangeFrom: firstKey, _rangeTo: lastKey,
+  };
+}
+
+function _getAggregate(fromKey, toKey) {
+  const keys = _keysInRange(fromKey, toKey);
+  if (keys.length === 0) return null;
+  const ck = keys[0] + ".." + keys[keys.length - 1];
+  if (!_aggCache[ck]) _aggCache[ck] = _buildAggregateMonth(fromKey, toKey);
+  return _aggCache[ck];
+}
+
+// MO() — the month object to RENDER (aggregate in range mode, else real month).
+// CMP() — the comparison month object (aggregate / real / null).
+function MO() {
+  if (_isRangeActive()) return _getAggregate(rangeStartKey, rangeEndKey);
+  return (analyticsData && analyticsData.months) ? analyticsData.months[currentMonthKey] : null;
+}
+function CMP() {
+  if (!cmpStartKey || !cmpEndKey) return null;
+  if (cmpStartKey === cmpEndKey) return analyticsData.months[cmpStartKey] || null;
+  return _getAggregate(cmpStartKey, cmpEndKey);
+}
+
+// String key identifying the active period (for export filenames etc.).
+function _activePeriodKey() {
+  return _isRangeActive() ? `${rangeStartKey}_${rangeEndKey}` : (currentMonthKey || "");
+}
 
 // Patients-per-MVO data, loaded from a separate Google Sheet.
 // Shape: Map<mvoNameNormalized, { hospital, dept, patients, note }>
@@ -2974,6 +3168,9 @@ function backToHospitalPicker() {
   analyticsData = null;
   currentMonthKey = null;
   compareMonthKey = null;
+  rangeStartKey = null; rangeEndKey = null;
+  cmpStartKey = null; cmpEndKey = null;
+  _aggCache = {};
   _expenseByItemPerMonth = null;
   openHospitalPicker();
 }
@@ -2987,6 +3184,9 @@ function selectHospital(id) {
     analyticsData = null;
     currentMonthKey = null;
     compareMonthKey = null;
+    rangeStartKey = null; rangeEndKey = null;
+    cmpStartKey = null; cmpEndKey = null;
+    _aggCache = {};
     _expenseByItemPerMonth = null;
   }
   currentHospitalId = id;
@@ -3399,7 +3599,7 @@ function _getDepartmentPatientCostForSub(sub) {
   if (!sub || !sub.path || !sub.path.length || !analyticsData || !currentMonthKey) return null;
   const deptIdx = sub.path[0];
   const depName = analyticsData.paths[deptIdx];
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (!depName || !m) return null;
 
   const totals = { es: 0 };
@@ -3430,7 +3630,7 @@ function _refreshPatientsUi() {
   try {
     const screen = document.getElementById("analytics-screen");
     if (screen && screen.style.display !== "none" && analyticsData && currentMonthKey) {
-      const m = analyticsData.months[currentMonthKey];
+      const m = MO();
       if (m) renderHierarchy(m);
     }
   } catch (_) {}
@@ -4301,6 +4501,7 @@ async function fetchAnalytics({ silent }) {
 // ── UI Init after data loaded ───────────────────────────────────────────────
 function initAnalyticsUI() {
   if (!analyticsData || !analyticsData.months) return;
+  _aggCache = {}; // fresh data → drop any memoised aggregates
   const monthKeys = Object.keys(analyticsData.months).sort();
   if (monthKeys.length === 0) {
     document.getElementById("analytics-content").innerHTML =
@@ -4308,13 +4509,20 @@ function initAnalyticsUI() {
     return;
   }
 
-  // Preserve month selection on refresh; otherwise latest
-  if (!currentMonthKey || !monthKeys.includes(currentMonthKey)) {
-    currentMonthKey = monthKeys[monthKeys.length - 1];
+  // Active period — preserve a valid selection across refreshes, else default
+  // to the latest single month.
+  if (!rangeEndKey || !monthKeys.includes(rangeEndKey)) rangeEndKey = monthKeys[monthKeys.length - 1];
+  if (!rangeStartKey || !monthKeys.includes(rangeStartKey)) rangeStartKey = rangeEndKey;
+  if (rangeStartKey > rangeEndKey) rangeStartKey = rangeEndKey;
+  currentMonthKey = rangeEndKey;
+
+  // Comparison — preserve if still valid, else default to the previous month.
+  if (cmpStartKey && !monthKeys.includes(cmpStartKey)) cmpStartKey = null;
+  if (cmpEndKey && !monthKeys.includes(cmpEndKey)) cmpEndKey = null;
+  if ((!cmpStartKey || !cmpEndKey) && monthKeys.length >= 2) {
+    cmpStartKey = cmpEndKey = monthKeys[monthKeys.length - 2];
   }
-  if (!compareMonthKey || !monthKeys.includes(compareMonthKey)) {
-    compareMonthKey = monthKeys.length >= 2 ? monthKeys[monthKeys.length - 2] : null;
-  }
+  compareMonthKey = (cmpStartKey && cmpStartKey === cmpEndKey) ? cmpStartKey : null;
 
   renderMonthTabs(monthKeys);
   renderUpdatedInfo();
@@ -4322,24 +4530,84 @@ function initAnalyticsUI() {
   renderAnalyticsMonth();
 }
 
+const _MONTHS_UK = { "01":"Січень","02":"Лютий","03":"Березень","04":"Квітень","05":"Травень","06":"Червень","07":"Липень","08":"Серпень","09":"Вересень","10":"Жовтень","11":"Листопад","12":"Грудень" };
+function _monthLabel(k) { return _MONTHS_UK[String(k).slice(5, 7)] || k; }
+function _periodLabel(a, b) {
+  if (!a || !b) return "—";
+  return a === b ? _monthLabel(a) : `${_monthLabel(a)} – ${_monthLabel(b)}`;
+}
+
+// Period range selector (variant B): two dropdowns "З … По" for the active
+// period and another pair for the comparison period.
 function renderMonthTabs(monthKeys) {
   const tabsEl = document.getElementById("an-month-tabs");
-  const MONTHS_UK = { "01":"Січень","02":"Лютий","03":"Березень","04":"Квітень","05":"Травень","06":"Червень","07":"Липень","08":"Серпень","09":"Вересень","10":"Жовтень","11":"Листопад","12":"Грудень" };
-  const tabs = monthKeys.map(k => {
-    const mm = k.slice(5, 7);
-    const label = MONTHS_UK[mm] || k;
-    const active = k === currentMonthKey ? " active" : "";
-    return `<button class="an-month-tab${active}" onclick="selectAnalyticsMonth('${k}')">${label}</button>`;
-  }).join("");
-  // Compare selector
-  const compareOptions = ['<option value="">Порівняти з...</option>']
-    .concat(monthKeys.filter(k => k !== currentMonthKey).map(k => {
-      const label = (MONTHS_UK[k.slice(5,7)] || k);
-      const sel = k === compareMonthKey ? " selected" : "";
-      return `<option value="${k}"${sel}>↔ ${label}</option>`;
-    })).join("");
-  tabsEl.innerHTML = tabs +
-    `<select class="an-compare-select" onchange="setCompareMonth(this.value)">${compareOptions}</select>`;
+  if (!tabsEl) return;
+  tabsEl.className = "an-period-bar";
+
+  const opts = (selected) => monthKeys.map(k =>
+    `<option value="${k}"${k === selected ? " selected" : ""}>${_monthLabel(k)}</option>`).join("");
+  const cmpOn = !!(cmpStartKey && cmpEndKey);
+  const cmpOpts = (selected) =>
+    `<option value="">—</option>` + monthKeys.map(k =>
+      `<option value="${k}"${k === selected ? " selected" : ""}>${_monthLabel(k)}</option>`).join("");
+
+  const rangeOn = _isRangeActive();
+  const hint = rangeOn
+    ? `Період: <b>${_periodLabel(rangeStartKey, rangeEndKey)}</b> — залишок на початок ${_monthLabel(rangeStartKey)}, на кінець ${_monthLabel(rangeEndKey)}; прихід і видаток підсумовані.`
+    : `Один місяць. Щоб увімкнути діапазон — виберіть різні «З» і «По».`;
+
+  tabsEl.innerHTML = `
+    <div class="an-period-row">
+      <span class="an-period-lbl">📅 Період</span>
+      <select class="an-period-select" onchange="setPeriodStart(this.value)">${opts(rangeStartKey)}</select>
+      <span class="an-period-sep">–</span>
+      <select class="an-period-select" onchange="setPeriodEnd(this.value)">${opts(rangeEndKey)}</select>
+    </div>
+    <div class="an-period-row">
+      <span class="an-period-lbl cmp">↔ Порівняти</span>
+      <select class="an-period-select cmp${cmpOn ? "" : " cmp-empty"}" onchange="setComparePeriodStart(this.value)">${cmpOpts(cmpStartKey)}</select>
+      <span class="an-period-sep">–</span>
+      <select class="an-period-select cmp${cmpOn ? "" : " cmp-empty"}" onchange="setComparePeriodEnd(this.value)">${cmpOpts(cmpEndKey)}</select>
+      ${cmpOn ? `<button class="an-period-clear" title="Прибрати порівняння" onclick="clearComparePeriod()">✕</button>` : ""}
+    </div>
+    <div class="an-period-hint">${hint}</div>
+  `;
+}
+
+function _clampActivePeriod() {
+  if (rangeStartKey && rangeEndKey && rangeStartKey > rangeEndKey) {
+    const t = rangeStartKey; rangeStartKey = rangeEndKey; rangeEndKey = t;
+  }
+  currentMonthKey = rangeEndKey;
+}
+function _clampComparePeriod() {
+  if (cmpStartKey && cmpEndKey && cmpStartKey > cmpEndKey) {
+    const t = cmpStartKey; cmpStartKey = cmpEndKey; cmpEndKey = t;
+  }
+  compareMonthKey = (cmpStartKey && cmpStartKey === cmpEndKey) ? cmpStartKey : null;
+}
+function _afterPeriodChange() {
+  const monthKeys = _allMonthKeys();
+  renderMonthTabs(monthKeys);
+  renderWarnings();
+  renderAnalyticsMonth();
+}
+
+function setPeriodStart(v) { rangeStartKey = v; _clampActivePeriod(); _afterPeriodChange(); }
+function setPeriodEnd(v)   { rangeEndKey = v;   _clampActivePeriod(); _afterPeriodChange(); }
+function setComparePeriodStart(v) {
+  if (!v) { clearComparePeriod(); return; }
+  cmpStartKey = v; if (!cmpEndKey) cmpEndKey = v;
+  _clampComparePeriod(); _afterPeriodChange();
+}
+function setComparePeriodEnd(v) {
+  if (!v) { clearComparePeriod(); return; }
+  cmpEndKey = v; if (!cmpStartKey) cmpStartKey = v;
+  _clampComparePeriod(); _afterPeriodChange();
+}
+function clearComparePeriod() {
+  cmpStartKey = null; cmpEndKey = null; compareMonthKey = null;
+  _afterPeriodChange();
 }
 
 function renderUpdatedInfo() {
@@ -4358,14 +4626,14 @@ function renderUpdatedInfo() {
 function renderWarnings() {
   const el = document.getElementById("an-warnings");
   const warnings = [];
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (m) {
     // Check for "(Без напряму)" direction — bookkeeping oversight worth flagging
     const noDir = m.directions.find(d => d.name === "(Без напряму)");
     if (noDir) {
       const sum = (noDir.totals && noDir.totals.os) || 0;
       if (sum > 0) {
-        warnings.push(`У цьому місяці виявлено позиції без проставленого напряму діяльності. Загальна вартість: ${fmtMoney(sum)}.`);
+        warnings.push(`У цьому періоді виявлено позиції без проставленого напряму діяльності. Загальна вартість: ${fmtMoney(sum)}.`);
       }
     }
   }
@@ -4374,23 +4642,27 @@ function renderWarnings() {
   ).join("");
 }
 
+// Legacy single-month entry point (kept for any external callers): collapse the
+// active period to a single month.
 function selectAnalyticsMonth(monthKey) {
-  currentMonthKey = monthKey;
-  // If compare equals current, drop it
-  if (compareMonthKey === currentMonthKey) compareMonthKey = null;
-  initAnalyticsUI();
+  rangeStartKey = rangeEndKey = monthKey;
+  _clampActivePeriod();
+  if (cmpStartKey === currentMonthKey && cmpEndKey === currentMonthKey) clearComparePeriod();
+  else _afterPeriodChange();
 }
 
 function setCompareMonth(monthKey) {
-  compareMonthKey = monthKey || null;
-  renderAnalyticsMonth();
+  if (!monthKey) { clearComparePeriod(); return; }
+  cmpStartKey = cmpEndKey = monthKey;
+  _clampComparePeriod();
+  _afterPeriodChange();
 }
 
-// ── Main renderer for selected month ────────────────────────────────────────
+// ── Main renderer for selected period ───────────────────────────────────────
 function renderAnalyticsMonth() {
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (!m) return;
-  const mCompare = compareMonthKey ? analyticsData.months[compareMonthKey] : null;
+  const mCompare = CMP();
 
   renderKPIs(m, mCompare);
   renderFlow(m, mCompare);
@@ -4471,7 +4743,7 @@ function setAnalyticsView(view, btn) {
     btn.parentElement.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   }
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (m) {
     renderAnalyticsSummary(m);
     // Defensive: ensure the hidden-MVO audit block stays visible regardless
@@ -4535,7 +4807,7 @@ function setRankingView(view, btn) {
     btn.parentElement.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   }
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (m) renderRankings(m);
 }
 
@@ -4617,12 +4889,12 @@ function renderRankings(m) {
     return;
   }
 
-  // growth / decline — need a comparison month
-  if (!compareMonthKey || !analyticsData.months[compareMonthKey]) {
-    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Оберіть місяць для порівняння</div><div class="empty-sub">У селекторі місяців вгорі виберіть місяць, з яким порівнювати поточний</div></div>`;
+  // growth / decline — need a comparison period
+  const mPrev = CMP();
+  if (!mPrev) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Оберіть період для порівняння</div><div class="empty-sub">У селекторі вгорі задайте період «Порівняти», з яким зіставляти поточний</div></div>`;
     return;
   }
-  const mPrev = analyticsData.months[compareMonthKey];
   const prevMap = _buildSubMapByPath(mPrev);
   const withDeltas = [];
   for (const s of subs) {
@@ -4727,7 +4999,7 @@ function setItemAnalyticsView(view, btn) {
     btn.parentElement.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
   }
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (m) renderItemAnalytics(m);
 }
 
@@ -4907,11 +5179,11 @@ function _renderTop30View(m, containerEl) {
 
 // ── Item growth / decline ──────────────────────────────────────────────────
 function _renderItemGrowthView(m, containerEl, kind) {
-  if (!compareMonthKey || !analyticsData.months[compareMonthKey]) {
-    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Оберіть місяць для порівняння</div><div class="empty-sub">У селекторі місяців вгорі виберіть місяць, з яким порівнювати поточний</div></div>`;
+  const mPrev = CMP();
+  if (!mPrev) {
+    containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Оберіть період для порівняння</div><div class="empty-sub">У селекторі вгорі задайте період «Порівняти», з яким зіставляти поточний</div></div>`;
     return;
   }
-  const mPrev = analyticsData.months[compareMonthKey];
   const prevMap = _buildItemMapByKey(mPrev);
   const all = _collectAllItems(m);
   const withDeltas = [];
@@ -4983,6 +5255,15 @@ function _renderItemDeltaRow(x, rank, kind) {
 // current one). If current expense ≥ 3× the average — flag it. We require
 // at least 2 historical months to call something an "average" reliably.
 function _renderAnomalyView(m, containerEl) {
+  // Anomaly detection compares one month's expense against the average of prior
+  // single months, so in range mode we evaluate the LAST month of the period
+  // (currentMonthKey === rangeEndKey) rather than the summed aggregate, which
+  // would otherwise be compared against single-month averages and over-flag.
+  let anomalyNote = "";
+  if (_isRangeActive()) {
+    const anchor = analyticsData.months[currentMonthKey];
+    if (anchor) { m = anchor; anomalyNote = `Аномалії рахуються для останнього місяця періоду (${_monthLabel(currentMonthKey)}).`; }
+  }
   const priorKeys = _monthsBefore(currentMonthKey).slice(-ANOMALY_HISTORY_MONTHS);
   if (priorKeys.length < 2) {
     containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📅</div><div class="empty-title">Потрібно більше історії</div><div class="empty-sub">Для виявлення аномалій потрібно мінімум 2 попередніх місяці. Зараз доступно: ${priorKeys.length}</div></div>`;
@@ -5017,7 +5298,8 @@ function _renderAnomalyView(m, containerEl) {
   anomalies.sort((a, b) => b.ratio - a.ratio);
   const top = anomalies.slice(0, ITEM_ANALYTICS_LIMIT);
   const totalSum = anomalies.reduce((s, a) => s + a.curEs, 0);
-  let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
+  let html = (anomalyNote ? `<div style="font-size:11px;color:#38bdf8;margin-bottom:6px;">ℹ️ ${esc(anomalyNote)}</div>` : "") +
+    `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">
       <b>${anomalies.length}</b> позицій з видатком у ${ANOMALY_THRESHOLD}× або більше від середнього (за ${priorKeys.length} попередніх ${priorKeys.length === 1 ? "місяць" : "місяців"}). Сума: ${fmtMoney(totalSum)}
     </div>`;
   html += top.map((a, i) => _renderAnomalyRow(a, i + 1)).join("");
@@ -5320,7 +5602,7 @@ function renderHiddenMvoSection(m) {
   // the unfiltered audit list of what got excluded from analytics).
   // We read from the ORIGINAL month (not the filtered tree _anTree) so a
   // search like "офтальмологія" doesn't make the audit list empty.
-  const full = analyticsData.months[currentMonthKey];
+  const full = MO();
   if (!full) { sect.style.display = "none"; return; }
 
   const entries = [];
@@ -5481,7 +5763,7 @@ function renderGroupNode(g, id) {
 // Each МВО is still rendered via renderSubdivisionShell with its original
 // `d{di}-g{gi}-s{si}` ID so detail navigation / search / lookup keep working.
 function renderDepartmentNode(dep, depId, groupId) {
-  const period = analyticsData.months[currentMonthKey].period;
+  const period = MO().period;
   const dos = daysOfSupply(dep.totals, period);
   const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
   const patientCost = _getDepartmentPatientCost(dep);
@@ -5522,7 +5804,7 @@ function renderSubdivisionShell(sub, id) {
   const leaf = sub.path.length > 0
     ? analyticsData.paths[sub.path[sub.path.length - 1]]
     : "(без назви)";
-  const period = analyticsData.months[currentMonthKey].period;
+  const period = MO().period;
   const dos = daysOfSupply(t, period);
   const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
   return `
@@ -5576,20 +5858,23 @@ function closeSubDetail() {
 // МВО by path in the newly-selected month so the screen stays on the same
 // МВО. If that МВО doesn't exist in the target month (e.g. department was
 // reorganized) we show a friendly notice with a "go back" button.
+// Switch month inside the subdivision detail view. Collapses the active period
+// to that single month, re-resolves the current МВО by path, and keeps the main
+// screen state in sync. If the МВО doesn't exist in the target month we show a
+// friendly notice.
 function selectSubDetailMonth(monthKey) {
-  if (!monthKey || monthKey === currentMonthKey) return;
-  currentMonthKey = monthKey;
-  // Drop a stale compare selection if it now equals current
-  if (compareMonthKey === currentMonthKey) compareMonthKey = null;
-  // Re-resolve current МВО in the new month
-  const m = analyticsData.months[currentMonthKey];
+  if (!monthKey) return;
+  rangeStartKey = rangeEndKey = monthKey;
+  _clampActivePeriod();
+  if (cmpStartKey === currentMonthKey && cmpEndKey === currentMonthKey) clearComparePeriod();
+  else _afterPeriodChange(); // refresh the (hidden) main analytics screen too
+  const m = MO();
   if (!m) { renderSubDetail(); return; }
   const matched = _findSubdivisionByPath(m, _currentSubPath);
   if (matched) {
     _currentSubdivision = matched.sub;
     _currentSubId = matched.id;
   } else {
-    // Mark as missing — renderSubDetail will show the empty-state notice
     _currentSubdivision = null;
     _currentSubId = null;
   }
@@ -5628,11 +5913,13 @@ function renderSubDetailMonthTabs() {
   if (!el || !analyticsData || !analyticsData.months) return;
   const monthKeys = Object.keys(analyticsData.months).sort();
   if (monthKeys.length <= 1) { el.innerHTML = ""; return; }
-  const MONTHS_UK = { "01":"Січень","02":"Лютий","03":"Березень","04":"Квітень","05":"Травень","06":"Червень","07":"Липень","08":"Серпень","09":"Вересень","10":"Жовтень","11":"Листопад","12":"Грудень" };
-  el.innerHTML = monthKeys.map(k => {
-    const mm = k.slice(5, 7);
-    const label = MONTHS_UK[mm] || k;
-    const active = k === currentMonthKey ? " active" : "";
+  const rangeOn = _isRangeActive();
+  const chip = rangeOn
+    ? `<span class="an-period-chip">Період: ${_periodLabel(rangeStartKey, rangeEndKey)}</span>`
+    : "";
+  el.innerHTML = chip + monthKeys.map(k => {
+    const label = _monthLabel(k);
+    const active = (!rangeOn && k === currentMonthKey) ? " active" : "";
     return `<button class="an-month-tab${active}" onclick="selectSubDetailMonth('${k}')">${label}</button>`;
   }).join("");
 }
@@ -5642,7 +5929,7 @@ function renderSubDetail() {
   const sub = _currentSubdivision;
   if (!sub) {
     // МВО not found in this month (e.g. reorganized, renamed)
-    const m = analyticsData.months[currentMonthKey];
+    const m = MO();
     const leaf = (_currentSubPath && _currentSubPath.length)
       ? analyticsData.paths[_currentSubPath[_currentSubPath.length - 1]]
       : "цей підрозділ";
@@ -5659,7 +5946,7 @@ function renderSubDetail() {
     document.getElementById("sub-items-container").innerHTML = "";
     return;
   }
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   const period = m.period;
   const t = sub.totals || {};
 
@@ -5796,7 +6083,7 @@ function setSubFilter(key) {
 function renderSubItems() {
   const sub = _currentSubdivision;
   if (!sub) return;
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   const period = m.period;
   const buckets = _classifySubItems(sub, m);
 
@@ -5879,7 +6166,7 @@ function exportDepartmentsToXlsx() {
     alert("Дані ще не завантажені.");
     return;
   }
-  const m = analyticsData.months[currentMonthKey];
+  const m = MO();
   if (!m) { alert("Не знайдено даних для обраного місяця."); return; }
 
   // Aggregate subdivisions by department (path[0]) — mirrors the UI grouping.
@@ -5996,13 +6283,13 @@ function exportDepartmentsToXlsx() {
   const periodLabel = (period.from && period.to)
     ? `${_fmtUkDate(period.from)}—${_fmtUkDate(period.to)}`
     : currentMonthKey;
-  const sheetName = _safeSheetName(currentMonthKey || "Аналітика");
+  const sheetName = _safeSheetName(_activePeriodKey() || "Аналітика");
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, sheetName);
 
-  // File name e.g. "Пантелеймон_Відділення_2026-04.xlsx"
-  const fname = `${_safeFileSegment(hospName)}_Відділення_${currentMonthKey}.xlsx`;
+  // File name e.g. "Пантелеймон_Відділення_2026-04.xlsx" (or "..._2026-01_2026-02" for a range)
+  const fname = `${_safeFileSegment(hospName)}_Відділення_${_activePeriodKey()}.xlsx`;
   try {
     XLSX.writeFile(wb, fname);
   } catch (e) {
@@ -6035,11 +6322,11 @@ function onHierSearch(val) {
     if (!root) return;
     if (q.length < 2) {
       // Reset: render full hierarchy
-      renderHierarchy(analyticsData.months[currentMonthKey]);
+      renderHierarchy(MO());
       return;
     }
     // Render filtered: only directions whose any subdivision/group matches
-    const m = analyticsData.months[currentMonthKey];
+    const m = MO();
     const filtered = m.directions.map(d => {
       const groups = d.groups.map(g => {
         const subs = g.subdivisions.filter(sub => {
@@ -6082,7 +6369,7 @@ function _renderHierarchyTree(m, expandAll) {
     // Keep the hidden-MVO audit block visible even during search — it's a
     // sibling node and doesn't get filtered.
     if (analyticsData && currentMonthKey) {
-      renderHiddenMvoSection(analyticsData.months[currentMonthKey]);
+      renderHiddenMvoSection(MO());
     }
     return;
   }
@@ -6093,7 +6380,7 @@ function _renderHierarchyTree(m, expandAll) {
     return ((b.totals && b.totals.cs) || 0) - ((a.totals && a.totals.cs) || 0);
   });
   // Look up the original index of each direction for stable ID mapping
-  const fullM = analyticsData.months[currentMonthKey];
+  const fullM = MO();
   const dirIndexMap = new Map(fullM.directions.map((d, i) => [d.name, i]));
   root.innerHTML = dirs.map(d => renderDirectionNode(d, dirIndexMap.get(d.name) ?? 0)).join("");
 
@@ -6104,7 +6391,7 @@ function _renderHierarchyTree(m, expandAll) {
   }
   // Same defensive call for the multi-direction branch.
   if (analyticsData && currentMonthKey) {
-    renderHiddenMvoSection(analyticsData.months[currentMonthKey]);
+    renderHiddenMvoSection(MO());
   }
 }
 
@@ -6232,7 +6519,7 @@ function renderAnItemCard(entry) {
   const it = entry.item, sub = entry.sub, direction = entry.direction;
   const name = analyticsData.names[it.n] || "(?)";
   const pathStr = (entry.path || []).map(i => analyticsData.paths[i]).join(" › ");
-  const period = analyticsData.months[currentMonthKey].period;
+  const period = MO().period;
   const cat = entry.cat || classifyItem(it, sub, period);
   const itKey   = itemKey(it, sub);
   const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
