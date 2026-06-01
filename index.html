@@ -1067,6 +1067,25 @@
   .an-dept-patient-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
   .an-dept-patient-val { font-size: 14px; color: var(--green); font-weight: 800; text-align: right; white-space: nowrap; }
   .an-dept-patient-sub { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  /* per-department financial movement strip (poч → прихід → видаток → кінець) */
+  .an-dept-flow {
+    margin: 0 0 8px 22px; padding: 8px 4px;
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: 8px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  }
+  .an-dept-flow-cell { text-align: center; padding: 0 2px; min-width: 0; }
+  .an-dept-flow-lbl { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+  .an-dept-flow-val { font-size: 12px; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .an-dept-flow-val.open  { color: var(--text); }
+  .an-dept-flow-val.in    { color: var(--green); }
+  .an-dept-flow-val.out   { color: var(--warn); }
+  .an-dept-flow-val.close { color: var(--accent); }
+  .an-dept-flow-qty { font-size: 9px; color: var(--muted); margin-top: 1px; white-space: nowrap; }
+  .an-dept-flow-period {
+    grid-column: 1 / -1; text-align: center; font-size: 10px; color: var(--muted);
+    margin-bottom: 2px; padding-bottom: 4px; border-bottom: 1px solid rgba(37,43,68,.5);
+  }
   .an-node.subdivision { background: var(--card2); }
   .an-node.subdivision .an-node-head { padding-left: 30px; }
   .an-node.subdivision .an-node-head .an-node-title { font-size: 12px; color: var(--text); font-weight: 500; }
@@ -5778,6 +5797,7 @@ function renderDepartmentNode(dep, depId, groupId) {
           </div>
           <div class="an-dept-patient-val">${fmtMoney(patientCost.cost)}</div>
         </div>` : "";
+  const flowCard = _renderDeptFlow(dep.totals, period);
   return `
     <div class="an-node department">
       <div class="an-node-head" onclick="toggleAnNode('${depId}')">
@@ -5789,11 +5809,35 @@ function renderDepartmentNode(dep, depId, groupId) {
         </div>
       </div>
       <div class="an-node-body" id="body-${depId}">
+        ${flowCard}
         ${patientCard}
         ${dep.subs.map(({ sub, si }) => renderSubdivisionShell(sub, `${groupId}-s${si}`)).join("")}
       </div>
     </div>
   `;
+}
+
+// Compact movement strip for one department over the active period:
+// Поч. залишок → Надходження → Видаток → Кінц. залишок (sum, with qty subline).
+function _renderDeptFlow(t, period) {
+  t = t || {};
+  const periodLbl = (period && period.from && period.to)
+    ? `Рух за період · ${fmtShortDate(period.from)} – ${fmtShortDate(period.to)}`
+    : "Рух за період";
+  const cell = (lbl, cls, sum, qty) => `
+    <div class="an-dept-flow-cell">
+      <div class="an-dept-flow-lbl">${lbl}</div>
+      <div class="an-dept-flow-val ${cls}">${fmtMoney(sum || 0, true)}</div>
+      ${(qty != null && qty !== 0) ? `<div class="an-dept-flow-qty">${fmtNum(qty)} од.</div>` : ""}
+    </div>`;
+  return `
+    <div class="an-dept-flow">
+      <div class="an-dept-flow-period">${esc(periodLbl)}</div>
+      ${cell("Поч.",    "open",  t.os, t.oq)}
+      ${cell("Прихід",  "in",    t.rs, t.rq)}
+      ${cell("Видаток", "out",   t.es, t.eq)}
+      ${cell("Кінець",  "close", t.cs, t.cq)}
+    </div>`;
 }
 
 // Subdivision SHELL — clicking it opens the full detail screen. Now that
