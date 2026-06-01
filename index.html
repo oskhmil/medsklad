@@ -4556,6 +4556,19 @@ function _periodLabel(a, b) {
   return a === b ? _monthLabel(a) : `${_monthLabel(a)} – ${_monthLabel(b)}`;
 }
 
+// Shared "З … По" range row used by both the main selector and the МВО detail
+// screen. `startFn`/`endFn` are global handler names called with the value.
+function _periodRangeRowHTML(labelHtml, lblCls, startVal, endVal, startFn, endFn) {
+  const opts = (selected) => _allMonthKeys().map(k =>
+    `<option value="${k}"${k === selected ? " selected" : ""}>${_monthLabel(k)}</option>`).join("");
+  return `<div class="an-period-row">
+      <span class="an-period-lbl${lblCls ? " " + lblCls : ""}">${labelHtml}</span>
+      <select class="an-period-select" onchange="${startFn}(this.value)">${opts(startVal)}</select>
+      <span class="an-period-sep">–</span>
+      <select class="an-period-select" onchange="${endFn}(this.value)">${opts(endVal)}</select>
+    </div>`;
+}
+
 // Period range selector (variant B): two dropdowns "З … По" for the active
 // period and another pair for the comparison period.
 function renderMonthTabs(monthKeys) {
@@ -4576,12 +4589,7 @@ function renderMonthTabs(monthKeys) {
     : `Один місяць. Щоб увімкнути діапазон — виберіть різні «З» і «По».`;
 
   tabsEl.innerHTML = `
-    <div class="an-period-row">
-      <span class="an-period-lbl">📅 Період</span>
-      <select class="an-period-select" onchange="setPeriodStart(this.value)">${opts(rangeStartKey)}</select>
-      <span class="an-period-sep">–</span>
-      <select class="an-period-select" onchange="setPeriodEnd(this.value)">${opts(rangeEndKey)}</select>
-    </div>
+    ${_periodRangeRowHTML("📅 Період", "", rangeStartKey, rangeEndKey, "setPeriodStart", "setPeriodEnd")}
     <div class="an-period-row">
       <span class="an-period-lbl cmp">↔ Порівняти</span>
       <select class="an-period-select cmp${cmpOn ? "" : " cmp-empty"}" onchange="setComparePeriodStart(this.value)">${cmpOpts(cmpStartKey)}</select>
@@ -5957,15 +5965,37 @@ function renderSubDetailMonthTabs() {
   if (!el || !analyticsData || !analyticsData.months) return;
   const monthKeys = Object.keys(analyticsData.months).sort();
   if (monthKeys.length <= 1) { el.innerHTML = ""; return; }
+  el.className = "an-period-bar";
   const rangeOn = _isRangeActive();
-  const chip = rangeOn
-    ? `<span class="an-period-chip">Період: ${_periodLabel(rangeStartKey, rangeEndKey)}</span>`
-    : "";
-  el.innerHTML = chip + monthKeys.map(k => {
-    const label = _monthLabel(k);
-    const active = (!rangeOn && k === currentMonthKey) ? " active" : "";
-    return `<button class="an-month-tab${active}" onclick="selectSubDetailMonth('${k}')">${label}</button>`;
-  }).join("");
+  const hint = rangeOn
+    ? `Період: <b>${_periodLabel(rangeStartKey, rangeEndKey)}</b> — рух підсумовано, залишок на кінець ${_monthLabel(rangeEndKey)}.`
+    : `Один місяць. Виберіть різні «З» і «По» для діапазону.`;
+  el.innerHTML =
+    _periodRangeRowHTML("📅 Період", "", rangeStartKey, rangeEndKey, "setDetailPeriodStart", "setDetailPeriodEnd") +
+    `<div class="an-period-hint">${hint}</div>`;
+}
+
+// Period handlers for the МВО detail screen. They update the active period,
+// keep the (hidden) main screen consistent, re-resolve the current МВО by path,
+// and re-render the detail.
+function setDetailPeriodStart(v) { rangeStartKey = v; _clampActivePeriod(); _applyDetailPeriodChange(); }
+function setDetailPeriodEnd(v)   { rangeEndKey = v;   _clampActivePeriod(); _applyDetailPeriodChange(); }
+function _applyDetailPeriodChange() {
+  // If comparison collapsed onto the new single month, drop it (parity with main).
+  if (cmpStartKey === currentMonthKey && cmpEndKey === currentMonthKey) {
+    cmpStartKey = null; cmpEndKey = null; compareMonthKey = null;
+  }
+  // Keep the main analytics screen in sync (it's hidden while in detail).
+  renderMonthTabs(_allMonthKeys());
+  renderAnalyticsMonth();
+  // Re-locate the same МВО (by path) in the newly-selected period.
+  const m = MO();
+  if (m && _currentSubPath && _currentSubPath.length) {
+    const matched = _findSubdivisionByPath(m, _currentSubPath);
+    _currentSubdivision = matched ? matched.sub : null;
+    _currentSubId = matched ? matched.id : null;
+  }
+  renderSubDetail();
 }
 
 function renderSubDetail() {
