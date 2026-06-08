@@ -7902,22 +7902,23 @@ function _finplanMonthForecast(monthData, monthName) {
   if (today < from) return { state: "future", totalDays };
   if (today > to)   return { state: "closed", fact: total, totalDays };
 
-  // Active month: extrapolate based on data freshness.
-  // We use period.to (if available) as "elapsed" — this is the date through
-  // which the data covers, which may lag behind today by 1-2 days. If period.to
-  // is missing, fall back to (today - from + 1).
-  let elapsed;
+  // Active month: extrapolate based on how many days of data we actually have.
+  // The data can never cover days in the FUTURE, so the elapsed window is
+  // bounded by today. Note: some 1С exports set period.to to the nominal
+  // calendar month-end even mid-month (e.g. a June file opened on the 8th still
+  // reports "01.06.2026 – 30.06.2026"). Trusting period.to alone made such a
+  // month look fully elapsed and therefore "closed". We take the EARLIER of
+  // period.to and today as the real data-coverage end.
+  let effectiveTo = today;
   if (monthData.period && monthData.period.to) {
     const dataTo = new Date(monthData.period.to);
     if (!isNaN(dataTo)) {
       dataTo.setHours(0, 0, 0, 0);
-      elapsed = Math.round((dataTo - from) / MS_PER_DAY) + 1;
+      if (dataTo < today) effectiveTo = dataTo;
     }
   }
-  if (elapsed == null || elapsed <= 0) {
-    elapsed = Math.round((today - from) / MS_PER_DAY) + 1;
-  }
-  // Guard: elapsed must not exceed totalDays (data shouldn't overshoot the month)
+  let elapsed = Math.round((effectiveTo - from) / MS_PER_DAY) + 1;
+  // Guard: elapsed must stay within the month bounds
   if (elapsed > totalDays) elapsed = totalDays;
   if (elapsed <= 0 || total <= 0) return null;
   if (elapsed >= totalDays) return { state: "closed", fact: total, totalDays };
