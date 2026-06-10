@@ -2967,10 +2967,11 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
+  // v9 = parent grouping units reconciled (re-parent children, drop phantom "(без МВО)").
   // v8 = items of person-less departments are attached to "(без МВО)" —
   // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
-  return "medsklad_analytics_cache_v8__" + id;
+  return "medsklad_analytics_cache_v9__" + id;
 }
 
 // Remove analytics caches of OLDER versions (v7 and below) so they don't eat
@@ -2980,7 +2981,7 @@ function analyticsHospitalCacheKey(id) {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v8__")) {
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v9__")) {
         toRemove.push(k);
       }
     }
@@ -3840,6 +3841,76 @@ function _anFallbackLevel(aVal, bVal, currentGroup, currentDept) {
   return 8;
 }
 
+// ─── Multi-level subdivision reconciliation ─────────────────────────────────
+// 1С can nest subdivisions (indents 6/8/10): a PARENT unit (often named with a
+// trailing "+", e.g. "Діагностично-лабораторне відділення+") contains child
+// units, each with its own МВО and items. When the file comes through Google
+// Sheets the indents are stripped and the inference classifies both parent and
+// children as sibling departments. The parent then surfaces as a phantom
+// "(без МВО)" subdivision: it has the AGGREGATE totals of its children, zero
+// items — and double-counts those children in hospital sums.
+//
+// Detection is purely numeric: a "(без МВО)" sub with no items whose totals
+// (os/rs/es/cs) equal the running sum of the IMMEDIATELY FOLLOWING departments
+// is a parent grouping. We then re-parent those child subs under the parent
+// department (МВО shown as "child › person") and drop the phantom.
+// Candidates that match nothing are kept as-is — genuinely aggregate-only
+// departments (e.g. central sterilization) stay untouched.
+function _anReparentAggregates(subs) {
+  const FIELDS = ["os", "rs", "es", "cs"];
+  const TOL = 0.5; // ₴; dept rows and children are 2dp-rounded, drift is tiny
+  const isCandidate = s =>
+    s.path.length === 2 && s.path[1] === "(без МВО)" && (!s.items || s.items.length === 0);
+
+  // Process bottom-up so inner parents fold first; outer parents then see the
+  // already-reparented (single-counted) children.
+  for (let i = subs.length - 1; i >= 0; i--) {
+    const P = subs[i];
+    if (!isCandidate(P)) continue;
+    const pt = P.totals || {};
+    // Require a meaningful numeric signature (≥2 nonzero fields) so we never
+    // match on noise.
+    if (FIELDS.filter(f => Math.abs(pt[f] || 0) > 0.005).length < 2) continue;
+
+    const acc = { os: 0, rs: 0, es: 0, cs: 0 };
+    let endIdx = -1;
+    let j = i + 1;
+    while (j < subs.length) {
+      // Consume one whole department (consecutive subs sharing path[0]) at a time
+      const dept = subs[j].path[0];
+      let k = j;
+      while (k < subs.length && subs[k].path[0] === dept) {
+        const t = subs[k].totals || {};
+        for (const f of FIELDS) acc[f] += t[f] || 0;
+        k++;
+      }
+      let allMatch = true, overshoot = false;
+      for (const f of FIELDS) {
+        const d = acc[f] - (pt[f] || 0);
+        if (Math.abs(d) > TOL) allMatch = false;
+        if (d > TOL) overshoot = true;
+      }
+      if (allMatch) { endIdx = k - 1; break; }
+      if (overshoot) break; // sums only grow — no match possible anymore
+      j = k;
+    }
+    if (endIdx === -1) continue;
+
+    // Re-parent children: dept becomes the parent, МВО keeps the child context.
+    for (let m = i + 1; m <= endIdx; m++) {
+      const s = subs[m];
+      const childDept = s.path[0];
+      const person = s.path[1];
+      const newPerson = (person && person !== "(без МВО)")
+        ? childDept + " › " + person
+        : childDept;
+      s.path = [P.path[0], newPerson];
+    }
+    subs.splice(i, 1); // drop the phantom parent — its money now counted once
+  }
+  return subs;
+}
+
 function _anIsStructuralHeader(text) {
   const s = String(text || "").trim().toLowerCase();
   return (
@@ -4123,7 +4194,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   const groupsOut = [];
   for (const gname in groups) {
     const g = groups[gname];
-    const subs = Object.values(g.subdivisions).map(sub => {
+    let subs = Object.values(g.subdivisions).map(sub => {
       let totalsOut;
       if (sub.totalsOverride) {
         totalsOut = _anStripNone(sub.totalsOverride);
@@ -4141,6 +4212,7 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
       if (sub.lastWriteoff) rec.last_writeoff = sub.lastWriteoff;
       return rec;
     });
+    subs = _anReparentAggregates(subs);
     groupsOut.push({ name: g.name, totals: _anStripNone(g.totals), subdivisions: subs });
   }
   stats.departments = deptSet.size;
