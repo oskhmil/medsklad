@@ -3958,15 +3958,18 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   function finalizeEmptyDept() {
     if (!currentGroup || !currentDept || currentDeptHasPerson || !_anHasAnyNumber(currentDeptTotals)) return;
     const key = currentDept + "|(без МВО)";
-    if (!currentGroup.subdivisions[key]) {
-      currentGroup.subdivisions[key] = {
+    let sub = currentGroup.subdivisions[key];
+    if (!sub) {
+      sub = currentGroup.subdivisions[key] = {
         path: [currentDept, "(без МВО)"],
-        totalsOverride: _anStripNone(currentDeptTotals),
         items: [],
         itemsByName: {},
         lastWriteoff: null,
       };
     }
+    // The department header totals are authoritative — items may legitimately
+    // not sum to them (e.g. rounding or rows we couldn't classify).
+    sub.totalsOverride = _anStripNone(currentDeptTotals);
   }
 
   for (const { row, cells } of parsedRows) {
@@ -4026,13 +4029,15 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
       if (aVal.startsWith("Списання")) {
         const d = _anParseDocDate(aVal);
         if (d) {
-          // Update per-МВО latest write-off (used in the subdivision header)
-          if (currentGroup && currentDept && currentPerson) {
-            const key = currentDept + "|" + currentPerson;
+          // Update per-МВО latest write-off (used in the subdivision header).
+          // Departments without an МВО level map to "(без МВО)".
+          if (currentGroup && currentDept) {
+            const personKey = currentPerson || "(без МВО)";
+            const key = currentDept + "|" + personKey;
             let sub = currentGroup.subdivisions[key];
             if (!sub) {
               sub = currentGroup.subdivisions[key] = {
-                path: [currentDept, currentPerson], items: [], itemsByName: {}, lastWriteoff: null,
+                path: [currentDept, personKey], items: [], itemsByName: {}, lastWriteoff: null,
               };
             }
             if (!sub.lastWriteoff || d > sub.lastWriteoff) sub.lastWriteoff = d;
@@ -4050,14 +4055,20 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
 
     // Item row: indent=0, col A empty, col B filled
     if (indent === 0 && !aVal && bVal) {
-      if (!currentGroup || !currentDept || !currentPerson) { stats.unknown_levels++; continue; }
+      if (!currentGroup || !currentDept) { stats.unknown_levels++; continue; }
       const nums = _anExtractNumbers(cells);
       if (!_anHasAnyNumber(nums)) { stats.skipped_empty++; continue; }
-      const key = currentDept + "|" + currentPerson;
+      // Some departments have positions directly under the department header,
+      // with no МВО (person) level at all. Previously such rows were DROPPED
+      // (only totals survived via finalizeEmptyDept) — so the УІ showed
+      // "(без МВО)" with movement but 0 positions. Now we attach them to the
+      // synthetic "(без МВО)" subdivision so they are searchable and visible.
+      const personKey = currentPerson || "(без МВО)";
+      const key = currentDept + "|" + personKey;
       let sub = currentGroup.subdivisions[key];
       if (!sub) {
         sub = currentGroup.subdivisions[key] = {
-          path: [currentDept, currentPerson], items: [], itemsByName: {}, lastWriteoff: null,
+          path: [currentDept, personKey], items: [], itemsByName: {}, lastWriteoff: null,
         };
       }
       // Aggregate same-named items (different series of the same drug = one row)
