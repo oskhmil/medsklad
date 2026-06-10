@@ -2967,10 +2967,26 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
+  // v8 = items of person-less departments are attached to "(без МВО)" —
+  // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
-  // Bumping invalidates older malformed hierarchy cached in the browser.
-  return "medsklad_analytics_cache_v7__" + id;
+  return "medsklad_analytics_cache_v8__" + id;
 }
+
+// Remove analytics caches of OLDER versions (v7 and below) so they don't eat
+// the localStorage quota after a version bump. Runs once at startup.
+(function _cleanupOldAnalyticsCaches() {
+  try {
+    const toRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v8__")) {
+        toRemove.push(k);
+      }
+    }
+    toRemove.forEach(k => localStorage.removeItem(k));
+  } catch (e) { /* localStorage may be unavailable; nothing to clean */ }
+})();
 
 let currentHospitalId = null;
 
