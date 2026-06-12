@@ -1287,6 +1287,42 @@
   }
   .an-warn-ico { flex-shrink: 0; }
 
+  /* ── 💬 Запитати ── */
+  .ask-answer {
+    display: none;
+    background: rgba(79,142,247,.08);
+    border: 1px solid rgba(79,142,247,.35);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .ask-answer .ask-meta {
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .ask-hints {
+    display: none;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .ask-hint-chip {
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    background: none;
+  }
+  .ask-hint-chip:hover, .ask-hint-chip:active {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
   @media (max-width: 420px) {
     .an-kpi-grid { grid-template-columns: 1fr; }
     .an-node-title { font-size: 12px; }
@@ -1309,7 +1345,7 @@
     </div>
     <div id="search-wrap">
       <div class="search-wrap">
-        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : debouncedSearch(this.value)">
+        <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : searchMode==='ask' ? debouncedAsk(this.value) : debouncedSearch(this.value)" onkeydown="if(event.key==='Enter'&&searchMode==='ask'){clearTimeout(_askTimer);onAsk(this.value);this.blur();}">
         <span class="search-ico">🔍</span>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
@@ -1317,6 +1353,13 @@
         <button class="filter-btn" id="mode-mnn" onclick="setSearchMode('mnn',this)" style="font-size:11px;padding:4px 10px;">За МНН</button>
         <button class="filter-btn" id="mode-series" onclick="setSearchMode('series',this)" style="font-size:11px;padding:4px 10px;">За серією</button>
         <button class="filter-btn" id="mode-dept" onclick="setSearchMode('dept',this)" style="font-size:11px;padding:4px 10px;">За відділенням</button>
+        <button class="filter-btn" id="mode-ask" onclick="setSearchMode('ask',this)" style="font-size:11px;padding:4px 10px;">💬 Запитати</button>
+      </div>
+      <div class="ask-hints" id="ask-hints">
+        <button class="ask-hint-chip" onclick="askExample('Де є цефтріаксон?')">Де є цефтріаксон?</button>
+        <button class="ask-hint-chip" onclick="askExample('Що прострочено в реанімації?')">Що прострочено в реанімації?</button>
+        <button class="ask-hint-chip" onclick="askExample('Скільки парацетамолу?')">Скільки парацетамолу?</button>
+        <button class="ask-hint-chip" onclick="askExample('Які серії гепарину?')">Які серії гепарину?</button>
       </div>
       <div id="dept-search-wrap" style="display:none">
         <div class="selected-depts" id="selected-depts"></div>
@@ -1691,7 +1734,8 @@
         <div class="section-lbl">Результати</div>
         <span class="result-count" id="result-count">0 записів</span>
       </div>
-      <div class="filter-row">
+      <div class="ask-answer" id="ask-answer"></div>
+      <div class="filter-row" id="results-filter-row">
         <button class="filter-btn active" onclick="setFilter('all',this)">Всі</button>
         <button class="filter-btn" onclick="setFilter('expired',this)">⛔ Прострочені</button>
         <button class="filter-btn" onclick="setFilter('soon',this)">⚠️ Скоро</button>
@@ -1736,7 +1780,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.74";
+const APP_VERSION = "v.75";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2434,10 +2478,13 @@ function setSearchMode(mode, btn) {
     name:   'Введіть назву препарату...',
     mnn:    'Введіть МНН (латиницею)...',
     series: 'Введіть серію...',
-    dept:   'Введіть назву відділення...'
+    dept:   'Введіть назву відділення...',
+    ask:    'Поставте питання про залишки...'
   };
   document.getElementById("search-input").placeholder = placeholders[mode] || placeholders.name;
   document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
+  document.getElementById("ask-hints").style.display = mode === 'ask' ? 'flex' : 'none';
+  if (mode !== 'ask') setAskUI(false);
   document.getElementById("search-input").value = "";
   currentQuery = "";
   // Reset item-name filter when switching modes
@@ -2546,6 +2593,8 @@ function goHome() {
   const _df2 = document.getElementById("dept-item-filter");
   if (_df2) _df2.value = "";
   document.getElementById("dept-search-wrap").style.display = "none";
+  document.getElementById("ask-hints").style.display = "none";
+  setAskUI(false);
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
   show("home");
@@ -2563,6 +2612,8 @@ function quickFilter(type) {
   searchMode = 'name';
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
+  document.getElementById("ask-hints").style.display = "none";
+  setAskUI(false);
   currentQuery = "*";
   currentFilter = type;
   document.querySelectorAll(".filter-row .filter-btn").forEach(b=>b.classList.remove("active"));
@@ -2579,6 +2630,7 @@ function onSearch(val) {
   currentQuery = val.trim();
   if (!currentQuery) { show("home"); return; }
   if (currentQuery.length < 2) return;
+  setAskUI(false);
   show("results");
   renderResults();
 }
@@ -2704,6 +2756,233 @@ function showMore() {
 
 function esc(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── 💬 Запитати: розбір питань простими правилами (без ШІ) ───────────────────
+// Питання розкладається на: інтент (де / скільки / прострочено / скоро / серії)
+// + назва препарату + відділення. Пошук виконують наявні дані allItems.
+
+const ASK_STOPWORDS = new Set([
+  "де","є","і","й","та","а","але","чи","що","як","це","ця","цей","ці","там","тут",
+  "в","у","на","до","з","зі","із","по","про","для","від","при","або","ще","вже",
+  "який","яка","яке","які","якому","якій","яких","якого","котрий","котрому",
+  "скільки","кількість","всього","загалом","разом","маємо","мається","має","хто",
+  "відділення","відділенні","відділеннях","відділень","відділені","відділення?",
+  "лікарні","лікарня","лікарень","лікарню","складі","складах",
+  "залишок","залишки","залишків","залишилось","залишилося","лишилось",
+  "наявність","наявності","наявний","наявна","наявні","наявне",
+  "знайди","знайти","покажи","показати","скажи","сказати","перевір","перевірити",
+  "глянь","подивись","подивитись","дізнатись","цікавить",
+  "прострочено","прострочені","прострочений","прострочена","прострочене",
+  "протерміновано","протерміновані","протермінований",
+  "термін","терміни","термінів","придатності","придатний","придатна",
+  "закінчується","закінчуються","спливає","спливають","скоро","найближчим","часом",
+  "серія","серії","серій","серією","серіях",
+  "препарат","препарати","препарату","препаратів","препаратах",
+  "ліки","ліків","ліках","медикаменти","медикаментів","позиції","позицій",
+  "будь","ласка","нас","нам","мені","можна","треба","потрібно"
+]);
+
+function askDetectIntents(q) {
+  return {
+    expired: /прострочен|протермінован/.test(q),
+    soon:    /закінчу|спливає|спливають|скоро/.test(q),
+    series:  /сері(я|ї|й|єю|ях)/.test(q),
+    where:   /(^|\s)де(\s|$)|якому відділ|яких відділ|хто має/.test(q),
+    howmuch: /скільки|кількіст/.test(q)
+  };
+}
+
+// Зіставлення відділень: порівнюємо 5-символьні «стеми» слів,
+// щоб «реанімації» в питанні знайшло «Реанімаційне відділення»
+function askMatchDepts(qTokens) {
+  const depts = [...new Set(allItems.map(i => i.dept))];
+  const used = new Set();
+  const scored = [];
+  depts.forEach(d => {
+    const words = normalize(d).split(/[^a-zа-щьюяіїєґ'0-9]+/).filter(w => w.length >= 4 && !ASK_STOPWORDS.has(w));
+    let score = 0;
+    const matched = [];
+    words.forEach(w => {
+      const stem = w.slice(0, 5);
+      qTokens.forEach(t => {
+        if (t.length >= 4 && t.slice(0, 5) === stem) { score++; matched.push(t); }
+      });
+    });
+    if (score > 0) scored.push({ dept: d, score, matched });
+  });
+  if (!scored.length) return { depts: [], usedTokens: used };
+  const max = Math.max(...scored.map(s => s.score));
+  const best = scored.filter(s => s.score === max);
+  best.forEach(s => s.matched.forEach(t => used.add(t)));
+  return { depts: best.map(s => s.dept), usedTokens: used };
+}
+
+// Толерантність до відмінків: «цефтріаксону» знайде «цефтріаксон»
+function askTokenInText(text, tok) {
+  if (text.includes(tok)) return true;
+  for (let cut = 1; cut <= 3; cut++) {
+    const p = tok.slice(0, tok.length - cut);
+    if (p.length >= 4 && text.includes(p)) return true;
+  }
+  return false;
+}
+
+function askMatchItems(tokens, depts, status) {
+  return allItems.filter(it => {
+    if (depts.length && !depts.includes(it.dept)) return false;
+    if (tokens.length) {
+      const txt = normalize(it.name + " " + (it.mnn || ""));
+      if (!tokens.every(tok => askTokenInText(txt, tok))) return false;
+    }
+    if (status === "expired" && expiryStatus(it.expiry) !== "expired") return false;
+    if (status === "soon"    && expiryStatus(it.expiry) !== "soon")    return false;
+    return true;
+  });
+}
+
+function askPlural(n, forms) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return forms[0];
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return forms[1];
+  return forms[2];
+}
+
+function askSumByUnit(items) {
+  const m = {};
+  items.forEach(it => {
+    if (it.qty != null) { const u = it.unit || "од."; m[u] = (m[u] || 0) + it.qty; }
+  });
+  const parts = Object.entries(m).map(([u, q]) => `${Math.round(q * 100) / 100} ${u}`);
+  return parts.length ? parts.join(" + ") : "—";
+}
+
+function askDeptBreakdown(items) {
+  const map = {};
+  items.forEach(it => { (map[it.dept] = map[it.dept] || []).push(it); });
+  return Object.entries(map)
+    .map(([d, arr]) => ({ dept: d, sum: askSumByUnit(arr), count: arr.length }))
+    .sort((a, b) => b.count - a.count);
+}
+
+function setAskUI(on) {
+  const p = document.getElementById("ask-answer");
+  if (p) { p.style.display = on ? "block" : "none"; if (!on) p.innerHTML = ""; }
+  const fr = document.getElementById("results-filter-row");
+  if (fr) fr.style.display = on ? "none" : "flex";
+}
+
+function showAskAnswer(html, res) {
+  const p = document.getElementById("ask-answer");
+  let meta = "";
+  if (lastLoaded) {
+    meta = `<div class="ask-meta">🕐 Дані станом на ${lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})}</div>`;
+  }
+  p.innerHTML = html + meta;
+  setAskUI(true);
+  show("results");
+  if (res === null) {
+    document.getElementById("results-list").innerHTML = "";
+    document.getElementById("result-count").textContent = "—";
+  } else {
+    displayLimit = 50;
+    renderResultsList(res);
+  }
+}
+
+let _askTimer = null;
+function debouncedAsk(val) {
+  clearTimeout(_askTimer);
+  _askTimer = setTimeout(() => onAsk(val), 700);
+}
+
+function askExample(q) {
+  const si = document.getElementById("search-input");
+  si.value = q;
+  clearTimeout(_askTimer);
+  onAsk(q);
+}
+
+function onAsk(rawVal) {
+  const raw = String(rawVal || "").trim();
+  if (!raw) { setAskUI(false); show("home"); return; }
+  if (raw.length < 4) return;
+
+  const q = normalize(raw).replace(/[?!.,;:«»()]/g, " ").replace(/\s+/g, " ").trim();
+  const qTokens = q.split(/\s+/).filter(Boolean);
+  const intents = askDetectIntents(q);
+  const deptMatch = askMatchDepts(qTokens);
+  const drugTokens = qTokens.filter(t =>
+    t.length >= 3 && !ASK_STOPWORDS.has(t) && !deptMatch.usedTokens.has(t));
+  const status = intents.expired ? "expired" : intents.soon ? "soon" : null;
+
+  if (!drugTokens.length && !deptMatch.depts.length && !status) {
+    showAskAnswer(
+      `🤔 Не зміг розібрати питання.<br>Спробуйте, наприклад: «Де є цефтріаксон?», «Скільки парацетамолу в реанімації?», «Що прострочено в хірургії?»`,
+      null);
+    return;
+  }
+
+  let usedTokens = drugTokens;
+  let res = askMatchItems(drugTokens, deptMatch.depts, status);
+
+  // Якщо з усіма словами пусто — пробуємо кожне слово окремо
+  // (можливо, частина слів — зайві або з помилкою)
+  if (!res.length && drugTokens.length > 1) {
+    for (const t of drugTokens) {
+      const r = askMatchItems([t], deptMatch.depts, status);
+      if (r.length) { res = r; usedTokens = [t]; break; }
+    }
+  }
+
+  const drugLabel = usedTokens.join(" ");
+  const deptLabel = deptMatch.depts.length === 1
+    ? deptMatch.depts[0]
+    : deptMatch.depts.join("; ");
+
+  if (!res.length) {
+    let hint = "Перевірте написання назви";
+    if (deptMatch.depts.length) hint += ` або спробуйте без відділення`;
+    showAskAnswer(
+      `🔎 За запитом «${esc(raw)}» нічого не знайдено.<br>${hint}.`,
+      null);
+    return;
+  }
+
+  const names = [...new Set(res.map(i => normalize(i.name)))];
+  const bd = askDeptBreakdown(res);
+  const total = askSumByUnit(res);
+  const recWord = askPlural(res.length, ["запис", "записи", "записів"]);
+  const deptWord = askPlural(bd.length, ["відділенні", "відділеннях", "відділеннях"]);
+  let text = "";
+
+  if (intents.series && drugTokens.length) {
+    const seriesSet = [...new Set(res.filter(i => i.series).map(i => i.series))];
+    text = `🧾 «${esc(drugLabel)}»: ${seriesSet.length} ${askPlural(seriesSet.length, ["серія", "серії", "серій"])} `
+         + `у ${bd.length} ${deptWord}`
+         + (deptMatch.depts.length ? ` (${esc(deptLabel)})` : "")
+         + `. Деталі по кожній серії — у картках нижче.`;
+  } else if (status) {
+    const ico = status === "expired" ? "⛔ Прострочено" : "⚠️ Закінчується термін (менше 90 днів)";
+    text = `${ico}: ${res.length} ${recWord}, ${names.length} ${askPlural(names.length, ["назва", "назви", "назв"])}`
+         + (deptMatch.depts.length ? ` у «${esc(deptLabel)}»` : ` у ${bd.length} ${deptWord}`)
+         + (drugTokens.length ? ` за запитом «${esc(drugLabel)}»` : "")
+         + `.`;
+    if (!deptMatch.depts.length && bd.length > 1) {
+      const lines = bd.slice(0, 6).map(b => `• ${esc(b.dept)} — ${b.count} ${askPlural(b.count, ["запис","записи","записів"])}`).join("<br>");
+      text += `<br>${lines}` + (bd.length > 6 ? `<br>…і ще ${bd.length - 6} відділень` : "");
+    }
+  } else if (intents.howmuch && deptMatch.depts.length) {
+    text = `🧮 «${esc(drugLabel || "Усі позиції")}» у «${esc(deptLabel)}»: всього ${esc(total)} `
+         + `(${res.length} ${recWord}, ${names.length} ${askPlural(names.length, ["назва", "назви", "назв"])}).`;
+  } else {
+    const lines = bd.slice(0, 6).map(b => `• ${esc(b.dept)} — ${esc(b.sum)}`).join("<br>");
+    text = `💊 «${esc(drugLabel || deptLabel)}» — знайдено у ${bd.length} ${deptWord} (${res.length} ${recWord}), всього ${esc(total)}:`
+         + `<br>${lines}`
+         + (bd.length > 6 ? `<br>…і ще ${bd.length - 6} відділень` : "");
+  }
+
+  showAskAnswer(text, res);
 }
 
 // ── new items (snapshot comparison) ─────────────────────────────────────────
