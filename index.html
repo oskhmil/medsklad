@@ -1288,6 +1288,54 @@
   .an-warn-ico { flex-shrink: 0; }
 
   /* ── 💬 Запитати ── */
+  #mic-btn {
+    display: none;
+    position: absolute;
+    right: 38px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+  }
+  #mic-btn.listening {
+    animation: micPulse 1s ease-in-out infinite;
+  }
+  @keyframes micPulse {
+    0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
+    50%      { opacity: .45; transform: translateY(-50%) scale(1.25); }
+  }
+  #fresh-banner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 9px 12px;
+    background: rgba(52,211,153,.12);
+    border: 1px solid rgba(52,211,153,.45);
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  #fresh-banner-text { flex: 1; line-height: 1.4; }
+  .fresh-banner-btn {
+    background: var(--green);
+    color: #06281c;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .fresh-banner-close {
+    color: var(--muted);
+    font-size: 14px;
+    padding: 2px 6px;
+  }
   .ask-answer {
     display: none;
     background: rgba(79,142,247,.08);
@@ -1347,6 +1395,7 @@
       <div class="search-wrap">
         <input id="search-input" type="text" placeholder="Введіть назву препарату..." oninput="searchMode==='dept' ? onDeptInput(this.value) : searchMode==='ask' ? debouncedAsk(this.value) : debouncedSearch(this.value)" onkeydown="if(event.key==='Enter'&&searchMode==='ask'){clearTimeout(_askTimer);onAsk(this.value);this.blur();}">
         <span class="search-ico">🔍</span>
+        <button id="mic-btn" onclick="toggleMic()" title="Голосовий ввід">🎤</button>
       </div>
       <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
         <button class="filter-btn active" id="mode-name" onclick="setSearchMode('name',this)" style="font-size:11px;padding:4px 10px;">За назвою</button>
@@ -1368,6 +1417,11 @@
           <input id="dept-item-filter" type="text" placeholder="🔎 Фільтр по назві в обраних відділеннях..." oninput="onDeptItemFilter(this.value)" style="width:100%;background:#1c2035;border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:#fff;font-size:13px;outline:none;">
         </div>
       </div>
+    </div>
+    <div id="fresh-banner" onclick="freshBannerAction()">
+      <span id="fresh-banner-text">🔔 Доступні свіжі дані</span>
+      <span class="fresh-banner-btn">Оновити</span>
+      <span class="fresh-banner-close" onclick="event.stopPropagation();dismissFreshBanner()">✕</span>
     </div>
   </div>
 
@@ -1780,7 +1834,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.75";
+const APP_VERSION = "v.76";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2053,6 +2107,7 @@ async function fetchAndUpdate(showLoader) {
 
     allItems = newItems;
     lastLoaded = new Date();
+    _watchMarkSeen("medsklad");
     const cacheOk = saveCache(newItems);
     if (!cacheOk) {
       // Tell the user we can't cache — otherwise they'll wonder why every
@@ -2484,6 +2539,7 @@ function setSearchMode(mode, btn) {
   document.getElementById("search-input").placeholder = placeholders[mode] || placeholders.name;
   document.getElementById("dept-search-wrap").style.display = mode === 'dept' ? 'block' : 'none';
   document.getElementById("ask-hints").style.display = mode === 'ask' ? 'flex' : 'none';
+  updateMicVisibility();
   if (mode !== 'ask') setAskUI(false);
   document.getElementById("search-input").value = "";
   currentQuery = "";
@@ -2594,6 +2650,7 @@ function goHome() {
   if (_df2) _df2.value = "";
   document.getElementById("dept-search-wrap").style.display = "none";
   document.getElementById("ask-hints").style.display = "none";
+  updateMicVisibility();
   setAskUI(false);
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
@@ -2613,6 +2670,7 @@ function quickFilter(type) {
   document.querySelectorAll("#search-wrap .filter-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("mode-name").classList.add("active");
   document.getElementById("ask-hints").style.display = "none";
+  updateMicVisibility();
   setAskUI(false);
   currentQuery = "*";
   currentFilter = type;
@@ -2983,6 +3041,152 @@ function onAsk(rawVal) {
   }
 
   showAskAnswer(text, res);
+}
+
+// ── 🎤 Голосовий ввід (Web Speech API, лише в режимі «Запитати») ─────────────
+let _micRec = null;
+let _micActive = false;
+
+function _micSupported() {
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+
+function updateMicVisibility() {
+  const b = document.getElementById("mic-btn");
+  if (b) b.style.display = (searchMode === 'ask' && _micSupported()) ? "block" : "none";
+}
+
+function toggleMic() {
+  const btn = document.getElementById("mic-btn");
+  if (_micActive) {
+    try { _micRec.stop(); } catch (e) {}
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  _micRec = new SR();
+  _micRec.lang = "uk-UA";
+  _micRec.interimResults = false;
+  _micRec.maxAlternatives = 1;
+  _micRec.onstart = () => { _micActive = true; btn.classList.add("listening"); };
+  _micRec.onend   = () => { _micActive = false; btn.classList.remove("listening"); };
+  _micRec.onerror = () => { _micActive = false; btn.classList.remove("listening"); };
+  _micRec.onresult = (ev) => {
+    const t = ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
+    if (!t) return;
+    const si = document.getElementById("search-input");
+    si.value = t;
+    clearTimeout(_askTimer);
+    onAsk(t);
+  };
+  try { _micRec.start(); } catch (e) {}
+}
+
+// ── 🔔 Спостерігач свіжих даних ──────────────────────────────────────────────
+// Крихітний Apps Script на Google-акаунті Остапа віддає дати останньої зміни
+// файлів-джерел. Додаток порівнює їх із «баченими» і показує банер.
+// Поки URL порожній — увесь механізм вимкнено (безпечно деплоїти).
+const DATA_WATCH_URL = "https://script.google.com/macros/s/AKfycbzd-8pIK7aoXIyambb7nI8pLmUNTco2cEJnntDp0k-948acsT80aCUlmDZoCY1nkTACjg/exec";
+const WATCH_BASELINE_KEY = "medsklad_watch_baseline";
+const WATCH_INTERVAL_MS = 15 * 60 * 1000; // 15 хв, лише коли вкладка активна
+let _watchLast = null;
+let _freshBlocks = [];
+
+function _watchBlockLabel(k) {
+  if (k === "medsklad") return "Пошук медикаментів";
+  if (k === "finplan")  return "Фінансовий план";
+  const h = (typeof ANALYTICS_HOSPITALS !== "undefined")
+    ? ANALYTICS_HOSPITALS.find(x => x.id === k) : null;
+  return h ? ("Аналітика: " + h.name) : k;
+}
+
+function _loadWatchBaseline() {
+  try { return JSON.parse(localStorage.getItem(WATCH_BASELINE_KEY)) || null; }
+  catch (e) { return null; }
+}
+function _saveWatchBaseline(b) {
+  try { localStorage.setItem(WATCH_BASELINE_KEY, JSON.stringify(b)); } catch (e) {}
+}
+
+async function checkFreshData() {
+  if (!DATA_WATCH_URL) return;
+  try {
+    const resp = await fetch(DATA_WATCH_URL, { cache: "no-store" });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    _watchLast = data;
+    const baseline = _loadWatchBaseline();
+    if (!baseline) { _saveWatchBaseline(data); return; } // перший запуск — без банера
+    const fresh = Object.keys(data).filter(k => baseline[k] && data[k] > baseline[k]);
+    if (fresh.length) showFreshBanner(fresh);
+  } catch (e) {}
+}
+
+// Після успішного завантаження даних блоку фіксуємо актуальну дату як «бачену»
+async function _watchMarkSeen(k) {
+  if (!DATA_WATCH_URL) return;
+  try {
+    const resp = await fetch(DATA_WATCH_URL, { cache: "no-store" });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    _watchLast = data;
+    const b = _loadWatchBaseline() || {};
+    if (data[k]) { b[k] = data[k]; _saveWatchBaseline(b); }
+  } catch (e) {}
+}
+
+function showFreshBanner(blocks) {
+  _freshBlocks = blocks;
+  document.getElementById("fresh-banner-text").textContent =
+    "🔔 Свіжі дані: " + blocks.map(_watchBlockLabel).join(", ");
+  document.getElementById("fresh-banner").style.display = "flex";
+}
+
+function dismissFreshBanner() {
+  // Приймаємо нові дати як базові, щоб банер не повертався для цього оновлення
+  if (_watchLast) {
+    const b = _loadWatchBaseline() || {};
+    _freshBlocks.forEach(k => { if (_watchLast[k]) b[k] = _watchLast[k]; });
+    _saveWatchBaseline(b);
+  }
+  document.getElementById("fresh-banner").style.display = "none";
+  _freshBlocks = [];
+}
+
+function freshBannerAction() {
+  const blocks = _freshBlocks.slice();
+  dismissFreshBanner();
+
+  const inMedsearch = ["home-screen", "results-screen", "new-items-screen"]
+    .some(id => { const el = document.getElementById(id); return el && el.style.display === "block"; });
+
+  blocks.forEach(k => {
+    if (k === "medsklad") {
+      if (inMedsearch) {
+        loadFromDrive(true);
+      } else {
+        try { localStorage.removeItem(CACHE_KEY); localStorage.removeItem(CACHE_TIME_KEY); } catch (e) {}
+      }
+    } else if (k === "finplan") {
+      try { localStorage.removeItem(FINPLAN_CACHE_KEY); localStorage.removeItem(FINPLAN_CACHE_TIME_KEY); } catch (e) {}
+      const fp = document.getElementById("finplan-screen");
+      if (fp && fp.style.display === "block") loadFinplan(true);
+    } else {
+      // Лікарня аналітики: чистимо кеш — при відкритті підтягнеться свіже
+      try { localStorage.removeItem(analyticsHospitalCacheKey(k)); } catch (e) {}
+    }
+  });
+}
+
+function startFreshWatcher() {
+  if (!DATA_WATCH_URL) return;
+  setTimeout(checkFreshData, 4000);
+  setInterval(() => {
+    if (document.visibilityState === "visible") checkFreshData();
+  }, WATCH_INTERVAL_MS);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") checkFreshData();
+  });
 }
 
 // ── new items (snapshot comparison) ─────────────────────────────────────────
@@ -4863,6 +5067,7 @@ async function fetchAnalytics({ silent }) {
     }
     analyticsData = parsedData;
     _expenseByItemPerMonth = null;
+    _watchMarkSeen(hospital.id);
 
     // Persist cache
     try {
@@ -7275,6 +7480,7 @@ function _saveFinplanCache(data) {
   } catch (e) {
     console.warn("[finplan] cache save failed:", e.message);
   }
+  _watchMarkSeen("finplan");
 }
 
 function _loadFinplanCache() {
@@ -8745,6 +8951,7 @@ function exportFinplanXlsx() {
 // INITIALIZATION
 // ═══════════════════════════════════════════════════════════════════════════
 show("sections");
+startFreshWatcher();
 
 </script>
 </body>
