@@ -1834,7 +1834,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.78";
+const APP_VERSION = "v.79";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2724,19 +2724,44 @@ function renderResults() {
     if (currentQuery === '*')    return true;
     return multiWordMatch(it.name, words);
   });
+
+  // Fuzzy-фолбек для пошуку «За назвою»: якщо точний пошук нічого не дав,
+  // пробуємо виправити одруки в словах запиту й перешукати.
+  let nameCorrection = null;
+  if (!res.length && searchMode === 'name' && currentQuery !== '*' && words.length) {
+    const corrected = [];
+    let anyFix = false;
+    words.forEach(w => {
+      if (w.length < 4) { corrected.push(w); return; }
+      const exact = allItems.some(it => normalize(it.name).includes(w));
+      if (exact) { corrected.push(w); return; }
+      const c = askClosestVocab(w);
+      if (c && c.dist > 0) { corrected.push(c.word); anyFix = true; }
+      else corrected.push(w);
+    });
+    if (anyFix) {
+      const r = allItems.filter(it => multiWordMatch(it.name, corrected));
+      if (r.length) { res = r; nameCorrection = corrected.join(" "); }
+    }
+  }
+
   if (currentFilter==="expired") res = res.filter(it=>expiryStatus(it.expiry)==="expired");
   if (currentFilter==="soon")    res = res.filter(it=>expiryStatus(it.expiry)==="soon");
   displayLimit = 50;
-  renderResultsList(res);
+  renderResultsList(res, nameCorrection);
 }
 
-function renderResultsList(res) {
+function renderResultsList(res, correction) {
   document.getElementById("result-count").textContent = res.length + " записів";
   const list = document.getElementById("results-list");
   if (!res.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
     return;
   }
+
+  const correctionHtml = correction
+    ? `<div style="background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.35);border-radius:12px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--muted)">🔁 Можливо, ви мали на увазі «<b style="color:var(--text)">${esc(correction)}</b>»</div>`
+    : "";
 
   // Group by normalized drug name
   const groups = {};
@@ -2796,7 +2821,7 @@ function renderResultsList(res) {
   if (groupOrder.length > displayLimit) {
     html += `<button class="big-btn" style="margin-top:10px;font-size:14px;padding:12px;" onclick="showMore()">Показати ще (${groupOrder.length - displayLimit} назв залишилось)</button>`;
   }
-  list.innerHTML = html;
+  list.innerHTML = correctionHtml + html;
   window._lastResults = res;
 }
 
