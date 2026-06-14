@@ -1834,7 +1834,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.76";
+const APP_VERSION = "v.78";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2876,6 +2876,68 @@ function askMatchDepts(qTokens) {
   return { depts: best.map(s => s.dept), usedTokens: used };
 }
 
+// ── Fuzzy-зіставлення (толерантність до одруків) ─────────────────────────────
+// Відстань Левенштейна з ранньою зупинкою: щойно перевищили max — виходимо.
+function askLeven(a, b, max) {
+  const la = a.length, lb = b.length;
+  if (Math.abs(la - lb) > max) return max + 1;
+  let prev = new Array(lb + 1);
+  let cur = new Array(lb + 1);
+  for (let j = 0; j <= lb; j++) prev[j] = j;
+  for (let i = 1; i <= la; i++) {
+    cur[0] = i;
+    let rowMin = cur[0];
+    const ca = a.charCodeAt(i - 1);
+    for (let j = 1; j <= lb; j++) {
+      const cost = ca === b.charCodeAt(j - 1) ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+      if (cur[j] < rowMin) rowMin = cur[j];
+    }
+    if (rowMin > max) return max + 1; // далі лише гірше
+    const t = prev; prev = cur; cur = t;
+  }
+  return prev[lb];
+}
+
+// Словник унікальних «слів» з назв препаратів + МНН (будується раз на завантаження).
+let _askDrugVocab = null;
+let _askDrugVocabFor = null;
+function askBuildVocab() {
+  if (_askDrugVocab && _askDrugVocabFor === allItems) return _askDrugVocab;
+  const set = new Set();
+  allItems.forEach(it => {
+    normalize(it.name + " " + (it.mnn || ""))
+      .split(/[^a-zа-щьюяіїєґ'0-9]+/)
+      .forEach(w => { if (w.length >= 4) set.add(w); });
+  });
+  _askDrugVocab = [...set];
+  _askDrugVocabFor = allItems;
+  return _askDrugVocab;
+}
+
+// Поріг похибки залежно від довжини слова: короткі слова — суворіше.
+function askFuzzyThreshold(len) {
+  if (len <= 4) return 1;
+  if (len <= 7) return 2;
+  return 3;
+}
+
+// Для токена з опискою шукає найближче реальне слово зі словника.
+// Повертає {word, dist} або null.
+function askClosestVocab(tok) {
+  const vocab = askBuildVocab();
+  const max = askFuzzyThreshold(tok.length);
+  let best = null, bestDist = max + 1;
+  for (const w of vocab) {
+    if (Math.abs(w.length - tok.length) > max) continue;
+    const stem4 = tok.slice(0, 2);
+    if (w.slice(0, 2) !== stem4 && w[0] !== tok[0]) continue; // груба відсічка для швидкості
+    const d = askLeven(tok, w, max);
+    if (d < bestDist) { bestDist = d; best = w; if (d === 0) break; }
+  }
+  return best && bestDist <= max ? { word: best, dist: bestDist } : null;
+}
+
 // Толерантність до відмінків: «цефтріаксону» знайде «цефтріаксон»
 function askTokenInText(text, tok) {
   if (text.includes(tok)) return true;
@@ -2993,6 +3055,36 @@ function onAsk(rawVal) {
     }
   }
 
+  // Fuzzy-фолбек: якщо досі пусто — шукаємо найближчі реальні слова до drug-токенів
+  // (виправлення одруків через відстань Левенштейна) і пробуємо ще раз.
+  let askCorrection = null;
+  if (!res.length && drugTokens.length) {
+    const corrected = [];
+    let anyFix = false;
+    drugTokens.forEach(t => {
+      // якщо слово вже точно зустрічається — не чіпаємо
+      const exact = askMatchItems([t], [], null).length > 0;
+      if (exact) { corrected.push(t); return; }
+      const c = askClosestVocab(t);
+      if (c && c.dist > 0) { corrected.push(c.word); anyFix = true; }
+      else corrected.push(t);
+    });
+    if (anyFix) {
+      const r = askMatchItems(corrected, deptMatch.depts, status);
+      if (r.length) {
+        res = r;
+        usedTokens = corrected;
+        askCorrection = corrected.join(" ");
+      } else {
+        // пробуємо кожне виправлене слово окремо
+        for (const t of corrected) {
+          const r2 = askMatchItems([t], deptMatch.depts, status);
+          if (r2.length) { res = r2; usedTokens = [t]; askCorrection = t; break; }
+        }
+      }
+    }
+  }
+
   const drugLabel = usedTokens.join(" ");
   const deptLabel = deptMatch.depts.length === 1
     ? deptMatch.depts[0]
@@ -3040,10 +3132,12 @@ function onAsk(rawVal) {
          + (bd.length > 6 ? `<br>…і ще ${bd.length - 6} відділень` : "");
   }
 
+  if (askCorrection) {
+    text = `<span style="color:var(--muted)">🔁 Можливо, ви мали на увазі «<b style="color:var(--text)">${esc(askCorrection)}</b>»:</span><br>` + text;
+  }
+
   showAskAnswer(text, res);
 }
-
-// ── 🎤 Голосовий ввід (Web Speech API, лише в режимі «Запитати») ─────────────
 let _micRec = null;
 let _micActive = false;
 
@@ -3053,7 +3147,7 @@ function _micSupported() {
 
 function updateMicVisibility() {
   const b = document.getElementById("mic-btn");
-  if (b) b.style.display = (searchMode === 'ask' && _micSupported()) ? "block" : "none";
+  if (b) b.style.display = ((searchMode === 'ask' || searchMode === 'name') && _micSupported()) ? "block" : "none";
 }
 
 function toggleMic() {
@@ -3076,8 +3170,13 @@ function toggleMic() {
     if (!t) return;
     const si = document.getElementById("search-input");
     si.value = t;
-    clearTimeout(_askTimer);
-    onAsk(t);
+    if (searchMode === 'ask') {
+      clearTimeout(_askTimer);
+      onAsk(t);
+    } else {
+      clearTimeout(_searchTimer);
+      onSearch(t);
+    }
   };
   try { _micRec.start(); } catch (e) {}
 }
