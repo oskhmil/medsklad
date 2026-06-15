@@ -1321,6 +1321,20 @@
     color: var(--text);
     cursor: pointer;
   }
+  #update-banner {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 9px 12px;
+    background: rgba(79,142,247,.14);
+    border: 1px solid rgba(79,142,247,.5);
+    border-radius: 12px;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  #update-banner-text { flex: 1; line-height: 1.4; }
   #fresh-banner-text { flex: 1; line-height: 1.4; }
   .fresh-banner-btn {
     background: var(--green);
@@ -1417,6 +1431,10 @@
           <input id="dept-item-filter" type="text" placeholder="🔎 Фільтр по назві в обраних відділеннях..." oninput="onDeptItemFilter(this.value)" style="width:100%;background:#1c2035;border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:#fff;font-size:13px;outline:none;">
         </div>
       </div>
+    </div>
+    <div id="update-banner" onclick="applyAppUpdate()">
+      <span id="update-banner-text">🔄 Доступна нова версія додатка</span>
+      <span class="fresh-banner-btn">Оновити</span>
     </div>
     <div id="fresh-banner" onclick="freshBannerAction()">
       <span id="fresh-banner-text">🔔 Доступні свіжі дані</span>
@@ -1834,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.79";
+const APP_VERSION = "v.80";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3303,6 +3321,15 @@ function freshBannerAction() {
 }
 
 function startFreshWatcher() {
+  // Перевірка версії додатка працює завжди (не залежить від DATA_WATCH_URL)
+  setTimeout(checkAppVersion, 3000);
+  setInterval(() => {
+    if (document.visibilityState === "visible") checkAppVersion();
+  }, APP_VERSION_INTERVAL_MS);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") checkAppVersion();
+  });
+
   if (!DATA_WATCH_URL) return;
   setTimeout(checkFreshData, 4000);
   setInterval(() => {
@@ -3311,6 +3338,45 @@ function startFreshWatcher() {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") checkFreshData();
   });
+}
+
+// ── 🔄 Самооновлення: помічаємо, що на сервері новіший index.html ─────────────
+// Читаємо власний index.html в обхід кешу, витягуємо APP_VERSION і порівнюємо
+// з версією, що зараз працює. Жодних окремих файлів вести не треба.
+const APP_VERSION_INTERVAL_MS = 10 * 60 * 1000; // 10 хв, лише коли вкладка активна
+let _updateReady = false;
+
+function _verToNum(v) {
+  // "v.79" → 79 ; "v.79.2" → 79.2 ; стійко до сміття
+  const m = String(v || "").match(/[\d.]+/);
+  return m ? parseFloat(m[0]) : NaN;
+}
+
+async function checkAppVersion() {
+  if (_updateReady) return; // банер уже показано — не смикаємо
+  try {
+    const url = location.pathname.split("?")[0] + "?_v=" + Date.now();
+    const resp = await fetch(url, { cache: "no-store" });
+    if (!resp.ok) return;
+    const html = await resp.text();
+    const m = html.match(/APP_VERSION\s*=\s*["']([^"']+)["']/);
+    if (!m) return;
+    const serverVer = _verToNum(m[1]);
+    const localVer = _verToNum(APP_VERSION);
+    if (!isNaN(serverVer) && !isNaN(localVer) && serverVer > localVer) {
+      _updateReady = true;
+      const el = document.getElementById("update-banner");
+      document.getElementById("update-banner-text").textContent =
+        "🔄 Доступна нова версія додатка (" + m[1] + ")";
+      el.style.display = "flex";
+    }
+  } catch (e) {}
+}
+
+function applyAppUpdate() {
+  // Перезавантаження начисто, повз кеш: міняємо URL, щоб браузер не віддав старе
+  const base = location.pathname.split("?")[0];
+  location.replace(base + "?_u=" + Date.now());
 }
 
 // ── new items (snapshot comparison) ─────────────────────────────────────────
