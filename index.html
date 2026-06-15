@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.80";
+const APP_VERSION = "v.81";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2368,6 +2368,7 @@ function openMedsearch() {
     document.getElementById("search-input").value = "";
     renderHome();
     show("home");
+    updateMicVisibility();
     // Auto-refresh in the background ONLY when cache is older than the TTL.
     // For fresh-enough cache, we save bandwidth and skip the 5–10 s parse.
     const cacheAge = Date.now() - (cache.time ? cache.time.getTime() : 0);
@@ -2376,6 +2377,7 @@ function openMedsearch() {
     }
   } else {
     show("start");
+    updateMicVisibility();
   }
 }
 
@@ -9142,6 +9144,7 @@ function exportFinplanXlsx() {
 // ═══════════════════════════════════════════════════════════════════════════
 show("sections");
 startFreshWatcher();
+updateMicVisibility();
 
 </script>
 </body>
