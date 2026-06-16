@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.82";
+const APP_VERSION = "v.83";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6667,9 +6667,13 @@ function renderSubdivisionShell(sub, id) {
   const period = MO().period;
   const dos = daysOfSupply(t, period);
   const dosLabel = isFinite(dos) && dos > 0 ? fmtDaysOfSupply(dos) : "—";
+  // Encode the stable path as a fallback so openSubDetail can re-resolve the
+  // correct subdivision even if the numeric index drifted (e.g. data refreshed
+  // between render and click). Indices are not stable; path is.
+  const pathAttr = (sub.path && sub.path.length) ? sub.path.join(",") : "";
   return `
     <div class="an-node subdivision" data-sub-id="${id}">
-      <div class="an-node-head" onclick="openSubDetail('${id}')">
+      <div class="an-node-head" onclick="openSubDetail('${id}','${pathAttr}')">
         <span class="an-node-arrow">›</span>
         <div class="an-node-title">${esc(leaf)}</div>
         <div class="an-node-sum">
@@ -6687,8 +6691,28 @@ let _currentSubId = null;
 let _currentSubPath = null; // snapshot of path indices for cross-month resolution
 let subDetailFilter = "all";  // all | dead | fast | new | deficit
 
-function openSubDetail(id) {
-  const sub = _lookupSubdivision(id);
+function openSubDetail(id, pathStr) {
+  let sub = _lookupSubdivision(id);
+
+  // Stability guard: if a path was provided, verify the index-resolved sub
+  // actually matches it. Numeric indices can drift (e.g. data refreshed between
+  // render and click), silently pointing at a DIFFERENT МВО — that caused the
+  // cost-per-patient card to show another department's patients. If the path
+  // doesn't match, re-resolve by path (which is stable) against the live tree.
+  if (pathStr) {
+    const wantPath = pathStr;
+    const gotPath = (sub && sub.path) ? sub.path.join(",") : null;
+    if (gotPath !== wantPath) {
+      const m = MO();
+      const pathArr = pathStr.split(",").map(Number);
+      const matched = m ? _findSubdivisionByPath(m, pathArr) : null;
+      if (matched) {
+        sub = matched.sub;
+        id = matched.id;
+      }
+    }
+  }
+
   if (!sub) {
     alert("Не знайдено підрозділ");
     return;
