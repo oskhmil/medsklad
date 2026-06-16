@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.90";
+const APP_VERSION = "v.91";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6280,8 +6280,23 @@ function daysOfSupplyQty(it_or_totals, period) {
 function fmtDaysOfSupply(d) {
   if (!isFinite(d)) return "∞";
   if (d <= 0) return "0";
+  // Items with a tiny but non-zero monthly expense (e.g. 1 unit used, 500 in
+  // stock) produce astronomically large days-of-supply (tens of thousands of
+  // days). Showing "1527 міс" is meaningless noise, so cap the display: beyond
+  // ~2 years it's all just "практично без руху" — the exact number adds nothing.
+  if (d > 730) return "> 2 років";
   if (d > 365) return Math.round(d / 30) + " міс";
   return Math.round(d) + " дн";
+}
+
+// Format a turnover/cycle day count with the same sanity cap, returning a
+// display string. Used for "Період обороту" and summary turnover where huge
+// values from near-zero expense would otherwise read as nonsense.
+function fmtCycleDays(d) {
+  if (!isFinite(d) || d <= 0) return "—";
+  if (d > 730) return "> 2 років";
+  if (d > 365) return Math.round(d / 30) + " міс";
+  return Math.round(d) + " дн.";
 }
 
 // Number of days an item has had ZERO expense, looking backwards through
@@ -7037,7 +7052,7 @@ function renderSubDetail() {
   let cycleStr = "—";
   const _os = t.os || 0, _cs = t.cs || 0, _es = t.es || 0;
   if (_es > 0 && (_os > 0 || _cs > 0)) {
-    cycleStr = Math.round(((_os + _cs) / 2 * _periodDays) / _es) + " дн.";
+    cycleStr = fmtCycleDays(((_os + _cs) / 2 * _periodDays) / _es);
   }
   const kpis = [];
   const _posSub = `${sub.items.length} позицій`;
@@ -7652,13 +7667,13 @@ function computeMonthStats(m) {
   if (closing > 0 && expense > 0) {
     const dayRate = expense / days;
     const daysOfSupply = closing / dayRate;
-    turnoverStr = Math.round(daysOfSupply) + " дн.";
+    turnoverStr = fmtCycleDays(daysOfSupply);
     turnoverHint = "вистачить на цю кількість днів при поточному видатку";
   }
   if (expense > 0 && (opening > 0 || closing > 0)) {
     const avgStock = (opening + closing) / 2;
     const cycleDays = (avgStock * days) / expense;
-    cycleDaysStr = Math.round(cycleDays) + " дн.";
+    cycleDaysStr = fmtCycleDays(cycleDays);
     cycleDaysHint = "у середньому одиниця лежить на складі стільки днів";
   }
   return {
