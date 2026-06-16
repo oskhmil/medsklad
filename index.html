@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.88";
+const APP_VERSION = "v.90";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3672,6 +3672,13 @@ let analyticsData = null;
 let currentMonthKey = null;
 let compareMonthKey = null;  // legacy single-month compare key (kept in sync below)
 let analyticsView = "all";
+let deadSummarySort = "money"; // 'money' | 'days' — сортування загального списку «Без руху»
+
+function setDeadSummarySort(mode) {
+  deadSummarySort = mode;
+  const m = MO();
+  if (m) renderAnalyticsSummary(m);
+}
 
 // ─── Period range selection ────────────────────────────────────────────────
 // The ACTIVE period is [rangeStartKey .. rangeEndKey] (real "YYYY-MM" keys).
@@ -5630,15 +5637,30 @@ function renderAnalyticsSummary(m) {
     return;
   }
 
-  // Sort by money impact (descending)
-  const sortField = analyticsView === "fast" ? "es" : (analyticsView === "newItems" ? "rs" : "cs");
-  list.sort((a, b) => (b.item[sortField] || 0) - (a.item[sortField] || 0));
+  // For the "dead" category, allow sorting by money (default) or by how long
+  // the item has been stagnant — the same "days without movement" metric used
+  // on the МВО screen. Other categories sort by money impact only.
+  let sortControls = "";
+  if (analyticsView === "dead") {
+    if (deadSummarySort === "days") {
+      list.sort((a, b) =>
+        (_deadDaysForItem(b.item, b.sub) || 0) - (_deadDaysForItem(a.item, a.sub) || 0));
+    } else {
+      list.sort((a, b) => (b.item.cs || 0) - (a.item.cs || 0));
+    }
+    const btn = (key, label) =>
+      `<button class="filter-btn${deadSummarySort === key ? " active" : ""}" style="font-size:11px;padding:4px 10px;" onclick="setDeadSummarySort('${key}')">${label}</button>`;
+    sortControls = `<div style="display:flex;gap:6px;margin-bottom:10px;">${btn("money", "↓ Залишок (грн)")}${btn("days", "↓ Дні без руху")}</div>`;
+  } else {
+    const sortField = analyticsView === "fast" ? "es" : "rs";
+    list.sort((a, b) => (b.item[sortField] || 0) - (a.item[sortField] || 0));
+  }
 
   // Limit to top 100 for perf; add "show more" if needed
   const limit = 100;
   const visible = list.slice(0, limit);
 
-  let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Показано ${visible.length} з ${list.length} позицій</div>`;
+  let html = sortControls + `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Показано ${visible.length} з ${list.length} позицій</div>`;
   html += visible.map(entry => renderAnItemCard(entry)).join("");
   if (list.length > limit) {
     html += `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">Решта ${list.length - limit} позицій доступні через розгортання відділень нижче</div>`;
@@ -6211,12 +6233,33 @@ const DAYS_OF_SUPPLY_FAST_THRESHOLD   = 30;  // < N days of supply → fast turn
 // Days of supply = closing balance / (expense per day in current period).
 // Returns Infinity if no expense (means "lasts forever" at zero burn rate).
 // Returns 0 if closing == 0.
+// Effective period length for BURN-RATE math only. 1C exports set period.to to
+// the nominal month-end (e.g. 30.06) even when the file was pulled mid-month,
+// so for the current/partial month the expense covers fewer days than the
+// nominal length. Dividing full stock by a rate over the full nominal month
+// understates daily burn → days-of-supply explodes ("космічні дні"). We cap the
+// period end at today so the rate reflects actually elapsed days.
+// Only for days-of-supply / turnover — NOT for daysInPeriod(), which must keep
+// full month lengths for the "days without movement" accumulation.
+function _effectiveBurnDays(period) {
+  if (!period || !period.from || !period.to) return 30;
+  const from = new Date(period.from);
+  let to = new Date(period.to);
+  const today = new Date();
+  if (!isNaN(from) && !isNaN(to)) {
+    if (today < to && today >= from) to = today; // partial current month → up to today
+    const d = Math.round((to - from) / 86400000) + 1;
+    return d > 0 ? d : 1;
+  }
+  return daysInPeriod(period);
+}
+
 function daysOfSupply(it_or_totals, period) {
   const cs = (it_or_totals && it_or_totals.cs) || 0;
   const es = (it_or_totals && it_or_totals.es) || 0;
   if (cs <= 0) return 0;
   if (es <= 0) return Infinity;
-  const days = daysInPeriod(period);
+  const days = _effectiveBurnDays(period);
   const dailyBurn = es / days;
   return cs / dailyBurn;
 }
@@ -6228,7 +6271,7 @@ function daysOfSupplyQty(it_or_totals, period) {
   const eq = (it_or_totals && it_or_totals.eq) || 0;
   if (cq <= 0) return 0;
   if (eq <= 0) return Infinity;
-  const days = daysInPeriod(period);
+  const days = _effectiveBurnDays(period);
   const dailyBurn = eq / days;
   return cq / dailyBurn;
 }
@@ -6990,7 +7033,7 @@ function renderSubDetail() {
   const sumSum = (arr, field) => arr.reduce((s, e) => s + (e.item[field] || 0), 0);
   // Cycle days for this subdivision: (середній залишок × днів) / видаток.
   // Дивиться назад — як швидко крутився запас за період.
-  const _periodDays = daysInPeriod(period);
+  const _periodDays = _effectiveBurnDays(period);
   let cycleStr = "—";
   const _os = t.os || 0, _cs = t.cs || 0, _es = t.es || 0;
   if (_es > 0 && (_os > 0 || _cs > 0)) {
@@ -7493,7 +7536,7 @@ function renderAnItemRow(it, sub, period) {
     : `<div style="color:var(--muted);font-size:10px;">≈ ${fmtDaysOfSupply(cat.dos)} запасу</div>`;
 
   const itKey   = itemKey(it, sub);
-  const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
+  const deadDays = cat.dead ? _deadDaysForItem(it, sub) : null;
   const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
   const lwDate = cat.dead ? _findLatestWriteoffAcrossMonths(it, sub) : null;
   const badges = _itemBadges(cat, deadDays, lastMov, lwDate);
@@ -7540,7 +7583,7 @@ function renderAnItemCard(entry) {
   const period = MO().period;
   const cat = entry.cat || classifyItem(it, sub, period);
   const itKey   = itemKey(it, sub);
-  const deadDays = cat.dead ? daysWithoutMovement(itKey, currentMonthKey) : null;
+  const deadDays = cat.dead ? _deadDaysForItem(it, sub) : null;
   const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
   const lwDate = cat.dead ? _findLatestWriteoffAcrossMonths(it, sub) : null;
   const badges = _itemBadges(cat, deadDays, lastMov, lwDate);
@@ -7605,7 +7648,7 @@ function computeMonthStats(m) {
   // лежала на складі за період. Дивиться назад.
   let cycleDaysStr = "—", cycleDaysHint = "";
   const closing = vis.cs || 0, opening = vis.os || 0, expense = vis.es || 0;
-  const days = daysInPeriod(m.period);
+  const days = _effectiveBurnDays(m.period);
   if (closing > 0 && expense > 0) {
     const dayRate = expense / days;
     const daysOfSupply = closing / dayRate;
