@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.87";
+const APP_VERSION = "v.88";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6247,6 +6247,29 @@ function fmtDaysOfSupply(d) {
 //
 // itemKey: the n (name index) + path joined — same item across months.
 // Returns either a number of days, or null if we can't tell.
+// Single reference point for ALL stagnation calculations (both the "не списано"
+// badge and the "без руху" badge), so they never disagree. If the user is
+// viewing the LATEST month with data (the current report), we measure up to
+// today — "N days" then means real stagnation as of now. If they're viewing an
+// older/historical month, we measure up to the END of that month, because
+// overlaying today's date onto a past report would be meaningless.
+function _stagnationAsOf(monthKey) {
+  const monthKeys = (analyticsData && analyticsData.months)
+    ? Object.keys(analyticsData.months)
+        .filter(k => analyticsData.months[k].directions && analyticsData.months[k].directions.length)
+        .sort()
+    : [];
+  if (!monthKeys.length) return new Date();
+  const latest = monthKeys[monthKeys.length - 1];
+  if (monthKey === latest) return new Date(); // актуальний звіт → від сьогодні
+  const m = analyticsData.months[monthKey];
+  if (m && m.period && m.period.to) {
+    const d = new Date(m.period.to);
+    if (!isNaN(d)) return d;
+  }
+  return new Date();
+}
+
 function daysWithoutMovement(itemKey, currentMonthKey) {
   if (!analyticsData || !analyticsData.months) return null;
   const monthKeys = Object.keys(analyticsData.months).sort();
@@ -6254,6 +6277,7 @@ function daysWithoutMovement(itemKey, currentMonthKey) {
   if (curIdx < 0) return null;
 
   let totalDays = 0;
+  const asOf = _stagnationAsOf(currentMonthKey);
   // Walk from current month back to earliest. Stop as soon as we find a
   // month where this item had non-zero expense — that's the last movement.
   for (let i = curIdx; i >= 0; i--) {
@@ -6263,6 +6287,17 @@ function daysWithoutMovement(itemKey, currentMonthKey) {
     if (hadMovement) {
       // Stop counting; days accumulated so far is the answer.
       return totalDays;
+    }
+    // For the VIEWED month (first iteration), count only up to the shared
+    // reference point (today, or end of viewed month) — not the whole month —
+    // so both badges agree on "as of when".
+    if (i === curIdx && m.period && m.period.from) {
+      const from = new Date(m.period.from);
+      if (!isNaN(from)) {
+        const d = Math.round((asOf - from) / 86400000) + 1;
+        totalDays += d > 0 ? d : 0;
+        continue;
+      }
     }
     totalDays += daysInPeriod(m.period);
   }
@@ -7377,12 +7412,14 @@ function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
   const DEAD_BADGE_MIN_DAYS = 60;
 
   if (cat.dead) {
+    // Shared reference point so "не списано (N дн)" and "без руху N дн" agree.
+    const asOf = _stagnationAsOf(currentMonthKey);
     // Estimate how many days this item has been without movement, from the
     // best signal available (exact write-off date → accumulated dead days).
     let estDays = null;
     if (lastWriteoffDate) {
       const wd = new Date(lastWriteoffDate);
-      if (!isNaN(wd)) estDays = Math.max(0, Math.round((Date.now() - wd) / 86400000));
+      if (!isNaN(wd)) estDays = Math.max(0, Math.round((asOf - wd) / 86400000));
     } else if (typeof deadDays === "number") {
       estDays = deadDays;
     }
@@ -7398,11 +7435,10 @@ function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
       // "since {earliest month in data}" message.
       let txt;
       if (lastWriteoffDate) {
-        const today = new Date();
         const wd = new Date(lastWriteoffDate);
         let suffix = "";
         if (!isNaN(wd)) {
-          const days = Math.max(0, Math.round((today - wd) / 86400000));
+          const days = Math.max(0, Math.round((asOf - wd) / 86400000));
           if (days > 0) suffix = ` (${days} дн)`;
         }
         txt = `💀 не списано з ${fmtShortDate(lastWriteoffDate)}${suffix}`;
