@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.81";
+const APP_VERSION = "v.82";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3833,9 +3833,9 @@ let patientsData = null;
 // Same source, indexed by hospital + department name. Used for department-level
 // cost-per-patient where patient counts are maintained at ward level.
 let patientsDeptData = null;
-const PATIENTS_URL = "https://docs.google.com/spreadsheets/d/1fdiLhkahn5yuyQk3P7el7AgP3JyI2YzY/export?format=xlsx";
-const PATIENTS_CACHE_KEY = "patients_cache_v3";
-const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v3";
+const PATIENTS_URL = "https://docs.google.com/spreadsheets/d/1aNeo6cE0O1PQgJQtZ0iy6FKRi-BYQTtW/export?format=xlsx";
+const PATIENTS_CACHE_KEY = "patients_cache_v4";
+const PATIENTS_CACHE_TIME_KEY = "patients_cache_time_v4";
 const PATIENTS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours
 
 // ─── Hospital picker ────────────────────────────────────────────────────────
@@ -4082,11 +4082,15 @@ function _patientsCachePayload() {
 function _patientsDataStats() {
   const mvoCount = patientsData ? patientsData.size : 0;
   const deptCount = patientsDeptData ? patientsDeptData.size : 0;
+  const sumByMonth = (e) => {
+    if (!e || !e.byMonth) return 0;
+    return Object.values(e.byMonth).reduce((s, v) => s + (v || 0), 0);
+  };
   const deptTotal = patientsDeptData
-    ? [...patientsDeptData.values()].reduce((s, e) => s + (e.patients || 0), 0)
+    ? [...patientsDeptData.values()].reduce((s, e) => s + sumByMonth(e), 0)
     : 0;
   const mvoTotal = patientsData
-    ? [...patientsData.values()].reduce((s, e) => s + (e.patients || 0), 0)
+    ? [...patientsData.values()].reduce((s, e) => s + sumByMonth(e), 0)
     : 0;
   return { mvoCount, deptCount, totalPatients: deptTotal || mvoTotal };
 }
@@ -4119,11 +4123,24 @@ function _patientHeaderColumns(row) {
     return -1;
   };
   const mvoCol      = findCol("мво", "медсклад");
-  const patientsCol = findCol("пацієнт", "паціент", "patient", "пролікован");
   const hospitalCol = findCol("лікарн", "hospital");
   const deptCol     = findCol("відділ", "відділення", "department");
   const noteCol     = findCol("приміт", "note");
-  return { mvoCol, patientsCol, hospitalCol, deptCol, noteCol };
+  // Patient columns may be per-month: "Пацієнтів 2026-04", "Пацієнтів 2026-05"…
+  // Collect ALL of them, keyed by the YYYY-MM found in the header.
+  // A bare "Пацієнтів" (no month) maps to key "" (legacy / single-month).
+  const monthCols = {}; // { "2026-04": colIndex, "": colIndex }
+  let anyPatientsCol = -1;
+  for (let i = 0; i < header.length; i++) {
+    const h = header[i];
+    if (h.includes("пацієнт") || h.includes("паціент") || h.includes("patient") || h.includes("пролікован")) {
+      anyPatientsCol = anyPatientsCol < 0 ? i : anyPatientsCol;
+      const mm = h.match(/(\d{4})[-.\/](\d{2})/);
+      const key = mm ? `${mm[1]}-${mm[2]}` : "";
+      monthCols[key] = i;
+    }
+  }
+  return { mvoCol, hospitalCol, deptCol, noteCol, monthCols, patientsCol: anyPatientsCol };
 }
 
 function _isPatientsHospitalRow(row) {
@@ -4173,25 +4190,26 @@ function _parsePatientsXlsx(buf) {
     if (/^(всього|усього|разом)$/i.test(dept)) continue;
     if (/^(відділення|department)$/i.test(dept)) continue;
 
-    const patients = _parsePatientsCount(row[cols.patientsCol]);
-    if (patients <= 0) continue; // skip rows with zero (e.g. secondary МВО of same dept)
+    // Patients per month: { "2026-04": 707, "2026-05": 690, ... }
+    const byMonth = {};
+    let anyPositive = false;
+    for (const mk in cols.monthCols) {
+      const cnt = _parsePatientsCount(row[cols.monthCols[mk]]);
+      byMonth[mk] = cnt;
+      if (cnt > 0) anyPositive = true;
+    }
+    if (!anyPositive) continue; // skip rows with zero across all months (secondary МВО)
     const note = cols.noteCol >= 0 ? String(row[cols.noteCol] || "").trim() : "";
-    const rec = {
-      mvo,
-      patients,
-      hospital,
-      dept,
-      note,
-    };
+    const rec = { mvo, byMonth, hospital, dept, note };
     if (mvo) byMvo.set(_normalizeMvoName(mvo), rec);
     if (dept) {
       const deptKey = _patientsDeptKey(hospital, dept);
       const cur = byDept.get(deptKey);
       if (cur) {
-        cur.patients += patients;
+        for (const mk in byMonth) cur.byMonth[mk] = (cur.byMonth[mk] || 0) + byMonth[mk];
         cur.mvoCount += mvo ? 1 : 0;
       } else {
-        byDept.set(deptKey, { hospital, dept, patients, note, mvoCount: mvo ? 1 : 0 });
+        byDept.set(deptKey, { hospital, dept, byMonth: { ...byMonth }, note, mvoCount: mvo ? 1 : 0 });
       }
     }
   }
@@ -4249,24 +4267,39 @@ function _deptMatchScore(a, b) {
   return hits / minSize;
 }
 
-// Look up patients count for a sub by name. Returns 0 if not in map.
+// Returns the YYYY-MM month for which patient data should be used, or null.
+// Cost-per-patient must reflect a SINGLE month only (Variant A): if the user
+// selected a range (З…По different months), we don't show the card, because
+// dividing a multi-month expense by single-month patients would be misleading.
+function _activePatientsMonth() {
+  if (_isRangeActive()) return null;        // діапазон — картка ховається
+  return currentMonthKey || null;           // "2026-04" тощо
+}
+
+// Patients count for a sub in the currently selected month. 0 if range / no data.
 function _getPatientsForSub(sub) {
   if (!patientsData || !sub) return 0;
+  const month = _activePatientsMonth();
+  if (!month) return 0;
   const name = (sub.path && sub.path.length > 0)
     ? analyticsData.paths[sub.path[sub.path.length - 1]]
     : "";
   if (!name) return 0;
   const key = _normalizeMvoName(name);
   const entry = patientsData.get(key);
-  return entry ? entry.patients : 0;
+  if (!entry) return 0;
+  return (entry.byMonth && entry.byMonth[month]) ? entry.byMonth[month] : 0;
 }
 
 function _getPatientsForDept(depName) {
   if (!patientsDeptData || !depName) return 0;
+  const month = _activePatientsMonth();
+  if (!month) return 0;
+  const pOf = (entry) => (entry && entry.byMonth && entry.byMonth[month]) ? entry.byMonth[month] : 0;
   const hospital = getAnalyticsHospital(currentHospitalId);
   const hospitalName = hospital ? hospital.name : "";
   const exact = patientsDeptData.get(_patientsDeptKey(hospitalName, depName));
-  if (exact) return exact.patients || 0;
+  if (exact) return pOf(exact);
 
   const hospitalKey = _normalizePatientsHospital(hospitalName);
   const depKey = _normalizeMvoName(depName);
@@ -4276,7 +4309,7 @@ function _getPatientsForDept(depName) {
     if (hospitalKey && entryHospitalKey && hospitalKey !== entryHospitalKey) continue;
     candidates.push(entry);
     if (_normalizeMvoName(entry.dept) === depKey) {
-      return entry.patients || 0;
+      return pOf(entry);
     }
   }
 
@@ -4295,7 +4328,7 @@ function _getPatientsForDept(depName) {
       ties++;
     }
   }
-  return best && bestScore >= 0.6 && ties === 1 ? (best.patients || 0) : 0;
+  return best && bestScore >= 0.6 && ties === 1 ? pOf(best) : 0;
 }
 
 function _getDepartmentPatientCost(dep) {
