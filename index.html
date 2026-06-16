@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.86";
+const APP_VERSION = "v.87";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7073,8 +7073,8 @@ function renderSubItems() {
         return da - db;
       }
       case "dead_desc": {
-        const dadays = a.cat.dead ? (daysWithoutMovement(itemKey(a.item, sub), currentMonthKey) || 0) : -1;
-        const dbdays = b.cat.dead ? (daysWithoutMovement(itemKey(b.item, sub), currentMonthKey) || 0) : -1;
+        const dadays = a.cat.dead ? (_deadDaysForItem(a.item, sub) || 0) : -1;
+        const dbdays = b.cat.dead ? (_deadDaysForItem(b.item, sub) || 0) : -1;
         return dbdays - dadays;
       }
       case "name_asc":  return (analyticsData.names[a.item.n] || "").localeCompare(analyticsData.names[b.item.n] || "", "uk");
@@ -7407,17 +7407,29 @@ function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
         }
         txt = `💀 не списано з ${fmtShortDate(lastWriteoffDate)}${suffix}`;
       } else if (lastMovedMonthKey) {
-        txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}`;
+        // Show both the last-movement month AND the accumulated days, so the
+        // scale of stagnation is obvious at a glance.
+        const daysPart = (typeof deadDays === "number" && deadDays > 0)
+          ? ` (${deadDays} дн)` : "";
+        txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}${daysPart}`;
       } else {
-        // No movement found in any month — say since when we've been watching.
-        const monthKeys = analyticsData && analyticsData.months
-          ? Object.keys(analyticsData.months).sort()
+        // No movement found in any loaded month — this is the oldest, deepest
+        // dead stock. Show how long (days) and since which month we've been
+        // watching, instead of a vague "без руху".
+        const monthKeys = (analyticsData && analyticsData.months)
+          ? Object.keys(analyticsData.months)
+              .filter(k => analyticsData.months[k].directions && analyticsData.months[k].directions.length)
+              .sort()
           : [];
         const earliest = monthKeys[0];
-        if (earliest && earliest !== currentMonthKey) {
-          txt = `💀 не рухався з ${fmtMonthKey(earliest)}`;
+        const daysPart = (typeof deadDays === "number" && deadDays > 0)
+          ? `${deadDays} дн` : "";
+        if (earliest) {
+          txt = daysPart
+            ? `💀 без руху ${daysPart} (з ${fmtMonthKey(earliest)})`
+            : `💀 без руху з ${fmtMonthKey(earliest)}`;
         } else {
-          txt = "💀 без руху";
+          txt = daysPart ? `💀 без руху ${daysPart}` : "💀 без руху";
         }
       }
       badges.push(`<span class="an-badge dead">${txt}</span>`);
