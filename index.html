@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.84";
+const APP_VERSION = "v.86";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3883,6 +3883,7 @@ function backToHospitalPicker() {
   cmpStartKey = null; cmpEndKey = null;
   _aggCache = {};
   _expenseByItemPerMonth = null;
+  _deadDaysCache = new Map();
   openHospitalPicker();
 }
 
@@ -3899,6 +3900,7 @@ function selectHospital(id) {
     cmpStartKey = null; cmpEndKey = null;
     _aggCache = {};
     _expenseByItemPerMonth = null;
+  _deadDaysCache = new Map();
   }
   currentHospitalId = id;
   renderHospitalSelect();
@@ -3951,6 +3953,7 @@ async function loadAnalytics(forceRefresh) {
         if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length > 0) {
           analyticsData = cached.data;
           _expenseByItemPerMonth = null;
+  _deadDaysCache = new Map();
           initAnalyticsUI();
           setState("ready");
           // Silent background refresh if cache is older than TTL
@@ -5303,6 +5306,7 @@ async function fetchAnalytics({ silent }) {
     }
     analyticsData = parsedData;
     _expenseByItemPerMonth = null;
+  _deadDaysCache = new Map();
     _watchMarkSeen(hospital.id);
 
     // Persist cache
@@ -5353,6 +5357,7 @@ function initAnalyticsUI() {
   if (!rangeStartKey || !monthKeys.includes(rangeStartKey)) rangeStartKey = rangeEndKey;
   if (rangeStartKey > rangeEndKey) rangeStartKey = rangeEndKey;
   currentMonthKey = rangeEndKey;
+  _deadDaysCache = new Map();
 
   // Comparison — preserve if still valid, else default to the previous month.
   if (cmpStartKey && !monthKeys.includes(cmpStartKey)) cmpStartKey = null;
@@ -5425,6 +5430,7 @@ function _clampActivePeriod() {
     const t = rangeStartKey; rangeStartKey = rangeEndKey; rangeEndKey = t;
   }
   currentMonthKey = rangeEndKey;
+  _deadDaysCache = new Map();
 }
 function _clampComparePeriod() {
   if (cmpStartKey && cmpEndKey && cmpStartKey > cmpEndKey) {
@@ -6324,6 +6330,8 @@ function fmtMonthKey(mk) {
 // Build a fast lookup of "items with movement" per month for the dead-days
 // computation. Cached per analyticsData load.
 let _expenseByItemPerMonth = null;
+let _deadDaysCache = new Map();
+  _deadDaysCache = new Map();
 function _ensureExpenseIndex() {
   if (_expenseByItemPerMonth) return;
   _expenseByItemPerMonth = new Map();  // monthKey -> Set of itemKeys with es>0
@@ -6356,6 +6364,24 @@ function itemKey(it, sub) {
   return it.n + "|" + sub.path.join(">");
 }
 
+// Minimum days without movement for an item to count as "dead" (мертвий запас).
+// Shared by the badge, the per-МВО filter/counter, and the analytics summary,
+// so all three agree. Items untouched for less than this are normal working
+// stock, not stagnation.
+const DEAD_MIN_DAYS = 60;
+
+// Cached days-without-movement per itemKey (declared near _expenseByItemPerMonth
+// above). classifyItem runs for tens of thousands of items, and
+// daysWithoutMovement walks all months, so we memoize to keep rendering fast.
+function _deadDaysForItem(it, sub) {
+  const k = itemKey(it, sub);
+  if (_deadDaysCache.has(k)) return _deadDaysCache.get(k);
+  const d = daysWithoutMovement(k, currentMonthKey);
+  const val = (typeof d === "number") ? d : null;
+  _deadDaysCache.set(k, val);
+  return val;
+}
+
 // Classify an item into one or more analytics buckets, given its containing
 // subdivision and the current period. Returns flags + key metrics.
 function classifyItem(it, sub, period) {
@@ -6365,8 +6391,16 @@ function classifyItem(it, sub, period) {
   const dos     = daysOfSupply(it, period);
   const dosQty  = daysOfSupplyQty(it, period);
 
-  // Dead: has stock at close, zero expense in this period, was there at start.
-  const dead = (os > 0) && (es === 0) && (cs > 0);
+  // Dead: has stock at close, zero expense in this period, was there at start —
+  // AND has been stagnant for at least DEAD_MIN_DAYS. Short gaps (e.g. 16 days)
+  // are normal working stock, so they don't count as dead anywhere.
+  let dead = (os > 0) && (es === 0) && (cs > 0);
+  if (dead) {
+    const dd = _deadDaysForItem(it, sub);
+    // If we can measure the gap and it's short → not dead. If unmeasurable
+    // (no movement found across history → null), keep it dead.
+    if (dd !== null && dd < DEAD_MIN_DAYS) dead = false;
+  }
 
   // Brand new: nothing at start of period, received stock during it.
   const newItem = (os === 0) && (rs > 0);
@@ -7337,36 +7371,57 @@ function _flowCell(qty, sum, unit) {
 
 function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
   const badges = [];
+  // Minimum stagnation to bother showing the "no movement" badge. A medication
+  // untouched for 2-3 weeks is normal working stock — flagging it as "dead"
+  // is noise. Only genuine stagnation (≥ this many days) is worth surfacing.
+  const DEAD_BADGE_MIN_DAYS = 60;
+
   if (cat.dead) {
-    // Prefer the exact last write-off date if we have it — that's actionable
-    // and accurate. Falls back to month-of-last-movement, then to a generic
-    // "since {earliest month in data}" message.
-    let txt;
+    // Estimate how many days this item has been without movement, from the
+    // best signal available (exact write-off date → accumulated dead days).
+    let estDays = null;
     if (lastWriteoffDate) {
-      // "💀 не списано з 21.02.2026 (54 дн)"
-      const today = new Date();
       const wd = new Date(lastWriteoffDate);
-      let suffix = "";
-      if (!isNaN(wd)) {
-        const days = Math.max(0, Math.round((today - wd) / 86400000));
-        if (days > 0) suffix = ` (${days} дн)`;
-      }
-      txt = `💀 не списано з ${fmtShortDate(lastWriteoffDate)}${suffix}`;
-    } else if (lastMovedMonthKey) {
-      txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}`;
-    } else {
-      // No movement found in any month — say since when we've been watching.
-      const monthKeys = analyticsData && analyticsData.months
-        ? Object.keys(analyticsData.months).sort()
-        : [];
-      const earliest = monthKeys[0];
-      if (earliest && earliest !== currentMonthKey) {
-        txt = `💀 не рухався з ${fmtMonthKey(earliest)}`;
-      } else {
-        txt = "💀 без руху";
-      }
+      if (!isNaN(wd)) estDays = Math.max(0, Math.round((Date.now() - wd) / 86400000));
+    } else if (typeof deadDays === "number") {
+      estDays = deadDays;
     }
-    badges.push(`<span class="an-badge dead">${txt}</span>`);
+    // If we can measure the gap and it's below the threshold → no badge.
+    // If we genuinely can't measure it (no date, no deadDays), we keep the
+    // badge only when there's evidence of long-term stagnation (no movement
+    // found across loaded history → lastMovedMonthKey is null AND deadDays null).
+    const tooFresh = (estDays !== null && estDays < DEAD_BADGE_MIN_DAYS);
+
+    if (!tooFresh) {
+      // Prefer the exact last write-off date if we have it — that's actionable
+      // and accurate. Falls back to month-of-last-movement, then to a generic
+      // "since {earliest month in data}" message.
+      let txt;
+      if (lastWriteoffDate) {
+        const today = new Date();
+        const wd = new Date(lastWriteoffDate);
+        let suffix = "";
+        if (!isNaN(wd)) {
+          const days = Math.max(0, Math.round((today - wd) / 86400000));
+          if (days > 0) suffix = ` (${days} дн)`;
+        }
+        txt = `💀 не списано з ${fmtShortDate(lastWriteoffDate)}${suffix}`;
+      } else if (lastMovedMonthKey) {
+        txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}`;
+      } else {
+        // No movement found in any month — say since when we've been watching.
+        const monthKeys = analyticsData && analyticsData.months
+          ? Object.keys(analyticsData.months).sort()
+          : [];
+        const earliest = monthKeys[0];
+        if (earliest && earliest !== currentMonthKey) {
+          txt = `💀 не рухався з ${fmtMonthKey(earliest)}`;
+        } else {
+          txt = "💀 без руху";
+        }
+      }
+      badges.push(`<span class="an-badge dead">${txt}</span>`);
+    }
   }
   // For brand-new items, days-of-supply is misleading (the rate is based on
   // 1-N days of data, not a full month), so we skip the "fast" badge entirely
