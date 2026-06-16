@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.83";
+const APP_VERSION = "v.84";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4254,17 +4254,28 @@ function _deptMatchScore(a, b) {
   const bNorm = _normalizeDeptLoose(b).replace(/\s+/g, "");
   if (!aNorm || !bNorm) return 0;
   if (aNorm === bNorm) return 1;
-  if (aNorm.includes(bNorm) || bNorm.includes(aNorm)) return 0.92;
+  // Only treat as near-equal when the SHORTER string is a prefix of the longer
+  // AND they're close in length. A bare substring test wrongly matched
+  // "терапія" inside "реперф.терапії". Require the longer to start with the
+  // shorter and differ by at most a few chars.
+  const shorter = aNorm.length <= bNorm.length ? aNorm : bNorm;
+  const longer  = aNorm.length <= bNorm.length ? bNorm : aNorm;
+  if (longer.startsWith(shorter) && (longer.length - shorter.length) <= 3) {
+    return 0.9;
+  }
 
   const aTokens = new Set(_deptTokens(a));
   const bTokens = new Set(_deptTokens(b));
-  const minSize = Math.min(aTokens.size, bTokens.size);
-  if (minSize === 0) return 0;
+  if (aTokens.size === 0 || bTokens.size === 0) return 0;
   let hits = 0;
   for (const t of aTokens) {
     if (bTokens.has(t)) hits++;
   }
-  return hits / minSize;
+  // Jaccard: shared / (union). One coincidental shared token (e.g. "терапії"
+  // between "Центр терапії" and "реперф.терапії") yields a LOW score instead
+  // of a false 1.0, so unrelated units don't borrow each other's patients.
+  const union = aTokens.size + bTokens.size - hits;
+  return union > 0 ? hits / union : 0;
 }
 
 // Returns the YYYY-MM month for which patient data should be used, or null.
@@ -4328,7 +4339,7 @@ function _getPatientsForDept(depName) {
       ties++;
     }
   }
-  return best && bestScore >= 0.6 && ties === 1 ? pOf(best) : 0;
+  return best && bestScore >= 0.85 && ties === 1 ? pOf(best) : 0;
 }
 
 function _getDepartmentPatientCost(dep) {
@@ -6921,17 +6932,15 @@ function renderSubDetail() {
   const _daysSub = `${_posSub} · вистачить на цю кількість днів при поточному видатку`;
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Дні запасу</div><div class="an-kpi-val">${fmtDaysOfSupply(dos)}</div><div class="an-kpi-sub">${_daysSub}</div></div>`);
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">Період обороту</div><div class="an-kpi-val">${cycleStr}</div><div class="an-kpi-sub">у середньому одиниця лежить на складі стільки днів</div></div>`);
-  // Cost-per-patient: shown only if this МВО is mapped in the patients sheet.
-  // Hidden for laboratory/storage/support subdivisions that don't have patients.
+  // Cost-per-patient: shown ONLY when this exact МВО is mapped in the patients
+  // sheet (by head's name). We deliberately do NOT fall back to a fuzzy
+  // department-name match — that produced false hits (e.g. "реперф.терапії"
+  // wrongly matching "Центр терапії"), attributing another unit's patients.
+  // If the МВО isn't in the mapping, no card is shown — by design.
   const _patients = _getPatientsForSub(sub);
   if (_patients > 0 && _es > 0) {
     const _costPerPatient = _es / _patients;
     kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💊 На пацієнта</div><div class="an-kpi-val">${fmtMoney(_costPerPatient)}</div><div class="an-kpi-sub">${_patients} пацієнтів · ${fmtMoney(_es)} видатку</div></div>`);
-  } else {
-    const _deptPatientCost = _getDepartmentPatientCostForSub(sub);
-    if (_deptPatientCost) {
-      kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💊 На пацієнта у відділенні</div><div class="an-kpi-val">${fmtMoney(_deptPatientCost.cost)}</div><div class="an-kpi-sub">${_deptPatientCost.patients} пацієнтів · ${fmtMoney(_deptPatientCost.expense)} видатку відділення</div></div>`);
-    }
   }
   kpis.push(`<div class="an-kpi"><div class="an-kpi-lbl">💀 Без руху</div><div class="an-kpi-val">${buckets.dead.length}</div><div class="an-kpi-sub">${fmtMoney(sumSum(buckets.dead, "cs"))}</div></div>`);
   document.getElementById("sub-detail-kpis").innerHTML = kpis.join("");
