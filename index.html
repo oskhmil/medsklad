@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.91";
+const APP_VERSION = "v.92";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -1883,6 +1883,12 @@ const CACHE_VERSION_KEY = "medsklad_cache_version";
     }
     toDelete.forEach(k => { try { localStorage.removeItem(k); } catch(_) {} });
     localStorage.setItem(CACHE_VERSION_KEY, String(CACHE_VERSION));
+    // Also wipe IndexedDB-backed caches (analytics). This IIFE runs during
+    // parse, before `IDB` is defined, so defer the call to a macrotask by which
+    // point the const is initialised.
+    setTimeout(function () {
+      try { if (IDB.available) IDB.clear(); } catch (_) {}
+    }, 0);
     if (toDelete.length > 0) {
       console.info("[medsklad] cache version bumped to", CACHE_VERSION,
                    "— cleared", toDelete.length, "stale entries");
@@ -1948,6 +1954,8 @@ async function checkRemoteCacheVersion() {
     }
     toDelete.forEach(k => { try { localStorage.removeItem(k); } catch(_) {} });
     localStorage.setItem(REMOTE_CACHE_VERSION_KEY, remote);
+    // Also wipe IndexedDB-backed caches (analytics) — they're not in localStorage.
+    try { if (IDB.available) await IDB.clear(); } catch (_) {}
     // Reload so the fresh state is reflected everywhere in the UI.
     location.reload();
   } catch (e) {
@@ -1972,6 +1980,92 @@ let deptItemFilter = "";
 let _cacheFailedThisSession = false;
 
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1uAByiAlSotEn1Y7fO1_fN72vOZ8lcu1z/export?format=xlsx";
+
+// ── IndexedDB key-value store (for caches too big for localStorage) ──────────
+// localStorage caps at ~5 MB per origin and is shared across every module AND
+// any other page on this domain. The analytics cache alone is 2–3 MB per
+// hospital, and with 10+ hospitals on the roadmap it can never fit there. That
+// pressure was crowding out the medsearch cache ("кеш переповнено"). The heavy,
+// growth-prone caches (currently: analytics) live in IndexedDB instead — it
+// offers hundreds of MB. Tiny keys (auth, version flags, snapshot, finplan)
+// stay in localStorage; their sync API keeps call sites simple and they're
+// trivial in size.
+const IDB = (function () {
+  const DB_NAME = "medsklad", STORE = "kv", DB_VER = 1;
+  let _dbp = null;
+  function open() {
+    if (_dbp) return _dbp;
+    _dbp = new Promise((resolve, reject) => {
+      let req;
+      try { req = indexedDB.open(DB_NAME, DB_VER); }
+      catch (e) { reject(e); return; }
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror   = () => reject(req.error);
+    });
+    return _dbp;
+  }
+  function run(mode, fn) {
+    return open().then(db => new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE, mode);
+      const store = tx.objectStore(STORE);
+      let result;
+      const rq = fn(store);
+      if (rq) rq.onsuccess = () => { result = rq.result; };
+      tx.oncomplete = () => resolve(result);
+      tx.onerror    = () => reject(tx.error);
+      tx.onabort    = () => reject(tx.error);
+    }));
+  }
+  return {
+    available: (function () {
+      try { return typeof indexedDB !== "undefined" && indexedDB !== null; }
+      catch (e) { return false; }
+    })(),
+    get: (key)      => run("readonly",  s => s.get(key)),
+    set: (key, val) => run("readwrite", s => s.put(val, key)),
+    del: (key)      => run("readwrite", s => s.delete(key)),
+    clear: ()       => run("readwrite", s => s.clear()),
+  };
+})();
+
+// One-time startup migration: move any analytics caches still sitting in
+// localStorage (from pre-IndexedDB builds) into IndexedDB and free the
+// localStorage slots. This immediately relieves the quota pressure that was
+// blocking the medsearch cache — even if the user never opens analytics this
+// session. Current-version (v9) payloads are migrated; older versions dropped.
+(function _migrateAnalyticsCachesToIDB() {
+  if (!IDB.available) return;
+  try {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k)) keys.push(k);
+    }
+    keys.forEach(k => {
+      let raw = null;
+      try { raw = localStorage.getItem(k); } catch (_) { return; }
+      if (raw == null) return;
+      if (k.startsWith("medsklad_analytics_cache_v9__")) {
+        let obj = null;
+        try { obj = JSON.parse(raw); } catch (_) { obj = null; }
+        if (obj) {
+          IDB.set(k, obj)
+            .then(() => { try { localStorage.removeItem(k); } catch (_) {} })
+            .catch(() => { /* keep LS copy if IDB write fails */ });
+        } else {
+          try { localStorage.removeItem(k); } catch (_) {}
+        }
+      } else {
+        // stale older-version analytics cache — just drop it
+        try { localStorage.removeItem(k); } catch (_) {}
+      }
+    });
+  } catch (e) { /* localStorage unavailable — nothing to migrate */ }
+})();
 
 // ── cache ────────────────────────────────────────────────────────────────────
 // localStorage on mobile is small (5 MB on iOS Safari). The medsearch dataset
@@ -3318,6 +3412,7 @@ function freshBannerAction() {
     } else {
       // Лікарня аналітики: чистимо кеш — при відкритті підтягнеться свіже
       try { localStorage.removeItem(analyticsHospitalCacheKey(k)); } catch (e) {}
+      try { if (IDB.available) IDB.del(analyticsHospitalCacheKey(k)); } catch (e) {}
     }
   });
 }
@@ -3954,9 +4049,19 @@ async function loadAnalytics(forceRefresh) {
   // Try cache first
   if (!forceRefresh) {
     try {
-      const raw = localStorage.getItem(cacheKey);
-      if (raw) {
-        const cached = JSON.parse(raw);
+      let cached = IDB.available ? await IDB.get(cacheKey) : null;
+      // One-time migration: pre-IndexedDB builds kept this in localStorage. If
+      // a copy is still there, move it into IndexedDB and free the LS slot.
+      if (!cached) {
+        let lsRaw = null;
+        try { lsRaw = localStorage.getItem(cacheKey); } catch (_) {}
+        if (lsRaw) {
+          try { cached = JSON.parse(lsRaw); } catch (_) { cached = null; }
+          try { localStorage.removeItem(cacheKey); } catch (_) {}
+          if (cached && IDB.available) { try { await IDB.set(cacheKey, cached); } catch (_) {} }
+        }
+      }
+      if (cached) {
         if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length > 0) {
           analyticsData = cached.data;
           _expenseByItemPerMonth = null;
@@ -3979,6 +4084,7 @@ async function loadAnalytics(forceRefresh) {
     } catch (e) {
       // cache corrupted / quota — ignore and fall through to network
       try { localStorage.removeItem(cacheKey); } catch (_) {}
+      try { if (IDB.available) await IDB.del(cacheKey); } catch (_) {}
     }
   }
 
@@ -5316,17 +5422,20 @@ async function fetchAnalytics({ silent }) {
   _deadDaysCache = new Map();
     _watchMarkSeen(hospital.id);
 
-    // Persist cache
-    try {
-      localStorage.setItem(cacheKey, JSON.stringify({
-        ts: Date.now(),
-        data: analyticsData,
-      }));
-    } catch (e) {
-      // Quota exceeded — the parsed object might be too big for localStorage
-      // on this device. Everything still works in-memory; we just won't cache.
-      try { localStorage.removeItem(cacheKey); } catch(_) {}
+    // Persist cache. IndexedDB has a far larger quota than localStorage — the
+    // analytics payload is multi-MB per hospital and would blow the ~5 MB LS
+    // wall (it was crowding out the medsearch cache before this migration).
+    const _anPayload = { ts: Date.now(), data: analyticsData };
+    if (IDB.available) {
+      try { await IDB.set(cacheKey, _anPayload); }
+      catch (e) { try { await IDB.del(cacheKey); } catch (_) {} }
+    } else {
+      // Fallback for ancient browsers without IndexedDB
+      try { localStorage.setItem(cacheKey, JSON.stringify(_anPayload)); }
+      catch (e) { try { localStorage.removeItem(cacheKey); } catch(_) {} }
     }
+    // Drop any stale localStorage copy left over from before the IDB migration
+    try { localStorage.removeItem(cacheKey); } catch (_) {}
 
     if (!silent) {
       initAnalyticsUI();
