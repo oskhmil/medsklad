@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.95";
+const APP_VERSION = "v.97";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7890,6 +7890,10 @@ const FINPLAN_OVERRIDES = [
   // Тому override спрацьовує ЛИШЕ коли в назві є "південн" — інший склад
   // падає у Пантелеймона через штатний маркер /св[\.\s]*пан/.
   { test: /дволітчук[^]*південн|південн[^]*дволітчук/i, target: "polic" },
+  // Бойко Роман (фармацевт ПОГУЛЯНКА) — аптечний пункт Погулянка,
+  // належить до Лаб-діагност. центрів. Прив'язка до "погулянк" —
+  // стабільна назва локації, не залежить від того, хто там фармацевт.
+  { test: /погулянк/i, target: "polic" },
   // Склад лабораторні реагенти — окремий склад св. Пантелеймона на тому ж
   // рівні що Склад №4. Він має йти в Лабораторію, незалежно від орфографії
   // (різні місяці можуть писати по-різному: "лабораторні", "лабораторної",
@@ -8194,6 +8198,7 @@ function _parseFinplanSheet(ws) {
   let currentAccount = null;
   let currentMvo = null;
   let inTargetBlock = false;
+  let controlSum = 0; // агрегат 1С з рядків рахунку "202" (для перевірки інтегрітету)
 
   // detect if indents are all-zero (fallback mode)
   const hasIndents = indents.some(v => v > 0);
@@ -8242,6 +8247,11 @@ function _parseFinplanSheet(ws) {
       currentMvo = null;
       inTargetBlock = (currentDirection && currentDirection.toUpperCase().includes("НСЗУ")
                       && currentAccount === "202");
+      // Контрольна сума з самого файлу: рядок рахунку "202" містить
+      // агрегат 1С. Після парсингу порівнюємо з сумою розпізнаних МВО —
+      // якщо не сходиться, значить якийсь склад не розпізнався
+      // _looksLikeStorage і його сума випала з підсумку.
+      if (inTargetBlock && sum != null) controlSum += sum;
       continue;
     }
 
@@ -8308,7 +8318,17 @@ function _parseFinplanSheet(ws) {
   let total = 0;
   for (const m of mvos) total += m.sum;
 
-  return { period, mvos, total };
+  // Перевірка інтегрітету: сума розпізнаних МВО vs агрегат 1С (рахунок 202).
+  // Розбіжність > 1 грн = якийсь склад не розпізнано → його сума випала.
+  const integrityDelta = controlSum > 0 ? +(controlSum - total).toFixed(2) : 0;
+  if (Math.abs(integrityDelta) > 1) {
+    console.warn("[finplan] РОЗБІЖНІСТЬ СУМ: у файлі", controlSum.toFixed(2),
+                 "— розпізнано", total.toFixed(2),
+                 "— різниця", integrityDelta.toFixed(2),
+                 "(ймовірно, нерозпізнаний склад трактується як товар)");
+  }
+
+  return { period, mvos, total, controlSum, integrityDelta };
 }
 
 function _parseFpNum(v) {
@@ -8359,6 +8379,11 @@ function _looksLikeStorage(text) {
   if (/склади\s+лдц/i.test(text)) return true;
   if (/^відділ/i.test(text)) return true;
   if (/^лаборант/i.test(text)) return true;
+  // "фармацевт" — МВО без по-батькові та ініціалів, напр.
+  // "Бойко Роман (фармацевт ПОГУЛЯНКА)", "Дволітчук Іванна (асистент
+  // фармацевт ПІВДЕННИЙ)". Перевірено по всіх аркушах: слово не
+  // зустрічається у назвах товарів, тільки в рядках МВО.
+  if (/фармацевт/i.test(text)) return true;
   if (/\bвп\s/i.test(text)) return true;
   if (/поліклін/i.test(text)) return true;
   // Note: bare "діагност" was deliberately removed — it appears in many product
@@ -8451,6 +8476,7 @@ function renderFinplan() {
     <div class="fp-summary-label">Всього закупівель (НСЗУ, рах. 202)</div>
     <div class="fp-summary-total">${fmtFinplanMoney(monthData.total)}</div>
     <div class="fp-summary-period">${esc(_finplanCurrentMonth)}${periodStr ? " · " + esc(periodStr) : ""}</div>
+    ${Math.abs(monthData.integrityDelta || 0) > 1 ? `<div style="margin-top:6px;font-size:11px;color:var(--warn);">⚠️ Сума не сходиться з файлом на ${fmtFinplanMoney(monthData.integrityDelta)} — ймовірно, нерозпізнаний склад</div>` : ""}
     ${updatedStr ? `<div class="fp-summary-updated">🔄 Дані оновлено ${esc(updatedStr)}</div>` : ""}
   `;
 
