@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.93";
+const APP_VERSION = "v.94";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2212,7 +2212,9 @@ async function fetchAndUpdate(showLoader) {
   // For silent (background) refresh: show subtle indicator instead of loader.
   if (!showLoader) setRefreshing(true);
   try {
-    const resp = await fetch(GDRIVE_URL);
+    // cache: "no-store" — інакше браузер може віддати вчорашню копію xlsx
+    // зі свого HTTP-кешу навіть при примусовому оновленні.
+    const resp = await fetch(GDRIVE_URL, { cache: "no-store" });
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const buf = await resp.arrayBuffer();
     const newItems = parseWorkbook(buf);
@@ -5343,7 +5345,9 @@ async function _anFetchAnalyticsWorkbook(baseUrl, { silent, progressEl, textEl }
     const url = candidate + (silent ? "" : (candidate.indexOf("?") >= 0 ? "&t=" : "?t=") + Date.now());
     try {
       if (!silent && textEl) textEl.textContent = "Завантаження даних...";
-      const resp = await fetch(url);
+      // no-store доповнює ?t=-бустер: бустер є лише в ручному режимі,
+      // фонове (silent) оновлення без no-store могло тягнути стару копію.
+      const resp = await fetch(url, { cache: "no-store" });
       if (!resp.ok) throw new Error("HTTP " + resp.status);
       const buf = await _anReadResponseArrayBuffer(resp, { silent, progressEl, textEl });
       const head = new Uint8Array(buf, 0, Math.min(4, buf.byteLength));
@@ -8088,7 +8092,10 @@ async function _fetchFinplanInBackground() {
 }
 
 async function _fetchFinplan() {
-  const resp = await fetch(FINPLAN_URL);
+  // cache: "no-store" — без цього браузер міг віддавати вчорашній xlsx
+  // з HTTP-кешу навіть при forceRefresh (локальний кеш чистився, але
+  // мережевий запит повертав стару копію).
+  const resp = await fetch(FINPLAN_URL, { cache: "no-store" });
   if (!resp.ok) throw new Error("HTTP " + resp.status);
   const buf = await resp.arrayBuffer();
   // cellStyles:true is required to preserve alignment.indent on column A,
