@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.92";
+const APP_VERSION = "v.93";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7880,6 +7880,9 @@ const FINPLAN_OVERRIDES = [
   // Романчукевич з киснем — завжди в "Інші підрозділи"
   // (in January was misclassified to Mykolaja; this override fixes it)
   { test: /романчукевич/i, target: "other" },
+  // Дволітчук Іванна (асистент фармацевт ПІВДЕННИЙ) — склад належить до
+  // Лаб-діагност. центрів, незалежно від інших маркерів у назві.
+  { test: /дволітчук/i, target: "polic" },
   // Склад лабораторні реагенти — окремий склад св. Пантелеймона на тому ж
   // рівні що Склад №4. Він має йти в Лабораторію, незалежно від орфографії
   // (різні місяці можуть писати по-різному: "лабораторні", "лабораторної",
