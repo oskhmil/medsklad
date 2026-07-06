@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.97";
+const APP_VERSION = "v.98";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -8395,7 +8395,13 @@ function _looksLikeStorage(text) {
   // require enough context not to misfire.
   if (/лаб[-\s]+діагност/i.test(text)) return true;
   if (/діагностичн\w*\s+центр/i.test(text)) return true;
-  if (/центр/i.test(text) && /(пан|лук|мик|анн)/i.test(text)) return true;
+  // F: "центр" у парі з маркером лікарні (центри крові, патанатомія).
+  // ВАЖЛИВО: обидва мають стояти на ПОЧАТКУ слова. Перевірка підрядком
+  // ловила товари: "Кон-центр-ований розчин для промив-анн-я" →
+  // "центр"+"анн" → товар ставав фейковим МВО і засмоктував сусідні
+  // позиції лабораторії.
+  if (/(^|[\s.,;:«"'()\-])центр/i.test(text) &&
+      /(^|[\s.,;:«"'()\-])(пан|лук|мик|анн)/i.test(text)) return true;
   return false;
 }
 
