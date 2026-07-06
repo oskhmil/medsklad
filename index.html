@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.98";
+const APP_VERSION = "v.99";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7854,6 +7854,11 @@ function fmtShortDate(iso) {
 const FINPLAN_URL = "https://docs.google.com/spreadsheets/d/1wXlsqZL2f7Tt9yxZv_gS8DI_q5Jg7DZh/export?format=xlsx";
 const FINPLAN_CACHE_KEY = "medsklad_finplan_cache";
 const FINPLAN_CACHE_TIME_KEY = "medsklad_finplan_cache_time";
+// Версія, якою був зроблений кешований розбір. Кеш зберігає ВЖЕ РОЗПАРСЕНІ
+// дані, тож зміни у правилах парсера (напр. _looksLikeStorage) без цієї
+// перевірки не застосовувались до 12 год — колеги бачили старий розбір
+// на новій версії додатку.
+const FINPLAN_CACHE_VER_KEY = "medsklad_finplan_cache_ver";
 
 // Hospital markers: ordered list of [hospital_label, [keywords...]].
 // Matching is case-insensitive substring on normalized МВО name.
@@ -8019,6 +8024,7 @@ function _saveFinplanCache(data) {
   try {
     localStorage.setItem(FINPLAN_CACHE_KEY, JSON.stringify(data));
     localStorage.setItem(FINPLAN_CACHE_TIME_KEY, Date.now().toString());
+    localStorage.setItem(FINPLAN_CACHE_VER_KEY, APP_VERSION);
   } catch (e) {
     console.warn("[finplan] cache save failed:", e.message);
   }
@@ -8030,6 +8036,9 @@ function _loadFinplanCache() {
     const raw = localStorage.getItem(FINPLAN_CACHE_KEY);
     const ts = localStorage.getItem(FINPLAN_CACHE_TIME_KEY);
     if (!raw || !ts) return null;
+    // Кеш зроблений іншою версією додатку → парсер міг змінитися,
+    // відкидаємо і перепарсуємо з нуля.
+    if (localStorage.getItem(FINPLAN_CACHE_VER_KEY) !== APP_VERSION) return null;
     return { data: JSON.parse(raw), time: new Date(parseInt(ts)) };
   } catch (e) {
     return null;
