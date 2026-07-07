@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.99";
+const APP_VERSION = "v.100";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7126,7 +7126,14 @@ function renderSubDetail() {
       writeoffLine = `<div style="font-size:12px;margin-top:8px;color:var(--muted)">📅 Останнє списання: ${esc(lastWriteoffStr)}</div>`;
     }
   } else {
-    writeoffLine = `<div style="font-size:12px;margin-top:8px;color:var(--muted)">📅 Списань не виявлено</div>`;
+    // Блок може бути "підсумковим" (1С дав суми без розшифровки позицій) —
+    // тоді "Списань не виявлено" бреше: видаток є, просто без деталізації.
+    const _tw = sub.totals || {};
+    if ((!sub.items || sub.items.length === 0) && (_tw.es || 0) > 0) {
+      writeoffLine = `<div style="font-size:12px;margin-top:8px;color:var(--muted)">📅 Списання за період: <span style="color:var(--text);font-weight:700">${fmtMoney(_tw.es)}</span> — без розшифровки у файлі 1С</div>`;
+    } else {
+      writeoffLine = `<div style="font-size:12px;margin-top:8px;color:var(--muted)">📅 Списань не виявлено</div>`;
+    }
   }
 
   // If this is a hidden (household-classified) МВО, prepend an informational
@@ -7147,7 +7154,28 @@ function renderSubDetail() {
     `;
   }
 
-  document.getElementById("sub-detail-header").innerHTML = hiddenBanner + `
+  // Банер для "підсумкових" блоків: 1С вивантажує реорганізовані підрозділи
+  // (напр. "Реорганізовані › Діагностично-лабораторне відділення+") лише
+  // рядком підсумків — без жодної позиції чи операції під ним. Це не помилка
+  // парсера і не відсутність руху: гроші є, розшифровки у файлі немає.
+  let summaryOnlyBanner = "";
+  {
+    const _tb = sub.totals || {};
+    const _hasMoney = (_tb.os || 0) + (_tb.rs || 0) + (_tb.es || 0) + (_tb.cs || 0) > 0;
+    if ((!sub.items || sub.items.length === 0) && _hasMoney) {
+      summaryOnlyBanner = `
+        <div style="background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.3);
+                    border-radius:8px;padding:8px 12px;margin-bottom:10px;
+                    font-size:12px;line-height:1.5;color:var(--accent);">
+          ℹ️ <b>Підсумковий блок</b> — 1С вивантажує цей підрозділ лише
+          загальними сумами, без розшифровки по позиціях. Рух за місяць:
+          прихід ${fmtMoney(_tb.rs || 0)}, видаток ${fmtMoney(_tb.es || 0)}.
+        </div>
+      `;
+    }
+  }
+
+  document.getElementById("sub-detail-header").innerHTML = hiddenBanner + summaryOnlyBanner + `
     <div class="an-flow-title">Підрозділ</div>
     <div style="font-size:15px;font-weight:700;line-height:1.3;margin-bottom:4px;">${esc(leaf)}</div>
     <div style="font-size:11px;color:var(--muted);line-height:1.4;">${esc(pathFull)}</div>
@@ -7290,7 +7318,14 @@ function renderSubItems() {
 
   const containerEl = document.getElementById("sub-items-container");
   if (entries.length === 0) {
-    containerEl.innerHTML = `<div class="empty-state" style="padding:40px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Нічого не знайдено</div></div>`;
+    // Якщо у підрозділу взагалі немає позицій, але є суми — це підсумковий
+    // блок з 1С (див. банер угорі), кажемо це прямо замість "не знайдено".
+    const _t = (_currentSubdivision && _currentSubdivision.totals) || {};
+    const _summaryOnly = _currentSubdivision && (!_currentSubdivision.items || _currentSubdivision.items.length === 0)
+      && ((_t.os || 0) + (_t.rs || 0) + (_t.es || 0) + (_t.cs || 0) > 0);
+    containerEl.innerHTML = _summaryOnly
+      ? `<div class="empty-state" style="padding:40px 10px;"><div class="empty-ico">🗂️</div><div class="empty-sub">1С не дає розшифровки позицій для цього підрозділу —<br>у файлі є лише загальні суми (показані вище)</div></div>`
+      : `<div class="empty-state" style="padding:40px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Нічого не знайдено</div></div>`;
     return;
   }
 
