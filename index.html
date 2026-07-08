@@ -1494,6 +1494,14 @@
         <div class="hp-hero-sub">Оберіть лікарню для перегляду аналітики</div>
       </div>
       <div class="choice-wrap" id="hospital-picker-list"></div>
+      <button class="choice-btn" onclick="openDemandForTMO()" style="width:100%;margin-top:12px;">
+        <div class="choice-ico">📋</div>
+        <div class="choice-body">
+          <div class="choice-title">Річна потреба по ТМО</div>
+          <div class="choice-sub">Зведений прогноз закупівель по всіх лікарнях з даними</div>
+        </div>
+        <div class="choice-arrow">›</div>
+      </button>
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
@@ -1628,7 +1636,50 @@
           <button class="filter-btn" onclick="setItemAnalyticsView('anomaly', this)">⚠️ Аномалії</button>
         </div>
         <div id="an-item-analytics"></div>
+
+        <!-- Annual demand entry -->
+        <div class="an-section-title" style="margin-top:18px;">📋 Планування закупівель</div>
+        <button class="choice-btn" onclick="openDemandForHospital()" style="width:100%;">
+          <div class="choice-ico">📋</div>
+          <div class="choice-body">
+            <div class="choice-title">Річна потреба</div>
+            <div class="choice-sub">Прогноз закупівель на рік зі списань цієї лікарні</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
       </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  ANNUAL DEMAND                               -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="demand-screen" style="display:none">
+      <div class="an-back-row">
+        <button class="back-btn" onclick="closeDemand()">← Назад</button>
+      </div>
+      <div class="an-section-title">📋 Річна потреба</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;" id="demand-scope"></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
+        Розрахунок зі <b>списань</b>: середньомісячне споживання × 12 + страховий запас − поточний залишок.
+        Середнє рахується від першого місяця з рухом. Позиції без жодного списання не включаються.
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">
+        <span style="font-size:11px;color:var(--muted);">Страховий запас:</span>
+        <select id="demand-safety" class="an-hospital-select" style="flex:0 0 auto;width:auto;" onchange="renderDemand()">
+          <option value="0">без запасу</option>
+          <option value="1" selected>1 місяць</option>
+          <option value="2">2 місяці</option>
+          <option value="3">3 місяці</option>
+        </select>
+        <button class="fp-export-btn" onclick="exportDemandExcel()" style="margin-left:auto;">📥 Excel</button>
+      </div>
+      <div style="position:relative;margin-bottom:10px;">
+        <input id="demand-search" type="text" placeholder="Пошук препарату..."
+          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-size:13px;outline:none;"
+          oninput="renderDemand()">
+      </div>
+      <div id="demand-summary" style="font-size:11px;color:var(--muted);margin-bottom:8px;"></div>
+      <div id="demand-list"></div>
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
@@ -1852,7 +1903,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.102";
+const APP_VERSION = "v.103";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2415,6 +2466,7 @@ function show(screen) {
   document.getElementById("hospital-picker-screen").style.display  = screen==="hospitalpicker" ? "block" : "none";
   document.getElementById("analytics-screen").style.display        = screen==="analytics"? "block" : "none";
   document.getElementById("sub-detail-screen").style.display       = screen==="subdetail"? "block" : "none";
+  document.getElementById("demand-screen").style.display           = screen==="demand"   ? "block" : "none";
   document.getElementById("finplan-screen").style.display          = screen==="finplan"  ? "block" : "none";
   document.getElementById("start-screen").style.display            = screen==="start"    ? "block" : "none";
   document.getElementById("loader").style.display                  = screen==="loader"   ? "block" : "none";
@@ -2429,6 +2481,7 @@ function show(screen) {
   const logoSub = document.querySelector(".logo-sub");
   if (logoSub) {
     if (screen === "analytics" || screen === "subdetail" || screen === "hospitalpicker") logoSub.textContent = "Аналіз відділень";
+    else if (screen === "demand") logoSub.textContent = "Річна потреба";
     else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
     else if (screen === "sections") logoSub.textContent = `Оберіть розділ · ${APP_VERSION}`;
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
@@ -5055,6 +5108,197 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   stats.departments = deptSet.size;
   stats.persons = personSet.size;
   return { groups: groupsOut, stats };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//                    Annual demand (Річна потреба)
+// ═══════════════════════════════════════════════════════════════════════════
+// Розрахунок зі списань (eq/es) по всіх місяцях, агреговано по номенклатурі
+// на рівні лікарні (закупівля централізована). Два входи:
+//   openDemandForHospital() — з поточної analyticsData;
+//   openDemandForTMO()      — зведення по всіх лікарнях з кешем в IndexedDB.
+let _demandRows = null;      // обчислені рядки
+let _demandScopeLabel = "";  // назва охоплення для заголовка/експорту
+let _demandBackTo = "analytics"; // куди повертатись
+
+function _demandAccumulate(acc, data, hospitalName) {
+  // acc: Map(normName → row). Проходимо ВСІ місяці лікарні.
+  const monthKeys = Object.keys(data.months || {}).sort();
+  if (!monthKeys.length) return 0;
+  const lastKey = monthKeys[monthKeys.length - 1];
+  for (let mi = 0; mi < monthKeys.length; mi++) {
+    const month = data.months[monthKeys[mi]];
+    const isLast = monthKeys[mi] === lastKey;
+    for (const dir of (month.directions || [])) {
+      for (const g of (dir.groups || [])) {
+        for (const sub of (g.subdivisions || [])) {
+          if (sub._hidden) continue; // господарські МВО не є фарм-потребою
+          for (const it of (sub.items || [])) {
+            const name = (data.names && typeof it.n === "number") ? data.names[it.n] : String(it.n || "");
+            if (!name) continue;
+            const key = name.toLowerCase().replace(/\s+/g, " ").trim();
+            let row = acc.get(key);
+            if (!row) {
+              row = { name, eqByMonth: {}, eq: 0, es: 0, stockQ: 0, stockS: 0,
+                      firstMove: null, hospitals: new Set() };
+              acc.set(key, row);
+            }
+            const eq = it.eq || 0, es = it.es || 0;
+            if (eq > 0) {
+              row.eqByMonth[monthKeys[mi]] = (row.eqByMonth[monthKeys[mi]] || 0) + eq;
+              row.eq += eq; row.es += es;
+              if (row.firstMove === null || monthKeys[mi] < row.firstMove) row.firstMove = monthKeys[mi];
+              row.hospitals.add(hospitalName);
+            }
+            if (isLast) { row.stockQ += (it.cq || 0); row.stockS += (it.cs || 0); }
+          }
+        }
+      }
+    }
+  }
+  return monthKeys.length;
+}
+
+function _demandFinalize(acc, allMonthKeys) {
+  const sortedKeys = [...allMonthKeys].sort();
+  const lastKey = sortedKeys[sortedKeys.length - 1];
+  const rows = [];
+  for (const row of acc.values()) {
+    if (row.eq <= 0) continue; // без списань — потреби немає
+    // активні місяці: від першого руху до кінця наявного періоду
+    const firstIdx = sortedKeys.indexOf(row.firstMove);
+    const activeMonths = Math.max(1, sortedKeys.length - firstIdx);
+    const avgMonthly = row.eq / activeMonths;
+    const annual = avgMonthly * 12;
+    const avgPrice = row.eq > 0 ? row.es / row.eq : 0;
+    // разовий сплеск: один місяць дає ≥80% усього списання при періоді ≥3 міс
+    const maxMonth = Math.max(...Object.values(row.eqByMonth));
+    const spike = activeMonths >= 3 && maxMonth >= row.eq * 0.8;
+    rows.push({
+      name: row.name, eq: row.eq, activeMonths, avgMonthly, annual, avgPrice,
+      stockQ: row.stockQ, spike,
+      hospitals: [...row.hospitals],
+    });
+  }
+  return { rows, monthsCount: sortedKeys.length, lastKey };
+}
+
+function openDemandForHospital() {
+  if (!analyticsData || !analyticsData.months) { alert("Дані аналітики не завантажені."); return; }
+  const h = getAnalyticsHospital(currentHospitalId);
+  const acc = new Map();
+  _demandAccumulate(acc, analyticsData, h ? h.name : "");
+  const fin = _demandFinalize(acc, Object.keys(analyticsData.months));
+  _demandRows = fin.rows;
+  _demandScopeLabel = `${h ? h.name : "Лікарня"} · ${fin.monthsCount} міс. даних (останній: ${fin.lastKey})`;
+  _demandBackTo = "analytics";
+  document.getElementById("demand-search").value = "";
+  renderDemand();
+  show("demand");
+}
+
+async function openDemandForTMO() {
+  const sources = [];
+  const missing = [];
+  for (const h of ANALYTICS_HOSPITALS) {
+    if (!h.url) continue;
+    let cached = null;
+    try { cached = IDB.available ? await IDB.get(analyticsHospitalCacheKey(h.id)) : null; } catch (_) {}
+    if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length) {
+      sources.push({ name: h.name, data: cached.data });
+    } else if (currentHospitalId === h.id && analyticsData && analyticsData.months) {
+      sources.push({ name: h.name, data: analyticsData });
+    } else {
+      missing.push(h.name);
+    }
+  }
+  if (!sources.length) {
+    alert("Немає завантажених даних жодної лікарні.\nВідкрийте аналітику лікарні хоча б раз — дані закешуються.");
+    return;
+  }
+  const acc = new Map();
+  const allKeys = new Set();
+  for (const s of sources) {
+    _demandAccumulate(acc, s.data, s.name);
+    Object.keys(s.data.months || {}).forEach(k => allKeys.add(k));
+  }
+  const fin = _demandFinalize(acc, [...allKeys]);
+  _demandRows = fin.rows;
+  _demandScopeLabel = `ТМО (${sources.map(s => s.name).join(", ")})`
+    + (missing.length ? ` · без даних: ${missing.join(", ")}` : "");
+  _demandBackTo = "hospitalpicker";
+  document.getElementById("demand-search").value = "";
+  renderDemand();
+  show("demand");
+}
+
+function closeDemand() {
+  show(_demandBackTo === "hospitalpicker" ? "hospitalpicker" : "analytics");
+}
+
+function _demandComputed() {
+  // застосовує страховий запас і пошук до _demandRows
+  const safety = parseInt(document.getElementById("demand-safety").value, 10) || 0;
+  const q = (document.getElementById("demand-search").value || "").toLowerCase().trim();
+  const out = [];
+  for (const r of (_demandRows || [])) {
+    if (q && !r.name.toLowerCase().includes(q)) continue;
+    const toBuy = Math.max(0, r.annual + safety * r.avgMonthly - r.stockQ);
+    out.push({ ...r, toBuy, budget: toBuy * r.avgPrice });
+  }
+  out.sort((a, b) => b.budget - a.budget);
+  return out;
+}
+
+function renderDemand() {
+  document.getElementById("demand-scope").textContent = _demandScopeLabel;
+  const rows = _demandComputed();
+  const totalBudget = rows.reduce((s, r) => s + r.budget, 0);
+  document.getElementById("demand-summary").innerHTML =
+    `${rows.length} позицій · прогноз бюджету: <b style="color:var(--text)">${fmtMoney(totalBudget)}</b> · сортування за бюджетом`;
+  const limit = 300;
+  const visible = rows.slice(0, limit);
+  const fmtQ = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  document.getElementById("demand-list").innerHTML = visible.map(r => `
+    <div class="result-card" style="margin-bottom:8px;">
+      <div style="padding:10px 14px;">
+        <div style="font-size:13px;font-weight:700;line-height:1.3;margin-bottom:6px;">${esc(r.name)}
+          ${r.spike ? `<span style="font-size:10px;color:var(--warn);font-weight:600;"> ⚠️ разовий сплеск — перевір вручну</span>` : ""}
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--muted);">
+          <span>Списано: <b style="color:var(--text)">${fmtQ(r.eq)}</b> за ${r.activeMonths} міс</span>
+          <span>Сер./міс: <b style="color:var(--text)">${fmtQ(r.avgMonthly)}</b></span>
+          <span>Рік: <b style="color:var(--text)">${fmtQ(r.annual)}</b></span>
+          <span>Залишок: <b style="color:var(--text)">${fmtQ(r.stockQ)}</b></span>
+          <span>До закупівлі: <b style="color:var(--accent)">${fmtQ(r.toBuy)}</b></span>
+          <span>Бюджет: <b style="color:var(--green)">${fmtMoney(r.budget)}</b></span>
+        </div>
+      </div>
+    </div>`).join("")
+    + (rows.length > limit ? `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">+ ще ${rows.length - limit} (звузьте пошуком)</div>` : "")
+    + (!rows.length ? `<div class="empty-state"><div class="empty-ico">📭</div><div class="empty-sub">Нічого не знайдено</div></div>` : "");
+}
+
+function exportDemandExcel() {
+  const rows = _demandComputed();
+  if (!rows.length) { alert("Немає даних для експорту."); return; }
+  const safety = parseInt(document.getElementById("demand-safety").value, 10) || 0;
+  const aoa = [
+    ["Річна потреба — " + _demandScopeLabel + ` (страховий запас: ${safety} міс)`],
+    [],
+    ["Назва", "Списано (к-сть)", "Місяців з руху", "Сер./міс", "Прогноз на рік",
+     "Залишок (к-сть)", "До закупівлі (к-сть)", "Сер. ціна, грн", "Бюджет, грн", "Примітка"],
+    ...rows.map(r => [
+      r.name, +r.eq.toFixed(2), r.activeMonths, +r.avgMonthly.toFixed(2), +r.annual.toFixed(2),
+      +r.stockQ.toFixed(2), +r.toBuy.toFixed(2), +r.avgPrice.toFixed(2), +r.budget.toFixed(2),
+      r.spike ? "разовий сплеск — перевірити" : "",
+    ]),
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"] = [{wch:55},{wch:14},{wch:12},{wch:10},{wch:13},{wch:13},{wch:17},{wch:12},{wch:14},{wch:26}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Потреба");
+  XLSX.writeFile(wb, "Річна_потреба.xlsx");
 }
 
 // ─── Household-items filter ─────────────────────────────────────────────────
