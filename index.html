@@ -1852,7 +1852,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.100";
+const APP_VERSION = "v.102";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7934,6 +7934,10 @@ const FINPLAN_OVERRIDES = [
   // належить до Лаб-діагност. центрів. Прив'язка до "погулянк" —
   // стабільна назва локації, не залежить від того, хто там фармацевт.
   { test: /погулянк/i, target: "polic" },
+  // Будь-який склад з "ЛДЦ" у назві (лабораторно-діагностичний центр) —
+  // за визначенням належить до Лаб-діагност. центрів. Штатний маркер
+  // не пропускав дужку перед ЛДЦ: "Задорожний Олег (ЛДЦ СИХІВ)".
+  { test: /(^|[\s.,;:«"'()\-])лдц(?![а-яіїєґ])/i, target: "polic" },
   // Склад лабораторні реагенти — окремий склад св. Пантелеймона на тому ж
   // рівні що Склад №4. Він має йти в Лабораторію, незалежно від орфографії
   // (різні місяці можуть писати по-різному: "лабораторні", "лабораторної",
@@ -8243,6 +8247,8 @@ function _parseFinplanSheet(ws) {
   let currentMvo = null;
   let inTargetBlock = false;
   let controlSum = 0; // агрегат 1С з рядків рахунку "202" (для перевірки інтегрітету)
+  const orphanRuns = []; // серії рядків без МВО-господаря (перший = підозрюваний склад)
+  let _orphanRun = null;
 
   // detect if indents are all-zero (fallback mode)
   const hasIndents = indents.some(v => v > 0);
@@ -8282,6 +8288,7 @@ function _parseFinplanSheet(ws) {
       currentDirection = aText;
       currentAccount = null;
       currentMvo = null;
+      _orphanRun = null;
       inTargetBlock = (currentDirection.toUpperCase().includes("НСЗУ"));
       continue;
     }
@@ -8289,6 +8296,7 @@ function _parseFinplanSheet(ws) {
     if (isAccount && currentDirection) {
       currentAccount = aText;
       currentMvo = null;
+      _orphanRun = null;
       inTargetBlock = (currentDirection && currentDirection.toUpperCase().includes("НСЗУ")
                       && currentAccount === "202");
       // Контрольна сума з самого файлу: рядок рахунку "202" містить
@@ -8331,6 +8339,7 @@ function _parseFinplanSheet(ws) {
     let isItem = !isMvo;
 
     if (isMvo) {
+      _orphanRun = null;
       const cls = _classifyHospitalWithReason(aText);
       currentMvo = mvoByName.get(aText);
       if (!currentMvo) {
@@ -8355,6 +8364,15 @@ function _parseFinplanSheet(ws) {
         qty: qty || 0,
         sum: sum || 0,
       });
+    } else if (isItem && !currentMvo) {
+      // СИРОТА: рядок у цільовому блоці, але розпізнаного МВО-господаря
+      // немає (напр. нерозпізнаний склад стоїть ПЕРШИМ одразу після рядка
+      // "202" — тоді і він, і всі його товари випадають з підсумку повністю).
+      // Перший рядок серії — сам нерозпізнаний склад, головний підозрюваний.
+      if (!_orphanRun) {
+        _orphanRun = { name: aText, sum: sum || 0 };
+        orphanRuns.push(_orphanRun);
+      }
     }
   }
 
@@ -8365,14 +8383,46 @@ function _parseFinplanSheet(ws) {
   // Перевірка інтегрітету: сума розпізнаних МВО vs агрегат 1С (рахунок 202).
   // Розбіжність > 1 грн = якийсь склад не розпізнано → його сума випала.
   const integrityDelta = controlSum > 0 ? +(controlSum - total).toFixed(2) : 0;
+  // Пошук ВИНУВАТЦЯ. Нерозпізнаний склад "тоне" у попередньому МВО разом
+  // зі своїми позиціями, тож сума позицій МВО-господаря перевищує його
+  // власний агрегат на 2× пропущену суму (сам рядок складу + його товари).
+  // Позиція з сумою ≈ половини перевищення — це і є проковтнутий склад.
+  const suspects = [];
+  if (Math.abs(integrityDelta) > 1) {
+    // Випадок 1: нерозпізнаний склад стоїть першим у блоці → його рядки
+    // осиротіли й випали повністю. Голова кожної серії сиріт = підозрюваний.
+    for (const o of orphanRuns) {
+      suspects.push({ name: o.name, sum: o.sum, host: null });
+    }
+    // Випадок 2: нерозпізнаний склад посеред блоку → "потонув" у попередньому
+    // МВО разом зі своїми позиціями; сума позицій господаря перевищує його
+    // агрегат на 2× пропущену суму. Позиція з сумою ≈ половини перевищення —
+    // це і є проковтнутий склад.
+    for (const m of mvos) {
+      let itemsSum = 0;
+      for (const it of m.items) itemsSum += it.sum || 0;
+      const over = itemsSum - m.sum;
+      if (over > 1) {
+        const target = over / 2;
+        const tol = Math.max(1, target * 0.005);
+        for (const it of m.items) {
+          if (Math.abs((it.sum || 0) - target) <= tol) {
+            suspects.push({ name: it.name, sum: it.sum, host: m.name });
+          }
+        }
+      }
+    }
+  }
   if (Math.abs(integrityDelta) > 1) {
     console.warn("[finplan] РОЗБІЖНІСТЬ СУМ: у файлі", controlSum.toFixed(2),
                  "— розпізнано", total.toFixed(2),
                  "— різниця", integrityDelta.toFixed(2),
-                 "(ймовірно, нерозпізнаний склад трактується як товар)");
+                 suspects.length
+                   ? "— підозрювані: " + suspects.map(s => `«${s.name}» (${s.sum})` + (s.host ? ` всередині «${s.host}»` : " — випав повністю")).join("; ")
+                   : "(ймовірно, нерозпізнаний склад трактується як товар)");
   }
 
-  return { period, mvos, total, controlSum, integrityDelta };
+  return { period, mvos, total, controlSum, integrityDelta, suspects };
 }
 
 function _parseFpNum(v) {
@@ -8421,6 +8471,10 @@ function _looksLikeStorage(text) {
   if (/^підрозділ(\s|$)/i.test(text)) return true;
   if (/склад\s*[№\d]/i.test(text)) return true;
   if (/склади\s+лдц/i.test(text)) return true;
+  // "ЛДЦ" як самостійне слово (у т.ч. в дужках): "Задорожний Олег (ЛДЦ СИХІВ)".
+  // Старий патерн вимагав "склади лдц" і пропускав такі назви — склад
+  // випадав з підсумку.
+  if (/(^|[\s.,;:«"'()\-])лдц(?![а-яіїєґ])/i.test(text)) return true;
   if (/^відділ/i.test(text)) return true;
   if (/^лаборант/i.test(text)) return true;
   // "фармацевт" — МВО без по-батькові та ініціалів, напр.
@@ -8526,7 +8580,7 @@ function renderFinplan() {
     <div class="fp-summary-label">Всього закупівель (НСЗУ, рах. 202)</div>
     <div class="fp-summary-total">${fmtFinplanMoney(monthData.total)}</div>
     <div class="fp-summary-period">${esc(_finplanCurrentMonth)}${periodStr ? " · " + esc(periodStr) : ""}</div>
-    ${Math.abs(monthData.integrityDelta || 0) > 1 ? `<div style="margin-top:6px;font-size:11px;color:var(--warn);">⚠️ Сума не сходиться з файлом на ${fmtFinplanMoney(monthData.integrityDelta)} — ймовірно, нерозпізнаний склад</div>` : ""}
+    ${Math.abs(monthData.integrityDelta || 0) > 1 ? `<div style="margin-top:6px;font-size:11px;color:var(--warn);">⚠️ Сума не сходиться з файлом на ${fmtFinplanMoney(monthData.integrityDelta)}${(monthData.suspects && monthData.suspects.length) ? ` — ймовірно, не розпізнано як склад: ${monthData.suspects.map(s => `«${esc(s.name)}» (${fmtFinplanMoney(s.sum)}${s.host ? `, сидить у «${esc(s.host)}»` : ""})`).join("; ")}. Скинь цю назву Остапу/Claude — додамо в розпізнавання.` : ` — ймовірно, нерозпізнаний склад`}</div>` : ""}
     ${updatedStr ? `<div class="fp-summary-updated">🔄 Дані оновлено ${esc(updatedStr)}</div>` : ""}
   `;
 
