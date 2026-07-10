@@ -1647,6 +1647,14 @@
           </div>
           <div class="choice-arrow">›</div>
         </button>
+        <button class="choice-btn" onclick="openAbxScreen()" style="width:100%;margin-top:8px;">
+          <div class="choice-ico">🦠</div>
+          <div class="choice-body">
+            <div class="choice-title">Антибіотики резерву</div>
+            <div class="choice-sub">Рух групи Reserve по відділеннях — для інфекційного контролю</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
       </div>
     </div>
 
@@ -1683,11 +1691,32 @@
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  RESERVE ANTIBIOTICS                         -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="abx-screen" style="display:none">
+      <div class="an-back-row" style="display:flex;align-items:center;gap:8px;">
+        <button class="back-btn" onclick="closeAbx()">← Назад</button>
+        <button class="fp-export-btn" onclick="exportAbxExcel()" style="margin-left:auto;">📥 Excel</button>
+      </div>
+      <div class="an-section-title">🦠 Антибіотики резерву</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;" id="abx-scope"></div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
+        Група <b>RESERVE</b> за класифікацією AWaRe інфекційного контролю ТМО (засоби останньої надії,
+        форма 1814 в Doctor Eleks). Позиції зіставляються за <b>МНН</b> зі словника, що наповнюється
+        з файлу залишків. Натисніть на препарат — розріз по відділеннях.
+      </div>
+      <div id="abx-summary" style="font-size:11px;color:var(--muted);margin-bottom:8px;"></div>
+      <div id="abx-list"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
     <!--                  SUBDIVISION DETAIL                          -->
     <!-- ════════════════════════════════════════════════════════════ -->
     <div id="sub-detail-screen" style="display:none">
-      <div class="an-back-row">
+      <div class="an-back-row" style="display:flex;align-items:center;gap:8px;">
         <button class="back-btn" onclick="closeSubDetail()">← Назад до напрямів</button>
+        <button class="fp-export-btn" onclick="exportSubDetailExcel()" style="margin-left:auto;"
+                title="Експорт усіх позицій підрозділу в Excel">📥 Excel</button>
       </div>
 
       <!-- Month switcher (mirrors the main analytics month tabs so users can
@@ -1903,7 +1932,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.103";
+const APP_VERSION = "v.106";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2237,6 +2266,7 @@ async function loadFromDrive(isRefresh) {
     const cache = loadCache();
     if (cache) {
       allItems = cache.items;
+    _mnnMapMerge(allItems);
       lastLoaded = cache.time;
       newItemNames = loadNewNames();
       currentQuery = "";
@@ -2271,6 +2301,7 @@ async function fetchAndUpdate(showLoader) {
     const newItems = parseWorkbook(buf);
 
     allItems = newItems;
+    _mnnMapMerge(allItems);
     lastLoaded = new Date();
     _watchMarkSeen("medsklad");
     const cacheOk = saveCache(newItems);
@@ -2335,6 +2366,7 @@ function handleFile(file) {
       const newItems = parseWorkbook(e.target.result);
 
       allItems = newItems;
+      _mnnMapMerge(allItems);
       lastLoaded = new Date();
 
       // Compare with last confirmed snapshot
@@ -2377,6 +2409,31 @@ function isDeptHeader(row, col) {
   if (SKIP_EXACT_HEADERS.includes(lc)) return false;
   if (SKIP_HEADERS.some(k => lc.startsWith(k))) return false;
   return true;
+}
+
+// ─── Накопичувальний словник Назва → МНН ────────────────────────────────────
+// Файл залишків містить пару Назва↔МНН (лат.), а аналітика — лише назви.
+// При кожному завантаженні залишків зливаємо нові пари у localStorage,
+// тож навіть коли препарат повністю списано і він зник із залишків,
+// його МНН лишається відомим для аналітики (антибіотики резерву тощо).
+const MNN_MAP_KEY = "medsklad_mnn_map_v1";
+function _mnnNormName(s) {
+  return String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
+}
+function _mnnMapLoad() {
+  try { return JSON.parse(localStorage.getItem(MNN_MAP_KEY)) || {}; } catch (_) { return {}; }
+}
+function _mnnMapMerge(items) {
+  try {
+    const map = _mnnMapLoad();
+    let added = 0;
+    for (const it of items) {
+      if (!it.mnn || !it.name) continue;
+      const k = _mnnNormName(it.name);
+      if (!map[k]) { map[k] = it.mnn; added++; }
+    }
+    if (added > 0) localStorage.setItem(MNN_MAP_KEY, JSON.stringify(map));
+  } catch (_) { /* quota — не критично, словник доповниться наступного разу */ }
 }
 
 function parseWorkbook(arrayBuffer) {
@@ -2467,6 +2524,7 @@ function show(screen) {
   document.getElementById("analytics-screen").style.display        = screen==="analytics"? "block" : "none";
   document.getElementById("sub-detail-screen").style.display       = screen==="subdetail"? "block" : "none";
   document.getElementById("demand-screen").style.display           = screen==="demand"   ? "block" : "none";
+  document.getElementById("abx-screen").style.display              = screen==="abx"      ? "block" : "none";
   document.getElementById("finplan-screen").style.display          = screen==="finplan"  ? "block" : "none";
   document.getElementById("start-screen").style.display            = screen==="start"    ? "block" : "none";
   document.getElementById("loader").style.display                  = screen==="loader"   ? "block" : "none";
@@ -2482,6 +2540,7 @@ function show(screen) {
   if (logoSub) {
     if (screen === "analytics" || screen === "subdetail" || screen === "hospitalpicker") logoSub.textContent = "Аналіз відділень";
     else if (screen === "demand") logoSub.textContent = "Річна потреба";
+    else if (screen === "abx") logoSub.textContent = "Антибіотики резерву";
     else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
     else if (screen === "sections") logoSub.textContent = `Оберіть розділ · ${APP_VERSION}`;
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
@@ -2511,6 +2570,7 @@ function openMedsearch() {
   const cache = loadCache();
   if (cache) {
     allItems = cache.items;
+    _mnnMapMerge(allItems);
     lastLoaded = cache.time;
     newItemNames = loadNewNames();
     currentQuery = "";
@@ -5301,6 +5361,157 @@ function exportDemandExcel() {
   XLSX.writeFile(wb, "Річна_потреба.xlsx");
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+//                    Антибіотики резерву (WHO AWaRe: Reserve)
+// ═══════════════════════════════════════════════════════════════════════════
+// Матчинг по МНН (лат.) через накопичувальний словник Назва→МНН з файлу
+// залишків. Основи (stems) покривають латинські відмінки: "Linezolidum",
+// "Colistini" тощо. Список = група Reserve ВООЗ; локальні доповнення
+// (напр. карбапенеми, які у ВООЗ — Watch) додаються сюди ж одним рядком.
+// Список RESERVE — за ЛОКАЛЬНОЮ класифікацією AWaRe інфекційного контролю
+// ТМО (файл «Класифікація антибіотиків AWaRe»), яка відрізняється від
+// дефолту ВООЗ: карбапенеми тут — Watch (НЕ включені); цефтріаксон і
+// левофлоксацин — Reserve (у ВООЗ Watch). Джерело істини — цей файл, не ВООЗ.
+const RESERVE_ABX = [
+  { stem: "aztreonam",    display: "Азтреонам (Aztreonam)" },
+  { stem: "colistin",     display: "Колістин (Colistin)" },
+  { stem: "colistimeth",  display: "Колістин (Colistimethate)" },
+  { stem: "linezolid",    display: "Лінезолід (Linezolid)" },
+  { stem: "polymyxin",    display: "Поліміксин B (Polymyxin B)" },
+  { stem: "tigecyclin",   display: "Тайгециклін (Tigecycline)" },
+  { stem: "ceftriaxon",   display: "Цефтріаксон (Ceftriaxone) — після чутливості з бак.лаб" },
+  { stem: "levofloxacin", display: "Левофлоксацин (Levofloxacin) — після чутливості з бак.лаб" },
+  { stem: "avibactam",    display: "Цефтазидим-авібактам (Ceftazidime-avibactam)" },
+  { stem: "ceftolozan",   display: "Цефтолозан-тазобактам (Ceftolozane-tazobactam)" },
+  { stem: "vaborbactam",  display: "Меропенем-ваборбактам (Meropenem-vaborbactam)" },
+  { stem: "cefiderocol",  display: "Цефідерокол (Cefiderocol)" },
+  // Фосфоміцин: у резерві — лише в/в форма (п/о = Watch). Розрізнити форму
+  // за самим МНН не можна, тож ловимо всі, а форму видно у назві препарату.
+  { stem: "fosfomycin",   display: "Фосфоміцин (Fosfomycin) — резерв лише в/в" },
+];
+function _reserveMatchMnn(mnn) {
+  const low = String(mnn || "").toLowerCase();
+  if (!low) return null;
+  for (const r of RESERVE_ABX) if (low.includes(r.stem)) return r;
+  return null;
+}
+
+let _abxRows = null;
+let _abxScopeLabel = "";
+let _abxNoDict = 0; // позицій-кандидатів без МНН у словнику
+
+function openAbxScreen() {
+  if (!analyticsData || !analyticsData.months) { alert("Дані аналітики не завантажені."); return; }
+  const dict = _mnnMapLoad();
+  if (!Object.keys(dict).length) {
+    alert("Словник Назва→МНН порожній.\nВідкрийте розділ «Пошук медикаментів» і завантажте залишки — словник наповниться автоматично.");
+    return;
+  }
+  const h = getAnalyticsHospital(currentHospitalId);
+  // Збираємо: МНН(display) → { total eq/es, byDept: Map, byMonth: Map }
+  const acc = new Map();
+  _abxNoDict = 0;
+  const monthKeys = Object.keys(analyticsData.months).sort();
+  for (const mk of monthKeys) {
+    const month = analyticsData.months[mk];
+    for (const dir of (month.directions || [])) {
+      for (const g of (dir.groups || [])) {
+        for (const sub of (g.subdivisions || [])) {
+          if (sub._hidden) continue;
+          // відділення = передостанній елемент шляху (останній — МВО)
+          const deptIdx = sub.path.length >= 2 ? sub.path[sub.path.length - 2] : sub.path[0];
+          const deptName = analyticsData.paths[deptIdx] || "—";
+          for (const it of (sub.items || [])) {
+            const eq = it.eq || 0, es = it.es || 0;
+            if (eq <= 0) continue;
+            const name = (analyticsData.names && typeof it.n === "number") ? analyticsData.names[it.n] : String(it.n || "");
+            const mnn = dict[_mnnNormName(name)];
+            const hit = _reserveMatchMnn(mnn);
+            if (!hit) continue;
+            let row = acc.get(hit.display);
+            if (!row) {
+              row = { display: hit.display, eq: 0, es: 0, byDept: new Map(), byMonth: new Map(), byDM: new Map(), names: new Set() };
+              acc.set(hit.display, row);
+            }
+            row.eq += eq; row.es += es;
+            row.names.add(name);
+            const d = row.byDept.get(deptName) || { eq: 0, es: 0 };
+            d.eq += eq; d.es += es; row.byDept.set(deptName, d);
+            const mo = row.byMonth.get(mk) || { eq: 0, es: 0 };
+            mo.eq += eq; mo.es += es; row.byMonth.set(mk, mo);
+            const dmKey = deptName + "||" + mk;
+            const dm = row.byDM.get(dmKey) || { eq: 0, es: 0 };
+            dm.eq += eq; dm.es += es; row.byDM.set(dmKey, dm);
+          }
+        }
+      }
+    }
+  }
+  _abxRows = [...acc.values()].sort((a, b) => b.es - a.es);
+  _abxScopeLabel = `${h ? h.name : ""} · ${monthKeys.length} міс. (${monthKeys[0]} – ${monthKeys[monthKeys.length - 1]})`;
+  renderAbxScreen();
+  show("abx");
+}
+
+function renderAbxScreen() {
+  document.getElementById("abx-scope").textContent = _abxScopeLabel;
+  const rows = _abxRows || [];
+  const totEs = rows.reduce((s, r) => s + r.es, 0);
+  document.getElementById("abx-summary").innerHTML = rows.length
+    ? `${rows.length} МНН резерву зі списаннями · разом: <b style="color:var(--text)">${fmtMoney(totEs)}</b>`
+    : "";
+  const fmtQ = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  document.getElementById("abx-list").innerHTML = rows.length ? rows.map((r, ri) => {
+    const depts = [...r.byDept.entries()].sort((a, b) => b[1].es - a[1].es);
+    const months = [...r.byMonth.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1);
+    return `
+    <div class="result-card" style="margin-bottom:10px;">
+      <div style="padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;"
+           onclick="const b=document.getElementById('abx-body-${ri}');b.style.display=b.style.display==='none'?'block':'none';">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
+          <div style="font-size:13px;font-weight:700;">🦠 ${esc(r.display)}</div>
+          <div style="font-size:13px;font-weight:800;color:var(--green);white-space:nowrap;">${fmtMoney(r.es)}</div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">
+          Списано: ${fmtQ(r.eq)} · відділень: ${depts.length} ·
+          по місяцях: ${months.map(([k, v]) => `${k.slice(5)}: ${fmtQ(v.eq)}`).join(" · ")}
+        </div>
+      </div>
+      <div id="abx-body-${ri}" style="display:none;padding:8px 14px 11px;">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Препарати: ${[...r.names].map(esc).join("; ")}</div>
+        ${depts.map(([dn, v]) => `
+          <div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid rgba(37,43,68,.4);font-size:12px;">
+            <span style="color:var(--muted);">${esc(dn)}</span>
+            <span style="white-space:nowrap;">${fmtQ(v.eq)} · <b>${fmtMoney(v.es)}</b></span>
+          </div>`).join("")}
+      </div>
+    </div>`;
+  }).join("") : `<div class="empty-state"><div class="empty-ico">🦠</div><div class="empty-title">Списань антибіотиків резерву не знайдено</div><div class="empty-sub">Або словник Назва→МНН ще не покриває ці позиції —<br>оновіть залишки у «Пошуку медикаментів»</div></div>`;
+}
+
+function exportAbxExcel() {
+  const rows = _abxRows || [];
+  if (!rows.length) { alert("Немає даних для експорту."); return; }
+  const aoa = [["Антибіотики резерву (WHO AWaRe: Reserve) — " + _abxScopeLabel], [],
+               ["МНН", "Відділення", "Місяць", "Списано, к-сть", "Списано, грн"]];
+  for (const r of rows) {
+    // повний зріз МНН × відділення × місяць — зручно зводити pivot-ом
+    const keys = [...r.byDM.keys()].sort();
+    for (const k of keys) {
+      const [dn, mk] = k.split("||");
+      const v = r.byDM.get(k);
+      aoa.push([r.display, dn, mk, +v.eq.toFixed(2), +v.es.toFixed(2)]);
+    }
+  }
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"] = [{wch:48},{wch:42},{wch:12},{wch:14},{wch:14}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Резерв");
+  XLSX.writeFile(wb, "Антибіотики_резерву.xlsx");
+}
+
+function closeAbx() { show("analytics"); }
+
 // ─── Household-items filter ─────────────────────────────────────────────────
 // Hide МВО whose items are construction/maintenance goods (drills, cables,
 // paint, etc.) rather than medical supplies. Rules:
@@ -7487,6 +7698,68 @@ function renderSubDetail() {
     fb("deficit", "🚨 Закінчилось", buckets.outOfStock.length);
 
   renderSubItems();
+}
+
+// ─── Export subdivision detail to Excel ─────────────────────────────────────
+// Повний перелік позицій відкритого підрозділу за вибраний період: рух
+// (кількість і гривні), серії, дні без руху, категорії. Те саме, що на
+// екрані, але в таблиці для друку/передачі.
+function exportSubDetailExcel() {
+  const sub = _currentSubdivision;
+  const m = MO();
+  if (!sub || !m) { alert("Підрозділ не відкритий або дані не завантажені."); return; }
+  const period = m.period || {};
+  const leaf = sub.path.length ? analyticsData.paths[sub.path[sub.path.length - 1]] : "Підрозділ";
+  const pathFull = sub.path.map(i => analyticsData.paths[i]).join(" › ");
+  const t = sub.totals || {};
+  const periodStr = (period.from && period.to) ? `${period.from} – ${period.to}` : (currentMonthKey || "");
+
+  const head = [
+    ["Аналітика підрозділу: " + leaf],
+    [pathFull],
+    ["Період: " + periodStr + (sub.last_writeoff ? ` · Останнє списання: ${sub.last_writeoff}` : "")],
+    ["Підсумки: поч. залишок " + (t.os || 0) + " грн · прихід " + (t.rs || 0) + " грн · видаток " + (t.es || 0) + " грн · кінц. залишок " + (t.cs || 0) + " грн"],
+    [],
+    ["Назва", "Серія(ї)",
+     "Поч. залишок, к-сть", "Поч. залишок, грн",
+     "Прихід, к-сть", "Прихід, грн",
+     "Видаток (списання), к-сть", "Видаток, грн",
+     "Кінц. залишок, к-сть", "Кінц. залишок, грн",
+     "Днів без руху", "Категорія"],
+  ];
+
+  const rows = (sub.items || []).map(it => {
+    const name = (analyticsData.names && typeof it.n === "number") ? analyticsData.names[it.n] : String(it.n || "");
+    const series = it.series_list ? it.series_list.join(", ") : (it.s || "");
+    let deadDays = null;
+    try { deadDays = _deadDaysForItem(it, sub); } catch (_) {}
+    let cat = {};
+    try { cat = classifyItem(it, sub, period) || {}; } catch (_) {}
+    const catStr = [
+      cat.dead ? "без руху" : "",
+      cat.newItem ? "нова" : "",
+      cat.fast ? "швидкий рух" : "",
+      cat.outOfStock ? "закінчилась" : "",
+    ].filter(Boolean).join(", ");
+    return [
+      name, series,
+      it.oq || 0, it.os || 0,
+      it.rq || 0, it.rs || 0,
+      it.eq || 0, it.es || 0,
+      it.cq || 0, it.cs || 0,
+      (deadDays != null && deadDays > 0) ? deadDays : "",
+      catStr,
+    ];
+  });
+  // сортування як на екрані за замовчуванням — за видатком (грн) спадно
+  rows.sort((a, b) => (b[7] || 0) - (a[7] || 0));
+
+  const ws = XLSX.utils.aoa_to_sheet(head.concat(rows));
+  ws["!cols"] = [{wch:55},{wch:20},{wch:12},{wch:13},{wch:12},{wch:13},{wch:14},{wch:13},{wch:12},{wch:13},{wch:11},{wch:20}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Підрозділ");
+  const safeLeaf = leaf.replace(/[\\/:*?"<>|]/g, "_").slice(0, 60);
+  XLSX.writeFile(wb, `Аналітика_${safeLeaf}_${currentMonthKey || "період"}.xlsx`);
 }
 
 function _classifySubItems(sub, m) {
