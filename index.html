@@ -1958,7 +1958,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.115";
+const APP_VERSION = "v.116";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -5589,6 +5589,7 @@ const AMP_LIST = [
   { stem:"nitrofurantoin", cat:"ACCESS",  display:"Нітрофурантоїн" },
   { stem:"ornidazol",      cat:"ACCESS",  display:"Орнідазол" },
   { stem:"sulfamethoxazol",cat:"ACCESS",  display:"Ко-тримоксазол" },
+  { stem:"trimoxazol",     cat:"ACCESS",  display:"Ко-тримоксазол" }, // МНН у 1С буває "Co-Trimoxazolum"
   { stem:"trimethoprim",   cat:"ACCESS",  display:"Триметоприм" },
   { stem:"tetracyclin",    cat:"ACCESS",  display:"Тетрациклін" },
   { stem:"thiamphenicol",  cat:"ACCESS",  display:"Тіамфенікол" },
@@ -5618,7 +5619,7 @@ const AMP_UA_ROOTS = [
 // антибактеріальних, щоб такий «сирота з МНН» потрапив у аудит, а не зник.
 function _looksLikeAmpLatin(mnn) {
   const low = String(mnn || "").toLowerCase();
-  return /cef|ceph|cillin|penem|floxacin|mycin|micin|cyclin|bactam|sulfa|oxazol|nidazol|penicillin|colistin|polymyxin|vancomycin|linezolid|aztreonam|rifampic|fosfomycin|chloramphenicol|nitrofuran/.test(low);
+  return /cef|ceph|cillin|penem|floxacin|mycin|micin|cyclin|bactam|sulfamethoxazol|sulfadiazin|sulfasalazin|sulfacetamid|trimoxazol|oxazol|nidazol|penicillin|colistin|polymyxin|vancomycin|linezolid|aztreonam|rifampic|fosfomycin|chloramphenicol|nitrofuran/.test(low);
 }
 
 function _looksLikeAmpUa(name) {
