@@ -361,6 +361,7 @@
   }
   .choice-btn.analytics .choice-ico { background: linear-gradient(135deg, #a78bfa, #f472b6); }
   .choice-btn.finplan .choice-ico { background: linear-gradient(135deg, #34d399, #10b981); }
+  .choice-btn.infcontrol .choice-ico { background: linear-gradient(135deg, #22d3ee, #0ea5a4); }
   .choice-btn .choice-body { flex: 1; min-width: 0; }
   .choice-btn .choice-title { font-size: 15px; font-weight: 700; color: #fff; }
   .choice-btn .choice-sub { font-size: 12px; color: var(--muted); font-weight: 500; margin-top: 3px; }
@@ -1478,6 +1479,14 @@
           </div>
           <div class="choice-arrow">›</div>
         </button>
+        <button class="choice-btn infcontrol" onclick="openInfControl()">
+          <div class="choice-ico">🦠</div>
+          <div class="choice-body">
+            <div class="choice-title">Інфекційний контроль</div>
+            <div class="choice-sub">Звітність АМП за класифікацією AWaRe</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
       </div>
     </div>
 
@@ -1502,6 +1511,21 @@
         </div>
         <div class="choice-arrow">›</div>
       </button>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  INFECTION CONTROL (AWaRe)                   -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="infcontrol-screen" style="display:none">
+      <div class="hp-back-row">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
+      </div>
+      <div class="hp-hero">
+        <div class="hp-hero-ico">🦠</div>
+        <div class="hp-hero-title">Відділ інфекційного контролю ТМО</div>
+        <div class="hp-hero-sub">Моніторинг антимікробних препаратів за класифікацією ВООЗ AWaRe (Access / Watch / Reserve). Оберіть лікарню.</div>
+      </div>
+      <div class="choice-wrap" id="infcontrol-picker-list"></div>
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
@@ -1650,8 +1674,8 @@
         <button class="choice-btn" onclick="openAbxScreen()" style="width:100%;margin-top:8px;">
           <div class="choice-ico">🦠</div>
           <div class="choice-body">
-            <div class="choice-title">Антибіотики резерву</div>
-            <div class="choice-sub">Рух групи Reserve по відділеннях — для інфекційного контролю</div>
+            <div class="choice-title">Антимікробні препарати</div>
+            <div class="choice-sub">Рух АМП (AWaRe) по відділеннях — для інфекційного контролю</div>
           </div>
           <div class="choice-arrow">›</div>
         </button>
@@ -1698,14 +1722,16 @@
         <button class="back-btn" onclick="closeAbx()">← Назад</button>
         <button class="fp-export-btn" onclick="exportAbxExcel()" style="margin-left:auto;">📥 Excel</button>
       </div>
-      <div class="an-section-title">🦠 Антибіотики резерву</div>
+      <div class="an-section-title">🦠 Антимікробні препарати (AWaRe)</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:10px;" id="abx-scope"></div>
+      <div id="abx-period" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;"></div>
       <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
-        Група <b>RESERVE</b> за класифікацією AWaRe інфекційного контролю ТМО (засоби останньої надії,
-        форма 1814 в Doctor Eleks). Позиції зіставляються за <b>МНН</b> зі словника, що наповнюється
-        з файлу залишків. Натисніть на препарат — розріз по відділеннях.
+        Усі антимікробні препарати за класифікацією AWaRe інфекційного контролю ТМО
+        (Access / Watch / Reserve). Позиції зіставляються за <b>МНН</b> зі словника, що
+        наповнюється з файлу залишків. Натисніть на препарат — розріз по відділеннях.
       </div>
       <div id="abx-summary" style="font-size:11px;color:var(--muted);margin-bottom:8px;"></div>
+      <div id="abx-missed" style="display:none;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:10px 12px;margin-bottom:10px;max-height:220px;overflow-y:auto;"></div>
       <div id="abx-list"></div>
     </div>
 
@@ -1932,7 +1958,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.106";
+const APP_VERSION = "v.115";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2436,6 +2462,34 @@ function _mnnMapMerge(items) {
   } catch (_) { /* quota — не критично, словник доповниться наступного разу */ }
 }
 
+// Гарантує, що словник Назва→МНН наповнений, не вимагаючи відкривати «Пошук
+// медикаментів». Порядок: наявний словник → кеш залишків → мережа (Google
+// Drive). Повертає true, якщо після всіх спроб у словнику є записи.
+async function _ensureMnnDict() {
+  if (Object.keys(_mnnMapLoad()).length) return true;
+  // 1) кеш залишків медпошуку (якщо його вже колись вантажили на цьому пристрої)
+  try {
+    const cache = loadCache();
+    if (cache && cache.items && cache.items.length) {
+      _mnnMapMerge(cache.items);
+      if (Object.keys(_mnnMapLoad()).length) return true;
+    }
+  } catch (_) {}
+  // 2) мережа — той самий файл залишків, що й медпошук; заразом кешуємо його,
+  //    щоб і «Пошук медикаментів» потім відкрився миттєво.
+  try {
+    const resp = await fetch(GDRIVE_URL, { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const buf = await resp.arrayBuffer();
+    const items = parseWorkbook(buf);
+    _mnnMapMerge(items);
+    try { saveCache(items); } catch (_) {}
+    return Object.keys(_mnnMapLoad()).length > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
 function parseWorkbook(arrayBuffer) {
   const wb = XLSX.read(arrayBuffer, { type: "array", cellDates: false });
   const ws = wb.Sheets[wb.SheetNames[0]];
@@ -2521,6 +2575,7 @@ function statusLabel(st, days) {
 function show(screen) {
   document.getElementById("section-screen").style.display          = screen==="sections" ? "block" : "none";
   document.getElementById("hospital-picker-screen").style.display  = screen==="hospitalpicker" ? "block" : "none";
+  document.getElementById("infcontrol-screen").style.display       = screen==="infcontrol" ? "block" : "none";
   document.getElementById("analytics-screen").style.display        = screen==="analytics"? "block" : "none";
   document.getElementById("sub-detail-screen").style.display       = screen==="subdetail"? "block" : "none";
   document.getElementById("demand-screen").style.display           = screen==="demand"   ? "block" : "none";
@@ -2539,8 +2594,9 @@ function show(screen) {
   const logoSub = document.querySelector(".logo-sub");
   if (logoSub) {
     if (screen === "analytics" || screen === "subdetail" || screen === "hospitalpicker") logoSub.textContent = "Аналіз відділень";
+    else if (screen === "infcontrol") logoSub.textContent = "Інфекційний контроль";
     else if (screen === "demand") logoSub.textContent = "Річна потреба";
-    else if (screen === "abx") logoSub.textContent = "Антибіотики резерву";
+    else if (screen === "abx") logoSub.textContent = _abxFromInfControl ? "Інфекційний контроль" : "Антимікробні препарати";
     else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
     else if (screen === "sections") logoSub.textContent = `Оберіть розділ · ${APP_VERSION}`;
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
@@ -2598,6 +2654,8 @@ const ANALYTICS_PWD_HASH = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada58218
 const FINPLAN_PWD_HASH   = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
 const ANALYTICS_AUTH_KEY = "medsklad_analytics_auth";
 const FINPLAN_AUTH_KEY   = "medsklad_finplan_auth";
+const INFCTRL_PWD_HASH   = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
+const INFCTRL_AUTH_KEY   = "medsklad_infcontrol_auth";
 
 // Which section the password modal is currently gating: "analytics" | "finplan"
 let _pwdTarget = "analytics";
@@ -2619,6 +2677,21 @@ function _isFinplanAuthorized() {
   try {
     return sessionStorage.getItem(FINPLAN_AUTH_KEY) === "1";
   } catch (_) { return false; }
+}
+
+function _isInfCtrlAuthorized() {
+  try {
+    return sessionStorage.getItem(INFCTRL_AUTH_KEY) === "1";
+  } catch (_) { return false; }
+}
+
+function openInfControl() {
+  _pwdTarget = "infcontrol";
+  if (_isInfCtrlAuthorized()) {
+    openInfControlPicker();
+    return;
+  }
+  _showPwdOverlay("Введіть пароль відділу інфекційного контролю", "text");
 }
 
 function openAnalytics() {
@@ -2699,14 +2772,20 @@ async function submitAnalyticsPassword() {
     if (err) err.textContent = "Браузер не підтримує перевірку. Відкрийте через https://";
     return;
   }
-  const expected  = _pwdTarget === "finplan" ? FINPLAN_PWD_HASH   : ANALYTICS_PWD_HASH;
-  const authKey   = _pwdTarget === "finplan" ? FINPLAN_AUTH_KEY   : ANALYTICS_AUTH_KEY;
+  const expected  = _pwdTarget === "finplan" ? FINPLAN_PWD_HASH
+                  : _pwdTarget === "infcontrol" ? INFCTRL_PWD_HASH
+                  : ANALYTICS_PWD_HASH;
+  const authKey   = _pwdTarget === "finplan" ? FINPLAN_AUTH_KEY
+                  : _pwdTarget === "infcontrol" ? INFCTRL_AUTH_KEY
+                  : ANALYTICS_AUTH_KEY;
   if (hash === expected) {
     try { sessionStorage.setItem(authKey, "1"); } catch (_) {}
     closePwdOverlay();
     if (_pwdTarget === "finplan") {
       show("finplan");
       loadFinplan(false);
+    } else if (_pwdTarget === "infcontrol") {
+      openInfControlPicker();
     } else {
       openHospitalPicker();
     }
@@ -3875,6 +3954,9 @@ function analyticsHospitalCacheKey(id) {
 })();
 
 let currentHospitalId = null;
+// true, якщо екран АМП відкрито з модуля «Інфекційний контроль» (а не з аналітики).
+// Визначає, куди веде кнопка «Назад» на екрані АМП.
+let _abxFromInfControl = false;
 
 const ANALYTICS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours silent refresh
 
@@ -4088,6 +4170,87 @@ function alertHospitalPending(id) {
   const h = getAnalyticsHospital(id);
   if (!h) return;
   alert(`«${h.name}» — дані для цієї лікарні ще не підключені.\n\nЯк тільки буде готовий файл аналітики, розділ стане активним.`);
+}
+
+// ── Infection-control module: hospital picker → straight to AMP report ──────
+function openInfControlPicker() {
+  renderInfControlPicker();
+  show("infcontrol");
+}
+
+function renderInfControlPicker() {
+  const el = document.getElementById("infcontrol-picker-list");
+  if (!el) return;
+  el.innerHTML = ANALYTICS_HOSPITALS.map(h => {
+    const disabled = !h.url;
+    const themeCls = h.theme ? (" " + h.theme) : "";
+    const disabledCls = disabled ? " disabled" : "";
+    const pendingTag = disabled ? `<span class="hp-pending-tag">Скоро</span>` : "";
+    const onClick = disabled
+      ? `onclick="alertHospitalPending('${h.id}')"`
+      : `onclick="selectHospitalForAbx('${h.id}')"`;
+    return `
+      <button class="choice-btn hp-choice-btn${themeCls}${disabledCls}" ${onClick}>
+        <div class="choice-ico">${h.ico}</div>
+        <div class="choice-body">
+          <div class="choice-title">${esc(h.name)}${pendingTag}</div>
+          <div class="choice-sub">${esc(h.sub)}</div>
+        </div>
+        <div class="choice-arrow">›</div>
+      </button>`;
+  }).join("");
+}
+
+// Обираємо лікарню в режимі інфекційного контролю: вантажимо ті самі дані
+// аналітики (АМП рахується з них), але одразу відкриваємо звіт АМП, минаючи
+// дашборд аналізу відділень.
+async function selectHospitalForAbx(id) {
+  const h = getAnalyticsHospital(id);
+  if (!h) return;
+  if (!h.url) { alertHospitalPending(id); return; }
+  // Перемикання лікарні — скидаємо стан аналітики (дзеркало selectHospital),
+  // щоб дані однієї лікарні не «протекли» у вигляд іншої.
+  if (currentHospitalId !== id) {
+    analyticsData = null;
+    currentMonthKey = null;
+    compareMonthKey = null;
+    rangeStartKey = null; rangeEndKey = null;
+    cmpStartKey = null; cmpEndKey = null;
+    _aggCache = {};
+    _expenseByItemPerMonth = null;
+    _deadDaysCache = new Map();
+  }
+  currentHospitalId = id;
+  renderHospitalSelect();
+  const lt = document.getElementById("loader-text");
+  if (lt) lt.textContent = "Завантажуємо дані АМП для «" + h.name + "»...";
+  show("loader");
+  try {
+    await loadAnalytics(false);
+  } catch (e) {
+    alert("Не вдалося завантажити дані аналітики.\n" + (e && e.message ? e.message : ""));
+    openInfControlPicker();
+    return;
+  }
+  if (!analyticsData || !analyticsData.months) {
+    alert("Дані для цієї лікарні недоступні. Спробуйте пізніше.");
+    openInfControlPicker();
+    return;
+  }
+  // Звіт АМП зіставляє позиції за МНН зі словника Назва→МНН. Наповнюємо його
+  // самотужки (кеш або Google Drive), щоб інфекціоністу не треба було спершу
+  // відкривати «Пошук медикаментів» — модуль самодостатній.
+  if (!Object.keys(_mnnMapLoad()).length) {
+    const lt2 = document.getElementById("loader-text");
+    if (lt2) lt2.textContent = "Готуємо довідник препаратів (Назва→МНН)...";
+    const ok = await _ensureMnnDict();
+    if (!ok) {
+      alert("Не вдалося підготувати довідник препаратів (Назва→МНН).\n\nПеревірте інтернет і спробуйте ще раз.");
+      openInfControlPicker();
+      return;
+    }
+  }
+  openAbxScreen(true);
 }
 
 function backToHospitalPicker() {
@@ -5362,45 +5525,167 @@ function exportDemandExcel() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//                    Антибіотики резерву (WHO AWaRe: Reserve)
+//        Антимікробні препарати (AWaRe: Access / Watch / Reserve)
 // ═══════════════════════════════════════════════════════════════════════════
-// Матчинг по МНН (лат.) через накопичувальний словник Назва→МНН з файлу
-// залишків. Основи (stems) покривають латинські відмінки: "Linezolidum",
-// "Colistini" тощо. Список = група Reserve ВООЗ; локальні доповнення
-// (напр. карбапенеми, які у ВООЗ — Watch) додаються сюди ж одним рядком.
-// Список RESERVE — за ЛОКАЛЬНОЮ класифікацією AWaRe інфекційного контролю
-// ТМО (файл «Класифікація антибіотиків AWaRe»), яка відрізняється від
-// дефолту ВООЗ: карбапенеми тут — Watch (НЕ включені); цефтріаксон і
-// левофлоксацин — Reserve (у ВООЗ Watch). Джерело істини — цей файл, не ВООЗ.
-const RESERVE_ABX = [
-  { stem: "aztreonam",    display: "Азтреонам (Aztreonam)" },
-  { stem: "colistin",     display: "Колістин (Colistin)" },
-  { stem: "colistimeth",  display: "Колістин (Colistimethate)" },
-  { stem: "linezolid",    display: "Лінезолід (Linezolid)" },
-  { stem: "polymyxin",    display: "Поліміксин B (Polymyxin B)" },
-  { stem: "tigecyclin",   display: "Тайгециклін (Tigecycline)" },
-  { stem: "ceftriaxon",   display: "Цефтріаксон (Ceftriaxone) — після чутливості з бак.лаб" },
-  { stem: "levofloxacin", display: "Левофлоксацин (Levofloxacin) — після чутливості з бак.лаб" },
-  { stem: "avibactam",    display: "Цефтазидим-авібактам (Ceftazidime-avibactam)" },
-  { stem: "ceftolozan",   display: "Цефтолозан-тазобактам (Ceftolozane-tazobactam)" },
-  { stem: "vaborbactam",  display: "Меропенем-ваборбактам (Meropenem-vaborbactam)" },
-  { stem: "cefiderocol",  display: "Цефідерокол (Cefiderocol)" },
-  // Фосфоміцин: у резерві — лише в/в форма (п/о = Watch). Розрізнити форму
-  // за самим МНН не можна, тож ловимо всі, а форму видно у назві препарату.
-  { stem: "fosfomycin",   display: "Фосфоміцин (Fosfomycin) — резерв лише в/в" },
+// Повний перелік АМП за файлом інфекційного контролю ТМО (класифікація AWaRe).
+// Матчинг по латинському МНН зі словника Назва→МНН. ПОРЯДОК КРИТИЧНИЙ:
+// комбіновані стеми (avibactam, sulbactam, clavulan...) — ПЕРШИМИ, інакше
+// "Ceftazidim+Avibactam" зловиться як голий цефтазидим; специфічні стеми
+// (ciprofloxacin) — перед коротшими, що є їх підрядком (ofloxacin).
+const AMP_LIST = [
+  // ── комбінації (мають перевірятись першими) ──
+  { stem:"avibactam",      cat:"RESERVE", display:"Цефтазидим/авібактам" },
+  { stem:"vaborbactam",    cat:"RESERVE", display:"Меропенем/ваборбактам" },
+  { stem:"ceftolozan",     cat:"RESERVE", display:"Цефтолозан/тазобактам" },
+  { stem:"clavulan",       cat:"ACCESS",  display:"Амоксицилін/клавуланат" },
+  { stem:"sulbactam",      cat:"ACCESS",  display:"Ампіцилін/сульбактам" },
+  { stem:"piperacillin",   cat:"WATCH",   display:"Піперацилін/тазобактам" },
+  // ── RESERVE ──
+  { stem:"aztreonam",      cat:"RESERVE", display:"Азтреонам" },
+  { stem:"colistimeth",    cat:"RESERVE", display:"Колістин" },
+  { stem:"colistin",       cat:"RESERVE", display:"Колістин" },
+  { stem:"linezolid",      cat:"RESERVE", display:"Лінезолід" },
+  { stem:"polymyxin",      cat:"RESERVE", display:"Поліміксин B" },
+  { stem:"tigecyclin",     cat:"RESERVE", display:"Тайгециклін" },
+  // ⚠ ЛОКАЛЬНА КАТЕГОРІЯ ТМО. Стандарт ВООЗ AWaRe: обидва — WATCH.
+  // Якщо ваш файл інфекційного контролю не підвищує їх до Reserve —
+  // змініть cat:"RESERVE" → cat:"WATCH" у двох рядках нижче.
+  // (levofloxacin МУСИТЬ лишатися вище за ofloxacin — "ofloxacin" є його підрядком.)
+  { stem:"ceftriaxon",     cat:"RESERVE", display:"Цефтріаксон" },
+  { stem:"levofloxacin",   cat:"RESERVE", display:"Левофлоксацин" },
+  { stem:"cefiderocol",    cat:"RESERVE", display:"Цефідерокол" },
+  // ── WATCH ──
+  { stem:"azithromycin",   cat:"WATCH",   display:"Азитроміцин" },
+  { stem:"vancomycin",     cat:"WATCH",   display:"Ванкоміцин" },
+  { stem:"erythromycin",   cat:"WATCH",   display:"Еритроміцин" },
+  { stem:"imipenem",       cat:"WATCH",   display:"Іміпенем/циластатин" },
+  { stem:"clarithromycin", cat:"WATCH",   display:"Кларитроміцин" },
+  { stem:"lincomycin",     cat:"WATCH",   display:"Лінкоміцин" },
+  { stem:"meropenem",      cat:"WATCH",   display:"Меропенем" },
+  { stem:"moxifloxacin",   cat:"WATCH",   display:"Моксифлоксацин" },
+  { stem:"ciprofloxacin",  cat:"WATCH",   display:"Ципрофлоксацин" },
+  { stem:"norfloxacin",    cat:"WATCH",   display:"Норфлоксацин" },
+  { stem:"ofloxacin",      cat:"WATCH",   display:"Офлоксацин" },
+  { stem:"rifampicin",     cat:"WATCH",   display:"Рифампіцин" },
+  { stem:"teicoplanin",    cat:"WATCH",   display:"Тейкопланін" },
+  { stem:"tobramycin",     cat:"WATCH",   display:"Тобраміцин" },
+  { stem:"fosfomycin",     cat:"WATCH",   display:"Фосфоміцин" },
+  { stem:"cefuroxim",      cat:"WATCH",   display:"Цефуроксим" },
+  { stem:"cefepim",        cat:"WATCH",   display:"Цефепім" },
+  { stem:"cefixim",        cat:"WATCH",   display:"Цефіксим" },
+  { stem:"cefoperazon",    cat:"WATCH",   display:"Цефоперазон" },
+  { stem:"cefotaxim",      cat:"WATCH",   display:"Цефотаксим" },
+  { stem:"cefoxitin",      cat:"WATCH",   display:"Цефокситин" },
+  { stem:"ceftazidim",     cat:"WATCH",   display:"Цефтазидим" },
+  // ── ACCESS ──
+  { stem:"amikacin",       cat:"ACCESS",  display:"Амікацин" },
+  { stem:"amoxicillin",    cat:"ACCESS",  display:"Амоксицилін" },
+  { stem:"ampicillin",     cat:"ACCESS",  display:"Ампіцилін" },
+  { stem:"benzylpenicillin",cat:"ACCESS", display:"Бензилпеніцилін" },
+  { stem:"doxycyclin",     cat:"ACCESS",  display:"Доксициклін" },
+  { stem:"gentamicin",     cat:"ACCESS",  display:"Гентаміцин" },
+  { stem:"clindamycin",    cat:"ACCESS",  display:"Кліндаміцин" },
+  { stem:"metronidazol",   cat:"ACCESS",  display:"Метронідазол" },
+  { stem:"nitrofurantoin", cat:"ACCESS",  display:"Нітрофурантоїн" },
+  { stem:"ornidazol",      cat:"ACCESS",  display:"Орнідазол" },
+  { stem:"sulfamethoxazol",cat:"ACCESS",  display:"Ко-тримоксазол" },
+  { stem:"trimethoprim",   cat:"ACCESS",  display:"Триметоприм" },
+  { stem:"tetracyclin",    cat:"ACCESS",  display:"Тетрациклін" },
+  { stem:"thiamphenicol",  cat:"ACCESS",  display:"Тіамфенікол" },
+  { stem:"tinidazol",      cat:"ACCESS",  display:"Тинідазол" },
+  { stem:"cefalexin",      cat:"ACCESS",  display:"Цефалексин" },
+  { stem:"cephalexin",     cat:"ACCESS",  display:"Цефалексин" },
+  { stem:"cefazolin",      cat:"ACCESS",  display:"Цефазолін" },
+  { stem:"chloramphenicol",cat:"ACCESS",  display:"Хлорамфенікол" },
 ];
-function _reserveMatchMnn(mnn) {
+const AMP_CAT_ORDER = { RESERVE:0, WATCH:1, ACCESS:2 };
+// Українські корені назв АМП — використовуються ЛИШЕ для самоперевірки
+// покриття (safety net): якщо позиція виглядає як АМП за укр. назвою, але
+// не зматчилась через словник МНН — вона підсвічується як пропущена, щоб
+// звіт не пішов нагору неповним через розбіжність назв між файлами.
+const AMP_UA_ROOTS = [
+  "лінезолід","ципрофлоксацин","левофлоксацин","цефтріаксон","цефтазидим",
+  "цефепім","цефотаксим","цефуроксим","цефазолін","цефокситин","цефоперазон","цефіксим",
+  "меропенем","іміпенем","азтреонам","колістин","ванкоміцин","тейкопланін","тайгециклін",
+  "азитроміцин","кларитроміцин","еритроміцин","лінкоміцин","гентаміцин","амікацин","тобраміцин",
+  "амоксицил","ампіцил","піперацил","метронідазол","орнідазол","тинідазол","доксициклін",
+  "тетрациклін","кліндаміцин","моксифлоксацин","норфлоксацин","офлоксацин","рифампіцин",
+  "нітрофурантоїн","фосфоміцин","хлорамфенікол","тіамфенікол","бензилпеніцилін","цефалексин",
+  "поліміксин","цефідерокол","авібактам","сульбактам","клавулан","триметоприм","цефтолозан",
+];
+// ЛАТИНСЬКА евристика — для випадку, коли МНН у словнику Є, але жоден стем
+// AMP_LIST не збігся (напр. МНН записане нестандартно). Ловить широкі корені
+// антибактеріальних, щоб такий «сирота з МНН» потрапив у аудит, а не зник.
+function _looksLikeAmpLatin(mnn) {
+  const low = String(mnn || "").toLowerCase();
+  return /cef|ceph|cillin|penem|floxacin|mycin|micin|cyclin|bactam|sulfa|oxazol|nidazol|penicillin|colistin|polymyxin|vancomycin|linezolid|aztreonam|rifampic|fosfomycin|chloramphenicol|nitrofuran/.test(low);
+}
+
+function _looksLikeAmpUa(name) {
+  const low = String(name || "").toLowerCase();
+  // Виключення: лабораторні диски для антибіотикочутливості — це витратка
+  // мікробіології, НЕ препарат. "Диски Тігециклін...", "Диски Ертапенем...".
+  // Прим.: \b у JS не працює на межі латиниці/кирилиці, тож (^|\s).
+  if (/(^|\s)диск/i.test(low)) return false;
+  if (/картридж|тест-систем|середовищ|(^|\s)агар/i.test(low)) return false;
+  for (const r of AMP_UA_ROOTS) if (low.includes(r)) return true;
+  return false;
+}
+const AMP_CAT_LABEL = { RESERVE:"Reserve", WATCH:"Watch", ACCESS:"Access" };
+const AMP_CAT_COLOR = { RESERVE:"var(--danger)", WATCH:"var(--warn)", ACCESS:"var(--green)" };
+function _ampMatchMnn(mnn) {
   const low = String(mnn || "").toLowerCase();
   if (!low) return null;
-  for (const r of RESERVE_ABX) if (low.includes(r.stem)) return r;
+  // ── Комбінації з сульбактамом ──────────────────────────────────────────────
+  // Сам "sulbactam" НЕ визначає препарат — визначає бета-лактам-партнер.
+  // Обробляємо ДО загального циклу, інакше все з сульбактамом (у т.ч.
+  // цефоперазон/сульбактам, цефотаксим/сульбактам) хибно матчиться як
+  // "Ампіцилін/сульбактам". Категорії партнерів — звірте з файлом ТМО.
+  if (low.includes("sulbactam")) {
+    if (low.includes("cefoperazon")) return { stem:"cefoperazon+sulbactam", cat:"WATCH",   display:"Цефоперазон/сульбактам" };
+    if (low.includes("cefotaxim"))   return { stem:"cefotaxim+sulbactam",   cat:"WATCH",   display:"Цефотаксим/сульбактам" };
+    if (low.includes("ceftriaxon"))  return { stem:"ceftriaxon+sulbactam",  cat:"RESERVE", display:"Цефтріаксон/сульбактам" };
+    if (low.includes("cefepim"))     return { stem:"cefepim+sulbactam",     cat:"WATCH",   display:"Цефепім/сульбактам" };
+    if (low.includes("ceftazidim"))  return { stem:"ceftazidim+sulbactam",  cat:"WATCH",   display:"Цефтазидим/сульбактам" };
+    if (low.includes("ampicillin"))  return { stem:"ampicillin+sulbactam",  cat:"ACCESS",  display:"Ампіцилін/сульбактам" };
+    // сульбактам без розпізнаного партнера → дефолт ампіцилін/сульбактам
+    return { stem:"sulbactam", cat:"ACCESS", display:"Ампіцилін/сульбактам" };
+  }
+  for (const r of AMP_LIST) if (low.includes(r.stem)) return r;
   return null;
 }
 
+function _abxRenderPeriodControls(allKeys) {
+  const el = document.getElementById("abx-period");
+  if (!el) return;
+  const opt = (sel) => allKeys.map(k =>
+    `<option value="${k}"${k === sel ? " selected" : ""}>${_monthLabel(k)} ${k.slice(0,4)}</option>`).join("");
+  el.innerHTML = `
+    <span style="font-size:11px;color:var(--muted);">Період:</span>
+    <select id="abx-from" class="an-hospital-select" style="flex:0 0 auto;width:auto;" onchange="_abxSetPeriod()">${opt(_abxFrom)}</select>
+    <span style="font-size:11px;color:var(--muted);">–</span>
+    <select id="abx-to" class="an-hospital-select" style="flex:0 0 auto;width:auto;" onchange="_abxSetPeriod()">${opt(_abxTo)}</select>`;
+}
+
+function _abxSetPeriod() {
+  const f = document.getElementById("abx-from");
+  const t = document.getElementById("abx-to");
+  if (f) _abxFrom = f.value;
+  if (t) _abxTo = t.value;
+  openAbxScreen(); // перебудова з новим діапазоном
+}
+
 let _abxRows = null;
+let _abxMissedRows = null;
 let _abxScopeLabel = "";
 let _abxNoDict = 0; // позицій-кандидатів без МНН у словнику
+let _abxFrom = null; // ключ місяця "від" (null = найраніший)
+let _abxTo = null;   // ключ місяця "до" (null = найпізніший)
 
-function openAbxScreen() {
+function openAbxScreen(fromInfControl) {
+  // Прапорець джерела: true — прийшли з модуля «Інфекційний контроль»,
+  // false/undefined — з дашборду аналітики. Керує кнопкою «Назад».
+  _abxFromInfControl = (fromInfControl === true);
   if (!analyticsData || !analyticsData.months) { alert("Дані аналітики не завантажені."); return; }
   const dict = _mnnMapLoad();
   if (!Object.keys(dict).length) {
@@ -5408,10 +5693,16 @@ function openAbxScreen() {
     return;
   }
   const h = getAnalyticsHospital(currentHospitalId);
+  const allKeys = Object.keys(analyticsData.months).sort();
+  // Діапазон: якщо не задано — весь період. Клемпимо до наявних місяців.
+  if (_abxFrom === null || !allKeys.includes(_abxFrom)) _abxFrom = allKeys[0];
+  if (_abxTo === null || !allKeys.includes(_abxTo)) _abxTo = allKeys[allKeys.length - 1];
+  if (_abxFrom > _abxTo) { const t = _abxFrom; _abxFrom = _abxTo; _abxTo = t; }
+  const monthKeys = allKeys.filter(k => k >= _abxFrom && k <= _abxTo);
   // Збираємо: МНН(display) → { total eq/es, byDept: Map, byMonth: Map }
   const acc = new Map();
   _abxNoDict = 0;
-  const monthKeys = Object.keys(analyticsData.months).sort();
+  const _abxMissed = new Map(); // назви, схожі на АМП, але не зматчені (аудит покриття)
   for (const mk of monthKeys) {
     const month = analyticsData.months[mk];
     for (const dir of (month.directions || [])) {
@@ -5425,18 +5716,41 @@ function openAbxScreen() {
             const eq = it.eq || 0, es = it.es || 0;
             if (eq <= 0) continue;
             const name = (analyticsData.names && typeof it.n === "number") ? analyticsData.names[it.n] : String(it.n || "");
+            // Виключаємо лабораторну витратку (диски чутливості, тест-системи,
+            // картриджі, середовища): це НЕ спожиті ліки, у звіт про
+            // споживання АМП вони не входять, навіть якщо МНН збігається.
+            if (/(^|\s)диск|картридж|тест-систем|середовищ|(^|\s)агар/i.test(name)) continue;
             const mnn = dict[_mnnNormName(name)];
-            const hit = _reserveMatchMnn(mnn);
-            if (!hit) continue;
+            const hit = _ampMatchMnn(mnn);
+            if (!hit) {
+              // Safety net (аудит покриття). Дві причини потрапити сюди:
+              //  1) МНН у словнику Є, але не збігся з жодним стемом AMP_LIST —
+              //     можливо, це АМП, якого немає у AWaRe-файлі, або МНН
+              //     записане нестандартно. Показуємо З його МНН, щоб було видно.
+              //  2) МНН немає — тоді покладаємось на укр.-евристику назви.
+              const suspiciousByMnn = mnn && _looksLikeAmpLatin(mnn);
+              if (suspiciousByMnn || _looksLikeAmpUa(name)) {
+                const mk2 = _abxMissed.get(name) || { eq: 0, mnn: mnn || "" };
+                mk2.eq += eq; mk2.mnn = mnn || mk2.mnn; _abxMissed.set(name, mk2);
+              }
+              continue;
+            }
+            const oq = it.oq || 0, rq = it.rq || 0, cq = it.cq || 0;
             let row = acc.get(hit.display);
             if (!row) {
-              row = { display: hit.display, eq: 0, es: 0, byDept: new Map(), byMonth: new Map(), byDM: new Map(), names: new Set() };
+              row = { display: hit.display, cat: hit.cat, mnn: mnn || "",
+                      oq: 0, rq: 0, eq: 0, cq: 0, es: 0,
+                      byDept: new Map(), byMonth: new Map(), byDM: new Map(),
+                      names: new Set(), rows: [] };
               acc.set(hit.display, row);
             }
-            row.eq += eq; row.es += es;
+            row.oq += oq; row.rq += rq; row.eq += eq; row.cq += cq; row.es += es;
             row.names.add(name);
-            const d = row.byDept.get(deptName) || { eq: 0, es: 0 };
-            d.eq += eq; d.es += es; row.byDept.set(deptName, d);
+            // повний рядок для звіту за шаблоном інфекціоністів
+            row.rows.push({ dept: deptName, month: mk, drug: name, mnn: mnn || "",
+                            oq, rq, eq, cq, es });
+            const d = row.byDept.get(deptName) || { oq:0, rq:0, eq:0, cq:0, es:0 };
+            d.oq += oq; d.rq += rq; d.eq += eq; d.cq += cq; d.es += es; row.byDept.set(deptName, d);
             const mo = row.byMonth.get(mk) || { eq: 0, es: 0 };
             mo.eq += eq; mo.es += es; row.byMonth.set(mk, mo);
             const dmKey = deptName + "||" + mk;
@@ -5447,8 +5761,16 @@ function openAbxScreen() {
       }
     }
   }
-  _abxRows = [...acc.values()].sort((a, b) => b.es - a.es);
-  _abxScopeLabel = `${h ? h.name : ""} · ${monthKeys.length} міс. (${monthKeys[0]} – ${monthKeys[monthKeys.length - 1]})`;
+  _abxRows = [...acc.values()].sort((a, b) =>
+    (AMP_CAT_ORDER[a.cat] - AMP_CAT_ORDER[b.cat]) || (b.es - a.es));
+  _abxMissedRows = [..._abxMissed.entries()]
+    .map(([name, v]) => ({ name, eq: v.eq, mnn: v.mnn || "" }))
+    .sort((a, b) => b.eq - a.eq);
+  const rangeStr = monthKeys.length === 1
+    ? `${_monthLabel(monthKeys[0])} ${monthKeys[0].slice(0,4)}`
+    : `${monthKeys[0]} – ${monthKeys[monthKeys.length - 1]} (${monthKeys.length} міс.)`;
+  _abxScopeLabel = `${h ? h.name : ""} · ${rangeStr}`;
+  _abxRenderPeriodControls(allKeys);
   renderAbxScreen();
   show("abx");
 }
@@ -5457,23 +5779,57 @@ function renderAbxScreen() {
   document.getElementById("abx-scope").textContent = _abxScopeLabel;
   const rows = _abxRows || [];
   const totEs = rows.reduce((s, r) => s + r.es, 0);
+  const byCat = { RESERVE:0, WATCH:0, ACCESS:0 };
+  rows.forEach(r => byCat[r.cat] = (byCat[r.cat]||0) + 1);
   document.getElementById("abx-summary").innerHTML = rows.length
-    ? `${rows.length} МНН резерву зі списаннями · разом: <b style="color:var(--text)">${fmtMoney(totEs)}</b>`
+    ? `${rows.length} МНН зі списаннями (Reserve: ${byCat.RESERVE} · Watch: ${byCat.WATCH} · Access: ${byCat.ACCESS}) · разом: <b style="color:var(--text)">${fmtMoney(totEs)}</b>`
     : "";
+  // Аудит покриття: позиції, схожі на АМП, але не розпізнані через словник МНН.
+  const missed = _abxMissedRows || [];
+  const missedEl = document.getElementById("abx-missed");
+  if (missedEl) {
+    if (missed.length) {
+      const fmtQ2 = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+      missedEl.style.display = "block";
+      missedEl.innerHTML = `
+        <div style="font-size:12px;font-weight:700;color:var(--warn);margin-bottom:4px;">
+          ⚠️ ${missed.length} позицій схожі на антимікробні, але не потрапили у звіт
+        </div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:6px;">
+          Ймовірно, назва в аналітиці не збігається з назвою у файлі залишків, тож МНН
+          не знайдено. Перевірте ці позиції вручну перед подачею звіту:
+        </div>
+        ${missed.map(m => `<div style="font-size:11px;padding:3px 0;border-bottom:1px solid rgba(37,43,68,.4);">
+          ${esc(m.name)} <span style="color:var(--muted);">· видаток ${fmtQ2(m.eq)}${m.mnn ? ` · МНН у залишках: <b>${esc(m.mnn)}</b> (не в списку АМП)` : " · МНН у залишках відсутнє"}</span>
+        </div>`).join("")}`;
+    } else {
+      missedEl.style.display = "none";
+      missedEl.innerHTML = "";
+    }
+  }
   const fmtQ = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  let lastCat = null;
   document.getElementById("abx-list").innerHTML = rows.length ? rows.map((r, ri) => {
     const depts = [...r.byDept.entries()].sort((a, b) => b[1].es - a[1].es);
     const months = [...r.byMonth.entries()].sort((a, b) => a[0] < b[0] ? -1 : 1);
-    return `
-    <div class="result-card" style="margin-bottom:10px;">
+    // заголовок групи категорії
+    let catHeader = "";
+    if (r.cat !== lastCat) {
+      lastCat = r.cat;
+      catHeader = `<div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${AMP_CAT_COLOR[r.cat]};margin:14px 0 6px;">${AMP_CAT_LABEL[r.cat]}</div>`;
+    }
+    return catHeader + `
+    <div class="result-card" style="margin-bottom:8px;">
       <div style="padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;"
            onclick="const b=document.getElementById('abx-body-${ri}');b.style.display=b.style.display==='none'?'block':'none';">
         <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
-          <div style="font-size:13px;font-weight:700;">🦠 ${esc(r.display)}</div>
+          <div style="font-size:13px;font-weight:700;">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${AMP_CAT_COLOR[r.cat]};margin-right:6px;"></span>${esc(r.display)}
+          </div>
           <div style="font-size:13px;font-weight:800;color:var(--green);white-space:nowrap;">${fmtMoney(r.es)}</div>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:3px;">
-          Списано: ${fmtQ(r.eq)} · відділень: ${depts.length} ·
+          Видаток: ${fmtQ(r.eq)} · залишок: ${fmtQ(r.cq)} · відділень: ${depts.length} ·
           по місяцях: ${months.map(([k, v]) => `${k.slice(5)}: ${fmtQ(v.eq)}`).join(" · ")}
         </div>
       </div>
@@ -5482,35 +5838,91 @@ function renderAbxScreen() {
         ${depts.map(([dn, v]) => `
           <div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid rgba(37,43,68,.4);font-size:12px;">
             <span style="color:var(--muted);">${esc(dn)}</span>
-            <span style="white-space:nowrap;">${fmtQ(v.eq)} · <b>${fmtMoney(v.es)}</b></span>
+            <span style="white-space:nowrap;">видаток ${fmtQ(v.eq)} · залишок ${fmtQ(v.cq)} · <b>${fmtMoney(v.es)}</b></span>
           </div>`).join("")}
       </div>
     </div>`;
-  }).join("") : `<div class="empty-state"><div class="empty-ico">🦠</div><div class="empty-title">Списань антибіотиків резерву не знайдено</div><div class="empty-sub">Або словник Назва→МНН ще не покриває ці позиції —<br>оновіть залишки у «Пошуку медикаментів»</div></div>`;
+  }).join("") : `<div class="empty-state"><div class="empty-ico">🦠</div><div class="empty-title">Списань антимікробних препаратів не знайдено</div><div class="empty-sub">Або словник Назва→МНН ще не покриває ці позиції —<br>оновіть залишки у «Пошуку медикаментів»</div></div>`;
+}
+
+// Форма випуску — витягуємо з назви препарату (табл./р-н/амп./фл. тощо)
+function _ampDoseForm(name) {
+  const n = String(name || "").toLowerCase();
+  const forms = [
+    [/табл|тб\b|таблет/, "таблетки"],
+    [/капсул|капс\b/, "капсули"],
+    [/розчин|р-н|р-ну|инфуз|інфуз/, "розчин"],
+    [/порош|пор\.\s*д\/|ліофіл|ліофіліз/, "порошок/ліофілізат"],
+    [/амп\b|ампул/, "ампули"],
+    [/флак|фл\b|фл\./, "флакони"],
+    [/сироп/, "сироп"],
+    [/суспенз/, "суспензія"],
+    [/мазь|крем|гель/, "зовнішня форма"],
+    [/крапл/, "краплі"],
+  ];
+  for (const [re, label] of forms) if (re.test(n)) return label;
+  return "";
 }
 
 function exportAbxExcel() {
   const rows = _abxRows || [];
   if (!rows.length) { alert("Немає даних для експорту."); return; }
-  const aoa = [["Антибіотики резерву (WHO AWaRe: Reserve) — " + _abxScopeLabel], [],
-               ["МНН", "Відділення", "Місяць", "Списано, к-сть", "Списано, грн"]];
+  const fmtN = v => +(Number(v) || 0).toFixed(2);
+  // Аркуш 1 — за шаблоном інфекціоністів (рядок на позицію в кожному відділенні)
+  const HEAD = ["Назва ВП", "Дата (період)", "Назва АМП", "Назва АМП (МНН)",
+    "Форма випуску", "Початковий залишок", "Надходження", "Видаток",
+    "Кінцевий залишок", "Термін придатності", "Ціна/вартість",
+    "Примітки (утилізація, карантин)"];
+  const detail = [HEAD];
+  // збираємо всі елементарні рядки з усіх МНН, групуємо ВП→АМП
+  const allRows = [];
   for (const r of rows) {
-    // повний зріз МНН × відділення × місяць — зручно зводити pivot-ом
-    const keys = [...r.byDM.keys()].sort();
-    for (const k of keys) {
-      const [dn, mk] = k.split("||");
-      const v = r.byDM.get(k);
-      aoa.push([r.display, dn, mk, +v.eq.toFixed(2), +v.es.toFixed(2)]);
+    for (const er of r.rows) {
+      allRows.push({ ...er, cat: r.cat, group: r.display });
     }
   }
-  const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws["!cols"] = [{wch:48},{wch:42},{wch:12},{wch:14},{wch:14}];
+  // агрегуємо однакові (ВП + препарат + період) — бо один препарат міг мати
+  // кілька серій-рядків у межах відділення за місяць
+  const aggMap = new Map();
+  for (const er of allRows) {
+    const k = er.dept + "||" + er.drug + "||" + er.month;
+    let a = aggMap.get(k);
+    if (!a) { a = { ...er, oq:0, rq:0, eq:0, cq:0, es:0 }; aggMap.set(k, a); }
+    a.oq += er.oq; a.rq += er.rq; a.eq += er.eq; a.cq += er.cq; a.es += er.es;
+  }
+  const agg = [...aggMap.values()].sort((x, y) =>
+    (AMP_CAT_ORDER[x.cat] - AMP_CAT_ORDER[y.cat]) ||
+    x.dept.localeCompare(y.dept, "uk") || x.drug.localeCompare(y.drug, "uk"));
+  for (const a of agg) {
+    detail.push([
+      a.dept, a.month, a.drug, a.mnn, _ampDoseForm(a.drug),
+      fmtN(a.oq), fmtN(a.rq), fmtN(a.eq), fmtN(a.cq),
+      "", fmtN(a.es), "",
+    ]);
+  }
+  const ws1 = XLSX.utils.aoa_to_sheet(detail);
+  ws1["!cols"] = [{wch:22},{wch:14},{wch:34},{wch:26},{wch:16},{wch:13},{wch:13},{wch:12},{wch:14},{wch:16},{wch:14},{wch:22}];
+
+  // Аркуш 2 — зведення по МНН (підсумок, як просили «щоб знати куди пішло»)
+  const sum = [["Категорія", "МНН / препарат", "Поч. залишок", "Надходження",
+    "Видаток", "Кінц. залишок", "Вартість видатку, грн", "Відділень"]];
+  for (const r of rows) {
+    sum.push([AMP_CAT_LABEL[r.cat], r.display, fmtN(r.oq), fmtN(r.rq),
+      fmtN(r.eq), fmtN(r.cq), fmtN(r.es), r.byDept.size]);
+  }
+  const ws2 = XLSX.utils.aoa_to_sheet(sum);
+  ws2["!cols"] = [{wch:10},{wch:34},{wch:13},{wch:13},{wch:12},{wch:14},{wch:18},{wch:10}];
+
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Резерв");
-  XLSX.writeFile(wb, "Антибіотики_резерву.xlsx");
+  XLSX.utils.book_append_sheet(wb, ws1, "Звіт по відділеннях");
+  XLSX.utils.book_append_sheet(wb, ws2, "Зведення по МНН");
+  XLSX.writeFile(wb, "Звіт_антимікробні_" + (_abxFrom === _abxTo ? _abxFrom : _abxFrom + "_" + _abxTo) + ".xlsx");
 }
 
-function closeAbx() { show("analytics"); }
+function closeAbx() {
+  if (_abxFromInfControl) openInfControlPicker();
+  else show("analytics");
+}
 
 // ─── Household-items filter ─────────────────────────────────────────────────
 // Hide МВО whose items are construction/maintenance goods (drills, cables,
