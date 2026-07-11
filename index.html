@@ -1958,7 +1958,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.116";
+const APP_VERSION = "v.120";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -5567,6 +5567,7 @@ const AMP_LIST = [
   { stem:"norfloxacin",    cat:"WATCH",   display:"Норфлоксацин" },
   { stem:"ofloxacin",      cat:"WATCH",   display:"Офлоксацин" },
   { stem:"rifampicin",     cat:"WATCH",   display:"Рифампіцин" },
+  { stem:"rifamycin",      cat:"WATCH",   display:"Рифампіцин" }, // МНН у 1С буває "Rifamycinum"
   { stem:"teicoplanin",    cat:"WATCH",   display:"Тейкопланін" },
   { stem:"tobramycin",     cat:"WATCH",   display:"Тобраміцин" },
   { stem:"fosfomycin",     cat:"WATCH",   display:"Фосфоміцин" },
@@ -5656,6 +5657,93 @@ function _ampMatchMnn(mnn) {
   return null;
 }
 
+// ── Запасний матчинг за УКРАЇНСЬКОЮ назвою ───────────────────────────────────
+// Використовується ЛИШЕ коли матчинг за латинським МНН не вдався (МНН у файлі
+// залишків порожнє або записане так, що не збіглося з жодним стемом). Порядок
+// КРИТИЧНИЙ так само, як у латинському: комбінації та довші корені — першими
+// (левофлоксацин/ципрофлоксацин ПЕРЕД офлоксацином, бо "офлоксацин" — їх підрядок).
+const AMP_UA_MAP = [
+  // ── комбінації ──
+  { ua:"авібактам",     cat:"RESERVE", display:"Цефтазидим/авібактам" },
+  { ua:"ваборбактам",   cat:"RESERVE", display:"Меропенем/ваборбактам" },
+  { ua:"цефтолозан",    cat:"RESERVE", display:"Цефтолозан/тазобактам" },
+  { ua:"клавулан",      cat:"ACCESS",  display:"Амоксицилін/клавуланат" },
+  { ua:"піперацил",     cat:"WATCH",   display:"Піперацилін/тазобактам" },
+  { ua:"тазобактам",    cat:"WATCH",   display:"Піперацилін/тазобактам" },
+  // ── RESERVE ──
+  { ua:"азтреонам",     cat:"RESERVE", display:"Азтреонам" },
+  { ua:"колістимет",    cat:"RESERVE", display:"Колістин" },
+  { ua:"колістин",      cat:"RESERVE", display:"Колістин" },
+  { ua:"лінезолід",     cat:"RESERVE", display:"Лінезолід" },
+  { ua:"поліміксин",    cat:"RESERVE", display:"Поліміксин B" },
+  { ua:"тайгециклін",   cat:"RESERVE", display:"Тайгециклін" },
+  { ua:"тигециклін",    cat:"RESERVE", display:"Тайгециклін" },
+  { ua:"цефтріаксон",   cat:"RESERVE", display:"Цефтріаксон" },   // локальна кат. ТМО
+  { ua:"левофлоксацин", cat:"RESERVE", display:"Левофлоксацин" }, // локальна кат. ТМО; ПЕРЕД офлоксацином
+  { ua:"цефідерокол",   cat:"RESERVE", display:"Цефідерокол" },
+  // ── WATCH ──
+  { ua:"азитроміцин",   cat:"WATCH",   display:"Азитроміцин" },
+  { ua:"ванкоміцин",    cat:"WATCH",   display:"Ванкоміцин" },
+  { ua:"еритроміцин",   cat:"WATCH",   display:"Еритроміцин" },
+  { ua:"іміпенем",      cat:"WATCH",   display:"Іміпенем/циластатин" },
+  { ua:"кларитроміцин", cat:"WATCH",   display:"Кларитроміцин" },
+  { ua:"лінкоміцин",    cat:"WATCH",   display:"Лінкоміцин" },
+  { ua:"меропенем",     cat:"WATCH",   display:"Меропенем" },
+  { ua:"моксифлоксацин",cat:"WATCH",   display:"Моксифлоксацин" },
+  { ua:"ципрофлоксацин",cat:"WATCH",   display:"Ципрофлоксацин" }, // ПЕРЕД офлоксацином
+  { ua:"норфлоксацин",  cat:"WATCH",   display:"Норфлоксацин" },
+  { ua:"офлоксацин",    cat:"WATCH",   display:"Офлоксацин" },
+  { ua:"рифампіцин",    cat:"WATCH",   display:"Рифампіцин" },
+  { ua:"рифаміцин",     cat:"WATCH",   display:"Рифампіцин" },
+  { ua:"тейкопланін",   cat:"WATCH",   display:"Тейкопланін" },
+  { ua:"тобраміцин",    cat:"WATCH",   display:"Тобраміцин" },
+  { ua:"фосфоміцин",    cat:"WATCH",   display:"Фосфоміцин" },
+  { ua:"цефуроксим",    cat:"WATCH",   display:"Цефуроксим" },
+  { ua:"цефепім",       cat:"WATCH",   display:"Цефепім" },
+  { ua:"цефіксим",      cat:"WATCH",   display:"Цефіксим" },
+  { ua:"цефоперазон",   cat:"WATCH",   display:"Цефоперазон" },
+  { ua:"цефотаксим",    cat:"WATCH",   display:"Цефотаксим" },
+  { ua:"цефокситин",    cat:"WATCH",   display:"Цефокситин" },
+  { ua:"цефтазидим",    cat:"WATCH",   display:"Цефтазидим" },
+  // ── ACCESS ──
+  { ua:"амікацин",      cat:"ACCESS",  display:"Амікацин" },
+  { ua:"амоксицил",     cat:"ACCESS",  display:"Амоксицилін" },
+  { ua:"ампіцил",       cat:"ACCESS",  display:"Ампіцилін" },
+  { ua:"бензилпеніцилін",cat:"ACCESS", display:"Бензилпеніцилін" },
+  { ua:"доксициклін",   cat:"ACCESS",  display:"Доксициклін" },
+  { ua:"гентаміцин",    cat:"ACCESS",  display:"Гентаміцин" },
+  { ua:"кліндаміцин",   cat:"ACCESS",  display:"Кліндаміцин" },
+  { ua:"метронідазол",  cat:"ACCESS",  display:"Метронідазол" },
+  { ua:"нітрофурантоїн",cat:"ACCESS",  display:"Нітрофурантоїн" },
+  { ua:"орнідазол",     cat:"ACCESS",  display:"Орнідазол" },
+  { ua:"ко-тримоксазол",cat:"ACCESS",  display:"Ко-тримоксазол" },
+  { ua:"котримоксазол", cat:"ACCESS",  display:"Ко-тримоксазол" },
+  { ua:"триметоприм",   cat:"ACCESS",  display:"Триметоприм" },
+  { ua:"тетрациклін",   cat:"ACCESS",  display:"Тетрациклін" },
+  { ua:"тіамфенікол",   cat:"ACCESS",  display:"Тіамфенікол" },
+  { ua:"тинідазол",     cat:"ACCESS",  display:"Тинідазол" },
+  { ua:"цефалексин",    cat:"ACCESS",  display:"Цефалексин" },
+  { ua:"цефазолін",     cat:"ACCESS",  display:"Цефазолін" },
+  { ua:"хлорамфенікол", cat:"ACCESS",  display:"Хлорамфенікол" },
+];
+
+function _ampMatchUa(name) {
+  const low = String(name || "").toLowerCase();
+  if (!low) return null;
+  // Комбінації з сульбактамом — партнер визначає препарат (див. _ampMatchMnn).
+  if (low.includes("сульбактам")) {
+    if (low.includes("цефоперазон")) return { cat:"WATCH",   display:"Цефоперазон/сульбактам" };
+    if (low.includes("цефотаксим"))  return { cat:"WATCH",   display:"Цефотаксим/сульбактам" };
+    if (low.includes("цефтріаксон")) return { cat:"RESERVE", display:"Цефтріаксон/сульбактам" };
+    if (low.includes("цефепім"))     return { cat:"WATCH",   display:"Цефепім/сульбактам" };
+    if (low.includes("цефтазидим"))  return { cat:"WATCH",   display:"Цефтазидим/сульбактам" };
+    if (low.includes("ампіцил"))     return { cat:"ACCESS",  display:"Ампіцилін/сульбактам" };
+    return { cat:"ACCESS", display:"Ампіцилін/сульбактам" };
+  }
+  for (const r of AMP_UA_MAP) if (low.includes(r.ua)) return r;
+  return null;
+}
+
 function _abxRenderPeriodControls(allKeys) {
   const el = document.getElementById("abx-period");
   if (!el) return;
@@ -5680,6 +5768,7 @@ let _abxRows = null;
 let _abxMissedRows = null;
 let _abxScopeLabel = "";
 let _abxNoDict = 0; // позицій-кандидатів без МНН у словнику
+let _abxUaCount = 0; // позицій, залучених у звіт за укр. назвою (МНН не збігся)
 let _abxFrom = null; // ключ місяця "від" (null = найраніший)
 let _abxTo = null;   // ключ місяця "до" (null = найпізніший)
 
@@ -5703,6 +5792,7 @@ function openAbxScreen(fromInfControl) {
   // Збираємо: МНН(display) → { total eq/es, byDept: Map, byMonth: Map }
   const acc = new Map();
   _abxNoDict = 0;
+  _abxUaCount = 0;
   const _abxMissed = new Map(); // назви, схожі на АМП, але не зматчені (аудит покриття)
   for (const mk of monthKeys) {
     const month = analyticsData.months[mk];
@@ -5722,13 +5812,21 @@ function openAbxScreen(fromInfControl) {
             // споживання АМП вони не входять, навіть якщо МНН збігається.
             if (/(^|\s)диск|картридж|тест-систем|середовищ|(^|\s)агар/i.test(name)) continue;
             const mnn = dict[_mnnNormName(name)];
-            const hit = _ampMatchMnn(mnn);
+            let hit = _ampMatchMnn(mnn);
+            let matchedByUa = false;
+            if (!hit) {
+              // Запасний шлях: МНН порожнє/не збіглося — пробуємо розпізнати
+              // за українською назвою. Якщо впевнено — залучаємо у звіт.
+              const uaHit = _ampMatchUa(name);
+              if (uaHit) { hit = uaHit; matchedByUa = true; }
+            }
             if (!hit) {
               // Safety net (аудит покриття). Дві причини потрапити сюди:
               //  1) МНН у словнику Є, але не збігся з жодним стемом AMP_LIST —
               //     можливо, це АМП, якого немає у AWaRe-файлі, або МНН
               //     записане нестандартно. Показуємо З його МНН, щоб було видно.
-              //  2) МНН немає — тоді покладаємось на укр.-евристику назви.
+              //  2) МНН немає і за назвою теж не розпізнали — покладаємось на
+              //     ширшу укр.-евристику, щоб позиція не зникла тихо.
               const suspiciousByMnn = mnn && _looksLikeAmpLatin(mnn);
               if (suspiciousByMnn || _looksLikeAmpUa(name)) {
                 const mk2 = _abxMissed.get(name) || { eq: 0, mnn: mnn || "" };
@@ -5736,22 +5834,28 @@ function openAbxScreen(fromInfControl) {
               }
               continue;
             }
+            if (matchedByUa) _abxUaCount++;
             const oq = it.oq || 0, rq = it.rq || 0, cq = it.cq || 0;
+            const os = it.os || 0, rs = it.rs || 0, cs = it.cs || 0;
             let row = acc.get(hit.display);
             if (!row) {
               row = { display: hit.display, cat: hit.cat, mnn: mnn || "",
-                      oq: 0, rq: 0, eq: 0, cq: 0, es: 0,
+                      oq: 0, rq: 0, eq: 0, cq: 0, os: 0, rs: 0, es: 0, cs: 0,
                       byDept: new Map(), byMonth: new Map(), byDM: new Map(),
                       names: new Set(), rows: [] };
               acc.set(hit.display, row);
             }
-            row.oq += oq; row.rq += rq; row.eq += eq; row.cq += cq; row.es += es;
+            if (!row.mnn && mnn) row.mnn = mnn;
+            row.oq += oq; row.rq += rq; row.eq += eq; row.cq += cq;
+            row.os += os; row.rs += rs; row.es += es; row.cs += cs;
             row.names.add(name);
             // повний рядок для звіту за шаблоном інфекціоністів
             row.rows.push({ dept: deptName, month: mk, drug: name, mnn: mnn || "",
                             oq, rq, eq, cq, es });
-            const d = row.byDept.get(deptName) || { oq:0, rq:0, eq:0, cq:0, es:0 };
-            d.oq += oq; d.rq += rq; d.eq += eq; d.cq += cq; d.es += es; row.byDept.set(deptName, d);
+            const d = row.byDept.get(deptName) || { oq:0, rq:0, eq:0, cq:0, os:0, rs:0, es:0, cs:0 };
+            d.oq += oq; d.rq += rq; d.eq += eq; d.cq += cq;
+            d.os += os; d.rs += rs; d.es += es; d.cs += cs;
+            row.byDept.set(deptName, d);
             const mo = row.byMonth.get(mk) || { eq: 0, es: 0 };
             mo.eq += eq; mo.es += es; row.byMonth.set(mk, mo);
             const dmKey = deptName + "||" + mk;
@@ -5776,6 +5880,24 @@ function openAbxScreen(fromInfControl) {
   show("abx");
 }
 
+// Розгортання/згортання: картка препарату (рівень 1) і відділення (рівень 2).
+function _abxToggle(ri) {
+  const b = document.getElementById("abx-body-" + ri);
+  const c = document.getElementById("abx-caret-" + ri);
+  if (!b) return;
+  const open = (b.style.display === "none" || !b.style.display);
+  b.style.display = open ? "block" : "none";
+  if (c) c.style.transform = open ? "rotate(90deg)" : "rotate(0deg)";
+}
+function _abxToggleDept(ri, di) {
+  const b = document.getElementById("abx-dept-" + ri + "-" + di);
+  const c = document.getElementById("abx-dcaret-" + ri + "-" + di);
+  if (!b) return;
+  const open = (b.style.display === "none" || !b.style.display);
+  b.style.display = open ? "block" : "none";
+  if (c) c.style.transform = open ? "rotate(90deg)" : "rotate(0deg)";
+}
+
 function renderAbxScreen() {
   document.getElementById("abx-scope").textContent = _abxScopeLabel;
   const rows = _abxRows || [];
@@ -5784,6 +5906,7 @@ function renderAbxScreen() {
   rows.forEach(r => byCat[r.cat] = (byCat[r.cat]||0) + 1);
   document.getElementById("abx-summary").innerHTML = rows.length
     ? `${rows.length} МНН зі списаннями (Reserve: ${byCat.RESERVE} · Watch: ${byCat.WATCH} · Access: ${byCat.ACCESS}) · разом: <b style="color:var(--text)">${fmtMoney(totEs)}</b>`
+      + (_abxUaCount ? `<br><span style="color:var(--warn);font-size:10px;">ℹ️ ${_abxUaCount} позицій залучено за назвою (МНН у залишках було порожнє/нестандартне)</span>` : "")
     : "";
   // Аудит покриття: позиції, схожі на АМП, але не розпізнані через словник МНН.
   const missed = _abxMissedRows || [];
@@ -5821,25 +5944,59 @@ function renderAbxScreen() {
     }
     return catHeader + `
     <div class="result-card" style="margin-bottom:8px;">
-      <div style="padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;"
-           onclick="const b=document.getElementById('abx-body-${ri}');b.style.display=b.style.display==='none'?'block':'none';">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;">
-          <div style="font-size:13px;font-weight:700;">
-            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${AMP_CAT_COLOR[r.cat]};margin-right:6px;"></span>${esc(r.display)}
+      <div style="padding:11px 14px;cursor:pointer;" onclick="_abxToggle(${ri})">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <div style="min-width:0;">
+            <div style="font-size:13px;font-weight:700;">
+              <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${AMP_CAT_COLOR[r.cat]};margin-right:6px;"></span>${esc(r.display)}
+            </div>
+            ${r.mnn ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;padding-left:14px;">${esc(r.mnn)}</div>` : ""}
+            <div style="font-size:10px;color:var(--muted);opacity:.75;margin-top:2px;padding-left:14px;">${[...r.names].map(esc).join("; ")}</div>
           </div>
-          <div style="font-size:13px;font-weight:800;color:var(--green);white-space:nowrap;">${fmtMoney(r.es)}</div>
-        </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:3px;">
-          Видаток: ${fmtQ(r.eq)} · залишок: ${fmtQ(r.cq)} · відділень: ${depts.length} ·
-          по місяцях: ${months.map(([k, v]) => `${k.slice(5)}: ${fmtQ(v.eq)}`).join(" · ")}
+          <div style="display:flex;align-items:center;gap:9px;white-space:nowrap;flex-shrink:0;">
+            <div style="text-align:right;">
+              <div style="font-size:15px;font-weight:800;color:var(--text);line-height:1.15;">${fmtQ(r.eq)}</div>
+              <div style="font-size:11px;font-weight:700;color:var(--green);">${fmtMoney(r.es)}</div>
+              <div style="font-size:9px;color:var(--muted);letter-spacing:.06em;margin-top:1px;">СПИСАНО</div>
+            </div>
+            <span id="abx-caret-${ri}" style="display:inline-block;color:var(--muted);font-size:13px;transition:transform .15s ease;">▸</span>
+          </div>
         </div>
       </div>
-      <div id="abx-body-${ri}" style="display:none;padding:8px 14px 11px;">
-        <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Препарати: ${[...r.names].map(esc).join("; ")}</div>
-        ${depts.map(([dn, v]) => `
-          <div style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid rgba(37,43,68,.4);font-size:12px;">
-            <span style="color:var(--muted);">${esc(dn)}</span>
-            <span style="white-space:nowrap;">видаток ${fmtQ(v.eq)} · залишок ${fmtQ(v.cq)} · <b>${fmtMoney(v.es)}</b></span>
+      <div id="abx-body-${ri}" style="display:none;padding:6px 10px 10px;border-top:1px solid var(--border);">
+        ${depts.map(([dn, v], di) => `
+          <div style="border-bottom:1px solid rgba(37,43,68,.4);">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 4px;cursor:pointer;" onclick="_abxToggleDept(${ri},${di})">
+              <span style="font-size:12px;color:var(--text);min-width:0;">${esc(dn)}</span>
+              <span style="white-space:nowrap;font-size:12px;color:var(--muted);flex-shrink:0;">
+                списано <b style="color:var(--text);">${fmtQ(v.eq)}</b> · <span style="color:var(--green);">${fmtMoney(v.es)}</span>
+                <span id="abx-dcaret-${ri}-${di}" style="display:inline-block;font-size:11px;margin-left:4px;transition:transform .15s ease;">▸</span>
+              </span>
+            </div>
+            <div id="abx-dept-${ri}-${di}" style="display:none;padding:2px 4px 9px;">
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+                <div style="background:var(--card2);border-radius:8px;padding:7px 5px;text-align:center;">
+                  <div style="font-size:9px;color:var(--muted);letter-spacing:.02em;margin-bottom:3px;line-height:1.25;">ЗАЛИШОК<br>НА ПОЧАТОК</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--text);">${fmtQ(v.oq)}</div>
+                  <div style="font-size:10px;color:var(--muted);">${fmtMoney(v.os)}</div>
+                </div>
+                <div style="background:var(--card2);border-radius:8px;padding:7px 5px;text-align:center;">
+                  <div style="font-size:9px;color:var(--muted);letter-spacing:.02em;margin-bottom:3px;line-height:1.25;">ПРИХІД<br>&nbsp;</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--accent);">${fmtQ(v.rq)}</div>
+                  <div style="font-size:10px;color:var(--muted);">${fmtMoney(v.rs)}</div>
+                </div>
+                <div style="background:var(--card2);border-radius:8px;padding:7px 5px;text-align:center;">
+                  <div style="font-size:9px;color:var(--muted);letter-spacing:.02em;margin-bottom:3px;line-height:1.25;">ВИКОРИС-<br>ТАННЯ</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--warn);">${fmtQ(v.eq)}</div>
+                  <div style="font-size:10px;color:var(--muted);">${fmtMoney(v.es)}</div>
+                </div>
+                <div style="background:var(--card2);border-radius:8px;padding:7px 5px;text-align:center;">
+                  <div style="font-size:9px;color:var(--muted);letter-spacing:.02em;margin-bottom:3px;line-height:1.25;">ЗАЛИШОК<br>НА КІНЕЦЬ</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--green);">${fmtQ(v.cq)}</div>
+                  <div style="font-size:10px;color:var(--muted);">${fmtMoney(v.cs)}</div>
+                </div>
+              </div>
+            </div>
           </div>`).join("")}
       </div>
     </div>`;
