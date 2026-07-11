@@ -1958,7 +1958,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.120";
+const APP_VERSION = "v.122";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6049,8 +6049,10 @@ function exportAbxExcel() {
     a.oq += er.oq; a.rq += er.rq; a.eq += er.eq; a.cq += er.cq; a.es += er.es;
   }
   const agg = [...aggMap.values()].sort((x, y) =>
+    x.dept.localeCompare(y.dept, "uk") ||
     (AMP_CAT_ORDER[x.cat] - AMP_CAT_ORDER[y.cat]) ||
-    x.dept.localeCompare(y.dept, "uk") || x.drug.localeCompare(y.drug, "uk"));
+    x.drug.localeCompare(y.drug, "uk") ||
+    x.month.localeCompare(y.month));
   for (const a of agg) {
     detail.push([
       a.dept, a.month, a.drug, a.mnn, _ampDoseForm(a.drug),
@@ -6060,6 +6062,33 @@ function exportAbxExcel() {
   }
   const ws1 = XLSX.utils.aoa_to_sheet(detail);
   ws1["!cols"] = [{wch:22},{wch:14},{wch:34},{wch:26},{wch:16},{wch:13},{wch:13},{wch:12},{wch:14},{wch:16},{wch:14},{wch:22}];
+
+  // Аркуш 2 — інтерактивний: відділення з РОЗКРИВНИМ списком препаратів.
+  // Excel малює зліва кнопки згортання «+/−»: згорнув — бачиш лише підсумковий
+  // рядок відділення; розгорнув — перелік препаратів. Підсумок стоїть НАД
+  // списком (!outline.above), препарати — на рівні 1 (!rows[i].level).
+  const g = [HEAD.slice()];
+  const grows = [{}]; // рядок заголовка — рівень 0
+  const deptG = new Map();
+  for (const a of agg) {
+    if (!deptG.has(a.dept)) deptG.set(a.dept, []);
+    deptG.get(a.dept).push(a);
+  }
+  for (const [dept, items] of deptG) {
+    const t = items.reduce((s, a) => { s.oq+=a.oq; s.rq+=a.rq; s.eq+=a.eq; s.cq+=a.cq; s.es+=a.es; return s; },
+                           { oq:0, rq:0, eq:0, cq:0, es:0 });
+    g.push([dept + "  (усього)", "", "", "", "", fmtN(t.oq), fmtN(t.rq), fmtN(t.eq), fmtN(t.cq), "", fmtN(t.es), ""]);
+    grows.push({}); // підсумок відділення — рівень 0
+    for (const a of items) {
+      g.push(["", a.month, a.drug, a.mnn, _ampDoseForm(a.drug),
+              fmtN(a.oq), fmtN(a.rq), fmtN(a.eq), fmtN(a.cq), "", fmtN(a.es), ""]);
+      grows.push({ level: 1 }); // препарат — згортається під відділення
+    }
+  }
+  const wsG = XLSX.utils.aoa_to_sheet(g);
+  wsG["!rows"] = grows;
+  wsG["!outline"] = { above: true };
+  wsG["!cols"] = ws1["!cols"];
 
   // Аркуш 2 — зведення по МНН (підсумок, як просили «щоб знати куди пішло»)
   const sum = [["Категорія", "МНН / препарат", "Поч. залишок", "Надходження",
@@ -6073,6 +6102,7 @@ function exportAbxExcel() {
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws1, "Звіт по відділеннях");
+  XLSX.utils.book_append_sheet(wb, wsG, "Відділення (розкривні)");
   XLSX.utils.book_append_sheet(wb, ws2, "Зведення по МНН");
   XLSX.writeFile(wb, "Звіт_антимікробні_" + (_abxFrom === _abxTo ? _abxFrom : _abxFrom + "_" + _abxTo) + ".xlsx");
 }
