@@ -1958,7 +1958,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.122";
+const APP_VERSION = "v.123";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6026,10 +6026,13 @@ function exportAbxExcel() {
   const rows = _abxRows || [];
   if (!rows.length) { alert("Немає даних для експорту."); return; }
   const fmtN = v => +(Number(v) || 0).toFixed(2);
+  // Ціна за одиницю = вартість списання / кількість списання (облікова ціна за
+  // штуку/флакон). Порожньо, якщо списання не було (ділення на 0).
+  const unit = (es, eq) => (eq > 0 ? +(Number(es) / Number(eq)).toFixed(2) : "");
   // Аркуш 1 — за шаблоном інфекціоністів (рядок на позицію в кожному відділенні)
   const HEAD = ["Назва ВП", "Дата (період)", "Назва АМП", "Назва АМП (МНН)",
     "Форма випуску", "Початковий залишок", "Надходження", "Видаток",
-    "Кінцевий залишок", "Термін придатності", "Ціна/вартість",
+    "Кінцевий залишок", "Термін придатності", "Ціна/вартість", "Ціна за од., грн",
     "Примітки (утилізація, карантин)"];
   const detail = [HEAD];
   // збираємо всі елементарні рядки з усіх МНН, групуємо ВП→АМП
@@ -6057,11 +6060,11 @@ function exportAbxExcel() {
     detail.push([
       a.dept, a.month, a.drug, a.mnn, _ampDoseForm(a.drug),
       fmtN(a.oq), fmtN(a.rq), fmtN(a.eq), fmtN(a.cq),
-      "", fmtN(a.es), "",
+      "", fmtN(a.es), unit(a.es, a.eq), "",
     ]);
   }
   const ws1 = XLSX.utils.aoa_to_sheet(detail);
-  ws1["!cols"] = [{wch:22},{wch:14},{wch:34},{wch:26},{wch:16},{wch:13},{wch:13},{wch:12},{wch:14},{wch:16},{wch:14},{wch:22}];
+  ws1["!cols"] = [{wch:22},{wch:14},{wch:34},{wch:26},{wch:16},{wch:13},{wch:13},{wch:12},{wch:14},{wch:16},{wch:14},{wch:13},{wch:22}];
 
   // Аркуш 2 — інтерактивний: відділення з РОЗКРИВНИМ списком препаратів.
   // Excel малює зліва кнопки згортання «+/−»: згорнув — бачиш лише підсумковий
@@ -6077,11 +6080,11 @@ function exportAbxExcel() {
   for (const [dept, items] of deptG) {
     const t = items.reduce((s, a) => { s.oq+=a.oq; s.rq+=a.rq; s.eq+=a.eq; s.cq+=a.cq; s.es+=a.es; return s; },
                            { oq:0, rq:0, eq:0, cq:0, es:0 });
-    g.push([dept + "  (усього)", "", "", "", "", fmtN(t.oq), fmtN(t.rq), fmtN(t.eq), fmtN(t.cq), "", fmtN(t.es), ""]);
+    g.push([dept + "  (усього)", "", "", "", "", fmtN(t.oq), fmtN(t.rq), fmtN(t.eq), fmtN(t.cq), "", fmtN(t.es), "", ""]);
     grows.push({}); // підсумок відділення — рівень 0
     for (const a of items) {
       g.push(["", a.month, a.drug, a.mnn, _ampDoseForm(a.drug),
-              fmtN(a.oq), fmtN(a.rq), fmtN(a.eq), fmtN(a.cq), "", fmtN(a.es), ""]);
+              fmtN(a.oq), fmtN(a.rq), fmtN(a.eq), fmtN(a.cq), "", fmtN(a.es), unit(a.es, a.eq), ""]);
       grows.push({ level: 1 }); // препарат — згортається під відділення
     }
   }
@@ -6092,13 +6095,13 @@ function exportAbxExcel() {
 
   // Аркуш 2 — зведення по МНН (підсумок, як просили «щоб знати куди пішло»)
   const sum = [["Категорія", "МНН / препарат", "Поч. залишок", "Надходження",
-    "Видаток", "Кінц. залишок", "Вартість видатку, грн", "Відділень"]];
+    "Видаток", "Кінц. залишок", "Вартість видатку, грн", "Ціна за од., грн", "Відділень"]];
   for (const r of rows) {
     sum.push([AMP_CAT_LABEL[r.cat], r.display, fmtN(r.oq), fmtN(r.rq),
-      fmtN(r.eq), fmtN(r.cq), fmtN(r.es), r.byDept.size]);
+      fmtN(r.eq), fmtN(r.cq), fmtN(r.es), unit(r.es, r.eq), r.byDept.size]);
   }
   const ws2 = XLSX.utils.aoa_to_sheet(sum);
-  ws2["!cols"] = [{wch:10},{wch:34},{wch:13},{wch:13},{wch:12},{wch:14},{wch:18},{wch:10}];
+  ws2["!cols"] = [{wch:10},{wch:34},{wch:13},{wch:13},{wch:12},{wch:14},{wch:18},{wch:13},{wch:10}];
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws1, "Звіт по відділеннях");
