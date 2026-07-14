@@ -1958,7 +1958,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.124";
+const APP_VERSION = "v.125";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -9043,6 +9043,11 @@ const FINPLAN_OVERRIDES = [
   // (irrespective of any other hospital marker that might appear in the name)
   { test: /войтович.*маріан|маріан.*войтович/i, target: "mykolaja" },
   { test: /склад\s*(№\s*)?(18|19)\b/i,          target: "mykolaja" },
+  // Корпало Катерина — Склад№10 СВ.Луки (НСЗУ). Штатний маркер /св[\.\s]*лук/
+  // ловить назву і без цього override, але 1С трункує поле («...Володим»)
+  // і між місяцями назва може прийти без фрагмента «СВ.Луки» — тоді
+  // прізвище гарантує стабільну класифікацію в Луки.
+  { test: /корпало.*катерин|катерин.*корпало/i, target: "luky" },
   // Романчукевич з киснем — завжди в "Інші підрозділи"
   // (in January was misclassified to Mykolaja; this override fixes it)
   { test: /романчукевич/i, target: "other" },
