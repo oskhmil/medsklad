@@ -1661,6 +1661,29 @@
         </div>
         <div id="an-item-analytics"></div>
 
+        <!-- Write-off by item: pick medication + period → total + per-department breakdown -->
+        <div class="an-section-title" style="margin-top:18px;">🔎 Списання по позиції</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">
+          Виберіть медикамент і період — покаже, <b>скільки всього списано по лікарні</b> та розшифровку, <b>де і скільки</b> (по відділеннях і МВО).
+        </div>
+        <div style="position:relative;margin-bottom:8px;">
+          <input id="wo-item-input" type="text" placeholder="Почніть вводити назву медикаменту..."
+                 autocomplete="off" oninput="onWriteoffItemInput(this.value)" onfocus="onWriteoffItemInput(this.value)"
+                 style="width:100%;background:#2a3050;border:1.5px solid var(--border);border-radius:10px;padding:9px 36px 9px 14px;color:#fff;font-size:13px;outline:none;">
+          <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔍</span>
+          <div class="dept-suggestions" id="wo-item-suggestions" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:30;margin-top:4px;"></div>
+        </div>
+        <div id="wo-selected" style="display:none;margin-bottom:8px;"></div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap;">
+          <span style="font-size:11px;color:var(--muted);">Період:</span>
+          <select id="wo-from" onchange="renderWriteoffResult()"
+                  style="flex:1;min-width:120px;background:#2a3050;border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:#fff;font-size:12px;"></select>
+          <span style="font-size:11px;color:var(--muted);">—</span>
+          <select id="wo-to" onchange="renderWriteoffResult()"
+                  style="flex:1;min-width:120px;background:#2a3050;border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:#fff;font-size:12px;"></select>
+        </div>
+        <div id="wo-result"></div>
+
         <!-- Annual demand entry -->
         <div class="an-section-title" style="margin-top:18px;">📋 Планування закупівель</div>
         <button class="choice-btn" onclick="openDemandForHospital()" style="width:100%;">
@@ -1958,7 +1981,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.125";
+const APP_VERSION = "v.126";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6701,6 +6724,7 @@ function renderAnalyticsMonth() {
   renderAnalyticsSummary(m);
   renderRankings(m);
   renderItemAnalytics(m);
+  _ensureWriteoffInit();
   renderHierarchy(m);
 }
 
@@ -7093,6 +7117,240 @@ function _monthsBefore(currentKey) {
   return Object.keys(analyticsData.months || {})
     .filter(k => k < currentKey)
     .sort();
+}
+
+// ── Списання по позиції (медикамент + період → по відділеннях) ──────────────
+// Стан інструмента. Ключ медикаменту — це індекс назви (it.n), стабільний у
+// межах усього JSON лікарні (одна назва → один індекс завдяки інтернінгу).
+let _woNameIdx = null;              // вибраний індекс назви або null
+let _woSuggestions = [];            // [{idx, name}] поточні підказки (по індексу кліку)
+let _woNameCache = null;            // { hid, list:[{idx,name}] } — кеш списку назв лікарні
+let _woInitedHid = null;            // для скидання стану при зміні лікарні
+
+// Місяці з даними (відсортовані за зростанням).
+function _woMonthKeys() {
+  if (!analyticsData || !analyticsData.months) return [];
+  return Object.keys(analyticsData.months)
+    .filter(k => {
+      const m = analyticsData.months[k];
+      return m && m.directions && m.directions.length;
+    })
+    .sort();
+}
+
+// Унікальні назви позицій лікарні, що МАЮТЬ хоч якесь списання (eq>0) хоча б в
+// одному місяці — саме вони цікаві для цього інструмента. Кешуємо по лікарні.
+function _woBuildNameList() {
+  if (_woNameCache && _woNameCache.hid === currentHospitalId) return _woNameCache.list;
+  const seen = new Set();
+  for (const k of _woMonthKeys()) {
+    const m = analyticsData.months[k];
+    for (const d of m.directions || [])
+      for (const g of d.groups || [])
+        for (const sub of g.subdivisions || []) {
+          if (sub._hidden) continue;
+          for (const it of sub.items || []) {
+            if ((it.eq || 0) > 0 && typeof it.n === "number") seen.add(it.n);
+          }
+        }
+  }
+  const list = [...seen]
+    .map(idx => ({ idx, name: analyticsData.names[idx] || "(?)" }))
+    .sort((a, b) => a.name.localeCompare(b.name, "uk"));
+  _woNameCache = { hid: currentHospitalId, list };
+  return list;
+}
+
+// Скидання/ініціалізація при відкритті або зміні лікарні.
+function _ensureWriteoffInit() {
+  if (_woInitedHid === currentHospitalId) { _woFillPeriodSelects(/*keepChoice=*/true); return; }
+  _woInitedHid = currentHospitalId;
+  _woNameIdx = null;
+  _woNameCache = null;
+  _woSuggestions = [];
+  const inp = document.getElementById("wo-item-input");
+  if (inp) inp.value = "";
+  const sug = document.getElementById("wo-item-suggestions");
+  if (sug) sug.style.display = "none";
+  const selBox = document.getElementById("wo-selected");
+  if (selBox) selBox.style.display = "none";
+  const res = document.getElementById("wo-result");
+  if (res) res.innerHTML = "";
+  _woFillPeriodSelects(/*keepChoice=*/false);
+}
+
+// Наповнює селекти періоду місяцями. keepChoice=true зберігає поточний вибір
+// (за глобальної зміни місяця), false — ставить дефолт = поточний місяць.
+function _woFillPeriodSelects(keepChoice) {
+  const fromEl = document.getElementById("wo-from");
+  const toEl   = document.getElementById("wo-to");
+  if (!fromEl || !toEl) return;
+  const keys = _woMonthKeys();
+  if (!keys.length) { fromEl.innerHTML = toEl.innerHTML = ""; return; }
+  const prevFrom = keepChoice ? fromEl.value : null;
+  const prevTo   = keepChoice ? toEl.value   : null;
+  const opts = keys.map(k => `<option value="${esc(k)}">${esc(fmtMonthKey(k))}</option>`).join("");
+  fromEl.innerHTML = opts;
+  toEl.innerHTML   = opts;
+  const def = (currentMonthKey && keys.includes(currentMonthKey)) ? currentMonthKey : keys[keys.length - 1];
+  fromEl.value = (prevFrom && keys.includes(prevFrom)) ? prevFrom : def;
+  toEl.value   = (prevTo   && keys.includes(prevTo))   ? prevTo   : def;
+}
+
+// Пошук медикаменту у полі вводу.
+function onWriteoffItemInput(val) {
+  const q = normalize(val);
+  const sugEl = document.getElementById("wo-item-suggestions");
+  if (!sugEl) return;
+  if (!q || q.length < 2) { sugEl.style.display = "none"; return; }
+  const list = _woBuildNameList();
+  _woSuggestions = list.filter(o => normalize(o.name).includes(q)).slice(0, 25);
+  if (!_woSuggestions.length) {
+    sugEl.style.display = "block";
+    sugEl.innerHTML = `<div class="dept-suggestion-item" style="cursor:default;color:var(--muted);">Нічого не знайдено (позиції без списань не показуються)</div>`;
+    return;
+  }
+  sugEl.style.display = "block";
+  sugEl.innerHTML = _woSuggestions.map((o, i) =>
+    `<div class="dept-suggestion-item" onclick="selectWriteoffItem(${i})"><span>${esc(o.name)}</span></div>`
+  ).join("");
+}
+
+function selectWriteoffItem(i) {
+  const o = _woSuggestions[i];
+  if (!o) return;
+  _woNameIdx = o.idx;
+  const inp = document.getElementById("wo-item-input");
+  if (inp) inp.value = o.name;
+  const sugEl = document.getElementById("wo-item-suggestions");
+  if (sugEl) sugEl.style.display = "none";
+  const selBox = document.getElementById("wo-selected");
+  if (selBox) {
+    selBox.style.display = "block";
+    selBox.innerHTML =
+      `<div class="selected-dept-chip" style="cursor:pointer;" onclick="clearWriteoffItem()" title="Прибрати вибір">${esc(o.name)} <span>✕</span></div>`;
+  }
+  renderWriteoffResult();
+}
+
+function clearWriteoffItem() {
+  _woNameIdx = null;
+  const inp = document.getElementById("wo-item-input");
+  if (inp) inp.value = "";
+  const selBox = document.getElementById("wo-selected");
+  if (selBox) { selBox.style.display = "none"; selBox.innerHTML = ""; }
+  const res = document.getElementById("wo-result");
+  if (res) res.innerHTML = "";
+}
+
+// Рахує списання вибраної позиції за період, згруповане по відділеннях (path[0])
+// і МВО (leaf). Повертає total + масив відділень.
+function _computeWriteoff(nameIdx, fromKey, toKey) {
+  const allKeys = _woMonthKeys();
+  const keys = allKeys.filter(k => k >= fromKey && k <= toKey);
+  const deptMap = new Map(); // deptName -> { qty, sum, mvos: Map(label->{qty,sum}) }
+  const perMonth = [];
+  let totQty = 0, totSum = 0;
+  for (const k of keys) {
+    const m = analyticsData.months[k];
+    let mQty = 0, mSum = 0;
+    for (const d of m.directions || [])
+      for (const g of d.groups || [])
+        for (const sub of g.subdivisions || []) {
+          if (sub._hidden) continue;
+          for (const it of sub.items || []) {
+            if (it.n !== nameIdx) continue;
+            const q = it.eq || 0, s = it.es || 0;
+            if (q === 0 && s === 0) continue;
+            const path = sub.path || [];
+            const deptName = path.length ? (analyticsData.paths[path[0]] || "—") : "—";
+            const mvoName  = path.length > 1 ? (analyticsData.paths[path[path.length - 1]] || "—") : deptName;
+            if (!deptMap.has(deptName)) deptMap.set(deptName, { qty: 0, sum: 0, mvos: new Map() });
+            const dRec = deptMap.get(deptName);
+            dRec.qty += q; dRec.sum += s;
+            if (!dRec.mvos.has(mvoName)) dRec.mvos.set(mvoName, { qty: 0, sum: 0 });
+            const mv = dRec.mvos.get(mvoName);
+            mv.qty += q; mv.sum += s;
+            totQty += q; totSum += s; mQty += q; mSum += s;
+          }
+        }
+    perMonth.push({ key: k, qty: mQty, sum: mSum });
+  }
+  const depts = [...deptMap.entries()]
+    .map(([name, r]) => ({
+      name, qty: r.qty, sum: r.sum,
+      mvos: [...r.mvos.entries()].map(([label, v]) => ({ label, qty: v.qty, sum: v.sum }))
+                                 .sort((a, b) => b.qty - a.qty),
+    }))
+    .sort((a, b) => b.qty - a.qty);
+  return { totQty, totSum, depts, perMonth, monthCount: keys.length };
+}
+
+function renderWriteoffResult() {
+  const res = document.getElementById("wo-result");
+  if (!res) return;
+  if (_woNameIdx == null) { res.innerHTML = ""; return; }
+  let fromKey = (document.getElementById("wo-from") || {}).value;
+  let toKey   = (document.getElementById("wo-to")   || {}).value;
+  if (!fromKey || !toKey) { res.innerHTML = ""; return; }
+  if (fromKey > toKey) { const t = fromKey; fromKey = toKey; toKey = t; } // авто-своп
+
+  const fq = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  const data = _computeWriteoff(_woNameIdx, fromKey, toKey);
+  const periodLbl = fromKey === toKey
+    ? fmtMonthKey(fromKey)
+    : `${fmtMonthKey(fromKey)} — ${fmtMonthKey(toKey)}`;
+
+  if (data.totQty === 0 && data.totSum === 0) {
+    res.innerHTML =
+      `<div style="padding:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;color:var(--muted);font-size:13px;">
+        За період <b style="color:var(--text)">${esc(periodLbl)}</b> списань цієї позиції не знайдено.
+      </div>`;
+    return;
+  }
+
+  // Підсумок по лікарні
+  let html =
+    `<div style="padding:14px 16px;background:linear-gradient(135deg,rgba(79,142,247,.12),rgba(56,189,248,.06));border:1px solid var(--accent);border-radius:12px;margin-bottom:12px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Списано по лікарні · ${esc(periodLbl)}</div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:26px;font-weight:800;color:var(--text);">${fq(data.totQty)}</span>
+        <span style="font-size:13px;color:var(--muted);">од.</span>
+        <span style="font-size:15px;font-weight:700;color:var(--danger);">${fmtMoney(data.totSum)}</span>
+      </div>
+    </div>`;
+
+  // Розбивка по місяцях (лише коли період > 1 міс)
+  if (data.monthCount > 1) {
+    html += `<div style="margin-bottom:12px;">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">По місяцях</div>
+      ${data.perMonth.map(pm => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(37,43,68,.5);font-size:12px;">
+          <span style="color:var(--muted);">${esc(fmtMonthKey(pm.key))}</span>
+          <span><b style="color:var(--text);">${fq(pm.qty)}</b> од. · <span style="color:var(--danger);">${fmtMoney(pm.sum)}</span></span>
+        </div>`).join("")}
+    </div>`;
+  }
+
+  // Розшифровка по відділеннях → МВО
+  html += `<div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Де списано (${data.depts.length} відділ.)</div>`;
+  html += data.depts.map(d => {
+    const showMvo = !(d.mvos.length === 1 && d.mvos[0].label === d.name);
+    const mvoRows = showMvo ? d.mvos.map(mv => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0 4px 14px;font-size:12px;border-top:1px solid rgba(37,43,68,.4);">
+        <span style="color:var(--muted);flex:1;">↳ ${esc(mv.label)}</span>
+        <span style="white-space:nowrap;"><b style="color:var(--text);">${fq(mv.qty)}</b> од. · <span style="color:var(--muted);">${fmtMoney(mv.sum)}</span></span>
+      </div>`).join("") : "";
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <span style="font-weight:700;font-size:13px;color:var(--text);">🏥 ${esc(d.name)}</span>
+        <span style="white-space:nowrap;font-size:13px;"><b style="color:var(--accent);">${fq(d.qty)}</b> од. · <span style="color:var(--danger);">${fmtMoney(d.sum)}</span></span>
+      </div>
+      ${mvoRows}
+    </div>`;
+  }).join("");
+
+  res.innerHTML = html;
 }
 
 function renderItemAnalytics(m) {
