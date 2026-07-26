@@ -1608,15 +1608,15 @@
 
       <div id="dls-content" style="display:none">
         <div class="dls-kpis">
-          <div class="dls-kpi">
+          <div class="dls-kpi" onclick="dlsKpi('all')" style="cursor:pointer">
             <div class="dls-kpi-num" style="color:var(--accent)" id="dls-k-total">0</div>
             <div class="dls-kpi-lbl">Чинних заборон</div>
           </div>
-          <div class="dls-kpi">
+          <div class="dls-kpi" onclick="dlsKpi('hits')" style="cursor:pointer">
             <div class="dls-kpi-num" id="dls-k-hits">0</div>
             <div class="dls-kpi-lbl">Виявлено на складах</div>
           </div>
-          <div class="dls-kpi">
+          <div class="dls-kpi" onclick="dlsKpi('month')" style="cursor:pointer">
             <div class="dls-kpi-num" style="color:#a78bfa" id="dls-k-month">0</div>
             <div class="dls-kpi-lbl">За поточний місяць</div>
           </div>
@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.127";
+const APP_VERSION = "v.129";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -11311,9 +11311,9 @@ function _dlsFoldName(s) {
 
 // Опорні слова торгової назви (>= 4 символів). Для «всі серії» беремо два —
 // там немає серії, яка страхує від хибних збігів на кшталт «СПИРТ».
-function _dlsBrandTokens(brand, wide) {
+function _dlsBrandTokens(brand) {
   const w = _dlsFoldName(brand).split(" ").filter(x => x.length >= 4);
-  return w.length ? (wide ? w.slice(0, 2) : w.slice(0, 1)) : [];
+  return w.length ? w.slice(0, 1) : [];
 }
 
 // ── Завантаження ────────────────────────────────────────────────────────────
@@ -11447,17 +11447,14 @@ function dlsMatch(records, items) {
     const hits = [];
     let confidence = null;
 
+    // «Всі серії» не звіряємо принципово: заборона стосується всіх серій
+    // КОНКРЕТНОГО виробника, а в залишках 1С виробника немає взагалі.
+    // Збіг лише за назвою дає хибні тривоги (ЦЕФЕПІМ Ананта ≠ ЦЕФЕПІМ інший).
+    // Такі приписи ДЛС супроводжує окремим файлом з переліком — перевірка ручна.
     if (r.all_series) {
-      const toks = _dlsBrandTokens(r.brand, true);
-      if (toks.length) {
-        for (const it of items) {
-          const h = hay(it);
-          if (toks.every(t => h.includes(t))) hits.push({ item: it, series: it.series });
-        }
-        if (hits.length) confidence = "brand";
-      }
+      continue;
     } else {
-      const toks = _dlsBrandTokens(r.brand, false);
+      const toks = _dlsBrandTokens(r.brand);
       for (const s of r.series) {
         const found = bySeries.get(_dlsFold(s));
         if (!found) continue;
@@ -11494,7 +11491,7 @@ function dlsCheckItem(item) {
   if (!recs || !recs.length) return null;
   const hay = _dlsFoldName(item.name) + " " + _dlsFoldName(item.mnn || "");
   const strict = recs.find(r => {
-    const t = _dlsBrandTokens(r.brand, false);
+    const t = _dlsBrandTokens(r.brand);
     return t.length && t.some(x => hay.includes(x));
   });
   return strict || recs[0];
@@ -11607,8 +11604,8 @@ function renderDls() {
 
     const conf = m && m.confidence === "series"
       ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Збіг лише за номером серії — назва препарату не збіглася. Перевірте вручну.</div>` : "";
-    const brandOnly = m && m.confidence === "brand"
-      ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Заборонено всі серії — збіг за назвою. Перевірте відповідність виробника.</div>` : "";
+    const brandOnly = r.all_series
+      ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Заборонено всі серії цього виробника. Автозвірка неможлива — у залишках 1С немає виробника. Звірте вручну за переліком ДЛС.</div>` : "";
     const parseWarn = r.parse_ok === false
       ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Серії у приписі записані нестандартно — автозвірка ненадійна, перевірте вручну.</div>` : "";
 
@@ -11626,11 +11623,36 @@ function renderDls() {
       <div class="dls-card-body" id="dls-body-${i}">
         <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px">${esc(r.name)}</div>
         ${r.manufacturer ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px">🏭 ${esc(r.manufacturer)}</div>` : ""}
-        ${hitRows ? `<div class="section-lbl" style="margin-top:6px">Знайдено на складах</div>${hitRows}` : `<div style="font-size:12px;color:var(--green)">✅ На залишках ТМО відсутній</div>`}
+        ${hitRows
+          ? `<div class="section-lbl" style="margin-top:6px">Знайдено на складах</div>${hitRows}`
+          : (r.all_series
+              ? `<div style="font-size:12px;color:var(--warn)">🔍 Потребує ручної перевірки</div>`
+              : `<div style="font-size:12px;color:var(--green)">✅ На залишках ТМО відсутній</div>`)}
         ${conf}${brandOnly}${parseWarn}
       </div>
     </div>`;
   }).join("");
+}
+
+// Клік по картці-лічильнику виставляє відповідний фільтр і місяць
+function dlsKpi(kind) {
+  const sel = document.getElementById("dls-month");
+  const setBtn = (id) => {
+    ["dls-f-hits","dls-f-all","dls-f-rev"].forEach(x =>
+      document.getElementById(x).classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  };
+  if (kind === "month") {
+    const nowYm = new Date().toISOString().slice(0, 7);
+    if ([...sel.options].some(o => o.value === nowYm)) sel.value = nowYm;
+    dlsFilter = "all"; setBtn("dls-f-all");
+  } else if (kind === "hits") {
+    sel.value = ""; dlsFilter = "hits"; setBtn("dls-f-hits");
+  } else {
+    sel.value = ""; dlsFilter = "all"; setBtn("dls-f-all");
+  }
+  renderDls();
+  document.getElementById("dls-list").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function dlsToggle(i) {
@@ -11666,7 +11688,11 @@ function _dlsFullText(r) {
   return parts.join(", ");
 }
 
-function _dlsResultText(m) {
+function _dlsResultText(m, rec) {
+  // За рішенням замовника колонка 5 має лише два стани: «ВИЯВЛЕНО: …»
+  // або «відсутній». Для «всіх серій» автозвірка не проводиться (у залишках
+  // 1С немає виробника) — попередження про ручну перевірку лишається
+  // в картці розділу ДЛС, у Журнал воно не потрапляє.
   if (!m || !m.hits.length) return "відсутній";
   const agg = new Map();
   for (const h of m.hits) {
@@ -11702,7 +11728,7 @@ async function downloadDlsJournal() {
         `№ ${r.num} від ${r.date}`,
         r.date,
         _dlsFullText(r),
-        _dlsResultText(dlsMatches ? dlsMatches.get(r.uid) : null),
+        _dlsResultText(dlsMatches ? dlsMatches.get(r.uid) : null, r),
         "", "", "",
       ]);
       return {
