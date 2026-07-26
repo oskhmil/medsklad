@@ -258,6 +258,56 @@
   }
   .selected-dept-chip span { color: var(--muted); font-size: 14px; }
 
+  /* ── Приписи Держлікслужби ─────────────────────────────────────────── */
+  #dls-screen { display: none; }
+  .dls-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .dls-kpis { display: flex; gap: 8px; margin-bottom: 14px; }
+  .dls-kpi {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 8px; text-align: center;
+  }
+  .dls-kpi-num { font-size: 21px; font-weight: 800; }
+  .dls-kpi-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  .dls-alert {
+    background: rgba(248,113,113,.10); border: 1px solid rgba(248,113,113,.45);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 13px; line-height: 1.5;
+  }
+  .dls-ok {
+    background: rgba(52,211,153,.08); border: 1px solid rgba(52,211,153,.35);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-size: 13px; color: var(--green);
+  }
+  .dls-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 10px; overflow: hidden;
+  }
+  .dls-card.hit { border-color: rgba(248,113,113,.55); background: rgba(248,113,113,.05); }
+  .dls-card-head { padding: 12px 14px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; }
+  .dls-card-body { display: none; padding: 0 14px 12px; }
+  .dls-card-body.open { display: block; }
+  .dls-brand { font-size: 14px; font-weight: 700; line-height: 1.35; }
+  .dls-meta { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+  .dls-ser {
+    display: inline-block; background: var(--card2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1px 7px; font-size: 11px; margin: 3px 3px 0 0;
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  .dls-ser.hit { background: rgba(248,113,113,.18); border-color: var(--danger); color: var(--danger); }
+  .dls-tag { display: inline-block; border-radius: 6px; padding: 2px 8px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+  .dls-tag.ban  { background: rgba(248,113,113,.15); color: var(--danger); }
+  .dls-tag.temp { background: rgba(245,158,11,.15);  color: var(--warn); }
+  .dls-tag.rev  { background: rgba(107,122,153,.18); color: var(--muted); }
+  .dls-tag.all  { background: rgba(167,139,250,.15); color: #a78bfa; }
+  .dls-hit-row {
+    display: flex; justify-content: space-between; gap: 8px;
+    padding: 7px 0; border-bottom: 1px solid rgba(37,43,68,.5); font-size: 12px;
+  }
+  .dls-hit-row:last-child { border-bottom: none; }
+  .dls-warn-badge {
+    display: inline-block; background: rgba(248,113,113,.18); color: var(--danger);
+    border: 1px solid rgba(248,113,113,.5); border-radius: 6px;
+    padding: 2px 7px; font-size: 10px; font-weight: 700; margin-top: 4px; cursor: pointer;
+  }
+
   @keyframes shine {
     0% { background-position: 0% center; }
     100% { background-position: 200% center; }
@@ -1487,6 +1537,14 @@
           </div>
           <div class="choice-arrow">›</div>
         </button>
+        <button class="choice-btn dls" onclick="openDls()">
+          <div class="choice-ico">⚖️</div>
+          <div class="choice-body">
+            <div class="choice-title">Приписи Держлікслужби</div>
+            <div class="choice-sub">Заборонені серії, звірка із залишками, Журнал</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
       </div>
     </div>
 
@@ -1526,6 +1584,61 @@
         <div class="hp-hero-sub">Моніторинг антимікробних препаратів за класифікацією ВООЗ AWaRe (Access / Watch / Reserve). Оберіть лікарню.</div>
       </div>
       <div class="choice-wrap" id="infcontrol-picker-list"></div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  ПРИПИСИ ДЕРЖЛІКСЛУЖБИ                       -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="dls-screen">
+      <div class="hp-back-row">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
+      </div>
+
+      <div id="dls-loading" style="text-align:center;padding:50px 20px;color:var(--muted)">
+        <div style="font-size:44px;margin-bottom:14px;">⚖️</div>
+        <div style="font-size:15px" id="dls-loading-text">Завантажуємо приписи ДЛС...</div>
+      </div>
+
+      <div id="dls-error" style="display:none;text-align:center;padding:50px 20px;">
+        <div style="font-size:44px;margin-bottom:14px;">⚠️</div>
+        <div style="font-size:15px;margin-bottom:8px;">Не вдалось завантажити приписи</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;" id="dls-error-details"></div>
+        <button class="big-btn" style="max-width:240px;" onclick="loadDls(true)">🔄 Спробувати ще</button>
+      </div>
+
+      <div id="dls-content" style="display:none">
+        <div class="dls-kpis">
+          <div class="dls-kpi">
+            <div class="dls-kpi-num" style="color:var(--accent)" id="dls-k-total">0</div>
+            <div class="dls-kpi-lbl">Чинних заборон</div>
+          </div>
+          <div class="dls-kpi">
+            <div class="dls-kpi-num" id="dls-k-hits">0</div>
+            <div class="dls-kpi-lbl">Виявлено на складах</div>
+          </div>
+          <div class="dls-kpi">
+            <div class="dls-kpi-num" style="color:#a78bfa" id="dls-k-month">0</div>
+            <div class="dls-kpi-lbl">За поточний місяць</div>
+          </div>
+        </div>
+
+        <div id="dls-verdict"></div>
+
+        <div class="dls-bar">
+          <button class="filter-btn active" id="dls-f-hits" onclick="dlsSetFilter('hits',this)">⛔ Знайдені</button>
+          <button class="filter-btn" id="dls-f-all" onclick="dlsSetFilter('all',this)">Всі чинні</button>
+          <button class="filter-btn" id="dls-f-rev" onclick="dlsSetFilter('revoked',this)">Скасовані</button>
+        </div>
+
+        <div class="dls-bar">
+          <select class="an-hospital-select" id="dls-month" onchange="renderDls()" style="flex:1"></select>
+          <button class="hbtn primary" onclick="downloadDlsJournal()">📥 Журнал</button>
+          <button class="hbtn" onclick="loadDls(true)">🔄</button>
+        </div>
+
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px" id="dls-updated"></div>
+        <div id="dls-list"></div>
+      </div>
     </div>
 
     <!-- ════════════════════════════════════════════════════════════ -->
@@ -1981,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.126";
+const APP_VERSION = "v.127";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2599,6 +2712,7 @@ function show(screen) {
   document.getElementById("section-screen").style.display          = screen==="sections" ? "block" : "none";
   document.getElementById("hospital-picker-screen").style.display  = screen==="hospitalpicker" ? "block" : "none";
   document.getElementById("infcontrol-screen").style.display       = screen==="infcontrol" ? "block" : "none";
+  document.getElementById("dls-screen").style.display              = screen==="dls"       ? "block" : "none";
   document.getElementById("analytics-screen").style.display        = screen==="analytics"? "block" : "none";
   document.getElementById("sub-detail-screen").style.display       = screen==="subdetail"? "block" : "none";
   document.getElementById("demand-screen").style.display           = screen==="demand"   ? "block" : "none";
@@ -2618,6 +2732,7 @@ function show(screen) {
   if (logoSub) {
     if (screen === "analytics" || screen === "subdetail" || screen === "hospitalpicker") logoSub.textContent = "Аналіз відділень";
     else if (screen === "infcontrol") logoSub.textContent = "Інфекційний контроль";
+    else if (screen === "dls") logoSub.textContent = "Приписи Держлікслужби";
     else if (screen === "demand") logoSub.textContent = "Річна потреба";
     else if (screen === "abx") logoSub.textContent = _abxFromInfControl ? "Інфекційний контроль" : "Антимікробні препарати";
     else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
@@ -2645,6 +2760,10 @@ function goStart() {
 const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 function openMedsearch() {
+  // Приписи ДЛС тягнемо одразу на вході, ще до розгалуження по кешу залишків:
+  // інакше на свіжому пристрої (кешу немає → екран «Завантажити дані») префетч
+  // не спрацює взагалі, і бейджі ⛔ не з'являться, поки не зайти в розділ ДЛС.
+  _dlsPrefetch();
   // If cached medsearch data exists → jump straight to home, else entry screen
   const cache = loadCache();
   if (cache) {
@@ -3127,6 +3246,7 @@ function renderResultsList(res, correction) {
           ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
           ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
           ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+          ${dlsBadgeFor(item)}
         </div>
       </div>`;
     }).join("");
@@ -3139,6 +3259,7 @@ function renderResultsList(res, correction) {
           <div class="summary-stats">
             <span class="summary-tag qty">Всього: ${totalQty} ${esc(unit)}</span>
             <span class="summary-tag depts">🏥 ${deptCount} відд.</span>
+            ${dlsGroupBadge(items)}
           </div>
         </div>
         <span class="summary-arrow" id="sum-arrow-${gIdx}">▼</span>
@@ -3794,6 +3915,7 @@ function showNewItems() {
           ${item.expiry?`<div class="data-row"><span class="data-lbl">Термін придатності</span><span class="data-val"><span class="${badgeClass(st)}">${fmtDate(item.expiry)}</span></span></div>`:""}
           ${item.days!==null&&item.expiry?`<div class="data-row"><span class="data-lbl">Залишилось</span><span class="data-val" style="color:${daysColor(st)}">${statusLabel(st,item.days)}</span></div>`:""}
           ${item.series?`<div class="data-row"><span class="data-lbl">Серія</span><span class="data-val" style="color:var(--muted);font-size:12px">${esc(item.series)}</span></div>`:""}
+          ${dlsBadgeFor(item)}
         </div>
       </div>`;
     }).join("");
@@ -11009,6 +11131,645 @@ function exportFinplanXlsx() {
 show("sections");
 startFreshWatcher();
 updateMicVisibility();
+
+
+// ── Мінімальний генератор стилізованого XLSX через JSZip ─────────────────────
+// Безкоштовна збірка SheetJS не пише шрифти/межі (це Pro-фіча), а Журнал ДЛС
+// має виглядати один-в-один із тим, що робить openpyxl у dls-monitor.
+// Тому збираємо OOXML руками. JSZip уже підключений для парсингу
+// alignment.indent в аналітиці, нових залежностей не додається.
+
+function _xmlEsc(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&apos;")
+    // XML 1.0 не дозволяє керівні символи — 1С/ДЛС зрідка їх підкидають
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+}
+
+function _colLetter(n) {           // 1 → A, 27 → AA
+  let s = "";
+  while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = (n - m - 1) / 26; }
+  return s;
+}
+
+const _XLSX_STYLES = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="2">
+<font><sz val="8"/><name val="Verdana"/><family val="2"/></font>
+<font><b/><sz val="8"/><name val="Verdana"/><family val="2"/></font>
+</fonts>
+<fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills>
+<borders count="2">
+<border><left/><right/><top/><bottom/><diagonal/></border>
+<border><left style="thin"/><right style="thin"/><top style="thin"/><bottom style="thin"/><diagonal/></border>
+</borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="3">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="1" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+</cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+
+function _sheetXml(sheet) {
+  const widths = sheet.widths || [];
+  const cols = widths.length
+    ? "<cols>" + widths.map((w, i) =>
+        `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("") + "</cols>"
+    : "";
+
+  const rows = sheet.rows.map((row, ri) => {
+    const r = ri + 1;
+    const styleId = (ri === 0) ? 1 : 2;          // перший рядок — жирна шапка
+    const cells = row.map((val, ci) => {
+      const ref = _colLetter(ci + 1) + r;
+      if (val === null || val === undefined || val === "") {
+        return `<c r="${ref}" s="${styleId}"/>`;
+      }
+      if (typeof val === "number" && isFinite(val)) {
+        return `<c r="${ref}" s="${styleId}"><v>${val}</v></c>`;
+      }
+      return `<c r="${ref}" s="${styleId}" t="inlineStr"><is><t xml:space="preserve">${_xmlEsc(val)}</t></is></c>`;
+    }).join("");
+    const ht = sheet.rowHeight ? ` ht="${sheet.rowHeight}" customHeight="1"` : "";
+    return `<row r="${r}"${ht}>${cells}</row>`;
+  }).join("");
+
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">${cols}<sheetData>${rows}</sheetData></worksheet>`;
+}
+
+// Excel забороняє в назві аркуша : \ / ? * [ ] і довжину > 31
+function _safeSheetName(name, used) {
+  let n = String(name || "Аркуш").replace(/[:\\\/\?\*\[\]]/g, "-").slice(0, 31) || "Аркуш";
+  let base = n, i = 2;
+  while (used.has(n)) { const suf = " (" + i++ + ")"; n = base.slice(0, 31 - suf.length) + suf; }
+  used.add(n);
+  return n;
+}
+
+/**
+ * sheets: [{ name, rows: [[...]], widths: [числа], rowHeight: число }]
+ * Повертає Blob, готовий до збереження.
+ */
+async function buildStyledXlsx(sheets) {
+  if (typeof JSZip === "undefined") throw new Error("JSZip не завантажився");
+  const zip = new JSZip();
+  const used = new Set();
+  const names = sheets.map(s => _safeSheetName(s.name, used));
+
+  zip.file("[Content_Types].xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+${sheets.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("\n")}
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+</Types>`);
+
+  zip.file("_rels/.rels",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+</Relationships>`);
+
+  zip.file("xl/workbook.xml",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets>${names.map((n, i) => `<sheet name="${_xmlEsc(n)}" sheetId="${i + 1}" r:id="rId${i + 1}"/>`).join("")}</sheets>
+</workbook>`);
+
+  zip.file("xl/_rels/workbook.xml.rels",
+    `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+${sheets.map((_, i) => `<Relationship Id="rId${i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i + 1}.xml"/>`).join("\n")}
+<Relationship Id="rId${sheets.length + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`);
+
+  zip.file("xl/styles.xml", _XLSX_STYLES);
+  sheets.forEach((s, i) => zip.file(`xl/worksheets/sheet${i + 1}.xml`, _sheetXml(s)));
+
+  return zip.generateAsync({
+    type: "blob",
+    mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    compression: "DEFLATE",
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//                    ПРИПИСИ ДЕРЖЛІКСЛУЖБИ (ДЛС)
+// ════════════════════════════════════════════════════════════════════════════
+// Дані готує окремий сервіс oskhmil/dls-monitor: GitHub Actions кожні 4 год
+// скрапить pub-mex.dls.gov.ua, шле новинки в Telegram і комітить data/dls.json.
+// raw.githubusercontent.com віддає його з Access-Control-Allow-Origin: *,
+// тому фронт читає файл напряму — без проксі, Pages і бекенду.
+
+const DLS_JSON_URL   = "https://raw.githubusercontent.com/oskhmil/dls-monitor/main/data/dls.json";
+const DLS_CACHE_KEY  = "medsklad_dls_cache";
+const DLS_CACHE_TIME = "medsklad_dls_cache_time";
+const DLS_TTL_MS     = 2 * 60 * 60 * 1000;   // 2 год — сервіс оновлюється раз на 4
+
+let dlsData      = null;   // payload з dls.json
+let dlsMatches   = null;   // Map: uid → { hits, confidence }
+let dlsFilter    = "hits";
+let _dlsSeriesIdx = null;  // згорнута серія → [записи] для бейджів у пошуку
+
+// ── Нормалізація ────────────────────────────────────────────────────────────
+// УВАГА: _dlsFold має один-в-один збігатися з fold() у dlscore.py,
+// а _dlsFoldName — з fold_name(). Розбіжність = серії тихо перестають матчитись.
+// У приписах ДЛС кирилиця регулярно домішується в латинські коди серій:
+// FD255985С, ТR056, А010624, 24Е001, Н/105 — без згортання це ~1.6% промахів.
+const _DLS_CYR2LAT = {
+  "А":"A","В":"B","Е":"E","З":"3","І":"I","К":"K","М":"M","Н":"H","О":"O",
+  "Р":"P","С":"C","Т":"T","У":"Y","Х":"X","Ѕ":"S","Ј":"J","Ї":"I","Ё":"E",
+  "а":"A","в":"B","е":"E","і":"I","к":"K","м":"M","н":"H","о":"O",
+  "р":"P","с":"C","т":"T","у":"Y","х":"X"
+};
+
+function _dlsFold(s) {
+  if (!s) return "";
+  let out = "";
+  for (const ch0 of String(s).toUpperCase()) {
+    const ch = _DLS_CYR2LAT[ch0] || ch0;
+    if ((ch >= "A" && ch <= "Z") || (ch >= "0" && ch <= "9")) out += ch;
+  }
+  return out;
+}
+
+function _dlsFoldName(s) {
+  if (!s) return "";
+  let out = "";
+  for (const ch0 of String(s).toUpperCase()) {
+    const ch = _DLS_CYR2LAT[ch0] || ch0;
+    out += /[0-9A-ZА-ЯЇЄҐ]/.test(ch) ? ch : " ";
+  }
+  return out.replace(/\s+/g, " ").trim();
+}
+
+// Опорні слова торгової назви (>= 4 символів). Для «всі серії» беремо два —
+// там немає серії, яка страхує від хибних збігів на кшталт «СПИРТ».
+function _dlsBrandTokens(brand, wide) {
+  const w = _dlsFoldName(brand).split(" ").filter(x => x.length >= 4);
+  return w.length ? (wide ? w.slice(0, 2) : w.slice(0, 1)) : [];
+}
+
+// ── Завантаження ────────────────────────────────────────────────────────────
+function _dlsSaveCache(payload) {
+  try {
+    localStorage.setItem(DLS_CACHE_KEY, JSON.stringify(payload));
+    localStorage.setItem(DLS_CACHE_TIME, Date.now().toString());
+  } catch (_) { /* квота — не критично, наступного разу візьмемо з мережі */ }
+}
+
+function _dlsLoadCache() {
+  try {
+    const d = localStorage.getItem(DLS_CACHE_KEY);
+    const t = localStorage.getItem(DLS_CACHE_TIME);
+    if (!d || !t) return null;
+    return { payload: JSON.parse(d), time: new Date(parseInt(t)) };
+  } catch (_) { return null; }
+}
+
+async function _dlsFetch() {
+  const resp = await fetch(DLS_JSON_URL, { cache: "no-store" });
+  if (!resp.ok) throw new Error("HTTP " + resp.status);
+  const payload = await resp.json();
+  if (!payload || !Array.isArray(payload.records)) throw new Error("Неочікуваний формат dls.json");
+  return payload;
+}
+
+// Залишки складів потрібні для звірки. Якщо медпошук ще не відкривали —
+// тягнемо той самий файл, що й він, і заразом кешуємо.
+async function _dlsEnsureStock() {
+  if (allItems && allItems.length) return true;
+  const cache = loadCache();
+  if (cache && cache.items && cache.items.length) {
+    allItems = cache.items;
+    _mnnMapMerge(allItems);
+    lastLoaded = cache.time;
+    return true;
+  }
+  try {
+    const resp = await fetch(GDRIVE_URL, { cache: "no-store" });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    allItems = parseWorkbook(await resp.arrayBuffer());
+    lastLoaded = new Date();
+    _mnnMapMerge(allItems);
+    try { saveCache(allItems); } catch (_) {}
+    return true;
+  } catch (_) { return false; }
+}
+
+function openDls() {
+  show("dls");
+  loadDls(false);
+}
+
+async function loadDls(force) {
+  const elLoad = document.getElementById("dls-loading");
+  const elErr  = document.getElementById("dls-error");
+  const elCont = document.getElementById("dls-content");
+  elErr.style.display = "none";
+
+  if (!force) {
+    const c = _dlsLoadCache();
+    if (c && (Date.now() - c.time.getTime()) < DLS_TTL_MS) {
+      dlsData = c.payload;
+      elLoad.style.display = "none";
+      elCont.style.display = "block";
+      await _dlsAfterLoad();
+      return;
+    }
+  }
+
+  elLoad.style.display = "block";
+  elCont.style.display = "none";
+  document.getElementById("dls-loading-text").textContent = "Завантажуємо приписи ДЛС...";
+
+  try {
+    dlsData = await _dlsFetch();
+    _dlsSaveCache(dlsData);
+    elLoad.style.display = "none";
+    elCont.style.display = "block";
+    await _dlsAfterLoad();
+  } catch (err) {
+    const c = _dlsLoadCache();
+    if (c) {                       // мережа впала — краще застарілі дані, ніж нічого
+      dlsData = c.payload;
+      elLoad.style.display = "none";
+      elCont.style.display = "block";
+      await _dlsAfterLoad();
+      return;
+    }
+    elLoad.style.display = "none";
+    elErr.style.display = "block";
+    document.getElementById("dls-error-details").textContent = err.message;
+  }
+}
+
+async function _dlsAfterLoad() {
+  document.getElementById("dls-loading-text").textContent = "Звіряємо із залишками складів...";
+  const ok = await _dlsEnsureStock();
+  dlsMatches = ok ? dlsMatch(dlsData.records, allItems) : new Map();
+  _dlsBuildSeriesIndex();
+  _dlsFillMonths();
+  renderDls();
+}
+
+// ── Звірка ──────────────────────────────────────────────────────────────────
+function dlsMatch(records, items) {
+  const bySeries = new Map();
+  for (const it of items) {
+    if (!it.series) continue;
+    const k = _dlsFold(it.series);
+    if (!k) continue;
+    if (!bySeries.has(k)) bySeries.set(k, []);
+    bySeries.get(k).push(it);
+  }
+
+  // Кеш згорнутих назв: без нього 40k позицій × 300 приписів кладуть телефон
+  const nameCache = new Map();
+  const hay = (it) => {
+    let v = nameCache.get(it);
+    if (v === undefined) {
+      v = _dlsFoldName(it.name) + " " + _dlsFoldName(it.mnn || "");
+      nameCache.set(it, v);
+    }
+    return v;
+  };
+
+  const out = new Map();
+  for (const r of records) {
+    if (!r.active) continue;
+    const hits = [];
+    let confidence = null;
+
+    if (r.all_series) {
+      const toks = _dlsBrandTokens(r.brand, true);
+      if (toks.length) {
+        for (const it of items) {
+          const h = hay(it);
+          if (toks.every(t => h.includes(t))) hits.push({ item: it, series: it.series });
+        }
+        if (hits.length) confidence = "brand";
+      }
+    } else {
+      const toks = _dlsBrandTokens(r.brand, false);
+      for (const s of r.series) {
+        const found = bySeries.get(_dlsFold(s));
+        if (!found) continue;
+        for (const it of found) {
+          hits.push({ item: it, series: s, nameOk: toks.length ? toks.some(t => hay(it).includes(t)) : false });
+        }
+      }
+      if (hits.length) confidence = hits.some(h => h.nameOk) ? "exact" : "series";
+    }
+    if (hits.length) out.set(r.uid, { hits, confidence });
+  }
+  return out;
+}
+
+// Індекс для бейджів у «Пошуку медикаментів»
+function _dlsBuildSeriesIndex() {
+  _dlsSeriesIdx = new Map();
+  if (!dlsData) return;
+  for (const r of dlsData.records) {
+    if (!r.active || r.all_series) continue;
+    for (const s of r.series) {
+      const k = _dlsFold(s);
+      if (!k) continue;
+      if (!_dlsSeriesIdx.has(k)) _dlsSeriesIdx.set(k, []);
+      _dlsSeriesIdx.get(k).push(r);
+    }
+  }
+}
+
+// Викликається з renderResultsList — чи заборонена ця конкретна позиція
+function dlsCheckItem(item) {
+  if (!_dlsSeriesIdx || !item || !item.series) return null;
+  const recs = _dlsSeriesIdx.get(_dlsFold(item.series));
+  if (!recs || !recs.length) return null;
+  const hay = _dlsFoldName(item.name) + " " + _dlsFoldName(item.mnn || "");
+  const strict = recs.find(r => {
+    const t = _dlsBrandTokens(r.brand, false);
+    return t.length && t.some(x => hay.includes(x));
+  });
+  return strict || recs[0];
+}
+
+// ── Рендер ──────────────────────────────────────────────────────────────────
+const DLS_MONTHS_UA = ["Січень","Лютий","Березень","Квітень","Травень","Червень",
+                       "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"];
+
+function dlsMonthTitle(ym) {
+  const p = String(ym || "").split("-");
+  if (p.length !== 2) return ym;
+  const i = parseInt(p[1], 10) - 1;
+  return (DLS_MONTHS_UA[i] || p[1]) + " " + p[0];
+}
+
+function _dlsFillMonths() {
+  const sel = document.getElementById("dls-month");
+  const months = [...new Set(dlsData.records.map(r => r.ym))].sort().reverse();
+  const prev = sel.value;
+  sel.innerHTML = `<option value="">Усі місяці</option>` +
+    months.map(m => `<option value="${m}">${esc(dlsMonthTitle(m))}</option>`).join("");
+  if (prev && months.includes(prev)) sel.value = prev;
+}
+
+function dlsSetFilter(v, btn) {
+  dlsFilter = v;
+  ["dls-f-hits","dls-f-all","dls-f-rev"].forEach(id =>
+    document.getElementById(id).classList.remove("active"));
+  btn.classList.add("active");
+  renderDls();
+}
+
+function renderDls() {
+  if (!dlsData) return;
+  const ym = document.getElementById("dls-month").value;
+  const all = dlsData.records;
+
+  const active  = all.filter(r => r.active);
+  const hitUids = new Set(dlsMatches ? dlsMatches.keys() : []);
+  const nowYm   = new Date().toISOString().slice(0, 7);
+
+  document.getElementById("dls-k-total").textContent = active.length;
+  const kh = document.getElementById("dls-k-hits");
+  kh.textContent = hitUids.size;
+  kh.style.color = hitUids.size ? "var(--danger)" : "var(--green)";
+  document.getElementById("dls-k-month").textContent = active.filter(r => r.ym === nowYm).length;
+
+  const verdict = document.getElementById("dls-verdict");
+  verdict.innerHTML = hitUids.size
+    ? `<div class="dls-alert">⛔ <b>На складах ТМО виявлено ${hitUids.size} ${_dlsPlural(hitUids.size,"заборонену позицію","заборонені позиції","заборонених позицій")}.</b><br>
+       <span style="color:var(--muted)">Перевірте перелік нижче та вилучіть з обігу.</span></div>`
+    : `<div class="dls-ok">✅ Жодної чинної заборони серед залишків ТМО не виявлено.</div>`;
+
+  let list = all.filter(r => {
+    if (ym && r.ym !== ym) return false;
+    if (dlsFilter === "hits")    return hitUids.has(r.uid);
+    if (dlsFilter === "revoked") return r.kind === "ban" && !r.active;
+    return r.active;
+  });
+
+  list.sort((a, b) => (b.date.slice(6) + b.date.slice(3,5) + b.date.slice(0,2))
+                      .localeCompare(a.date.slice(6) + a.date.slice(3,5) + a.date.slice(0,2)));
+
+  document.getElementById("dls-updated").textContent =
+    "Дані ДЛС оновлено: " + (dlsData.generated_at || "—").replace("T", " ").replace("Z", " UTC") +
+    " · показано " + list.length;
+
+  const el = document.getElementById("dls-list");
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-ico">✅</div>
+      <div class="empty-title">Порожньо</div>
+      <div class="empty-sub">${dlsFilter === "hits" ? "Заборонених серій на складах немає" : "Немає записів за цим фільтром"}</div></div>`;
+    return;
+  }
+
+  el.innerHTML = list.map((r, i) => {
+    const m = dlsMatches ? dlsMatches.get(r.uid) : null;
+    const tag = !r.active ? `<span class="dls-tag rev">скасовано</span>`
+      : r.type.startsWith("тимч") ? `<span class="dls-tag temp">тимчасова</span>`
+      : `<span class="dls-tag ban">постійна</span>`;
+    const allTag = r.all_series ? `<span class="dls-tag all">всі серії</span>` : "";
+
+    const series = r.all_series
+      ? `<span class="dls-ser hit">всі серії</span>`
+      : (r.series.length
+          ? (() => {
+              // Окремі приписи містять по 50+ серій (напр. INUPRIN FORTE) — без
+              // ліміту картка розтягується на кілька екранів. Знайдені серії
+              // піднімаємо вгору, решту ховаємо під лічильник.
+              const hitOf = s => m && m.hits.some(h => _dlsFold(h.series) === _dlsFold(s));
+              const sorted = r.series.slice().sort((a, b) => (hitOf(b) ? 1 : 0) - (hitOf(a) ? 1 : 0));
+              const CAP = 12;
+              const shown = sorted.slice(0, CAP)
+                .map(s => `<span class="dls-ser${hitOf(s) ? " hit" : ""}">${esc(s)}</span>`).join("");
+              const rest = sorted.length - CAP;
+              return shown + (rest > 0
+                ? `<span class="dls-ser" style="opacity:.7">+ ще ${rest}</span>` : "");
+            })()
+          : `<span class="dls-ser">—</span>`);
+
+    const hitRows = m ? m.hits.map(h => `
+      <div class="dls-hit-row">
+        <span>🏥 ${esc(h.item.dept)}</span>
+        <span style="text-align:right">
+          <b style="color:var(--danger)">${h.item.qty ?? "—"} ${esc(h.item.unit || "")}</b>
+          <span style="color:var(--muted);font-size:11px"><br>сер. ${esc(h.series || h.item.series || "—")}</span>
+        </span>
+      </div>`).join("") : "";
+
+    const conf = m && m.confidence === "series"
+      ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Збіг лише за номером серії — назва препарату не збіглася. Перевірте вручну.</div>` : "";
+    const brandOnly = m && m.confidence === "brand"
+      ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Заборонено всі серії — збіг за назвою. Перевірте відповідність виробника.</div>` : "";
+    const parseWarn = r.parse_ok === false
+      ? `<div style="font-size:11px;color:var(--warn);margin-top:6px">⚠️ Серії у приписі записані нестандартно — автозвірка ненадійна, перевірте вручну.</div>` : "";
+
+    return `<div class="dls-card${m ? " hit" : ""}">
+      <div class="dls-card-head" onclick="dlsToggle(${i})">
+        <div style="flex:1;min-width:0">
+          <div class="dls-brand">${m ? "⛔ " : ""}${esc(r.brand)}</div>
+          <div class="dls-meta">${tag} ${allTag} · № ${esc(r.num)} від ${esc(r.date)}</div>
+          <div style="margin-top:4px">${series}</div>
+          ${m ? `<div class="dls-warn-badge">Виявлено на складах: ${m.hits.length}</div>` : ""}
+          ${r.revoked_by ? `<div style="font-size:11px;color:var(--green);margin-top:4px">✅ Скасовано № ${esc(r.revoked_by.num)} від ${esc(r.revoked_by.date)}</div>` : ""}
+        </div>
+        <span class="summary-arrow" id="dls-arr-${i}">▼</span>
+      </div>
+      <div class="dls-card-body" id="dls-body-${i}">
+        <div style="font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:8px">${esc(r.name)}</div>
+        ${r.manufacturer ? `<div style="font-size:11px;color:var(--muted);margin-bottom:8px">🏭 ${esc(r.manufacturer)}</div>` : ""}
+        ${hitRows ? `<div class="section-lbl" style="margin-top:6px">Знайдено на складах</div>${hitRows}` : `<div style="font-size:12px;color:var(--green)">✅ На залишках ТМО відсутній</div>`}
+        ${conf}${brandOnly}${parseWarn}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function dlsToggle(i) {
+  document.getElementById("dls-body-" + i).classList.toggle("open");
+  document.getElementById("dls-arr-" + i).classList.toggle("open");
+}
+
+function _dlsPlural(n, one, few, many) {
+  const n10 = n % 10, n100 = n % 100;
+  if (n10 === 1 && n100 !== 11) return one;
+  if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return few;
+  return many;
+}
+
+// ── Журнал: окремий аркуш на місяць, нумерація з початку місяця ─────────────
+const DLS_JOURNAL_HEADERS = [
+  "№ з/п",
+  "Дата і номер розпорядження/ рішення/припису",
+  "Дата одержання розпорядження/ рішення/припису",
+  "Назва лікарських засобів та перелік серій лікарських засобів, зазначених у розпорядженні/ рішенні/приписі",
+  "Результати перевірки щодо наявності зазначених лікарських засобів",
+  "Вжиті заходи у разі виявлення зазначених лікарських засобів",
+  "Дата і номер листа-повідомлення територіальному органу",
+  "Підпис уповноваженої особи",
+];
+
+function _dlsFullText(r) {
+  if (r.full) return r.full;                      // нестандартний розбір — оригінал
+  const parts = [r.name];
+  if (r.all_series) parts.push("Серія № всі серії");
+  else if (r.series.length) parts.push("Серія № " + r.series.join(", "));
+  if (r.manufacturer) parts.push(r.manufacturer);
+  return parts.join(", ");
+}
+
+function _dlsResultText(m) {
+  if (!m || !m.hits.length) return "відсутній";
+  const agg = new Map();
+  for (const h of m.hits) {
+    const ser = h.series || h.item.series || "—";
+    const key = h.item.dept + "||" + ser;
+    const cur = agg.get(key) || { dept: h.item.dept, series: ser, qty: 0, unit: h.item.unit || "" };
+    cur.qty += (h.item.qty || 0);
+    if (!cur.unit && h.item.unit) cur.unit = h.item.unit;
+    agg.set(key, cur);
+  }
+  return "ВИЯВЛЕНО: " + [...agg.values()]
+    .map(v => `${v.dept} — сер. ${v.series}, ${v.qty} ${v.unit}`.trim()).join("; ");
+}
+
+async function downloadDlsJournal() {
+  if (!dlsData) return;
+  try {
+    const active = dlsData.records.filter(r => r.active);   // скасовані не потрапляють
+    const byMonth = new Map();
+    for (const r of active) {
+      if (!byMonth.has(r.ym)) byMonth.set(r.ym, []);
+      byMonth.get(r.ym).push(r);
+    }
+    if (!byMonth.size) { alert("Немає чинних заборон для Журналу."); return; }
+
+    const widths = [6, 30, 20, 60, 30, 30, 30, 20];
+    const sheets = [...byMonth.keys()].sort().map(ym => {
+      const rows = byMonth.get(ym).slice().sort((a, b) =>
+        (a.date.slice(6) + a.date.slice(3,5) + a.date.slice(0,2) + a.num)
+          .localeCompare(b.date.slice(6) + b.date.slice(3,5) + b.date.slice(0,2) + b.num));
+      const body = rows.map((r, i) => [
+        i + 1,                                            // нумерація з початку місяця
+        `№ ${r.num} від ${r.date}`,
+        r.date,
+        _dlsFullText(r),
+        _dlsResultText(dlsMatches ? dlsMatches.get(r.uid) : null),
+        "", "", "",
+      ]);
+      return {
+        name: dlsMonthTitle(ym),
+        widths, rowHeight: 40,
+        rows: [DLS_JOURNAL_HEADERS, ["1","2","3","4","5","6","7","8"], ...body],
+      };
+    });
+
+    const blob = await buildStyledXlsx(sheets);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Журнал_ДЛС.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch (e) {
+    console.error("Журнал ДЛС:", e);
+    alert("Не вдалось сформувати Журнал: " + e.message);
+  }
+}
+
+// ── Бейджі ДЛС у «Пошуку медикаментів» ──────────────────────────────────────
+// Викликаються з renderResultsList і зі списку «Нове». Мають бути безпечними
+// до того, як приписи завантажені: тоді просто повертають порожній рядок.
+
+function dlsBadgeFor(item) {
+  try {
+    const d = dlsCheckItem(item);
+    if (!d) return "";
+    return `<div class="dls-warn-badge" style="margin-top:8px;display:block;text-align:center;padding:6px"
+      onclick="event.stopPropagation();openDls()">⛔ ЗАБОРОНЕНО ДЛС · № ${esc(d.num)} від ${esc(d.date)}</div>`;
+  } catch (_) { return ""; }
+}
+
+function dlsGroupBadge(items) {
+  try {
+    if (!_dlsSeriesIdx) return "";
+    const n = items.filter(it => dlsCheckItem(it)).length;
+    return n ? `<span class="summary-tag" style="background:rgba(248,113,113,.18);color:var(--danger)">⛔ ДЛС: ${n}</span>` : "";
+  } catch (_) { return ""; }
+}
+
+// Тихо підтягує приписи у фоні, щоб бейджі з'явились без відкриття розділу.
+// Помилки навмисне глушимо: пошук медикаментів має працювати і без ДЛС.
+let _dlsPrefetched = false;
+function _dlsPrefetch() {
+  if (_dlsPrefetched) return;
+  _dlsPrefetched = true;
+  const c = _dlsLoadCache();
+  if (c && (Date.now() - c.time.getTime()) < DLS_TTL_MS) {
+    dlsData = c.payload;
+    _dlsBuildSeriesIndex();
+    if (typeof window._lastResults !== "undefined" && window._lastResults) {
+      try { renderResultsList(window._lastResults); } catch (_) {}
+    }
+    return;
+  }
+  _dlsFetch().then(p => {
+    dlsData = p;
+    _dlsSaveCache(p);
+    _dlsBuildSeriesIndex();
+    if (window._lastResults) { try { renderResultsList(window._lastResults); } catch (_) {} }
+  }).catch(() => { _dlsPrefetched = false; });
+}
 
 </script>
 </body>
