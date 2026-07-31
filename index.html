@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.129";
+const APP_VERSION = "v.133";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2274,6 +2274,136 @@ const IDB = (function () {
   };
 })();
 
+
+// ── Store: єдине сховище для важких кешів ────────────────────────────────────
+// Проблема, яку це закриває: localStorage дає ~5 МБ на весь домен і ділиться
+// між УСІМА модулями. Кеш медпошуку на 40 тис. позицій — це 3.7 МБ, тобто 74%
+// бюджету одразу. Плюс фінплан, пацієнти, снапшот, карта МНН, приписи ДЛС.
+// На частині пристроїв запис падав з QuotaExceededError, а всі виклики
+// обгорнуті в catch(_){} — тому користувач бачив лише «чомусь гальмує»
+// і ніхто про це не дізнавався.
+//
+// Рішення: важкі кеші живуть в IndexedDB (сотні МБ проти 5). Щоб не
+// переписувати два десятки синхронних викликів на async (а це найризикованіше,
+// що можна зробити з основним модулем), Store тримає ДЗЕРКАЛО в пам'яті:
+//   читання — синхронне, з пам'яті
+//   запис   — синхронно в пам'ять + асинхронно в IndexedDB
+// Дзеркало наповнюється один раз на старті. Виклики модулів не змінюються,
+// у них лише localStorage.getItem → Store.get.
+//
+// У localStorage лишаються тільки дрібні прапорці (паролі-хеші, номери версій,
+// мітки часу) — разом кілька КБ. Переповнити це неможливо.
+const Store = (function () {
+  // Ключі, які переїжджають в IndexedDB. Усе інше лишається в localStorage.
+  const BULK = [
+    "medsklad_cache_v2",        // кеш медпошуку — найважчий
+    "medsklad_cache_time",
+    "medsklad_finplan_cache",
+    "medsklad_finplan_cache_time",
+    "patients_cache_v4",
+    "patients_cache_time_v4",
+    "medsklad_mnn_map_v1",
+    "medsklad_snapshot",
+    "medsklad_snapshot_time",
+    "medsklad_new_names",
+    "medsklad_dls_cache",
+  ];
+  const mem = new Map();
+  let _ready = null;
+  let _degraded = false;      // IndexedDB недоступний — працюємо на localStorage
+  const _errors = [];
+
+  function _note(op, key, err) {
+    _errors.push({ op, key, name: err && err.name, msg: err && err.message, at: Date.now() });
+    if (_errors.length > 20) _errors.shift();
+    console.warn("[store]", op, key, err && err.name, err && err.message);
+  }
+
+  // Одноразове наповнення дзеркала + міграція зі старого localStorage.
+  function hydrate() {
+    if (_ready) return _ready;
+    _ready = (async () => {
+      if (!IDB.available) {
+        _degraded = true;
+        for (const k of BULK) {
+          try { const v = localStorage.getItem(k); if (v != null) mem.set(k, v); } catch (_) {}
+        }
+        return;
+      }
+      for (const k of BULK) {
+        let fromIdb = null;
+        try { fromIdb = await IDB.get(k); } catch (e) { _note("get", k, e); }
+        if (fromIdb != null) { mem.set(k, String(fromIdb)); continue; }
+
+        // В IndexedDB немає — забираємо зі старого localStorage і переносимо.
+        let legacy = null;
+        try { legacy = localStorage.getItem(k); } catch (_) {}
+        if (legacy == null) continue;
+        mem.set(k, legacy);
+        try {
+          await IDB.set(k, legacy);
+          try { localStorage.removeItem(k); } catch (_) {}
+        } catch (e) { _note("migrate", k, e); }
+      }
+    })().catch(e => { _degraded = true; _note("hydrate", "*", e); });
+    return _ready;
+  }
+
+  function set(key, value) {
+    const v = String(value);
+    mem.set(key, v);
+    if (IDB.available && !_degraded) {
+      IDB.set(key, v).catch(e => {
+        _note("set", key, e);
+        // IndexedDB відмовив (приватний режим Safari, вичерпана квота диска) —
+        // пробуємо localStorage, щоб хоч якийсь кеш лишився
+        try { localStorage.setItem(key, v); } catch (e2) { _note("set-ls", key, e2); }
+      });
+      return true;
+    }
+    try { localStorage.setItem(key, v); return true; }
+    catch (e) { _note("set-ls", key, e); return false; }
+  }
+
+  function remove(key) {
+    mem.delete(key);
+    if (IDB.available) IDB.del(key).catch(e => _note("del", key, e));
+    try { localStorage.removeItem(key); } catch (_) {}
+  }
+
+  return {
+    ready: hydrate,
+    isReady: () => !!_ready,
+    degraded: () => _degraded,
+    keys: () => BULK.slice(),
+    errors: () => _errors.slice(),
+    get: (key) => (mem.has(key) ? mem.get(key) : null),
+    set,
+    remove,
+    // Скільки чим зайнято — для екрана діагностики
+    stats() {
+      const bulk = {};
+      let bulkTotal = 0;
+      for (const k of BULK) {
+        const n = (mem.get(k) || "").length;
+        if (n) { bulk[k] = n; bulkTotal += n; }
+      }
+      const ls = {};
+      let lsTotal = 0;
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          const n = (localStorage.getItem(k) || "").length + k.length;
+          ls[k] = n; lsTotal += n;
+        }
+      } catch (_) {}
+      return { bulk, bulkTotal, ls, lsTotal, degraded: _degraded, errors: _errors.length };
+    },
+  };
+})();
+
+Store.ready();
+
 // One-time startup migration: move any analytics caches still sitting in
 // localStorage (from pre-IndexedDB builds) into IndexedDB and free the
 // localStorage slots. This immediately relieves the quota pressure that was
@@ -2356,8 +2486,8 @@ function saveCache(items) {
   const serialized = JSON.stringify(payload);
 
   try {
-    localStorage.setItem(CACHE_KEY_V2, serialized);
-    localStorage.setItem(CACHE_TIME_KEY, payload.ts.toString());
+    if (!Store.set(CACHE_KEY_V2, serialized)) throw new Error("QuotaExceededError");
+    Store.set(CACHE_TIME_KEY, payload.ts.toString());
     // Drop legacy v1 if present
     try { localStorage.removeItem(CACHE_KEY); } catch(_) {}
     return true;
@@ -2367,9 +2497,9 @@ function saveCache(items) {
     // Cache write failed (quota or other). Drop ALL stale cache so we don't
     // mislead the user with old phantom numbers next time.
     try {
-      localStorage.removeItem(CACHE_KEY_V2);
+      Store.remove(CACHE_KEY_V2);
       localStorage.removeItem(CACHE_KEY);
-      localStorage.removeItem(CACHE_TIME_KEY);
+      Store.remove(CACHE_TIME_KEY);
     } catch(_) {}
     return false;
   }
@@ -2377,8 +2507,8 @@ function saveCache(items) {
 
 function loadCache() {
   try {
-    const rawV2 = localStorage.getItem(CACHE_KEY_V2);
-    const time  = localStorage.getItem(CACHE_TIME_KEY);
+    const rawV2 = Store.get(CACHE_KEY_V2);
+    const time  = Store.get(CACHE_TIME_KEY);
     if (rawV2 && time) {
       const p = JSON.parse(rawV2);
       // v3: name and series are interned too
@@ -2583,7 +2713,7 @@ function _mnnNormName(s) {
   return String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 function _mnnMapLoad() {
-  try { return JSON.parse(localStorage.getItem(MNN_MAP_KEY)) || {}; } catch (_) { return {}; }
+  try { return JSON.parse(Store.get(MNN_MAP_KEY)) || {}; } catch (_) { return {}; }
 }
 function _mnnMapMerge(items) {
   try {
@@ -2594,7 +2724,7 @@ function _mnnMapMerge(items) {
       const k = _mnnNormName(it.name);
       if (!map[k]) { map[k] = it.mnn; added++; }
     }
-    if (added > 0) localStorage.setItem(MNN_MAP_KEY, JSON.stringify(map));
+    if (added > 0) Store.set(MNN_MAP_KEY, JSON.stringify(map));
   } catch (_) { /* quota — не критично, словник доповниться наступного разу */ }
 }
 
@@ -2736,7 +2866,12 @@ function show(screen) {
     else if (screen === "demand") logoSub.textContent = "Річна потреба";
     else if (screen === "abx") logoSub.textContent = _abxFromInfControl ? "Інфекційний контроль" : "Антимікробні препарати";
     else if (screen === "finplan") logoSub.textContent = "Фінансовий план";
-    else if (screen === "sections") logoSub.textContent = `Оберіть розділ · ${APP_VERSION}`;
+    else if (screen === "sections") {
+      logoSub.textContent = `Оберіть розділ · ${APP_VERSION}`;
+      logoSub.style.cursor = "pointer";
+      logoSub.title = "Довгий тиск — діагностика сховища";
+      logoSub.onclick = _storageDiagTap;
+    }
     else logoSub.textContent = "Пошук по відомості залишків ТМО";
   }
   // Scroll to top on screen change
@@ -2759,7 +2894,8 @@ function goStart() {
 // Manual "🔄 Оновити" button always forces a refresh regardless.
 const MEDSEARCH_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
-function openMedsearch() {
+async function openMedsearch() {
+  await Store.ready();
   // Приписи ДЛС тягнемо одразу на вході, ще до розгалуження по кешу залишків:
   // інакше на свіжому пристрої (кешу немає → екран «Завантажити дані») префетч
   // не спрацює взагалі, і бейджі ⛔ не з'являться, поки не зайти в розділ ДЛС.
@@ -2827,7 +2963,8 @@ function _isInfCtrlAuthorized() {
   } catch (_) { return false; }
 }
 
-function openInfControl() {
+async function openInfControl() {
+  await Store.ready();
   _pwdTarget = "infcontrol";
   if (_isInfCtrlAuthorized()) {
     openInfControlPicker();
@@ -2845,7 +2982,8 @@ function openAnalytics() {
   _showPwdOverlay("Введіть пароль для перегляду аналітики", "text");
 }
 
-function openFinplan() {
+async function openFinplan() {
+  await Store.ready();
   _pwdTarget = "finplan";
   if (_isFinplanAuthorized()) {
     show("finplan");
@@ -3741,10 +3879,10 @@ function freshBannerAction() {
       if (inMedsearch) {
         loadFromDrive(true);
       } else {
-        try { localStorage.removeItem(CACHE_KEY); localStorage.removeItem(CACHE_TIME_KEY); } catch (e) {}
+        try { localStorage.removeItem(CACHE_KEY); Store.remove(CACHE_KEY_V2); Store.remove(CACHE_TIME_KEY); } catch (e) {}
       }
     } else if (k === "finplan") {
-      try { localStorage.removeItem(FINPLAN_CACHE_KEY); localStorage.removeItem(FINPLAN_CACHE_TIME_KEY); } catch (e) {}
+      try { Store.remove(FINPLAN_CACHE_KEY); Store.remove(FINPLAN_CACHE_TIME_KEY); } catch (e) {}
       const fp = document.getElementById("finplan-screen");
       if (fp && fp.style.display === "block") loadFinplan(true);
     } else {
@@ -3826,8 +3964,8 @@ function getUniqueNames(items) {
 
 function loadSnapshot() {
   try {
-    const data = localStorage.getItem(SNAPSHOT_KEY);
-    const time = localStorage.getItem(SNAPSHOT_TIME_KEY);
+    const data = Store.get(SNAPSHOT_KEY);
+    const time = Store.get(SNAPSHOT_TIME_KEY);
     if (data && time) return { names: JSON.parse(data), time: new Date(parseInt(time)) };
   } catch(e) {}
   return null;
@@ -3835,18 +3973,18 @@ function loadSnapshot() {
 
 function saveSnapshot(names) {
   try {
-    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(names));
-    localStorage.setItem(SNAPSHOT_TIME_KEY, Date.now().toString());
+    Store.set(SNAPSHOT_KEY, JSON.stringify(names));
+    Store.set(SNAPSHOT_TIME_KEY, Date.now().toString());
   } catch(e) {}
 }
 
 function saveNewNames(names) {
-  try { localStorage.setItem(NEW_NAMES_KEY, JSON.stringify(names)); } catch(e) {}
+  try { Store.set(NEW_NAMES_KEY, JSON.stringify(names)); } catch(e) {}
 }
 
 function loadNewNames() {
   try {
-    const data = localStorage.getItem(NEW_NAMES_KEY);
+    const data = Store.get(NEW_NAMES_KEY);
     if (data) return JSON.parse(data);
   } catch(e) {}
   return [];
@@ -4547,8 +4685,8 @@ async function loadPatientsData() {
 
   // Try cache first
   try {
-    const cachedRaw = localStorage.getItem(PATIENTS_CACHE_KEY);
-    const cachedTs  = parseInt(localStorage.getItem(PATIENTS_CACHE_TIME_KEY) || "0", 10);
+    const cachedRaw = Store.get(PATIENTS_CACHE_KEY);
+    const cachedTs  = parseInt(Store.get(PATIENTS_CACHE_TIME_KEY) || "0", 10);
     if (cachedRaw && cachedTs) {
       const parsed = JSON.parse(cachedRaw);
       _installPatientsData(parsed);
@@ -4592,8 +4730,8 @@ async function _fetchPatientsInBackground() {
       setStatus(`💊 Пацієнти: ${stats.mvoCount} МВО, ${stats.deptCount} відд., ${stats.totalPatients} пацієнтів`, "var(--green)");
     }
     try {
-      localStorage.setItem(PATIENTS_CACHE_KEY, JSON.stringify(_patientsCachePayload()));
-      localStorage.setItem(PATIENTS_CACHE_TIME_KEY, Date.now().toString());
+      Store.set(PATIENTS_CACHE_KEY, JSON.stringify(_patientsCachePayload()));
+      Store.set(PATIENTS_CACHE_TIME_KEY, Date.now().toString());
     } catch (_) { /* quota — ignore */ }
     _refreshPatientsUi();
   } catch (err) {
@@ -9568,8 +9706,8 @@ const FINPLAN_TTL_MS = 12 * 60 * 60 * 1000;
 
 function _saveFinplanCache(data) {
   try {
-    localStorage.setItem(FINPLAN_CACHE_KEY, JSON.stringify(data));
-    localStorage.setItem(FINPLAN_CACHE_TIME_KEY, Date.now().toString());
+    Store.set(FINPLAN_CACHE_KEY, JSON.stringify(data));
+    Store.set(FINPLAN_CACHE_TIME_KEY, Date.now().toString());
     localStorage.setItem(FINPLAN_CACHE_VER_KEY, APP_VERSION);
   } catch (e) {
     console.warn("[finplan] cache save failed:", e.message);
@@ -9579,8 +9717,8 @@ function _saveFinplanCache(data) {
 
 function _loadFinplanCache() {
   try {
-    const raw = localStorage.getItem(FINPLAN_CACHE_KEY);
-    const ts = localStorage.getItem(FINPLAN_CACHE_TIME_KEY);
+    const raw = Store.get(FINPLAN_CACHE_KEY);
+    const ts = Store.get(FINPLAN_CACHE_TIME_KEY);
     if (!raw || !ts) return null;
     // Кеш зроблений іншою версією додатку → парсер міг змінитися,
     // відкидаємо і перепарсуємо з нуля.
@@ -11317,20 +11455,22 @@ function _dlsBrandTokens(brand) {
 }
 
 // ── Завантаження ────────────────────────────────────────────────────────────
+// Приписи важать ~240 КБ і ростуть приблизно на 50 КБ/місяць. У localStorage
+// (≈5 МБ на iOS Safari, спільні на весь домен) вони витісняли кеш медпошуку —
+// та сама «кеш переповнено», що колись була з аналітикою. Тому тримаємо їх
+// в IndexedDB; localStorage лишається лише запасним варіантом.
 function _dlsSaveCache(payload) {
-  try {
-    localStorage.setItem(DLS_CACHE_KEY, JSON.stringify(payload));
-    localStorage.setItem(DLS_CACHE_TIME, Date.now().toString());
-  } catch (_) { /* квота — не критично, наступного разу візьмемо з мережі */ }
+  Store.set(DLS_CACHE_KEY, JSON.stringify({ payload, time: Date.now() }));
 }
 
 function _dlsLoadCache() {
   try {
-    const d = localStorage.getItem(DLS_CACHE_KEY);
-    const t = localStorage.getItem(DLS_CACHE_TIME);
-    if (!d || !t) return null;
-    return { payload: JSON.parse(d), time: new Date(parseInt(t)) };
-  } catch (_) { return null; }
+    const raw = Store.get(DLS_CACHE_KEY);
+    if (!raw) return null;
+    const rec = JSON.parse(raw);
+    if (rec && rec.payload && rec.time) return { payload: rec.payload, time: new Date(rec.time) };
+  } catch (_) {}
+  return null;
 }
 
 async function _dlsFetch() {
@@ -11363,7 +11503,8 @@ async function _dlsEnsureStock() {
   } catch (_) { return false; }
 }
 
-function openDls() {
+async function openDls() {
+  await Store.ready();
   show("dls");
   loadDls(false);
 }
@@ -11777,24 +11918,124 @@ function dlsGroupBadge(items) {
 // Тихо підтягує приписи у фоні, щоб бейджі з'явились без відкриття розділу.
 // Помилки навмисне глушимо: пошук медикаментів має працювати і без ДЛС.
 let _dlsPrefetched = false;
-function _dlsPrefetch() {
+async function _dlsPrefetch() {
   if (_dlsPrefetched) return;
   _dlsPrefetched = true;
+  await Store.ready();
+  const redraw = () => {
+    if (window._lastResults) { try { renderResultsList(window._lastResults); } catch (_) {} }
+  };
   const c = _dlsLoadCache();
   if (c && (Date.now() - c.time.getTime()) < DLS_TTL_MS) {
     dlsData = c.payload;
     _dlsBuildSeriesIndex();
-    if (typeof window._lastResults !== "undefined" && window._lastResults) {
-      try { renderResultsList(window._lastResults); } catch (_) {}
-    }
+    redraw();
     return;
   }
-  _dlsFetch().then(p => {
+  try {
+    const p = await _dlsFetch();
     dlsData = p;
     _dlsSaveCache(p);
     _dlsBuildSeriesIndex();
-    if (window._lastResults) { try { renderResultsList(window._lastResults); } catch (_) {} }
-  }).catch(() => { _dlsPrefetched = false; });
+    redraw();
+  } catch (_) { _dlsPrefetched = false; }
+}
+
+
+// ── Діагностика сховища ─────────────────────────────────────────────────────
+// П'ять швидких натискань на підпис під логотипом на екрані розділів.
+// Потрібно, щоб на скаргу «гальмує» можна було попросити скриншот
+// і побачити причину, а не гадати.
+let _diagTaps = 0, _diagTimer = null;
+function _storageDiagTap() {
+  clearTimeout(_diagTimer);
+  _diagTaps++;
+  _diagTimer = setTimeout(() => { _diagTaps = 0; }, 1200);
+  if (_diagTaps >= 5) { _diagTaps = 0; showStorageDiag(); }
+}
+
+function _fmtKB(n) {
+  const kb = n / 1024;
+  return kb >= 1024 ? (kb / 1024).toFixed(2) + " МБ" : Math.round(kb) + " КБ";
+}
+
+async function showStorageDiag() {
+  await Store.ready();
+  const st = Store.stats();
+
+  let quota = null;
+  try {
+    if (navigator.storage && navigator.storage.estimate) quota = await navigator.storage.estimate();
+  } catch (_) {}
+
+  const row = (k, v, warn) =>
+    `<div class="dls-hit-row"><span style="word-break:break-all;font-size:11px">${esc(k)}</span>
+     <span style="white-space:nowrap;${warn ? "color:var(--danger);font-weight:700" : ""}">${v}</span></div>`;
+
+  const bulkRows = Object.entries(st.bulk).sort((a, b) => b[1] - a[1])
+    .map(([k, n]) => row(k.replace(/^medsklad_/, ""), _fmtKB(n))).join("") ||
+    `<div style="font-size:12px;color:var(--muted);padding:6px 0">порожньо</div>`;
+
+  const lsPct = Math.round(st.lsTotal / (5 * 1024 * 1024) * 100);
+  const lsRows = Object.entries(st.ls).sort((a, b) => b[1] - a[1]).slice(0, 12)
+    .map(([k, n]) => row(k.replace(/^medsklad_/, ""), _fmtKB(n), n > 512 * 1024)).join("");
+
+  const errRows = Store.errors().length
+    ? Store.errors().slice(-6).map(e =>
+        row(`${e.op} ${String(e.key).replace(/^medsklad_/, "")}`, esc(e.name || "?"), true)).join("")
+    : `<div style="font-size:12px;color:var(--green);padding:6px 0">✅ помилок запису немає</div>`;
+
+  const html = `
+    <div class="dls-kpis">
+      <div class="dls-kpi">
+        <div class="dls-kpi-num" style="color:${st.degraded ? "var(--danger)" : "var(--green)"};font-size:15px">
+          ${st.degraded ? "localStorage" : "IndexedDB"}</div>
+        <div class="dls-kpi-lbl">Сховище кешів</div>
+      </div>
+      <div class="dls-kpi">
+        <div class="dls-kpi-num" style="color:var(--accent);font-size:15px">${_fmtKB(st.bulkTotal)}</div>
+        <div class="dls-kpi-lbl">Важкі кеші</div>
+      </div>
+      <div class="dls-kpi">
+        <div class="dls-kpi-num" style="color:${lsPct > 60 ? "var(--danger)" : "var(--green)"};font-size:15px">${lsPct}%</div>
+        <div class="dls-kpi-lbl">localStorage з 5 МБ</div>
+      </div>
+    </div>
+    ${st.degraded ? `<div class="dls-alert">⚠️ IndexedDB недоступний (приватний режим?). Кеші пишуться в localStorage — можливе переповнення.</div>` : ""}
+    ${lsPct > 60 ? `<div class="dls-alert">⚠️ localStorage заповнений на ${lsPct}%. Надішліть цей скриншот розробнику.</div>` : ""}
+    <div class="section-lbl" style="margin-top:14px">Важкі кеші · IndexedDB</div>${bulkRows}
+    <div class="section-lbl" style="margin-top:14px">localStorage · ${_fmtKB(st.lsTotal)}</div>${lsRows}
+    <div class="section-lbl" style="margin-top:14px">Помилки запису</div>${errRows}
+    ${quota ? `<div style="font-size:11px;color:var(--muted);margin-top:14px">
+      Дозволено пристроєм: ${_fmtKB(quota.quota || 0)} · використано ${_fmtKB(quota.usage || 0)}</div>` : ""}
+    <div style="font-size:11px;color:var(--muted);margin-top:6px">${esc(APP_VERSION)} · ${esc(navigator.userAgent.slice(0, 90))}</div>
+    <button class="big-btn" style="margin-top:16px;background:var(--card2)" onclick="if(confirm('Очистити всі кеші? Дані завантажаться заново.')){_storageWipe();}">🗑 Очистити всі кеші</button>
+    <button class="big-btn" style="margin-top:8px" onclick="goStart()">← Назад</button>`;
+
+  document.getElementById("dls-list").innerHTML = html;
+  document.getElementById("dls-content").style.display = "block";
+  document.getElementById("dls-loading").style.display = "none";
+  document.getElementById("dls-error").style.display = "none";
+  document.querySelectorAll("#dls-content > .dls-kpis, #dls-verdict, #dls-content > .dls-bar, #dls-updated")
+    .forEach(el => el.style.display = "none");
+  show("dls");
+  document.getElementById("logo-sub-diag-flag") || null;
+}
+
+async function _storageWipe() {
+  try {
+    Store.keys().forEach(k => Store.remove(k));
+    if (IDB.available) { try { await IDB.clear(); } catch (_) {} }
+    const keep = /_auth$|remote_cache_version|cache_version$/;
+    const del = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith("medsklad") && !keep.test(k)) del.push(k);
+    }
+    del.forEach(k => { try { localStorage.removeItem(k); } catch (_) {} });
+  } catch (_) {}
+  alert("Кеші очищено. Додаток перезавантажиться.");
+  location.reload();
 }
 
 </script>
