@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.137";
+const APP_VERSION = "v.138";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -7165,10 +7165,15 @@ function renderAnalyticsSummary(m) {
   const limit = 100;
   const visible = list.slice(0, limit);
 
-  let html = sortControls + `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Показано ${visible.length} з ${list.length} позицій</div>`;
+  let html = sortControls
+    + `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">`
+    +   `<span style="font-size:12px;color:var(--muted);">Показано ${visible.length} з ${list.length} позицій</span>`
+    +   `<button class="hbtn primary" style="margin-left:auto;font-size:11px;padding:4px 10px;white-space:nowrap;"`
+    +     ` onclick="exportAnalyticsCategoryToXlsx()">📊 Експорт (${list.length})</button>`
+    + `</div>`;
   html += visible.map(entry => renderAnItemCard(entry)).join("");
   if (list.length > limit) {
-    html += `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">Решта ${list.length - limit} позицій доступні через розгортання відділень нижче</div>`;
+    html += `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">Решта ${list.length - limit} позицій — у файлі експорту (кнопка вгорі) або через розгортання відділень нижче</div>`;
   }
 
   containerEl.innerHTML = html;
@@ -9110,6 +9115,99 @@ function renderSubItems() {
 // month: Назва — Залишок на початок (сума, грн) — Надходження — Видаток —
 // Залишок на кінець — плюс кількості і кількість МВО/позицій. Uses the same
 // SheetJS lib that's already loaded for the search section.
+// Експорт повного списку обраної категорії аналітики (Без руху / Оборотні /
+// Нові). На екрані список обрізається до 100 карток заради швидкості
+// відмальовки; тут обмеження немає — вивантажуються всі позиції.
+function exportAnalyticsCategoryToXlsx() {
+  if (typeof XLSX === "undefined") {
+    alert("Не вдалось завантажити бібліотеку експорту. Перевірте інтернет.");
+    return;
+  }
+  if (!analyticsData || !currentMonthKey) { alert("Дані ще не завантажені."); return; }
+  const m = MO();
+  if (!m) { alert("Не знайдено даних для обраного місяця."); return; }
+  if (analyticsView === "summary") { alert("Спершу оберіть категорію."); return; }
+
+  const items = classifyAllItems(m);
+  const list = (items[analyticsView] || []).slice();
+  if (!list.length) { alert("У цій категорії немає позицій."); return; }
+
+  const titleMap = {
+    dead: "Без руху",
+    fast: "Швидкий рух",
+    newItems: "Нові позиції",
+  };
+  const catLabel = titleMap[analyticsView] || "Аналітика";
+  const period = m.period || {};
+
+  // Сортування те саме, що на екрані, щоб порядок не розходився з UI.
+  if (analyticsView === "dead" && deadSummarySort === "days") {
+    list.sort((a, b) =>
+      (_deadDaysForItem(b.item, b.sub) || 0) - (_deadDaysForItem(a.item, a.sub) || 0));
+  } else {
+    const f = analyticsView === "fast" ? "es" : (analyticsView === "newItems" ? "rs" : "cs");
+    list.sort((a, b) => (b.item[f] || 0) - (a.item[f] || 0));
+  }
+
+  const round2 = v => Math.round((v || 0) * 100) / 100;
+  const header = [
+    "Препарат", "Відділення", "МВО", "Серії",
+    "Залишок на початок, грн", "Надходження, грн", "Видаток, грн", "Залишок на кінець, грн",
+    "Кількість на кінець", "Днів запасу", "Днів без руху", "Останнє списання",
+  ];
+  const aoa = [header];
+  for (const e of list) {
+    const it = e.item, sub = e.sub;
+    const path = (sub.path || []).map(p => analyticsData.paths[p]);
+    const seriesArr = it.series_list || (it.s ? [it.s] : []);
+    const dd = _deadDaysForItem(it, sub);
+    const dos = daysOfSupply(it, period);
+    aoa.push([
+      analyticsData.names[it.n] || "",
+      path[0] || "",
+      path.slice(1).join(" › ") || "",
+      seriesArr.join("; "),
+      round2(it.os), round2(it.rs), round2(it.es), round2(it.cs),
+      it.cq || 0,
+      (dos === null || dos === Infinity) ? "" : Math.round(dos),
+      (dd === null) ? "" : dd,
+      it.lw ? _fmtUkDate(it.lw) : "",
+    ]);
+  }
+  // Підсумковий рядок — щоб було видно вагу категорії загалом.
+  const sum = k => round2(list.reduce((a, e) => a + (e.item[k] || 0), 0));
+  aoa.push(["ВСЬОГО (" + list.length + " поз.)", "", "", "",
+            sum("os"), sum("rs"), sum("es"), sum("cs"), "", "", "", ""]);
+
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"] = [{wch:48},{wch:38},{wch:38},{wch:30},{wch:20},{wch:18},
+                 {wch:16},{wch:20},{wch:14},{wch:11},{wch:13},{wch:16}];
+  const moneyFmt = '#,##0.00" ₴"';
+  for (let r = 1; r < aoa.length; r++) {
+    for (let c = 4; c <= 7; c++) {
+      const ref = XLSX.utils.encode_cell({ r, c });
+      if (ws[ref]) ws[ref].z = moneyFmt;
+    }
+  }
+  // Примітка: SheetJS Community не записує panes у xlsx — закріплення шапки
+  // не спрацює в жодній формі запису. Лишаємо для сумісності з платною
+  // збіркою; практичну роль виконує автофільтр, який пишеться нормально.
+  ws["!freeze"] = { xSplit: 0, ySplit: 1 };
+  ws["!autofilter"] = { ref: `A1:L${list.length + 1}` };
+
+  const hospital = getAnalyticsHospital(currentHospitalId);
+  const hospName = hospital ? hospital.name : "Лікарня";
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, _safeSheetName(catLabel));
+  const fname = `${_safeFileSegment(hospName)}_${_safeFileSegment(catLabel)}_${_activePeriodKey()}.xlsx`;
+  try {
+    XLSX.writeFile(wb, fname);
+  } catch (e) {
+    console.error("XLSX writeFile failed:", e);
+    alert("Не вдалось зберегти файл: " + (e && e.message ? e.message : e));
+  }
+}
+
 function exportDepartmentsToXlsx() {
   if (typeof XLSX === "undefined") {
     alert("Не вдалось завантажити бібліотеку експорту. Перевірте інтернет.");
