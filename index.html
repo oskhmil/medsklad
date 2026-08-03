@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.135";
+const APP_VERSION = "v.137";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4532,7 +4532,7 @@ async function selectHospitalForAbx(id) {
     cmpStartKey = null; cmpEndKey = null;
     _aggCache = {};
     _expenseByItemPerMonth = null;
-    _deadDaysCache = new Map();
+    _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
   }
   currentHospitalId = id;
   renderHospitalSelect();
@@ -4577,7 +4577,7 @@ function backToHospitalPicker() {
   cmpStartKey = null; cmpEndKey = null;
   _aggCache = {};
   _expenseByItemPerMonth = null;
-  _deadDaysCache = new Map();
+  _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
   openHospitalPicker();
 }
 
@@ -4594,7 +4594,7 @@ function selectHospital(id) {
     cmpStartKey = null; cmpEndKey = null;
     _aggCache = {};
     _expenseByItemPerMonth = null;
-  _deadDaysCache = new Map();
+  _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
   }
   currentHospitalId = id;
   renderHospitalSelect();
@@ -4657,7 +4657,7 @@ async function loadAnalytics(forceRefresh) {
         if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length > 0) {
           analyticsData = cached.data;
           _expenseByItemPerMonth = null;
-  _deadDaysCache = new Map();
+  _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
           initAnalyticsUI();
           setState("ready");
           // Silent background refresh if cache is older than TTL
@@ -6795,7 +6795,7 @@ async function fetchAnalytics({ silent }) {
     }
     analyticsData = parsedData;
     _expenseByItemPerMonth = null;
-  _deadDaysCache = new Map();
+  _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
     _watchMarkSeen(hospital.id);
 
     // Persist cache. IndexedDB has a far larger quota than localStorage — the
@@ -6849,7 +6849,7 @@ function initAnalyticsUI() {
   if (!rangeStartKey || !monthKeys.includes(rangeStartKey)) rangeStartKey = rangeEndKey;
   if (rangeStartKey > rangeEndKey) rangeStartKey = rangeEndKey;
   currentMonthKey = rangeEndKey;
-  _deadDaysCache = new Map();
+  _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
 
   // Comparison — preserve if still valid, else default to the previous month.
   if (cmpStartKey && !monthKeys.includes(cmpStartKey)) cmpStartKey = null;
@@ -6922,7 +6922,7 @@ function _clampActivePeriod() {
     const t = rangeStartKey; rangeStartKey = rangeEndKey; rangeEndKey = t;
   }
   currentMonthKey = rangeEndKey;
-  _deadDaysCache = new Map();
+  _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
 }
 function _clampComparePeriod() {
   if (cmpStartKey && cmpEndKey && cmpStartKey > cmpEndKey) {
@@ -8088,6 +8088,10 @@ function daysWithoutMovement(itemKey, currentMonthKey) {
   for (let i = curIdx; i >= 0; i--) {
     const mk = monthKeys[i];
     const m = analyticsData.months[mk];
+    // Позиції ще не було у цьому підрозділі — далі назад не йдемо. Інакше
+    // лічильник зараховував місяці до її приходу (позиція, що надійшла у
+    // березні, показувала 215 днів простою замість 155).
+    if (i < curIdx && !_itemPresentInMonth(itemKey, m)) return totalDays;
     const hadMovement = _itemHadExpenseInMonth(itemKey, m);
     if (hadMovement) {
       // Stop counting; days accumulated so far is the answer.
@@ -8167,36 +8171,77 @@ function fmtMonthKey(mk) {
   return `${_UK_MONTHS[idx]} ${m[1]}`;
 }
 
+// Родовий відмінок — потрібен після прийменника «з»: «з січня 2026», а не
+// «з січень 2026». _UK_MONTHS вище лишається називним для випадків на кшталт
+// «рух востаннє: березень 2026».
+const _UK_MONTHS_GEN = ["січня","лютого","березня","квітня","травня","червня",
+                        "липня","серпня","вересня","жовтня","листопада","грудня"];
+function fmtMonthKeyGen(mk) {
+  if (!mk) return "—";
+  const m = String(mk).match(/^(\d{4})-(\d{2})/);
+  if (!m) return mk;
+  const idx = parseInt(m[2], 10) - 1;
+  if (idx < 0 || idx >= 12) return mk;
+  return `${_UK_MONTHS_GEN[idx]} ${m[1]}`;
+}
+
 // Build a fast lookup of "items with movement" per month for the dead-days
 // computation. Cached per analyticsData load.
 let _expenseByItemPerMonth = null;
+// Присутність позиції в місяці (незалежно від руху). Потрібна, щоб лічильник
+// простою не зараховував місяці, коли позиції у підрозділі ще не було:
+// _itemHadExpenseInMonth для відсутньої позиції повертає false, і без цього
+// індексу «без руху» рахувалось від початку ВСІХ даних, а не від приходу.
+let _presenceByItemPerMonth = null;
 let _deadDaysCache = new Map();
-  _deadDaysCache = new Map();
 function _ensureExpenseIndex() {
   if (_expenseByItemPerMonth) return;
   _expenseByItemPerMonth = new Map();  // monthKey -> Set of itemKeys with es>0
+  _presenceByItemPerMonth = new Map(); // monthKey -> Set of itemKeys present
   for (const [mk, m] of Object.entries(analyticsData.months)) {
     const set = new Set();
+    const present = new Set();
     for (const d of m.directions) {
       for (const g of d.groups) {
         for (const sub of g.subdivisions) {
-          if (sub._hidden) continue;
           for (const it of sub.items) {
-            if ((it.es || 0) > 0) {
-              set.add(itemKey(it, sub));
-            }
+            const k = itemKey(it, sub);
+            present.add(k);
+            if ((it.es || 0) > 0) set.add(k);
           }
         }
       }
     }
     _expenseByItemPerMonth.set(mk, set);
+    _presenceByItemPerMonth.set(mk, present);
   }
+}
+function _monthKeyOf(m) {
+  return Object.keys(analyticsData.months).find(k => analyticsData.months[k] === m);
+}
+function _itemPresentInMonth(key, m) {
+  _ensureExpenseIndex();
+  const set = _presenceByItemPerMonth.get(_monthKeyOf(m));
+  return set ? set.has(key) : false;
 }
 function _itemHadExpenseInMonth(key, m) {
   _ensureExpenseIndex();
-  const monthKey = Object.keys(analyticsData.months).find(k => analyticsData.months[k] === m);
-  const set = _expenseByItemPerMonth.get(monthKey);
+  const set = _expenseByItemPerMonth.get(_monthKeyOf(m));
   return set ? set.has(key) : false;
+}
+
+// Найраніший місяць, у якому позиція присутня у цьому підрозділі, або null.
+let _itemFirstMonthCache = new Map();
+function _itemFirstMonth(key) {
+  if (_itemFirstMonthCache.has(key)) return _itemFirstMonthCache.get(key);
+  _ensureExpenseIndex();
+  let out = null;
+  for (const k of Object.keys(analyticsData.months).sort()) {
+    const set = _presenceByItemPerMonth.get(k);
+    if (set && set.has(key)) { out = k; break; }
+  }
+  _itemFirstMonthCache.set(key, out);
+  return out;
 }
 
 // Stable identifier for an item across months: name index + path joined.
@@ -8234,17 +8279,31 @@ function classifyItem(it, sub, period) {
   // Brand new: nothing at start of period, received stock during it.
   const newItem = (os === 0) && (rs > 0);
 
-  // Dead: має залишок на кінець, НУЛЬОВИЙ видаток за вибраний період, і був на
-  // початку — плюс простій щонайменше DEAD_MIN_DAYS.
+  // Dead: має залишок на кінець, НУЛЬОВИЙ видаток за вибраний період — плюс
+  // простій щонайменше DEAD_MIN_DAYS.
   //
   // ВАЖЛИВО (регресія v.134, відкочено у v.135): була спроба замінити умову
   // `es === 0` на перевірку лише простою (_deadDaysForItem). Це дало хибні
   // спрацювання в режимі діапазону: позиція, що рухалась січень–травень, але
   // не мала видатку в останньому місяці періоду, потрапляла в «Без руху» з
-  // видатком у мільйони на тій самій картці. «Без руху за період» означає
-  // саме «не рухалась у вибраному періоді» — суму видатку за період ігнорувати
-  // не можна.
-  let dead = (os > 0) && (es === 0) && (cs > 0);
+  // видатком у мільйони на тій самій картці. `es === 0` за період — обов'язкове.
+  //
+  // v.137: умова входу розширена з `os > 0` до `os > 0 || rs > 0`. Раніше
+  // позиція, що надійшла у відділення всередині діапазону і відтоді стоїть,
+  // мала в агрегаті os = 0 і випадала в «Нові», хоча простій уже перевищував
+  // поріг. Тепер вирішує простій; захист від хибних спрацювань дає перевірка
+  // dd >= DEAD_MIN_DAYS — щойно отримана позиція має малий dd і мертвою не стає.
+  let dead = (os > 0 || rs > 0) && (es === 0) && (cs > 0);
+  // Позиція з'явилась усередині періоду (os === 0). Мертвою вважаємо лише
+  // тоді, коли вона була у підрозділі ще ДО поточного місяця. Інакше щойно
+  // отримана позиція ставала «мертвою» через те, що _stagnationAsOf рахує від
+  // СЬОГОДНІ, а звіт закінчується місяцем раніше: позиція, що надійшла в
+  // червні, при даних по червень і сьогоднішньому серпні давала 64 дні
+  // простою, хоча про липень ми взагалі нічого не знаємо.
+  if (dead && os === 0) {
+    const fm = _itemFirstMonth(itemKey(it, sub));
+    if (!fm || !currentMonthKey || fm >= currentMonthKey) dead = false;
+  }
   if (dead) {
     const dd = _deadDaysForItem(it, sub);
     // Короткі паузи (напр. 16 днів) — це нормальний робочий запас, не стагнація.
@@ -9314,7 +9373,7 @@ function _flowCell(qty, sum, unit) {
   return parts.join(" · ");
 }
 
-function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
+function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate, itKeyForBadge) {
   const badges = [];
   // Minimum stagnation to bother showing the "no movement" badge. A medication
   // untouched for 2-3 weeks is normal working stock — flagging it as "dead"
@@ -9360,20 +9419,32 @@ function _itemBadges(cat, deadDays, lastMovedMonthKey, lastWriteoffDate) {
         txt = `💀 рух востаннє: ${fmtMonthKey(lastMovedMonthKey)}${daysPart}`;
       } else {
         // No movement found in any loaded month — this is the oldest, deepest
-        // dead stock. Show how long (days) and since which month we've been
-        // watching, instead of a vague "без руху".
+        // dead stock. Беремо перший місяць, у якому позиція взагалі присутня
+        // у цьому підрозділі (а не найраніший місяць усіх даних): для позиції,
+        // що надійшла у березні, «з січня» було б неправдою.
         const monthKeys = (analyticsData && analyticsData.months)
           ? Object.keys(analyticsData.months)
               .filter(k => analyticsData.months[k].directions && analyticsData.months[k].directions.length)
               .sort()
           : [];
-        const earliest = monthKeys[0];
+        let earliest = monthKeys[0];
+        if (itKeyForBadge) {
+          for (const k of monthKeys) {
+            if (_itemPresentInMonth(itKeyForBadge, analyticsData.months[k])) { earliest = k; break; }
+          }
+        }
         const daysPart = (typeof deadDays === "number" && deadDays > 0)
           ? `${deadDays} дн` : "";
         if (earliest) {
+          // ВАЖЛИВО: `earliest` — це найраніший місяць у ЗАВАНТАЖЕНИХ даних,
+          // однаковий для всіх позицій, а НЕ місяць останнього руху цієї
+          // позиції. Попереднє формулювання «без руху N дн (з січня 2026)»
+          // читалось як «останній рух був у січні», через що всі картки
+          // виглядали однаково і породжували підозру на баг. Реальний простій
+          // може бути довшим — глибше за вікно даних ми не бачимо, тому «≥».
           txt = daysPart
-            ? `💀 без руху ${daysPart} (з ${fmtMonthKey(earliest)})`
-            : `💀 без руху з ${fmtMonthKey(earliest)}`;
+            ? `💀 жодного руху за наявні дані (≥${daysPart}, з ${fmtMonthKeyGen(earliest)})`
+            : `💀 жодного руху за наявні дані (з ${fmtMonthKeyGen(earliest)})`;
         } else {
           txt = daysPart ? `💀 без руху ${daysPart}` : "💀 без руху";
         }
@@ -9406,7 +9477,7 @@ function renderAnItemRow(it, sub, period) {
   const deadDays = cat.dead ? _deadDaysForItem(it, sub) : null;
   const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
   const lwDate = cat.dead ? _findLatestWriteoffAcrossMonths(it, sub) : null;
-  const badges = _itemBadges(cat, deadDays, lastMov, lwDate);
+  const badges = _itemBadges(cat, deadDays, lastMov, lwDate, itKey);
 
   // Flow rows: each stage gets qty (left) + sum (right) on one line
   const flowBits = [];
@@ -9453,7 +9524,7 @@ function renderAnItemCard(entry) {
   const deadDays = cat.dead ? _deadDaysForItem(it, sub) : null;
   const lastMov  = cat.dead ? lastMovementMonth(itKey, currentMonthKey)   : null;
   const lwDate = cat.dead ? _findLatestWriteoffAcrossMonths(it, sub) : null;
-  const badges = _itemBadges(cat, deadDays, lastMov, lwDate);
+  const badges = _itemBadges(cat, deadDays, lastMov, lwDate, itKey);
 
   const flowBits = [];
   const ec = (lbl, qty, sum, cls) => {
