@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.133";
+const APP_VERSION = "v.134";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4404,6 +4404,26 @@ function CMP() {
   if (!cmpStartKey || !cmpEndKey) return null;
   if (cmpStartKey === cmpEndKey) return analyticsData.months[cmpStartKey] || null;
   return _getAggregate(cmpStartKey, cmpEndKey);
+}
+
+// Скільки місяців в активному та порівняльному періодах.
+// Потрібно, щоб не зіставляти суму за 3 місяці з сумою за 1 — раніше таке
+// порівняння давало фіктивний «ріст», який був просто різницею довжини.
+// Коли довжини різні, значення порівняльного періоду приводяться до довжини
+// активного (prevEs * curM / prevM), а в інтерфейсі показується примітка.
+function _cmpPeriodScale() {
+  const curM  = _isRangeActive() ? _keysInRange(rangeStartKey, rangeEndKey).length : 1;
+  const prevM = (cmpStartKey && cmpEndKey) ? _keysInRange(cmpStartKey, cmpEndKey).length : 1;
+  const c = curM || 1, p = prevM || 1;
+  return { curM: c, prevM: p, differ: c !== p, factor: c / p };
+}
+
+// Текст-примітка для екранів порівняння, або "" якщо періоди однакової довжини.
+function _cmpScaleNote() {
+  const f = _cmpPeriodScale();
+  if (!f.differ) return "";
+  return `Періоди різної довжини (${f.curM} міс. проти ${f.prevM} міс.) — `
+       + `значення періоду порівняння приведені до ${f.curM} міс.`;
 }
 
 // String key identifying the active period (for export filenames etc.).
@@ -6952,6 +6972,25 @@ function renderWarnings() {
       }
     }
   }
+
+  // «Дні без руху» відлічуються від сьогодні (див. _stagnationAsOf), а не від
+  // кінця звіту. Якщо новий вивантаж не заливався давно, лічильник росте сам
+  // по собі і позиції перетинають поріг DEAD_MIN_DAYS без жодної події на
+  // складі. Попереджаємо, щоб цифру не читали як реальну стагнацію.
+  const _keys = _allMonthKeys();
+  const _lastK = _keys.length ? _keys[_keys.length - 1] : null;
+  const _lastTo = (_lastK && analyticsData.months[_lastK] && analyticsData.months[_lastK].period)
+    ? analyticsData.months[_lastK].period.to : null;
+  if (_lastTo) {
+    const _d = new Date(_lastTo);
+    if (!isNaN(_d)) {
+      const _age = Math.round((Date.now() - _d.getTime()) / 86400000);
+      if (_age > 45) {
+        warnings.push(`Найсвіжіші дані — станом на ${fmtShortDate(_lastTo)}, це ${_age} дн. тому. `
+          + `«Дні без руху» рахуються від сьогодні, тому позиції можуть виглядати мертвими просто через застарілий вивантаж з 1С.`);
+      }
+    }
+  }
   el.innerHTML = warnings.length === 0 ? "" : warnings.map(w =>
     `<div class="an-warn"><span class="an-warn-ico">⚠️</span><span>${esc(w)}</span></div>`
   ).join("");
@@ -7227,11 +7266,15 @@ function renderRankings(m) {
     return;
   }
   const prevMap = _buildSubMapByPath(mPrev);
+  const _scale = _cmpPeriodScale();
+  const _note  = _cmpScaleNote();
+  const _noteHtml = _note
+    ? `<div style="font-size:11px;color:var(--warn);margin-bottom:6px;">⚠️ ${esc(_note)}</div>` : "";
   const withDeltas = [];
   for (const s of subs) {
     const prev = prevMap.get(s.path.join("|"));
     if (!prev) continue; // didn't exist in the comparison month
-    const prevEs = prev.es || 0;
+    const prevEs = (prev.es || 0) * _scale.factor;
     const curEs  = s.es || 0;
     if (prevEs === 0 && curEs === 0) continue;
     const diff = curEs - prevEs;
@@ -7250,7 +7293,7 @@ function renderRankings(m) {
       containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жоден підрозділ не показав росту видатку порівняно з обраним місяцем</div></div>`;
       return;
     }
-    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Хто почав активніше витрачати порівняно з обраним місяцем</div>`;
+    let html = _noteHtml + `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Хто почав активніше витрачати порівняно з обраним періодом</div>`;
     html += top.map((x, i) => _renderRankingDeltaRow(x, i + 1, "growth")).join("");
     containerEl.innerHTML = html;
     return;
@@ -7264,7 +7307,7 @@ function renderRankings(m) {
       containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жоден підрозділ не показав спаду видатку порівняно з обраним місяцем</div></div>`;
       return;
     }
-    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Скорочення активності або проблема з постачанням</div>`;
+    let html = _noteHtml + `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Скорочення активності або проблема з постачанням</div>`;
     html += top.map((x, i) => _renderRankingDeltaRow(x, i + 1, "decline")).join("");
     containerEl.innerHTML = html;
     return;
@@ -7750,13 +7793,17 @@ function _renderItemGrowthView(m, containerEl, kind) {
     return;
   }
   const prevMap = _buildItemMapByKey(mPrev);
+  const _scale = _cmpPeriodScale();
+  const _note  = _cmpScaleNote();
+  const _noteHtml = _note
+    ? `<div style="font-size:11px;color:var(--warn);margin-bottom:6px;">⚠️ ${esc(_note)}</div>` : "";
   const all = _collectAllItems(m);
   const withDeltas = [];
   for (const e of all) {
     const pk = e.path.join("|") + "|" + e.item.n;
     const prevIt = prevMap.get(pk);
     if (!prevIt) continue; // didn't exist in compare month
-    const prevEs = prevIt.es || 0;
+    const prevEs = (prevIt.es || 0) * _scale.factor;
     const curEs  = e.item.es || 0;
     if (prevEs === 0 && curEs === 0) continue;
     const diff = curEs - prevEs;
@@ -7773,7 +7820,7 @@ function _renderItemGrowthView(m, containerEl, kind) {
       containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жодна позиція не показала росту видатку</div></div>`;
       return;
     }
-    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Позиції з найбільшим зростанням видатку порівняно з обраним місяцем</div>`;
+    let html = _noteHtml + `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Позиції з найбільшим зростанням видатку порівняно з обраним періодом</div>`;
     html += top.map((x, i) => _renderItemDeltaRow(x, i + 1, "growth")).join("");
     containerEl.innerHTML = html;
   } else {
@@ -7783,7 +7830,7 @@ function _renderItemGrowthView(m, containerEl, kind) {
       containerEl.innerHTML = `<div class="empty-state" style="padding:30px 10px;"><div class="empty-ico">📭</div><div class="empty-sub">Жодна позиція не показала спаду видатку</div></div>`;
       return;
     }
-    let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Позиції зі скороченням видатку — можливі проблеми постачання або зниження потреби</div>`;
+    let html = _noteHtml + `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">Позиції зі скороченням видатку — можливі проблеми постачання або зниження потреби</div>`;
     html += top.map((x, i) => _renderItemDeltaRow(x, i + 1, "decline")).join("");
     containerEl.innerHTML = html;
   }
@@ -8175,19 +8222,26 @@ function classifyItem(it, sub, period) {
   const dos     = daysOfSupply(it, period);
   const dosQty  = daysOfSupplyQty(it, period);
 
-  // Dead: has stock at close, zero expense in this period, was there at start —
-  // AND has been stagnant for at least DEAD_MIN_DAYS. Short gaps (e.g. 16 days)
-  // are normal working stock, so they don't count as dead anywhere.
-  let dead = (os > 0) && (es === 0) && (cs > 0);
-  if (dead) {
-    const dd = _deadDaysForItem(it, sub);
-    // If we can measure the gap and it's short → not dead. If unmeasurable
-    // (no movement found across history → null), keep it dead.
-    if (dd !== null && dd < DEAD_MIN_DAYS) dead = false;
-  }
-
   // Brand new: nothing at start of period, received stock during it.
   const newItem = (os === 0) && (rs > 0);
+
+  // Dead: має залишок на кінець і не рухалась щонайменше DEAD_MIN_DAYS.
+  //
+  // Раніше умова була (os > 0 && es === 0 && cs > 0). У режимі діапазону `es` —
+  // це СУМА за весь період, тому позиція, що рухалась лише в першому місяці
+  // діапазону і відтоді лежить, у «Без руху» не потрапляла, хоча в режимі
+  // одного місяця та сама позиція позначалась мертвою. Тепер орієнтир —
+  // виміряний простій (_deadDaysForItem), однаковий для обох режимів.
+  //
+  // Нові позиції виключені: у них немає історії, і лічильник простою рахував
+  // би місяці, коли позиції ще не існувало.
+  let dead = (cs > 0) && !newItem;
+  if (dead) {
+    const dd = _deadDaysForItem(it, sub);
+    // Якщо простій вимірюваний — вирішує він. Якщо ні (руху не знайдено
+    // за всю історію → null), падаємо на стару умову по видатку.
+    dead = (dd !== null) ? (dd >= DEAD_MIN_DAYS) : (os > 0 && es === 0);
+  }
 
   // Fast: closing covers less than threshold days — running out soon.
   // We deliberately EXCLUDE brand-new items: their daily-burn rate is computed
@@ -11340,7 +11394,10 @@ function _sheetXml(sheet) {
 }
 
 // Excel забороняє в назві аркуша : \ / ? * [ ] і довжину > 31
-function _safeSheetName(name, used) {
+// ВАЖЛИВО: ім'я має відрізнятись від _safeSheetName(s) вище (рядок ~9136).
+// Раніше обидві функції звались однаково, друга перекривала першу, і виклик
+// з одним аргументом в exportDepartmentsToXlsx() падав на used.has(n).
+function _safeSheetNameUnique(name, used) {
   let n = String(name || "Аркуш").replace(/[:\\\/\?\*\[\]]/g, "-").slice(0, 31) || "Аркуш";
   let base = n, i = 2;
   while (used.has(n)) { const suf = " (" + i++ + ")"; n = base.slice(0, 31 - suf.length) + suf; }
@@ -11356,7 +11413,7 @@ async function buildStyledXlsx(sheets) {
   if (typeof JSZip === "undefined") throw new Error("JSZip не завантажився");
   const zip = new JSZip();
   const used = new Set();
-  const names = sheets.map(s => _safeSheetName(s.name, used));
+  const names = sheets.map(s => _safeSheetNameUnique(s.name, used));
 
   zip.file("[Content_Types].xml",
     `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
