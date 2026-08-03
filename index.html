@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.134";
+const APP_VERSION = "v.135";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4352,6 +4352,15 @@ function _buildAggregateMonth(fromKey, toKey) {
             if (isFirst) { iA.oq = it.oq||0; iA.os = it.os||0; }
             if (isLast)  { iA.cq = it.cq||0; iA.cs = it.cs||0; }
             if (it.lw && (!iA.lw || it.lw > iA.lw)) iA.lw = it.lw;
+            // Серії треба зливати, інакше в режимі діапазону картка показує
+            // одну серію (ту, що трапилась першою), хоча суми охоплюють усі.
+            const incoming = it.series_list || (it.s ? [it.s] : []);
+            if (incoming.length) {
+              const pool = iA.series_list || (iA.s ? [iA.s] : []);
+              for (const sx of incoming) if (pool.indexOf(sx) === -1) pool.push(sx);
+              iA.series_list = pool;
+              if (!iA.s) iA.s = pool[0];
+            }
           }
         }
       }
@@ -8225,22 +8234,23 @@ function classifyItem(it, sub, period) {
   // Brand new: nothing at start of period, received stock during it.
   const newItem = (os === 0) && (rs > 0);
 
-  // Dead: має залишок на кінець і не рухалась щонайменше DEAD_MIN_DAYS.
+  // Dead: має залишок на кінець, НУЛЬОВИЙ видаток за вибраний період, і був на
+  // початку — плюс простій щонайменше DEAD_MIN_DAYS.
   //
-  // Раніше умова була (os > 0 && es === 0 && cs > 0). У режимі діапазону `es` —
-  // це СУМА за весь період, тому позиція, що рухалась лише в першому місяці
-  // діапазону і відтоді лежить, у «Без руху» не потрапляла, хоча в режимі
-  // одного місяця та сама позиція позначалась мертвою. Тепер орієнтир —
-  // виміряний простій (_deadDaysForItem), однаковий для обох режимів.
-  //
-  // Нові позиції виключені: у них немає історії, і лічильник простою рахував
-  // би місяці, коли позиції ще не існувало.
-  let dead = (cs > 0) && !newItem;
+  // ВАЖЛИВО (регресія v.134, відкочено у v.135): була спроба замінити умову
+  // `es === 0` на перевірку лише простою (_deadDaysForItem). Це дало хибні
+  // спрацювання в режимі діапазону: позиція, що рухалась січень–травень, але
+  // не мала видатку в останньому місяці періоду, потрапляла в «Без руху» з
+  // видатком у мільйони на тій самій картці. «Без руху за період» означає
+  // саме «не рухалась у вибраному періоді» — суму видатку за період ігнорувати
+  // не можна.
+  let dead = (os > 0) && (es === 0) && (cs > 0);
   if (dead) {
     const dd = _deadDaysForItem(it, sub);
-    // Якщо простій вимірюваний — вирішує він. Якщо ні (руху не знайдено
-    // за всю історію → null), падаємо на стару умову по видатку.
-    dead = (dd !== null) ? (dd >= DEAD_MIN_DAYS) : (os > 0 && es === 0);
+    // Короткі паузи (напр. 16 днів) — це нормальний робочий запас, не стагнація.
+    // Якщо простій невимірюваний (руху не знайдено за всю історію → null),
+    // лишаємо позицію мертвою.
+    if (dd !== null && dd < DEAD_MIN_DAYS) dead = false;
   }
 
   // Fast: closing covers less than threshold days — running out soon.
