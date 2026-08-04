@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.138";
+const APP_VERSION = "v.139";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6982,10 +6982,11 @@ function renderWarnings() {
     }
   }
 
-  // «Дні без руху» відлічуються від сьогодні (див. _stagnationAsOf), а не від
-  // кінця звіту. Якщо новий вивантаж не заливався давно, лічильник росте сам
-  // по собі і позиції перетинають поріг DEAD_MIN_DAYS без жодної події на
-  // складі. Попереджаємо, щоб цифру не читали як реальну стагнацію.
+  // Вікно даних показуємо ЗАВЖДИ нейтральним рядком: після v.139 дні без
+  // руху рахуються до кінця звітного періоду, тож користувач має бачити, на
+  // яку саме дату наведені числа. Жовте попередження лишається тільки для
+  // справді застарілого вивантажу.
+  let _windowLine = "";
   const _keys = _allMonthKeys();
   const _lastK = _keys.length ? _keys[_keys.length - 1] : null;
   const _lastTo = (_lastK && analyticsData.months[_lastK] && analyticsData.months[_lastK].period)
@@ -6994,13 +6995,19 @@ function renderWarnings() {
     const _d = new Date(_lastTo);
     if (!isNaN(_d)) {
       const _age = Math.round((Date.now() - _d.getTime()) / 86400000);
+      _windowLine = `Дані по ${fmtShortDate(_lastTo)}${_age > 0 ? ` · ${_age} дн. тому` : ""}. `
+                  + `Дні без руху рахуються до цієї дати.`;
       if (_age > 45) {
         warnings.push(`Найсвіжіші дані — станом на ${fmtShortDate(_lastTo)}, це ${_age} дн. тому. `
-          + `«Дні без руху» рахуються від сьогодні, тому позиції можуть виглядати мертвими просто через застарілий вивантаж з 1С.`);
+          + `Простій за цей час не врахований — залийте новий вивантаж з 1С, щоб «Без руху» був актуальним.`);
       }
     }
   }
-  el.innerHTML = warnings.length === 0 ? "" : warnings.map(w =>
+  el.innerHTML =
+    (_windowLine
+      ? `<div style="font-size:11px;color:var(--muted);padding:6px 2px 8px;line-height:1.45;">📅 ${esc(_windowLine)}</div>`
+      : "")
+    + warnings.map(w =>
     `<div class="an-warn"><span class="an-warn-ico">⚠️</span><span>${esc(w)}</span></div>`
   ).join("");
 }
@@ -8063,16 +8070,24 @@ function fmtCycleDays(d) {
 // today — "N days" then means real stagnation as of now. If they're viewing an
 // older/historical month, we measure up to the END of that month, because
 // overlaying today's date onto a past report would be meaningless.
+// Точка відліку простою для вказаного місяця — ЗАВЖДИ кінець його звітного
+// періоду, а не сьогоднішня дата.
+//
+// v.139: раніше для найсвіжішого місяця поверталось `new Date()`, і дні
+// без руху росли самі по собі, поки не заллють новий вивантаж. Через це
+// позиція могла світитись у «Без руху» на 100 днів, а після заливки липня
+// виявитись списаною ще 15.07 — тобто тривога була хибною і вже з'їла увагу.
+//
+// Тепер лічильник спирається лише на те, що підтверджено даними. Він не
+// зменшується — просто перестає рости, поки немає нового місяця. Якщо
+// позиція справді не рухалась і в липні, вона додасть ще 31 день, перетне
+// поріг і з'явиться в списку обґрунтовано.
+//
+// Ціна рішення: доки липень не залито, ~270 позицій із простоєм 60–95 днів
+// у список не потраплять. Це свідомий вибір на користь точності — краще
+// недоказаний простій пропустити, ніж показати непідтверджений.
 function _stagnationAsOf(monthKey) {
-  const monthKeys = (analyticsData && analyticsData.months)
-    ? Object.keys(analyticsData.months)
-        .filter(k => analyticsData.months[k].directions && analyticsData.months[k].directions.length)
-        .sort()
-    : [];
-  if (!monthKeys.length) return new Date();
-  const latest = monthKeys[monthKeys.length - 1];
-  if (monthKey === latest) return new Date(); // актуальний звіт → від сьогодні
-  const m = analyticsData.months[monthKey];
+  const m = analyticsData && analyticsData.months && analyticsData.months[monthKey];
   if (m && m.period && m.period.to) {
     const d = new Date(m.period.to);
     if (!isNaN(d)) return d;
