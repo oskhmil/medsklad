@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.139";
+const APP_VERSION = "v.140";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -9837,6 +9837,14 @@ const FINPLAN_OVERRIDES = [
   // "лаборатории", з опечатками).
   { test: /(склад|відділ).*(лаборатор|реагент)/i, target: "lab" },
   { test: /(лаборатор|реагент).*(склад|відділ)/i, target: "lab" },
+  // Вітів Андрій (Вироби медичного призначення) — склад ВМП, належить до
+  // Пантелеймона. У назві немає жодного маркера лікарні, тож без цього
+  // override склад падав у "Інші підрозділи". Прив'язка по прізвищу+імені,
+  // бо 1С може трункувати хвіст назви ("...призна").
+  // ВАЖЛИВО: цей override стоїть ПІСЛЯ лабораторних правил, але оскільки
+  // блок OVERRIDES перевіряється зверху вниз і жодне попереднє правило
+  // "Вітів" не ловить — спрацює саме це.
+  { test: /вітів[^]*андрій|андрій[^]*вітів/i, target: "pantelejmon" },
 ];
 
 // МВО patterns that ALWAYS go to "Інші підрозділи" (override hospital match)
