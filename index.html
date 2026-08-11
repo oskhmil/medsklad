@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.141";
+const APP_VERSION = "v.142";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -10165,6 +10165,40 @@ function _parseFinplanSheet(ws) {
   // detect if indents are all-zero (fallback mode)
   const hasIndents = indents.some(v => v > 0);
 
+  // ── Рівні ієрархії визначаємо ДИНАМІЧНО, не хардкодом ─────────────────
+  // Абсолютні значення indent залежать від того, як файл потрапив у Drive:
+  // сирий вивантаж 1С дає 0/2/4/6 (напрям/рахунок/МВО/товар), а копія,
+  // нормалізована через Google Sheets — 2/4/6/8. Хардкод рівнів ламався
+  // на одному з двох варіантів, тому виводимо їх із самого аркуша по
+  // рядках, які впізнаються за ЗМІСТОМ: напрям ("03-НСЗУ") і рахунок ("202").
+  let dirLvl = null, accLvl = null;
+  if (hasIndents) {
+    for (let i = 0; i < rows.length; i++) {
+      const t = String(rows[i][0] ?? "").trim();
+      if (!t) continue;
+      if (dirLvl === null && /^\d{2}\s*-\s*\S/.test(t)) dirLvl = indents[i];
+      if (accLvl === null && /^\d{3,5}$/.test(t))       accLvl = indents[i];
+      if (dirLvl !== null && accLvl !== null) break;
+    }
+  }
+
+  // Відступ НАСТУПНОГО непорожнього рядка — основа структурного правила:
+  // рядок є групою (МВО) тоді й лише тоді, коли під ним є вкладені рядки.
+  // Товар — це лист дерева. Назва при цьому не має значення взагалі, тож
+  // будь-яка креативна назва складу від бухгалтерії розпізнається сама.
+  const nextInd = new Array(rows.length).fill(-1);
+  if (hasIndents) {
+    let nxt = -1;
+    for (let i = rows.length - 1; i >= 0; i--) {
+      nextInd[i] = nxt;
+      if (String(rows[i][0] ?? "").trim()) nxt = indents[i];
+    }
+  }
+
+  // Діагностика: де структурний метод розійшовся з евристикою по назві.
+  const detectDisagreements = [];
+  let dataStarted = false;
+
   // Header row layout: row 8 in the file has col headers
   // A: Реєстратор.Напрям діяльності  B: Кількість  C: Сума
   // We treat columns by index regardless: col 0 = A, col 1 = B (qty), col 2 = C (sum).
@@ -10184,17 +10218,18 @@ function _parseFinplanSheet(ws) {
     const sum = _parseFpNum(row[COL_SUM]);
 
     // Determine row type
-    // Direction: indent==2 OR text matches /^\d{2}-/ (e.g., "03-НСЗУ", "67-Благодійна")
-    const isDirection = (indent === 2) ||
-      (indent === null && /^\d{2}\s*-\s*/.test(aText));
+    // Напрям: за змістом ("03-НСЗУ", "67-Благодійна") або, коли дані вже
+    // почались, за рівнем відступу. Обмеження "після першого напряму"
+    // потрібне, щоб шапка файлу ("Параметри:", "Відбір:") не потрапила
+    // у напрями — вона лежить на тому ж рівні, що й напрями у сирому 1С.
+    const isDirection = /^\d{2}\s*-\s*\S/.test(aText) ||
+      (dataStarted && hasIndents && dirLvl !== null && indent === dirLvl);
 
-    // Account: indent==4 OR text is a bare number (201, 202, 1531, ...)
-    // 1С uses both 3-digit standard accounts (20x) and 4+ digit subaccounts
-    // (e.g., 1531 in some directions). Anything that's purely digits at
-    // this level is an account header, NOT a product row.
-    // Must be inside a direction block (not a stray) — caller checks.
-    const isAccount = (indent === 4) ||
-      (indent === null && /^\d{3,5}$/.test(aText));
+    // Рахунок: bare number (201, 202, 1531...) або рівень рахунку.
+    const isAccount = /^\d{3,5}$/.test(aText) ||
+      (dataStarted && hasIndents && accLvl !== null && indent === accLvl);
+
+    if (isDirection) dataStarted = true;
 
     if (isDirection) {
       currentDirection = aText;
@@ -10247,7 +10282,24 @@ function _parseFinplanSheet(ws) {
     // The trickiest false-positive is items containing "(" like
     // "Анальгін №10 (5х2)" — these don't START with Surname-Initials and
     // don't match the storage keywords, so they're correctly treated as items.
-    let isMvo = _looksLikeStorage(aText);
+    // ПЕРВИННИЙ метод — структурний: рядок є МВО, якщо наступний рядок
+    // глибший (тобто під ним є вкладені позиції). Не залежить від назви,
+    // тому нові склади розпізнаються без правок коду.
+    // ЗАПАСНИЙ — евристика по назві: потрібна для аркушів, де 1С не
+    // проставив відступи взагалі (у нашому файлі це січень–квітень).
+    const nameSaysStorage = _looksLikeStorage(aText);
+    let isMvo;
+    if (hasIndents) {
+      isMvo = nextInd[i] > indent;
+      if (isMvo !== nameSaysStorage && detectDisagreements.length < 40) {
+        detectDisagreements.push({
+          name: aText, sum: sum || 0,
+          verdict: isMvo ? "структура=МВО, назва=товар" : "структура=товар, назва=МВО",
+        });
+      }
+    } else {
+      isMvo = nameSaysStorage;
+    }
     let isItem = !isMvo;
 
     if (isMvo) {
@@ -10334,7 +10386,13 @@ function _parseFinplanSheet(ws) {
                    : "(ймовірно, нерозпізнаний склад трактується як товар)");
   }
 
-  return { period, mvos, total, controlSum, integrityDelta, suspects };
+  if (detectDisagreements.length) {
+    console.info("[finplan] структура vs назва — розбіжності розпізнавання:",
+                 detectDisagreements);
+  }
+
+  return { period, mvos, total, controlSum, integrityDelta, suspects,
+           detectMode: hasIndents ? "indent" : "name", detectDisagreements };
 }
 
 function _parseFpNum(v) {
