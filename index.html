@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.140";
+const APP_VERSION = "v.141";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -9847,6 +9847,17 @@ const FINPLAN_OVERRIDES = [
   { test: /вітів[^]*андрій|андрій[^]*вітів/i, target: "pantelejmon" },
 ];
 
+// Назви МВО, які треба ПРИМУСОВО вважати складом у _looksLikeStorage().
+// Сюди йдуть склади без жодного структурного маркера в назві. Патерн має
+// бути прив'язаний до прізвища+імені — це унікальна комбінація, яка не
+// зустрічається у назвах товарів.
+const FINPLAN_STORAGE_NAMES = [
+  // "Вітів Андрій(Вироби медичного призначення)" — без ініціалів і без
+  // по-батькові, тому парсер не бачив рядок як МВО і його 2,67 млн ₴
+  // вливались у попередній склад (Бойко Роман, ЛДЦ Погулянка).
+  /вітів[^]*андрій|андрій[^]*вітів/i,
+];
+
 // МВО patterns that ALWAYS go to "Інші підрозділи" (override hospital match)
 const FINPLAN_EXCLUDE_PATTERNS = [
   /центр\s+служби\s+кров/i,    // Міський центр служби крові
@@ -10355,6 +10366,16 @@ function _parseFpNum(v) {
 // Item rows are everything else.
 function _looksLikeStorage(text) {
   if (!text) return false;
+  // 0. ЯВНИЙ СПИСОК — назви МВО, які не мають жодного структурного маркера
+  // (ні ініціалів, ні по-батькові, ні слова "Склад"/"Відділ"/"фармацевт").
+  // Такі рядки парсер не бачив як склад, і їхня сума вливалась у попередній
+  // МВО — саме це ловить перевірка інтегрітету. Прив'язка йде по
+  // прізвищу+імені: воно унікальне і ніколи не зустрічається у назвах
+  // товарів, на відміну від слів на кшталт "вироби медичного призначення".
+  // Додавати сюди нові назви за сигналом з блоку "Сума не сходиться".
+  for (const re of FINPLAN_STORAGE_NAMES) {
+    if (re.test(text)) return true;
+  }
   // A: "Прізвище І." or "Прізвище І.О." — initials with dots (most reliable)
   if (/^[А-ЯІЇЄҐ][а-яіїєґ']+\s+[А-ЯІЇЄҐ]\.\s*[А-ЯІЇЄҐ]?\.?(\s|,|\(|$)/.test(text)) return true;
   // B: Any capitalized word ending in patronymic suffix
