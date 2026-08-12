@@ -2094,7 +2094,7 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.142";
+const APP_VERSION = "v.143";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4177,10 +4177,12 @@ const ANALYTICS_HOSPITALS = [
   {
     id:    "luky",
     name:  "Лікарня св. Луки",
-    sub:   "Аналітика буде доступна після підключення даних",
+    sub:   "Відділення, МВО, рух, оборотність",
     ico:   "🏥",
-    theme: "",
-    url:   null, // not connected yet
+    theme: "analytics",
+    // Google Drive xlsx export URL — parsed in-browser (no JSON in repo).
+    // To swap files: replace the document ID below.
+    url:   "https://docs.google.com/spreadsheets/d/1KvsRU3URNezH5okk3bYFtnI6ggNVsKGF/export?format=xlsx",
     source: "xlsx",
   },
   {
