@@ -1685,8 +1685,13 @@
         <div id="an-patients-status" style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:8px;display:none;"></div>
 
         <!-- Hierarchy (directions → groups → subdivisions → items) -->
-        <div class="an-section-title">Напрями діяльності</div>
+        <div class="an-section-title" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <span>Напрями діяльності</span>
+          <span style="background:rgba(79,142,247,.15);color:var(--accent);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:none;">напрям: 03-НСЗУ</span>
+        </div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.5;">
+          Аналіз відділень рахується <b>тільки по напряму 03-НСЗУ</b>. Річна потреба
+          та інфекційний контроль враховують усі напрями.
           Натисніть на підрозділ щоб побачити детальну аналітику.
           Велика цифра справа від кожного блоку — <b>залишок на кінець місяця в гривнях</b>.
           Маленька — кількість позицій і вкладених підрозділів.
@@ -1830,6 +1835,8 @@
       <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 12px;">
         Розрахунок зі <b>списань</b>: середньомісячне споживання × 12 + страховий запас − поточний залишок.
         Середнє рахується від першого місяця з рухом. Позиції без жодного списання не включаються.
+        Враховуються <b>всі напрями діяльності</b> (НСЗУ, централізовані поставки, благодійні,
+        гуманітарні тощо), крім протезної майстерні. Під позицією — розріз по напрямах.
       </div>
       <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center;">
         <span style="font-size:11px;color:var(--muted);">Страховий запас:</span>
@@ -1865,6 +1872,7 @@
         Усі антимікробні препарати за класифікацією AWaRe інфекційного контролю ТМО
         (Access / Watch / Reserve). Позиції зіставляються за <b>МНН</b> зі словника, що
         наповнюється з файлу залишків. Натисніть на препарат — розріз по відділеннях.
+        Враховуються <b>всі напрями діяльності</b>, а не лише НСЗУ.
       </div>
       <div id="abx-summary" style="font-size:11px;color:var(--muted);margin-bottom:8px;"></div>
       <div id="abx-missed" style="display:none;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:10px 12px;margin-bottom:10px;max-height:220px;overflow-y:auto;"></div>
@@ -2094,7 +2102,18 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-const APP_VERSION = "v.143";
+// v.144 — напрями діяльності:
+//   • Аналіз відділень, KPI, мертвий запас, дні запасу — ТІЛЬКИ 03-НСЗУ
+//     (month.directions), цифри не змінились відносно v.143.
+//   • Річна потреба та інфекційний контроль — УСІ напрями
+//     (month.directions + month.other_directions), з розрізом по напрямах.
+//   • Напрям "51 - ПРОТЕЗНА МАЙСТЕРНЯ" відкидається на етапі розбору.
+//   • Виправлено: рядок "Разом" у кінці вивантаження ставав "відділенням"
+//     з підсумком організації, коли indent зрізаний (експорт через Google
+//     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
+//     змістом і слугує еталоном для звірки.
+//   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
+const APP_VERSION = "v.144";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4218,11 +4237,14 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
+  // v10 = напрями діяльності розділено: directions = лише 03-НСЗУ,
+  //       other_directions = решта (для потреби й АМП). Старий кеш не має
+  //       other_directions взагалі, тому мусить бути перерозібраний.
   // v9 = parent grouping units reconciled (re-parent children, drop phantom "(без МВО)").
   // v8 = items of person-less departments are attached to "(без МВО)" —
   // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
-  return "medsklad_analytics_cache_v9__" + id;
+  return "medsklad_analytics_cache_v10__" + id;
 }
 
 // Remove analytics caches of OLDER versions (v7 and below) so they don't eat
@@ -4232,7 +4254,7 @@ function analyticsHospitalCacheKey(id) {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v9__")) {
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v10__")) {
         toRemove.push(k);
       }
     }
@@ -5224,6 +5246,35 @@ function _anParseDocDate(text) {
   return `${m[3]}-${m[2]}-${m[1]}`;
 }
 
+// ─── Напрям діяльності (indent=2) ──────────────────────────────────────────
+// 1С називає напрями за схемою "<код>-<назва>": "03-НСЗУ", "04-спец",
+// "14- МОЗ  трансплантація", "51 -  ПРОТЕЗНА МАЙСТЕРНЯ". Регулярка потрібна не
+// стільки для файлів з живим indent (там рівень видно напряму), скільки для
+// експортів через Google Sheets, де indent зрізається і рівень доводиться
+// вгадувати за змістом. Без цього кожен напрям, крім першого, ставав
+// фантомним МВО з агрегатними підсумками і ДУБЛЮВАВ усі гроші.
+const AN_DIRECTION_RE = /^\d{1,2}\s*[-–—]/;
+function _anLooksLikeDirectionName(text) {
+  return AN_DIRECTION_RE.test(String(text || "").trim());
+}
+
+// Напрями, які не стосуються медикаментів і не повинні потрапляти ні в
+// потребу, ні в АМП-звіт, ні в аналітику. Відкидаються ще на етапі розбору —
+// так вони не займають місця в кеші.
+const AN_EXCLUDED_DIRECTION_RE = /протезн/i;
+function _anIsExcludedDirection(name) {
+  return AN_EXCLUDED_DIRECTION_RE.test(String(name || ""));
+}
+
+// Підсумковий рядок у кінці вивантаження 1С. Має indent=0 і суму по всій
+// організації в колонках. Поки indent живий, він нешкідливо падає в рівень 8;
+// щойно indent зрізано — стає "відділенням" і finalizeEmptyDept() навішує на
+// нього підсумок організації, роздуваючи аналітику в рази.
+const AN_TOTAL_ROW_NAMES = ["разом", "всього", "итого", "итого:"];
+function _anIsTotalRow(text) {
+  return AN_TOTAL_ROW_NAMES.indexOf(String(text || "").trim().toLowerCase()) !== -1;
+}
+
 function _anLooksLikeGroupName(text) {
   const s = String(text || "").trim().toLowerCase();
   return s.startsWith("вп ") || s.indexOf("лікарня") !== -1;
@@ -5257,6 +5308,8 @@ function _anLooksLikeDepartmentName(text) {
 
 function _anFallbackLevel(aVal, bVal, currentGroup, currentDept) {
   if (!aVal || bVal) return 0;
+  if (_anIsTotalRow(aVal)) return 0;
+  if (_anLooksLikeDirectionName(aVal)) return 2;
   const s = String(aVal || "").trim().toLowerCase();
   if (
     s === "організація" ||
@@ -5342,6 +5395,7 @@ function _anReparentAggregates(subs) {
 
 function _anIsStructuralHeader(text) {
   const s = String(text || "").trim().toLowerCase();
+  if (_anIsTotalRow(text)) return true;
   return (
     s === "організація" ||
     s === "склад/підрозділ" ||
@@ -5370,6 +5424,7 @@ function _anInferNoIndentLevels(rows) {
         name: aVal,
         cells,
         isGroup: _anLooksLikeGroupName(aVal),
+        isDir: _anLooksLikeDirectionName(aVal),
       });
     } else if (!aVal && bVal) {
       sig.push({ row: rec.row, type: "item" });
@@ -5381,6 +5436,9 @@ function _anInferNoIndentLevels(rows) {
     const cur = sig[i];
     if (cur.type !== "aonly") continue;
 
+    // Напрям діяльності — окремий рівень над лікарнею. Він НЕ скидає
+    // haveGroup: у файлі кожен напрям має власний рядок лікарні нижче.
+    if (cur.isDir) { levels.set(cur.row, 2); continue; }
     if (cur.isGroup) {
       levels.set(cur.row, 4);
       haveGroup = true;
@@ -5452,6 +5510,15 @@ function _anParsePeriod(sheetXml, sharedStrings, xfToIndent) {
 
 // Parse one sheet — returns { groups: [...], period, stats }
 function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
+  // Кожен напрям діяльності отримує власне "відро" груп. Ієрархія всередині
+  // напряму та сама, що й раніше (лікарня → відділення → МВО → позиція), тому
+  // жодна логіка нижче не змінюється — змінюється лише те, в яке відро вона
+  // пише. Напрям 03-НСЗУ віддається як `groups` (сумісність зі старою схемою),
+  // решта — окремо в `dirs`.
+  let currentDirection = "(без напряму)";
+  const dirGroups = {};
+  const dirOrder = [];
+  let groups = null;
   let currentGroup = null;
   let currentDept = null;
   let currentPerson = null;
@@ -5459,10 +5526,9 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   // appear directly after an item belong to it. We use this to attach
   // write-off dates to the item itself, not just the subdivision.
   let lastItem = null;
-  const groups = {};
   const stats = {
     rows_scanned: 0, items_captured: 0, skipped_empty: 0, unknown_levels: 0,
-    departments: 0, persons: 0,
+    departments: 0, persons: 0, directions: 0, skipped_directions: [],
   };
   const deptSet = new Set();
   const personSet = new Set();
@@ -5488,6 +5554,13 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     sub.totalsOverride = _anStripNone(currentDeptTotals);
   }
 
+  function useDirection(name) {
+    currentDirection = name;
+    if (!dirGroups[name]) { dirGroups[name] = {}; dirOrder.push(name); }
+    groups = dirGroups[name];
+  }
+  useDirection(currentDirection);
+
   for (const { row, cells } of parsedRows) {
     stats.rows_scanned++;
     const aCell = cells[0];
@@ -5504,6 +5577,27 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
       indent = inferredLevels.get(row) || _anFallbackLevel(aVal, bVal, currentGroup, currentDept);
     }
 
+    // Підсумковий рядок файлу ("Разом"). Не частина ієрархії — але це єдиний
+    // еталон, з яким можна звірити суму розібраних напрямів. Забираємо його
+    // ДО будь-якої класифікації рівнів.
+    if (aVal && !bVal && _anIsTotalRow(aVal)) {
+      const t = _anExtractNumbers(cells);
+      if (_anHasAnyNumber(t)) stats.file_total = _anStripNone(t);
+      continue;
+    }
+    // Напрям діяльності (indent=2). Порожня назва трапляється у вивантаженні
+    // 1С (позиції без проставленого напряму) — збираємо їх в "(без напряму)".
+    if (indent === 2) {
+      finalizeEmptyDept();
+      useDirection(aVal || "(без напряму)");
+      currentGroup = null;
+      currentDept = null;
+      currentDeptTotals = null;
+      currentDeptHasPerson = false;
+      currentPerson = null;
+      lastItem = null;
+      continue;
+    }
     // Hospital row (indent=4)
     if (indent === 4 && aVal) {
       finalizeEmptyDept();
@@ -5620,9 +5714,12 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
   finalizeEmptyDept();
 
   // Finalize: aggregate subdivision totals, drop internal index
+  const dirsOut = [];
+  for (const dname of dirOrder) {
   const groupsOut = [];
-  for (const gname in groups) {
-    const g = groups[gname];
+  const dgroups = dirGroups[dname];
+  for (const gname in dgroups) {
+    const g = dgroups[gname];
     let subs = Object.values(g.subdivisions).map(sub => {
       let totalsOut;
       if (sub.totalsOverride) {
@@ -5644,9 +5741,28 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     subs = _anReparentAggregates(subs);
     groupsOut.push({ name: g.name, totals: _anStripNone(g.totals), subdivisions: subs });
   }
+  if (groupsOut.length) dirsOut.push({ name: dname, groups: groupsOut });
+  }
+  // Виключені напрями (протезна майстерня) не потрапляють у результат, але
+  // їхній підсумок потрібен, щоб звірка з рядком "Разом" сходилась.
+  const keptDirs = [];
+  const excludedTotals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
+  for (const d of dirsOut) {
+    if (!_anIsExcludedDirection(d.name)) { keptDirs.push(d); continue; }
+    stats.skipped_directions.push(d.name);
+    for (const g of d.groups) for (const sub of g.subdivisions) {
+      const t = sub.totals || {};
+      for (const k in excludedTotals) if (typeof t[k] === "number") excludedTotals[k] += t[k];
+    }
+  }
+  stats.excluded_totals = _anStripNone(excludedTotals);
   stats.departments = deptSet.size;
   stats.persons = personSet.size;
-  return { groups: groupsOut, stats };
+  stats.directions = keptDirs.length;
+  // 03-НСЗУ — базовий напрям аналітики відділень. Якщо його раптом немає
+  // (інший формат вивантаження), беремо перший наявний, щоб екран не впав.
+  const nszu = keptDirs.find(d => /НСЗУ/i.test(d.name)) || keptDirs[0] || null;
+  return { dirs: keptDirs, groups: nszu ? nszu.groups : [], nszuName: nszu ? nszu.name : null, stats };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -5660,6 +5776,24 @@ let _demandRows = null;      // обчислені рядки
 let _demandScopeLabel = "";  // назва охоплення для заголовка/експорту
 let _demandBackTo = "analytics"; // куди повертатись
 
+// Усі напрями місяця: 03-НСЗУ (у `directions`) + решта (у `other_directions`).
+// Використовують ЛИШЕ «Річна потреба» і «Інфекційний контроль». Аналіз
+// відділень свідомо лишається на самому НСЗУ.
+// Старі кеші (до v10) не мають other_directions — тоді повертається те саме,
+// що й раніше, і нічого не ламається.
+function _anAllDirections(month) {
+  if (!month) return [];
+  const base = month.directions || [];
+  const extra = month.other_directions || [];
+  return extra.length ? base.concat(extra) : base;
+}
+
+// Людська назва напряму для розрізу. Для гілки НСЗУ у `directions` лежить
+// назва лікарні (історична сумісність), тому беремо _dirName.
+function _anDirLabel(dir) {
+  return (dir && (dir._dirName || dir.name)) || "—";
+}
+
 function _demandAccumulate(acc, data, hospitalName) {
   // acc: Map(normName → row). Проходимо ВСІ місяці лікарні.
   const monthKeys = Object.keys(data.months || {}).sort();
@@ -5668,7 +5802,8 @@ function _demandAccumulate(acc, data, hospitalName) {
   for (let mi = 0; mi < monthKeys.length; mi++) {
     const month = data.months[monthKeys[mi]];
     const isLast = monthKeys[mi] === lastKey;
-    for (const dir of (month.directions || [])) {
+    for (const dir of _anAllDirections(month)) {
+      const dirLabel = _anDirLabel(dir);
       for (const g of (dir.groups || [])) {
         for (const sub of (g.subdivisions || [])) {
           if (sub._hidden) continue; // господарські МВО не є фарм-потребою
@@ -5679,17 +5814,24 @@ function _demandAccumulate(acc, data, hospitalName) {
             let row = acc.get(key);
             if (!row) {
               row = { name, eqByMonth: {}, eq: 0, es: 0, stockQ: 0, stockS: 0,
-                      firstMove: null, hospitals: new Set() };
+                      firstMove: null, hospitals: new Set(), byDir: new Map() };
               acc.set(key, row);
             }
             const eq = it.eq || 0, es = it.es || 0;
+            if (!row.byDir) row.byDir = new Map();
+            let dRow = row.byDir.get(dirLabel);
+            if (!dRow) { dRow = { eq: 0, es: 0, stockQ: 0 }; row.byDir.set(dirLabel, dRow); }
             if (eq > 0) {
               row.eqByMonth[monthKeys[mi]] = (row.eqByMonth[monthKeys[mi]] || 0) + eq;
               row.eq += eq; row.es += es;
+              dRow.eq += eq; dRow.es += es;
               if (row.firstMove === null || monthKeys[mi] < row.firstMove) row.firstMove = monthKeys[mi];
               row.hospitals.add(hospitalName);
             }
-            if (isLast) { row.stockQ += (it.cq || 0); row.stockS += (it.cs || 0); }
+            if (isLast) {
+              row.stockQ += (it.cq || 0); row.stockS += (it.cs || 0);
+              dRow.stockQ += (it.cq || 0);
+            }
           }
         }
       }
@@ -5713,10 +5855,17 @@ function _demandFinalize(acc, allMonthKeys) {
     // разовий сплеск: один місяць дає ≥80% усього списання при періоді ≥3 міс
     const maxMonth = Math.max(...Object.values(row.eqByMonth));
     const spike = activeMonths >= 3 && maxMonth >= row.eq * 0.8;
+    // Розріз по напрямах: лишаємо тільки ті, де є списання або залишок,
+    // і сортуємо за списанням — щоб у картці першим стояв основний напрям.
+    const dirs = [...(row.byDir || new Map()).entries()]
+      .map(([name, v]) => ({ name, eq: v.eq, es: v.es, stockQ: v.stockQ }))
+      .filter(d => d.eq > 0 || d.stockQ > 0)
+      .sort((a, b) => (b.eq - a.eq) || (b.stockQ - a.stockQ));
     rows.push({
       name: row.name, eq: row.eq, activeMonths, avgMonthly, annual, avgPrice,
       stockQ: row.stockQ, spike,
       hospitals: [...row.hospitals],
+      dirs,
     });
   }
   return { rows, monthsCount: sortedKeys.length, lastKey };
@@ -5729,7 +5878,7 @@ function openDemandForHospital() {
   _demandAccumulate(acc, analyticsData, h ? h.name : "");
   const fin = _demandFinalize(acc, Object.keys(analyticsData.months));
   _demandRows = fin.rows;
-  _demandScopeLabel = `${h ? h.name : "Лікарня"} · ${fin.monthsCount} міс. даних (останній: ${fin.lastKey})`;
+  _demandScopeLabel = `${h ? h.name : "Лікарня"} · ${fin.monthsCount} міс. даних (останній: ${fin.lastKey}) · всі напрями`;
   _demandBackTo = "analytics";
   document.getElementById("demand-search").value = "";
   renderDemand();
@@ -5764,7 +5913,8 @@ async function openDemandForTMO() {
   const fin = _demandFinalize(acc, [...allKeys]);
   _demandRows = fin.rows;
   _demandScopeLabel = `ТМО (${sources.map(s => s.name).join(", ")})`
-    + (missing.length ? ` · без даних: ${missing.join(", ")}` : "");
+    + (missing.length ? ` · без даних: ${missing.join(", ")}` : "")
+    + " · всі напрями";
   _demandBackTo = "hospitalpicker";
   document.getElementById("demand-search").value = "";
   renderDemand();
@@ -5787,6 +5937,31 @@ function _demandComputed() {
   }
   out.sort((a, b) => b.budget - a.budget);
   return out;
+}
+
+// Коротка назва напряму для чипа: "03-НСЗУ" → "НСЗУ",
+// "67-Трьохстороння Угода ( Благодійна )" → "Трьохстороння Угода".
+function _demandShortDir(name) {
+  return String(name || "—")
+    .replace(/^\d{1,2}\s*[-–—]\s*/, "")
+    .replace(/\s*\([^)]*\)\s*$/, "")
+    .trim() || String(name || "—");
+}
+
+function _demandDirChips(r) {
+  if (!r.dirs || r.dirs.length <= 1) return "";
+  const fmtQ = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  const chips = r.dirs.map(d => {
+    const isNszu = /НСЗУ/i.test(d.name);
+    const col = isNszu ? "var(--accent)" : "var(--warn)";
+    const bg  = isNszu ? "rgba(79,142,247,.13)" : "rgba(245,158,11,.13)";
+    const parts = [];
+    if (d.eq > 0) parts.push("списано " + fmtQ(d.eq));
+    if (d.stockQ > 0) parts.push("залишок " + fmtQ(d.stockQ));
+    return `<span style="background:${bg};color:${col};border-radius:6px;padding:2px 7px;font-size:10px;font-weight:600;white-space:nowrap;">`
+      + esc(_demandShortDir(d.name)) + `: ${parts.join(" · ")}</span>`;
+  }).join("");
+  return `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;">${chips}</div>`;
 }
 
 function renderDemand() {
@@ -5812,6 +5987,7 @@ function renderDemand() {
           <span>До закупівлі: <b style="color:var(--accent)">${fmtQ(r.toBuy)}</b></span>
           <span>Бюджет: <b style="color:var(--green)">${fmtMoney(r.budget)}</b></span>
         </div>
+        ${_demandDirChips(r)}
       </div>
     </div>`).join("")
     + (rows.length > limit ? `<div style="text-align:center;padding:10px;font-size:12px;color:var(--muted);">+ ще ${rows.length - limit} (звузьте пошуком)</div>` : "")
@@ -5822,21 +5998,48 @@ function exportDemandExcel() {
   const rows = _demandComputed();
   if (!rows.length) { alert("Немає даних для експорту."); return; }
   const safety = parseInt(document.getElementById("demand-safety").value, 10) || 0;
+  const nszuOf = r => (r.dirs || []).filter(d => /НСЗУ/i.test(d.name))
+                                    .reduce((s, d) => s + d.eq, 0);
   const aoa = [
     ["Річна потреба — " + _demandScopeLabel + ` (страховий запас: ${safety} міс)`],
     [],
-    ["Назва", "Списано (к-сть)", "Місяців з руху", "Сер./міс", "Прогноз на рік",
+    ["Назва", "Списано (к-сть)", "з них НСЗУ", "з них інші напрями",
+     "Місяців з руху", "Сер./міс", "Прогноз на рік",
      "Залишок (к-сть)", "До закупівлі (к-сть)", "Сер. ціна, грн", "Бюджет, грн", "Примітка"],
-    ...rows.map(r => [
-      r.name, +r.eq.toFixed(2), r.activeMonths, +r.avgMonthly.toFixed(2), +r.annual.toFixed(2),
-      +r.stockQ.toFixed(2), +r.toBuy.toFixed(2), +r.avgPrice.toFixed(2), +r.budget.toFixed(2),
-      r.spike ? "разовий сплеск — перевірити" : "",
-    ]),
+    ...rows.map(r => {
+      const n = nszuOf(r);
+      return [
+        r.name, +r.eq.toFixed(2), +n.toFixed(2), +(r.eq - n).toFixed(2),
+        r.activeMonths, +r.avgMonthly.toFixed(2), +r.annual.toFixed(2),
+        +r.stockQ.toFixed(2), +r.toBuy.toFixed(2), +r.avgPrice.toFixed(2), +r.budget.toFixed(2),
+        r.spike ? "разовий сплеск — перевірити" : "",
+      ];
+    }),
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws["!cols"] = [{wch:55},{wch:14},{wch:12},{wch:10},{wch:13},{wch:13},{wch:17},{wch:12},{wch:14},{wch:26}];
+  ws["!cols"] = [{wch:55},{wch:14},{wch:13},{wch:18},{wch:12},{wch:10},{wch:13},
+                 {wch:13},{wch:17},{wch:12},{wch:14},{wch:26}];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Потреба");
+
+  // Аркуш 2 — повний розріз "препарат × напрям".
+  const aoa2 = [
+    ["Розріз по напрямах діяльності — " + _demandScopeLabel],
+    [],
+    ["Назва", "Напрям", "Списано (к-сть)", "Списано, грн", "Залишок (к-сть)", "Частка списання, %"],
+  ];
+  for (const r of rows) {
+    for (const d of (r.dirs || [])) {
+      aoa2.push([
+        r.name, d.name, +d.eq.toFixed(2), +d.es.toFixed(2), +d.stockQ.toFixed(2),
+        r.eq > 0 ? +((100 * d.eq) / r.eq).toFixed(1) : 0,
+      ]);
+    }
+  }
+  const ws2 = XLSX.utils.aoa_to_sheet(aoa2);
+  ws2["!cols"] = [{wch:55},{wch:34},{wch:16},{wch:16},{wch:16},{wch:18}];
+  XLSX.utils.book_append_sheet(wb, ws2, "За напрямами");
+
   XLSX.writeFile(wb, "Річна_потреба.xlsx");
 }
 
@@ -6112,7 +6315,8 @@ function openAbxScreen(fromInfControl) {
   const _abxMissed = new Map(); // назви, схожі на АМП, але не зматчені (аудит покриття)
   for (const mk of monthKeys) {
     const month = analyticsData.months[mk];
-    for (const dir of (month.directions || [])) {
+    for (const dir of _anAllDirections(month)) {
+      const dirLabel = _anDirLabel(dir);
       for (const g of (dir.groups || [])) {
         for (const sub of (g.subdivisions || [])) {
           if (sub._hidden) continue;
@@ -6167,7 +6371,7 @@ function openAbxScreen(fromInfControl) {
             row.names.add(name);
             // повний рядок для звіту за шаблоном інфекціоністів
             row.rows.push({ dept: deptName, month: mk, drug: name, mnn: mnn || "",
-                            oq, rq, eq, cq, es });
+                            oq, rq, eq, cq, es, dir: dirLabel });
             const d = row.byDept.get(deptName) || { oq:0, rq:0, eq:0, cq:0, os:0, rs:0, es:0, cs:0 };
             d.oq += oq; d.rq += rq; d.eq += eq; d.cq += cq;
             d.os += os; d.rs += rs; d.es += es; d.cs += cs;
@@ -6190,7 +6394,7 @@ function openAbxScreen(fromInfControl) {
   const rangeStr = monthKeys.length === 1
     ? `${_monthLabel(monthKeys[0])} ${monthKeys[0].slice(0,4)}`
     : `${monthKeys[0]} – ${monthKeys[monthKeys.length - 1]} (${monthKeys.length} міс.)`;
-  _abxScopeLabel = `${h ? h.name : ""} · ${rangeStr}`;
+  _abxScopeLabel = `${h ? h.name : ""} · ${rangeStr} · всі напрями`;
   _abxRenderPeriodControls(allKeys);
   renderAbxScreen();
   show("abx");
@@ -6576,8 +6780,11 @@ async function parseAnalyticsXlsx(arrayBuffer) {
       }
     }
 
-    // Intern names/paths in-place
-    for (const g of parsed.groups) {
+    // Intern names/paths in-place — по ВСІХ напрямах, не лише по НСЗУ,
+    // інакше позиції інших напрямів залишились би з сирими рядками замість
+    // індексів і `names[it.n]` повертало б undefined у потребі та АМП.
+    const _allGroups = (parsed.dirs || []).reduce((acc, d) => acc.concat(d.groups), []);
+    for (const g of _allGroups) {
       for (const sub of g.subdivisions) {
         sub.path = sub.path.map(p => internPath(p));
         for (const it of sub.items) it.n = internName(it.n);
@@ -6616,7 +6823,7 @@ async function parseAnalyticsXlsx(arrayBuffer) {
     // Group totals reflect ALL subdivisions (no hidden ones to exclude).
     // We still recompute them here defensively so g.totals is always
     // consistent with the sum of its subs.
-    for (const g of parsed.groups) {
+    for (const g of _allGroups) {
       const visTotals = { oq:0, os:0, rq:0, rs:0, eq:0, es:0, cq:0, cs:0 };
       for (const sub of g.subdivisions) {
         if (sub._hidden) continue;
@@ -6639,14 +6846,53 @@ async function parseAnalyticsXlsx(arrayBuffer) {
     //
     // Totals come from `g.totals` which has been recomputed above to exclude
     // hidden (household) subdivisions — so KPIs and the on-screen tree agree.
+    // `directions` — лише 03-НСЗУ. Це те, що бачить «Аналіз відділень»,
+    // KPI, мертвий запас і дні запасу: жодна з цих цифр не зрушується від
+    // появи інших напрямів.
+    //
+    // `other_directions` — решта напрямів у ТІЙ САМІЙ формі. Їх читають лише
+    // «Річна потреба» і «Інфекційний контроль» через _anAllDirections().
+    const otherDirections = [];
+    for (const d of (parsed.dirs || [])) {
+      if (d.groups === parsed.groups) continue; // це НСЗУ, він уже в directions
+      otherDirections.push({
+        name: d.name,
+        totals: d.groups[0] ? d.groups[0].totals : {},
+        groups: d.groups,
+      });
+    }
+    // ── Інтегріті: сума всіх напрямів + виключені = рядок "Разом" ──────
+    // Ловить рівно той клас помилок, через який знімання indent роздувало
+    // аналітику вдвічі: якщо якийсь агрегатний рядок помилково потрапив у
+    // дерево як підрозділ, ця сума розійдеться з підсумком файлу.
+    let integrity = null;
+    if (parsed.stats && parsed.stats.file_total && typeof parsed.stats.file_total.cs === "number") {
+      let parsedCs = 0;
+      for (const g of _allGroups) parsedCs += (g.totals && g.totals.cs) || 0;
+      const exclCs = (parsed.stats.excluded_totals && parsed.stats.excluded_totals.cs) || 0;
+      const fileCs = parsed.stats.file_total.cs;
+      integrity = {
+        file_cs: Math.round(fileCs * 100) / 100,
+        parsed_cs: Math.round(parsedCs * 100) / 100,
+        excluded_cs: Math.round(exclCs * 100) / 100,
+        diff: Math.round((parsedCs + exclCs - fileCs) * 100) / 100,
+        excluded: (parsed.stats.skipped_directions || []).slice(),
+      };
+      if (Math.abs(integrity.diff) > 1) {
+        console.warn("[analytics] розбіжність з підсумком файлу:", integrity);
+      }
+    }
     result.months[key] = {
       period,
+      _integrity: integrity,
       org_totals: parsed.groups[0] ? parsed.groups[0].totals : {},
       directions: [{
         name: parsed.groups[0] ? parsed.groups[0].name : "(Без напряму)",
         totals: parsed.groups[0] ? parsed.groups[0].totals : {},
         groups: parsed.groups, // direction.groups = the same hospital group
+        _dirName: parsed.nszuName || "03-НСЗУ",
       }],
+      other_directions: otherDirections,
     };
   }
 
@@ -6974,6 +7220,16 @@ function renderWarnings() {
   const warnings = [];
   const m = MO();
   if (m) {
+    // Розбіжність суми розібраних напрямів із підсумковим рядком файлу.
+    // Показуємо лише для реального місяця: агрегат за діапазон складається
+    // з кількох файлів і власного "Разом" не має.
+    const integ = m._integrity;
+    if (integ && Math.abs(integ.diff) > 1) {
+      warnings.push(`Сума розібраних напрямів (${fmtMoney(integ.parsed_cs + integ.excluded_cs)}) `
+        + `не збігається з підсумком файлу (${fmtMoney(integ.file_cs)}). `
+        + `Розбіжність: ${fmtMoney(integ.diff)}. Ймовірно, у вивантаженні з'явився новий рівень `
+        + `ієрархії або агрегатний рядок, якого парсер не впізнає.`);
+    }
     // Check for "(Без напряму)" direction — bookkeeping oversight worth flagging
     const noDir = m.directions.find(d => d.name === "(Без напряму)");
     if (noDir) {
