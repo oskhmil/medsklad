@@ -2102,6 +2102,13 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.148 — зворотна перевірка покриття АМП: список препаратів зі списку AWaRe,
+//   яких у звіті немає взагалі. Ловить препарати, заведені під торговою
+//   назвою без кореня МНН — вони не зачіпають жодну з наявних евристик.
+// v.147 — вироби мед. призначення з антимікробним компонентом (кістковий
+//   цемент з гентаміцином, спейсери, імпрегновані губки, шовний матеріал)
+//   більше не рахуються як спожиті АМП. Виключені позиції показуються
+//   окремим рядком під підсумком — не зникають тихо.
 // v.146 — лічильник "залучено за назвою" в АМП став клікабельним: розгортає
 //   перелік позицій з препаратом, категорією, списанням і напрямом, щоб
 //   інфекціоніст міг перевірити розпізнавання перед подачею звіту.
@@ -2120,7 +2127,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.146";
+const APP_VERSION = "v.148";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6303,9 +6310,25 @@ let _abxRows = null;
 let _abxMissedRows = null;
 let _abxScopeLabel = "";
 let _abxNoDict = 0; // позицій-кандидатів без МНН у словнику
+// Позиції, що МІСТЯТЬ антимікробний компонент, але не є спожитим антибіотиком.
+// Дві групи:
+//   1) лабораторна витратка — диски чутливості, картриджі, тест-системи,
+//      середовища, агар: антибіотик там реагент, а не лікування;
+//   2) вироби медичного призначення з антибіотиком у складі — кістковий
+//      цемент, спейсери, імпрегновані губки, шовний матеріал, катетери:
+//      антибіотик тут частина конструкції виробу, у звіт про споживання АМП
+//      він не входить (напр. "Кістковий цемент Palacos R з гентаміцином"
+//      рахувався як гентаміцин Access).
+// Виключені позиції НЕ зникають тихо — вони показуються окремим рядком під
+// підсумком, щоб інфекціоніст бачив, що саме відкинуто, і міг заперечити.
+const ABX_NON_DRUG_RE = /(^|\s)диск|картридж|тест-систем|середовищ|(^|\s)агар|цемент|спейсер|імплант|кістков|(^|\s)губк|шовн|(^|\s)нитк|катетер|стент/i;
+
 let _abxUaCount = 0; // позицій, залучених у звіт за укр. назвою (МНН не збігся)
 let _abxUaRows = null;   // деталізація тих позицій (для розгортання під лічильником)
 let _abxUaOpen = false;  // чи розгорнутий список
+let _abxExclRows = null; // виключені вироби/витратка, що збіглися з АМП
+let _abxExclOpen = false;
+let _abxZeroOpen = false; // чи розгорнутий чекліст "не знайдено в періоді"
 let _abxFrom = null; // ключ місяця "від" (null = найраніший)
 let _abxTo = null;   // ключ місяця "до" (null = найпізніший)
 
@@ -6335,6 +6358,8 @@ function openAbxScreen(fromInfControl) {
   // нестандартне). Це не помилка — інакше вони випали б зі звіту зовсім, —
   // але їх треба мати змогу переглянути очима перед подачею.
   const _abxUa = new Map();
+  // Виключені вироби/витратка, які ІНАКШЕ потрапили б у звіт.
+  const _abxExcl = new Map();
   for (const mk of monthKeys) {
     const month = analyticsData.months[mk];
     for (const dir of _anAllDirections(month)) {
@@ -6352,8 +6377,24 @@ function openAbxScreen(fromInfControl) {
             // Виключаємо лабораторну витратку (диски чутливості, тест-системи,
             // картриджі, середовища): це НЕ спожиті ліки, у звіт про
             // споживання АМП вони не входять, навіть якщо МНН збігається.
-            if (/(^|\s)диск|картридж|тест-систем|середовищ|(^|\s)агар/i.test(name)) continue;
             const mnn = dict[_mnnNormName(name)];
+            // Вироби медичного призначення й лабораторна витратка: якщо позиція
+            // все ж збігається з АМП — фіксуємо її окремо (щоб було видно, що
+            // саме відкинуто), і в жодному разі не пускаємо у звіт.
+            if (ABX_NON_DRUG_RE.test(name)) {
+              const exHit = _ampMatchMnn(mnn) || _ampMatchUa(name);
+              if (exHit) {
+                const ek = name + "||" + exHit.display;
+                let er = _abxExcl.get(ek);
+                if (!er) {
+                  er = { name, display: exHit.display, cat: exHit.cat,
+                         eq: 0, es: 0, dirs: new Set() };
+                  _abxExcl.set(ek, er);
+                }
+                er.eq += eq; er.es += es; er.dirs.add(dirLabel);
+              }
+              continue;
+            }
             let hit = _ampMatchMnn(mnn);
             let matchedByUa = false;
             if (!hit) {
@@ -6421,6 +6462,10 @@ function openAbxScreen(fromInfControl) {
   }
   _abxRows = [...acc.values()].sort((a, b) =>
     (AMP_CAT_ORDER[a.cat] - AMP_CAT_ORDER[b.cat]) || (b.es - a.es));
+  _abxExclRows = [..._abxExcl.values()]
+    .map(r => ({ ...r, dirs: [...r.dirs] }))
+    .sort((a, b) => b.es - a.es);
+  _abxExclOpen = false;
   _abxUaRows = [..._abxUa.values()]
     .map(r => ({ ...r, dirs: [...r.dirs], depts: [...r.depts] }))
     .sort((a, b) => b.es - a.es);
@@ -6468,6 +6513,86 @@ function _abxToggleUa() {
   renderAbxScreen();
 }
 
+// Рядок про виключені вироби медичного призначення / лабораторну витратку.
+// Показуємо лише коли є що показати — у більшості місяців це 1-3 позиції.
+function _abxExclLineHTML() {
+  const rows = _abxExclRows || [];
+  if (!rows.length) return "";
+  const fmtQ2 = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  const shortDir = n => String(n || "").replace(/^\d{1,2}\s*[-–—]\s*/, "").trim() || String(n || "");
+  const head = `<br><span onclick="_abxToggleExcl()" style="color:var(--muted);font-size:10px;cursor:pointer;text-decoration:underline dotted;">`
+    + `🚫 ${rows.length} позицій виключено як вироби мед. призначення / лаб. витратку `
+    + `${_abxExclOpen ? "▲" : "▼"}</span>`;
+  if (!_abxExclOpen) return head;
+  return head + `<div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-top:6px;max-height:220px;overflow-y:auto;">
+    <div style="font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:6px;">
+      Антимікробний компонент у цих позиціях є частиною виробу або реагентом, а не
+      спожитим препаратом, тож у звіт AWaRe вони не входять. Якщо якусь позицію
+      відкинуто помилково — скажіть, і я приберу її з фільтра.
+    </div>
+    ${rows.map(r => `<div style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(37,43,68,.4);line-height:1.45;">
+      <div>${esc(r.name)}</div>
+      <div style="color:var(--muted);font-size:10px;">
+        збігся з <b>${esc(r.display)}</b> (${esc(AMP_CAT_LABEL[r.cat] || r.cat)})
+        · списано ${fmtQ2(r.eq)} (${fmtMoney(r.es)})
+        · ${esc(r.dirs.map(shortDir).join(", "))}
+      </div>
+    </div>`).join("")}
+  </div>`;
+}
+
+function _abxToggleExcl() {
+  _abxExclOpen = !_abxExclOpen;
+  renderAbxScreen();
+}
+
+// ── Зворотна перевірка покриття ────────────────────────────────────────────
+// Три наявні механізми (жовтий блок "схожі на АМП", лічильник "залучено за
+// назвою", список виключених виробів) ловлять лише те, що ХОЧ ЧИМОСЬ схоже на
+// антимікробний препарат. Препарат, заведений у 1С під чистою торговою назвою
+// без кореня МНН ("Сульперазон", "Тієнам", "Зивокс", "Максипім"), не зачіпає
+// жодну евристику і зникає тихо.
+//
+// Єдиний спосіб це помітити — зайти з іншого боку: показати, яких препаратів
+// зі списку AWaRe у звіті НЕМАЄ ЗОВСІМ. Більшість із них справді не було в
+// обігу — але якщо інфекціоніст бачить у списку препарат, який точно
+// застосовувався, значить його назву не розпізнано, і треба шукати причину.
+function _abxZeroListHTML(rows) {
+  const found = new Set((rows || []).map(r => r.display));
+  const byCat = { RESERVE: [], WATCH: [], ACCESS: [] };
+  const seen = new Set();
+  for (const a of AMP_LIST) {
+    if (seen.has(a.display) || found.has(a.display)) continue;
+    seen.add(a.display);
+    if (byCat[a.cat]) byCat[a.cat].push(a.display);
+  }
+  const total = byCat.RESERVE.length + byCat.WATCH.length + byCat.ACCESS.length;
+  if (!total) return "";
+  const head = `<br><span onclick="_abxToggleZero()" style="color:var(--muted);font-size:10px;cursor:pointer;text-decoration:underline dotted;">`
+    + `🔍 ${total} препаратів зі списку AWaRe не знайдено в періоді — перевірка покриття `
+    + `${_abxZeroOpen ? "▲" : "▼"}</span>`;
+  if (!_abxZeroOpen) return head;
+  const block = (cat) => byCat[cat].length
+    ? `<div style="margin-bottom:6px;">
+         <div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:${AMP_CAT_COLOR[cat]};margin-bottom:3px;">${AMP_CAT_LABEL[cat]}</div>
+         <div style="font-size:11px;line-height:1.6;">${byCat[cat].map(esc).join(" · ")}</div>
+       </div>`
+    : "";
+  return head + `<div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-top:6px;max-height:260px;overflow-y:auto;">
+    <div style="font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:8px;">
+      Цих препаратів у звіті немає взагалі. Якщо якийсь із них у цьому періоді
+      точно застосовувався — його назву в 1С не вдалось розпізнати (найчастіше
+      це чиста торгова назва без МНН у файлі залишків). Скажіть який — додам.
+    </div>
+    ${block("RESERVE")}${block("WATCH")}${block("ACCESS")}
+  </div>`;
+}
+
+function _abxToggleZero() {
+  _abxZeroOpen = !_abxZeroOpen;
+  renderAbxScreen();
+}
+
 // Розгортання/згортання: картка препарату (рівень 1) і відділення (рівень 2).
 function _abxToggle(ri) {
   const b = document.getElementById("abx-body-" + ri);
@@ -6500,6 +6625,8 @@ function renderAbxScreen() {
             + `${_abxUaOpen ? "▲" : "▼"}</span>`
             + _abxUaListHTML()
           : "")
+      + _abxExclLineHTML()
+      + _abxZeroListHTML(rows)
     : "";
   // Аудит покриття: позиції, схожі на АМП, але не розпізнані через словник МНН.
   const missed = _abxMissedRows || [];
