@@ -2102,6 +2102,10 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.145 — документні рядки розпізнаються за формою реєстратора
+//   ("<номер> від <дата>"), а не лише за списком префіксів. «Випуск продукції
+//   і виконання робіт» проскакував і давав розбіжність 5 268,58 ₴ у файлах
+//   без indent (експорт через Google Sheets).
 // v.144 — напрями діяльності:
 //   • Аналіз відділень, KPI, мертвий запас, дні запасу — ТІЛЬКИ 03-НСЗУ
 //     (month.directions), цифри не змінились відносно v.143.
@@ -2113,7 +2117,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.144";
+const APP_VERSION = "v.145";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -5145,7 +5149,15 @@ function _refreshPatientsUi() {
 // Output mirrors `parse.py`'s schema (months / names / paths) so the existing
 // renderer works without changes.
 
-const AN_DOC_PREFIX_RE = /^(Списання|Переміщення|Надходження|Коригування|Реалізація|Повернення|Оприбуткування|Інвентариза|Передача матеріалів)/;
+const AN_DOC_PREFIX_RE = /^(Списання|Переміщення|Надходження|Коригування|Реалізація|Повернення|Оприбуткування|Інвентариза|Передача матеріалів|Випуск продукції)/;
+
+// Універсальний розпізнавач документного рядка 1С: номер + " від " + дата.
+// Список префіксів вище неминуче відстає від нових типів документів — саме так
+// «Випуск продукції і виконання робіт» проскочив у v.144 і став "відділенням"
+// з підсумком 5 268,58 ₴. Ця регулярка ловить БУДЬ-ЯКИЙ документ за формою
+// реєстратора, незалежно від назви, тож нові типи більше не потребують правок.
+// Номер буває "0000-012657", "1821", "1881-1" — тому шаблон навмисно широкий.
+const AN_DOC_REGISTRAR_RE = /\s[\d-]{3,}\s+від\s+\d{2}\.\d{2}\.\d{4}/;
 const AN_MONTH_UK_TO_NUM = {
   "Січень":"01","Лютий":"02","Березень":"03","Квітень":"04","Травень":"05","Червень":"06",
   "Липень":"07","Серпень":"08","Вересень":"09","Жовтень":"10","Листопад":"11","Грудень":"12",
@@ -5237,7 +5249,8 @@ function* _anIterRows(sheetXml, sharedStrings, xfToIndent) {
 
 function _anIsDocumentRow(text) {
   if (!text) return false;
-  return AN_DOC_PREFIX_RE.test(String(text).replace(/^\s+/, ""));
+  const s = String(text).replace(/^\s+/, "");
+  return AN_DOC_PREFIX_RE.test(s) || AN_DOC_REGISTRAR_RE.test(s);
 }
 function _anParseDocDate(text) {
   if (!text) return null;
