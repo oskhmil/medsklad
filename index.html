@@ -2102,6 +2102,9 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.146 — лічильник "залучено за назвою" в АМП став клікабельним: розгортає
+//   перелік позицій з препаратом, категорією, списанням і напрямом, щоб
+//   інфекціоніст міг перевірити розпізнавання перед подачею звіту.
 // v.145 — документні рядки розпізнаються за формою реєстратора
 //   ("<номер> від <дата>"), а не лише за списком префіксів. «Випуск продукції
 //   і виконання робіт» проскакував і давав розбіжність 5 268,58 ₴ у файлах
@@ -2117,7 +2120,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.145";
+const APP_VERSION = "v.146";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -6301,6 +6304,8 @@ let _abxMissedRows = null;
 let _abxScopeLabel = "";
 let _abxNoDict = 0; // позицій-кандидатів без МНН у словнику
 let _abxUaCount = 0; // позицій, залучених у звіт за укр. назвою (МНН не збігся)
+let _abxUaRows = null;   // деталізація тих позицій (для розгортання під лічильником)
+let _abxUaOpen = false;  // чи розгорнутий список
 let _abxFrom = null; // ключ місяця "від" (null = найраніший)
 let _abxTo = null;   // ключ місяця "до" (null = найпізніший)
 
@@ -6326,6 +6331,10 @@ function openAbxScreen(fromInfControl) {
   _abxNoDict = 0;
   _abxUaCount = 0;
   const _abxMissed = new Map(); // назви, схожі на АМП, але не зматчені (аудит покриття)
+  // Позиції, залучені у звіт за укр. назвою (МНН у словнику порожнє або
+  // нестандартне). Це не помилка — інакше вони випали б зі звіту зовсім, —
+  // але їх треба мати змогу переглянути очима перед подачею.
+  const _abxUa = new Map();
   for (const mk of monthKeys) {
     const month = analyticsData.months[mk];
     for (const dir of _anAllDirections(month)) {
@@ -6367,7 +6376,18 @@ function openAbxScreen(fromInfControl) {
               }
               continue;
             }
-            if (matchedByUa) _abxUaCount++;
+            if (matchedByUa) {
+              _abxUaCount++;
+              const uk = name + "||" + hit.display;
+              let ur = _abxUa.get(uk);
+              if (!ur) {
+                ur = { name, display: hit.display, cat: hit.cat, mnn: mnn || "",
+                       eq: 0, es: 0, dirs: new Set(), depts: new Set() };
+                _abxUa.set(uk, ur);
+              }
+              ur.eq += eq; ur.es += es;
+              ur.dirs.add(dirLabel); ur.depts.add(deptName);
+            }
             const oq = it.oq || 0, rq = it.rq || 0, cq = it.cq || 0;
             const os = it.os || 0, rs = it.rs || 0, cs = it.cs || 0;
             let row = acc.get(hit.display);
@@ -6401,6 +6421,10 @@ function openAbxScreen(fromInfControl) {
   }
   _abxRows = [...acc.values()].sort((a, b) =>
     (AMP_CAT_ORDER[a.cat] - AMP_CAT_ORDER[b.cat]) || (b.es - a.es));
+  _abxUaRows = [..._abxUa.values()]
+    .map(r => ({ ...r, dirs: [...r.dirs], depts: [...r.depts] }))
+    .sort((a, b) => b.es - a.es);
+  _abxUaOpen = false;
   _abxMissedRows = [..._abxMissed.entries()]
     .map(([name, v]) => ({ name, eq: v.eq, mnn: v.mnn || "" }))
     .sort((a, b) => b.eq - a.eq);
@@ -6411,6 +6435,37 @@ function openAbxScreen(fromInfControl) {
   _abxRenderPeriodControls(allKeys);
   renderAbxScreen();
   show("abx");
+}
+
+// Список позицій, залучених у звіт за українською назвою (без МНН у словнику).
+// Згорнутий за замовчуванням: у нормі це кілька позицій, і місце на екрані
+// цінніше. Розгортається кліком по лічильнику.
+function _abxUaListHTML() {
+  if (!_abxUaOpen || !_abxUaRows || !_abxUaRows.length) return "";
+  const fmtQ2 = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
+  const shortDir = n => String(n || "").replace(/^\d{1,2}\s*[-–—]\s*/, "").trim() || String(n || "");
+  return `<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:9px 12px;margin-top:6px;max-height:260px;overflow-y:auto;">
+    <div style="font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:6px;">
+      Ці позиції розпізнані за українською назвою, бо МНН у словнику порожнє або
+      записане нестандартно. У звіт вони входять — перевірте, що препарат і категорія
+      визначені правильно.
+    </div>
+    ${_abxUaRows.map(r => `<div style="font-size:11px;padding:4px 0;border-bottom:1px solid rgba(37,43,68,.4);line-height:1.45;">
+      <div>${esc(r.name)}</div>
+      <div style="color:var(--muted);font-size:10px;">
+        → <b style="color:${AMP_CAT_COLOR[r.cat] || "var(--muted)"}">${esc(r.display)}</b>
+        · ${esc(AMP_CAT_LABEL[r.cat] || r.cat)}
+        · списано ${fmtQ2(r.eq)} (${fmtMoney(r.es)})
+        · ${esc(r.dirs.map(shortDir).join(", "))}
+        ${r.mnn ? ` · МНН: ${esc(r.mnn)}` : " · МНН відсутнє"}
+      </div>
+    </div>`).join("")}
+  </div>`;
+}
+
+function _abxToggleUa() {
+  _abxUaOpen = !_abxUaOpen;
+  renderAbxScreen();
 }
 
 // Розгортання/згортання: картка препарату (рівень 1) і відділення (рівень 2).
@@ -6439,7 +6494,12 @@ function renderAbxScreen() {
   rows.forEach(r => byCat[r.cat] = (byCat[r.cat]||0) + 1);
   document.getElementById("abx-summary").innerHTML = rows.length
     ? `${rows.length} МНН зі списаннями (Reserve: ${byCat.RESERVE} · Watch: ${byCat.WATCH} · Access: ${byCat.ACCESS}) · разом: <b style="color:var(--text)">${fmtMoney(totEs)}</b>`
-      + (_abxUaCount ? `<br><span style="color:var(--warn);font-size:10px;">ℹ️ ${_abxUaCount} позицій залучено за назвою (МНН у залишках було порожнє/нестандартне)</span>` : "")
+      + (_abxUaCount
+          ? `<br><span onclick="_abxToggleUa()" style="color:var(--warn);font-size:10px;cursor:pointer;text-decoration:underline dotted;">`
+            + `ℹ️ ${_abxUaCount} позицій залучено за назвою (МНН у залишках було порожнє/нестандартне) `
+            + `${_abxUaOpen ? "▲" : "▼"}</span>`
+            + _abxUaListHTML()
+          : "")
     : "";
   // Аудит покриття: позиції, схожі на АМП, але не розпізнані через словник МНН.
   const missed = _abxMissedRows || [];
