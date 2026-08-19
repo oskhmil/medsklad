@@ -2102,6 +2102,11 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.150 — потреба в цілих числах: "До закупівлі" округлюється ВГОРУ до цілої
+//   одиниці, бюджет рахується вже від нього; "Сер./міс" і "Прогноз на рік"
+//   округлюються до цілого. "Списано" і "Залишок" лишаються точними —
+//   це факти з 1С, і дріб у них є діагностичним сигналом (помилка введення),
+//   тож у примітці тепер відповідна позначка.
 // v.149 — розширено класові корені в _looksLikeAmpLatin (vancin, planin,
 //   zolid, mulin, dacin), щоб антимікробні, яких ще нема в AMP_LIST
 //   (дальбаванцин, тедізолід, лефамулін…), потрапляли в аудиторський блок,
@@ -2131,7 +2136,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.149";
+const APP_VERSION = "v.150";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -5959,8 +5964,13 @@ function _demandComputed() {
   const out = [];
   for (const r of (_demandRows || [])) {
     if (q && !r.name.toLowerCase().includes(q)) continue;
-    const toBuy = Math.max(0, r.annual + safety * r.avgMonthly - r.stockQ);
-    out.push({ ...r, toBuy, budget: toBuy * r.avgPrice });
+    const toBuyRaw = Math.max(0, r.annual + safety * r.avgMonthly - r.stockQ);
+    // Округлення ВГОРУ: закупити 0,13 упаковки/ампули неможливо, а недозамовити
+    // гірше, ніж узяти на одиницю більше. Бюджет рахується вже від цілого
+    // числа, інакше сума в кошторисі не збігалася б із кількістю в заявці.
+    const toBuy = Math.ceil(toBuyRaw - 1e-9);
+    out.push({ ...r, toBuyRaw, toBuy, budget: toBuy * r.avgPrice,
+               annualR: Math.round(r.annual), avgMonthlyR: Math.round(r.avgMonthly) });
   }
   out.sort((a, b) => b.budget - a.budget);
   return out;
@@ -6008,8 +6018,8 @@ function renderDemand() {
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--muted);">
           <span>Списано: <b style="color:var(--text)">${fmtQ(r.eq)}</b> за ${r.activeMonths} міс</span>
-          <span>Сер./міс: <b style="color:var(--text)">${fmtQ(r.avgMonthly)}</b></span>
-          <span>Рік: <b style="color:var(--text)">${fmtQ(r.annual)}</b></span>
+          <span>Сер./міс: <b style="color:var(--text)">${fmtQ(r.avgMonthlyR)}</b></span>
+          <span>Рік: <b style="color:var(--text)">${fmtQ(r.annualR)}</b></span>
           <span>Залишок: <b style="color:var(--text)">${fmtQ(r.stockQ)}</b></span>
           <span>До закупівлі: <b style="color:var(--accent)">${fmtQ(r.toBuy)}</b></span>
           <span>Бюджет: <b style="color:var(--green)">${fmtMoney(r.budget)}</b></span>
@@ -6037,9 +6047,11 @@ function exportDemandExcel() {
       const n = nszuOf(r);
       return [
         r.name, +r.eq.toFixed(2), +n.toFixed(2), +(r.eq - n).toFixed(2),
-        r.activeMonths, +r.avgMonthly.toFixed(2), +r.annual.toFixed(2),
-        +r.stockQ.toFixed(2), +r.toBuy.toFixed(2), +r.avgPrice.toFixed(2), +r.budget.toFixed(2),
-        r.spike ? "разовий сплеск — перевірити" : "",
+        r.activeMonths, r.avgMonthlyR, r.annualR,
+        +r.stockQ.toFixed(2), r.toBuy, +r.avgPrice.toFixed(2), +r.budget.toFixed(2),
+        [r.spike ? "разовий сплеск — перевірити" : "",
+         Math.abs(r.eq - Math.round(r.eq)) > 1e-9 ? "дробове списання у джерелі" : ""]
+          .filter(Boolean).join("; "),
       ];
     }),
   ];
