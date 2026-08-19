@@ -2102,6 +2102,10 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.151 — МНН у потребі: колонка в обох аркушах експорту, підрядок у картці,
+//   пошук працює і за МНН (знаходить усі торгові назви однієї речовини).
+//   Словник — той самий medsklad_mnn_map_v1, що й в інфекційному контролі.
+//   Плюс: страховий запас показано в підсумковому рядку і в імені файлу.
 // v.150 — потреба в цілих числах: "До закупівлі" округлюється ВГОРУ до цілої
 //   одиниці, бюджет рахується вже від нього; "Сер./міс" і "Прогноз на рік"
 //   округлюються до цілого. "Списано" і "Залишок" лишаються точними —
@@ -2136,7 +2140,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.150";
+const APP_VERSION = "v.151";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -5905,6 +5909,9 @@ function _demandFinalize(acc, allMonthKeys) {
 
 function openDemandForHospital() {
   if (!analyticsData || !analyticsData.months) { alert("Дані аналітики не завантажені."); return; }
+  // Словник МНН тягнеться з файлу залишків. Якщо його ще не вантажили —
+  // наповнюємо у фоні й перемальовуємо; екран при цьому не блокується.
+  _ensureMnnDict().then(ok => { if (ok) renderDemand(); }).catch(() => {});
   const h = getAnalyticsHospital(currentHospitalId);
   const acc = new Map();
   _demandAccumulate(acc, analyticsData, h ? h.name : "");
@@ -5949,6 +5956,7 @@ async function openDemandForTMO() {
     + " · всі напрями";
   _demandBackTo = "hospitalpicker";
   document.getElementById("demand-search").value = "";
+  _ensureMnnDict().then(ok => { if (ok) renderDemand(); }).catch(() => {});
   renderDemand();
   show("demand");
 }
@@ -5961,15 +5969,21 @@ function _demandComputed() {
   // застосовує страховий запас і пошук до _demandRows
   const safety = parseInt(document.getElementById("demand-safety").value, 10) || 0;
   const q = (document.getElementById("demand-search").value || "").toLowerCase().trim();
+  // Той самий словник Назва→МНН, що живить інфекційний контроль. Читаємо один
+  // раз на перерахунок, а не по рядку: JSON.parse на 3000 позицій відчутний.
+  const mnnDict = _mnnMapLoad();
   const out = [];
   for (const r of (_demandRows || [])) {
-    if (q && !r.name.toLowerCase().includes(q)) continue;
+    const mnn = mnnDict[_mnnNormName(r.name)] || "";
+    // Пошук працює і за назвою, і за МНН — щоб можна було знайти всі
+    // торгові найменування однієї діючої речовини одним запитом.
+    if (q && !r.name.toLowerCase().includes(q) && !mnn.toLowerCase().includes(q)) continue;
     const toBuyRaw = Math.max(0, r.annual + safety * r.avgMonthly - r.stockQ);
     // Округлення ВГОРУ: закупити 0,13 упаковки/ампули неможливо, а недозамовити
     // гірше, ніж узяти на одиницю більше. Бюджет рахується вже від цілого
     // числа, інакше сума в кошторисі не збігалася б із кількістю в заявці.
     const toBuy = Math.ceil(toBuyRaw - 1e-9);
-    out.push({ ...r, toBuyRaw, toBuy, budget: toBuy * r.avgPrice,
+    out.push({ ...r, mnn, toBuyRaw, toBuy, budget: toBuy * r.avgPrice,
                annualR: Math.round(r.annual), avgMonthlyR: Math.round(r.avgMonthly) });
   }
   out.sort((a, b) => b.budget - a.budget);
@@ -6005,17 +6019,22 @@ function renderDemand() {
   document.getElementById("demand-scope").textContent = _demandScopeLabel;
   const rows = _demandComputed();
   const totalBudget = rows.reduce((s, r) => s + r.budget, 0);
+  const safetyLbl = document.getElementById("demand-safety");
+  const withMnn = rows.filter(r => r.mnn).length;
   document.getElementById("demand-summary").innerHTML =
-    `${rows.length} позицій · прогноз бюджету: <b style="color:var(--text)">${fmtMoney(totalBudget)}</b> · сортування за бюджетом`;
+    `${rows.length} позицій · страховий запас: <b style="color:var(--text)">${esc(safetyLbl ? safetyLbl.options[safetyLbl.selectedIndex].text : "—")}</b>`
+    + ` · прогноз бюджету: <b style="color:var(--text)">${fmtMoney(totalBudget)}</b> · сортування за бюджетом`
+    + (rows.length ? `<br><span style="font-size:10px;">МНН визначено для ${withMnn} з ${rows.length} позицій${withMnn < rows.length ? " — решта відсутня у файлі залишків" : ""}</span>` : "");
   const limit = 300;
   const visible = rows.slice(0, limit);
   const fmtQ = v => (Math.round(v * 100) / 100).toLocaleString("uk-UA");
   document.getElementById("demand-list").innerHTML = visible.map(r => `
     <div class="result-card" style="margin-bottom:8px;">
       <div style="padding:10px 14px;">
-        <div style="font-size:13px;font-weight:700;line-height:1.3;margin-bottom:6px;">${esc(r.name)}
+        <div style="font-size:13px;font-weight:700;line-height:1.3;margin-bottom:2px;">${esc(r.name)}
           ${r.spike ? `<span style="font-size:10px;color:var(--warn);font-weight:600;"> ⚠️ разовий сплеск — перевір вручну</span>` : ""}
         </div>
+        <div style="font-size:11px;color:#38bdf8;margin-bottom:6px;">${r.mnn ? esc(r.mnn) : `<span style="color:var(--muted)">МНН не визначено</span>`}</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px 14px;font-size:11px;color:var(--muted);">
           <span>Списано: <b style="color:var(--text)">${fmtQ(r.eq)}</b> за ${r.activeMonths} міс</span>
           <span>Сер./міс: <b style="color:var(--text)">${fmtQ(r.avgMonthlyR)}</b></span>
@@ -6040,13 +6059,13 @@ function exportDemandExcel() {
   const aoa = [
     ["Річна потреба — " + _demandScopeLabel + ` (страховий запас: ${safety} міс)`],
     [],
-    ["Назва", "Списано (к-сть)", "з них НСЗУ", "з них інші напрями",
+    ["Назва", "МНН", "Списано (к-сть)", "з них НСЗУ", "з них інші напрями",
      "Місяців з руху", "Сер./міс", "Прогноз на рік",
      "Залишок (к-сть)", "До закупівлі (к-сть)", "Сер. ціна, грн", "Бюджет, грн", "Примітка"],
     ...rows.map(r => {
       const n = nszuOf(r);
       return [
-        r.name, +r.eq.toFixed(2), +n.toFixed(2), +(r.eq - n).toFixed(2),
+        r.name, r.mnn || "", +r.eq.toFixed(2), +n.toFixed(2), +(r.eq - n).toFixed(2),
         r.activeMonths, r.avgMonthlyR, r.annualR,
         +r.stockQ.toFixed(2), r.toBuy, +r.avgPrice.toFixed(2), +r.budget.toFixed(2),
         [r.spike ? "разовий сплеск — перевірити" : "",
@@ -6056,7 +6075,7 @@ function exportDemandExcel() {
     }),
   ];
   const ws = XLSX.utils.aoa_to_sheet(aoa);
-  ws["!cols"] = [{wch:55},{wch:14},{wch:13},{wch:18},{wch:12},{wch:10},{wch:13},
+  ws["!cols"] = [{wch:55},{wch:28},{wch:14},{wch:13},{wch:18},{wch:12},{wch:10},{wch:13},
                  {wch:13},{wch:17},{wch:12},{wch:14},{wch:26}];
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Потреба");
@@ -6065,21 +6084,21 @@ function exportDemandExcel() {
   const aoa2 = [
     ["Розріз по напрямах діяльності — " + _demandScopeLabel],
     [],
-    ["Назва", "Напрям", "Списано (к-сть)", "Списано, грн", "Залишок (к-сть)", "Частка списання, %"],
+    ["Назва", "МНН", "Напрям", "Списано (к-сть)", "Списано, грн", "Залишок (к-сть)", "Частка списання, %"],
   ];
   for (const r of rows) {
     for (const d of (r.dirs || [])) {
       aoa2.push([
-        r.name, d.name, +d.eq.toFixed(2), +d.es.toFixed(2), +d.stockQ.toFixed(2),
+        r.name, r.mnn || "", d.name, +d.eq.toFixed(2), +d.es.toFixed(2), +d.stockQ.toFixed(2),
         r.eq > 0 ? +((100 * d.eq) / r.eq).toFixed(1) : 0,
       ]);
     }
   }
   const ws2 = XLSX.utils.aoa_to_sheet(aoa2);
-  ws2["!cols"] = [{wch:55},{wch:34},{wch:16},{wch:16},{wch:16},{wch:18}];
+  ws2["!cols"] = [{wch:55},{wch:28},{wch:34},{wch:16},{wch:16},{wch:16},{wch:18}];
   XLSX.utils.book_append_sheet(wb, ws2, "За напрямами");
 
-  XLSX.writeFile(wb, "Річна_потреба.xlsx");
+  XLSX.writeFile(wb, `Річна_потреба_запас-${safety}міс.xlsx`);
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
