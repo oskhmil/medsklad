@@ -2102,6 +2102,11 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.152 — захист від «порожнього» завантаження залишків: перевірка сигнатури
+//   zip (PK) і відмова приймати розбір на нуль рядків. Раніше HTML-сторінка
+//   входу від Google (типово у вбудованих браузерах Viber/Telegram на iOS)
+//   давала 200, розбиралась у нуль позицій, затирала дані й лягала в кеш —
+//   додаток показував суцільні нулі й після перезапуску.
 // v.151 — МНН у потребі: колонка в обох аркушах експорту, підрядок у картці,
 //   пошук працює і за МНН (знаходить усі торгові назви однієї речовини).
 //   Словник — той самий medsklad_mnn_map_v1, що й в інфекційному контролі.
@@ -2140,7 +2145,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.151";
+const APP_VERSION = "v.152";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2636,7 +2641,29 @@ async function fetchAndUpdate(showLoader) {
     const resp = await fetch(GDRIVE_URL, { cache: "no-store" });
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     const buf = await resp.arrayBuffer();
+
+    // ── Санітарна перевірка ДО розбору ──────────────────────────────────
+    // xlsx — це zip, тому будь-який справжній файл починається з "PK".
+    // Якщо прийшов HTML (сторінка входу в Google, згода на куки, заглушка
+    // вбудованого браузера), статус усе одно 200, SheetJS мовчки розбере
+    // це на нуль рядків, і додаток покаже суцільні нулі — саме так виглядав
+    // збій у вбудованому браузері Viber на iOS.
+    const head = new Uint8Array(buf.slice(0, 2));
+    if (head[0] !== 0x50 || head[1] !== 0x4B) {
+      throw new Error("Замість файлу прийшла веб-сторінка. Найчастіше так буває "
+        + "у вбудованому браузері (Viber, Telegram, Instagram). Відкрийте застосунок "
+        + "у Safari або Chrome.");
+    }
+
     const newItems = parseWorkbook(buf);
+
+    // Порожній розбір — це збій, а не «сьогодні нема залишків». Раніше такий
+    // результат затирав робочі дані й лягав у кеш, тож нулі трималися й після
+    // перезапуску. Тепер лишаємо попередні дані недоторканими.
+    if (!newItems.length) {
+      throw new Error("Файл завантажився, але жодного рядка не розібрано. "
+        + "Схоже, змінився формат вивантаження або файл ще не готовий.");
+    }
 
     allItems = newItems;
     _mnnMapMerge(allItems);
