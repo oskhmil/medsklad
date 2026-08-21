@@ -2102,6 +2102,10 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.154 — колонки файлу залишків визначаються за рядком заголовка, а не
+//   жорстко. Файл на Диску змінився з обробленого (назва в M) на сире
+//   вивантаження 1С (назва в H) — парсер шукав M, отримував порожньо і
+//   давав нуль позицій. Тепер обидва розклади читаються однаково.
 // v.153 — лікування вже збереженого порожнього кешу. v.152 закрила ЗАПИС
 //   порожнечі, але не чіпала те, що вже лежало у сховищі: масив на нуль
 //   позицій зі свіжою міткою часу віддавався при кожному відкритті, а фонове
@@ -2150,7 +2154,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.153";
+const APP_VERSION = "v.154";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2789,7 +2793,7 @@ const SKIP_EXACT_HEADERS = ["склад"];
 
 function isDeptHeader(row, col) {
   const a = String(row[col.A] ?? "").trim();
-  const m = String(row[col.M] ?? "").trim();
+  const m = String(row[col.NAME] ?? "").trim();
   if (!a || a.length < 3) return false;
   // Data rows always have col M (drug/item name); dept headers don't
   if (m) return false;
@@ -2854,6 +2858,44 @@ async function _ensureMnnDict() {
   }
 }
 
+// ─── Визначення колонок за рядком заголовка ─────────────────────────────────
+// Шукаємо рядок, у якому перша комірка "Артикул", і зіставляємо підписи
+// колонок з їхніми індексами. Порядок перевірок важливий: "Номенклатура.МНН"
+// мусить перевірятись ДО "Номенклатура", бо перше містить друге як префікс.
+const STOCK_FALLBACK_COLS = {
+  A: 0, MNN: 4, NAME: 12, CHAR: 13, SERIES: 14,
+  EXPIRY: 15, DAYS: 16, UNIT: 17, START: 18, END: 21,
+};
+
+function detectColumns(raw) {
+  for (let i = 0; i < Math.min(raw.length, 60); i++) {
+    const row = raw[i] || [];
+    const first = String(row[0] ?? "").trim().toLowerCase();
+    if (first !== "артикул") continue;
+
+    const col = { A: 0 };
+    for (let c = 1; c < row.length; c++) {
+      const h = String(row[c] ?? "").trim().toLowerCase();
+      if (!h) continue;
+      if (h.startsWith("номенклатура.мнн") || h === "мнн")       col.MNN    = c;
+      else if (h === "номенклатура" || h === "найменування")     col.NAME   = c;
+      else if (h.startsWith("характеристика"))                   col.CHAR   = c;
+      else if (h === "серія")                                    col.SERIES = c;
+      else if (h.includes("придатний до"))                       col.EXPIRY = c;
+      else if (h.startsWith("придатний"))                        col.DAYS   = c;
+      else if (h.startsWith("од."))                              col.UNIT   = c;
+      else if (h.startsWith("початковий"))                       col.START  = c;
+      else if (h.startsWith("кінцевий"))                         col.END    = c;
+    }
+    // Заголовок без назви номенклатури — не той рядок, шукаємо далі.
+    if (col.NAME === undefined) continue;
+    // Незнайдені колонки добираємо зі старої жорсткої розкладки, щоб
+    // урізаний заголовок не позбавляв нас решти полів.
+    return Object.assign({}, STOCK_FALLBACK_COLS, col);
+  }
+  return Object.assign({}, STOCK_FALLBACK_COLS);
+}
+
 function parseWorkbook(arrayBuffer) {
   const wb = XLSX.read(arrayBuffer, { type: "array", cellDates: false });
   const ws = wb.Sheets[wb.SheetNames[0]];
@@ -2861,23 +2903,20 @@ function parseWorkbook(arrayBuffer) {
   const items = [];
   let currentDept = "—";
 
-  // ── Column mapping (cleaned file: name in M instead of H) ──
-  // A(0)  = Артикул ("202" in data rows, dept name in header rows)
-  // E(4)  = Номенклатура.МНН
-  // M(12) = Номенклатура (drug/item name)
-  // N(13) = Характеристика
-  // O(14) = Серія
-  // P(15) = Придатний до (expiry date)
-  // Q(16) = Придатний (днів)
-  // R(17) = Од. вим.
-  // S(18) = Початковий залишок
-  // V(21) = Кінцевий залишок
-  const col = { A:0, E:4, M:12, N:13, O:14, P:15, Q:16, R:17, S:18, V:21 };
+  // ── Розкладка колонок визначається З ЗАГОЛОВКА, а не жорстко ──────────
+  // Файл залишків приходить у двох варіантах:
+  //   • оброблений  — назва в M
+  //   • сире 1С     — назва в H
+  // Жорстка привʼязка до M давала нуль розібраних рядків на сирому файлі:
+  // колонка порожня → кожен рядок відкидається → додаток показує нулі.
+  // Тепер шукаємо рядок заголовка й зіставляємо підписи з індексами, тож
+  // обидва розклади (і будь-яке майбутнє зміщення колонок) працюють.
+  const col = detectColumns(raw);
 
   for (let i = 0; i < raw.length; i++) {
     const row = raw[i];
     const a = String(row[col.A] ?? "").trim().replace(/\s+/g, ' ');
-    const m = String(row[col.M] ?? "").trim().replace(/\s+/g, ' ');
+    const m = String(row[col.NAME] ?? "").trim().replace(/\s+/g, ' ');
 
     // Detect department header rows
     if (isDeptHeader(row, col)) { currentDept = a; continue; }
@@ -2885,19 +2924,19 @@ function parseWorkbook(arrayBuffer) {
     // Skip rows without a drug/item name in column M
     if (!m || m.toLowerCase() === "номенклатура") continue;
 
-    const mnn = String(row[col.E] ?? "").trim() || null;
+    const mnn = String(row[col.MNN] ?? "").trim() || null;
     // Prefer final balance (V), fall back to initial (S)
-    const qtyRaw = (row[col.V] !== "" && row[col.V] != null) ? row[col.V] : row[col.S];
+    const qtyRaw = (row[col.END] !== "" && row[col.END] != null) ? row[col.END] : row[col.START];
     const qty = (qtyRaw !== "" && qtyRaw != null) ? Number(qtyRaw) : null;
 
     items.push({
       dept:   currentDept,
       name:   m,
       mnn:    mnn,
-      series: String(row[col.O] || "").trim() || null,
-      expiry: String(row[col.P] || "").trim() || null,
-      days:   (row[col.Q] !== "" && row[col.Q] != null) ? Number(row[col.Q]) : null,
-      unit:   String(row[col.R] || "").trim() || null,
+      series: String(row[col.SERIES] || "").trim() || null,
+      expiry: String(row[col.EXPIRY] || "").trim() || null,
+      days:   (row[col.DAYS] !== "" && row[col.DAYS] != null) ? Number(row[col.DAYS]) : null,
+      unit:   String(row[col.UNIT] || "").trim() || null,
       qty,
     });
   }
