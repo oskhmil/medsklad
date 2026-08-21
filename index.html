@@ -2102,6 +2102,11 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.153 — лікування вже збереженого порожнього кешу. v.152 закрила ЗАПИС
+//   порожнечі, але не чіпала те, що вже лежало у сховищі: масив на нуль
+//   позицій зі свіжою міткою часу віддавався при кожному відкритті, а фонове
+//   оновлення не запускалось, бо кеш «свіжий». Тепер порожній кеш
+//   відкидається й стирається — наступне відкриття йде по мережу.
 // v.152 — захист від «порожнього» завантаження залишків: перевірка сигнатури
 //   zip (PK) і відмова приймати розбір на нуль рядків. Раніше HTML-сторінка
 //   входу від Google (типово у вбудованих браузерах Viber/Telegram на iOS)
@@ -2145,7 +2150,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.152";
+const APP_VERSION = "v.153";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2556,7 +2561,27 @@ function saveCache(items) {
   }
 }
 
+// Порожній кеш = отруєний кеш. Він міг лишитись від збірок до v.152, які
+// зберігали результат невдалого завантаження (HTML-сторінка входу від Google
+// розбиралась у нуль рядків). Мітка часу в нього свіжа, тому фонове оновлення
+// не спрацьовувало, і додаток показував нулі нескінченно. Тут ми його
+// відкидаємо й стираємо, щоб наступне відкриття пішло по мережу.
+function _cacheOrNull(res) {
+  if (res && Array.isArray(res.items) && res.items.length) return res;
+  if (res) {
+    try {
+      Store.remove(CACHE_KEY_V2);
+      Store.remove(CACHE_TIME_KEY);
+    } catch (_) {}
+  }
+  return null;
+}
+
 function loadCache() {
+  return _cacheOrNull(_loadCacheRaw());
+}
+
+function _loadCacheRaw() {
   try {
     const rawV2 = Store.get(CACHE_KEY_V2);
     const time  = Store.get(CACHE_TIME_KEY);
