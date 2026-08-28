@@ -27,6 +27,9 @@ STATE_PATH = "prozorro_state.json"
 OUT_PATH = "data/procurement.json"
 
 RETENTION_MONTHS = 12
+# Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
+# статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
+PARSER_VERSION = 3
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -583,6 +586,11 @@ def main():
     log("=" * 60)
 
     state = load_state()
+    stale_parser = state.get("parser") != PARSER_VERSION
+    if stale_parser and state.get("tenders"):
+        log(f"  логіка розбору змінилась (v{state.get('parser')} → v{PARSER_VERSION}):"
+            " знімки перечитуються, сповіщення цього разу не шлемо")
+        state["tenders"] = {}
     known = {k: v for k, v in state.get("seen", {}).items() if str(k).startswith("UA-")}
     dropped = len(state.get("seen", {})) - len(known)
     if dropped:
@@ -659,8 +667,8 @@ def main():
             log(f"  CHG  {item['name'][:50]} · {was} → {item['status']}")
 
     first_run = not state.get("tenders")
-    if first_run:
-        log("  перший запуск — сповіщення не шлемо")
+    if first_run or stale_parser:
+        log("  перший запуск або зміна логіки — сповіщення не шлемо")
     else:
         notify(events)
 
@@ -691,7 +699,7 @@ def main():
         f.write(payload)
     log(f"  {OUT_PATH}: {len(payload) // 1024} КБ, змінено: {changed}")
 
-    new_state = {"tenders": {}, "seen": {}}
+    new_state = {"parser": PARSER_VERSION, "tenders": {}, "seen": {}}
     for t in parsed:
         new_state["tenders"][t["id"]] = {
             "dateModified": t.get("dateModified"),
