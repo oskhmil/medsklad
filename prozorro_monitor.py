@@ -366,7 +366,8 @@ def parse_tender(t, meta=None):
     codes = item_codes(t)
     root = ((t.get("classification") or {}).get("id") or "")
 
-    if _diag_left > 0:
+    has_content = bool(t.get("items") or t.get("awards") or t.get("lots"))
+    if _diag_left > 0 and has_content:
         _diag_left -= 1
         aw = t.get("awards") or []
         co = t.get("contracts") or []
@@ -385,8 +386,11 @@ def parse_tender(t, meta=None):
         if its:
             log(f"         item[0] ключі: {sorted(its[0].keys())[:14]}")
             log(f"         item[0] relatedLot={its[0].get('relatedLot')} descr={str(its[0].get('description'))[:40]}")
-        if not aw and not co:
-            log(f"         УСІ ключі: {sorted(t.keys())}")
+        log(f"         ключі тендера: {sorted(t.keys())}")
+        if co:
+            log(f"         contract[0] повністю: {json.dumps(co[0], ensure_ascii=False)[:400]}")
+        elif aw:
+            log(f"         award[0] повністю: {json.dumps(aw[0], ensure_ascii=False)[:400]}")
 
     # пошук уже відфільтрував за buyer, тому розбіжність лише логуємо
     if edr and edr != EDRPOU:
@@ -429,7 +433,7 @@ def parse_tender(t, meta=None):
             contract_end = p
 
     return {
-        "id": t.get("id") or t.get("tenderID"),
+        "id": t.get("tenderID") or t.get("id"),
         "tenderID": t.get("tenderID"),
         "title": (t.get("title") or (meta.get("title") if meta else "") or "").strip(),
         "date": t.get("date") or (meta.get("date") if meta else None),
@@ -590,7 +594,10 @@ def main():
     log("=" * 60)
 
     state = load_state()
-    known = dict(state.get("seen", {}))
+    known = {k: v for k, v in state.get("seen", {}).items() if str(k).startswith("UA-")}
+    dropped = len(state.get("seen", {})) - len(known)
+    if dropped:
+        log(f"  (зі стану відкинуто {dropped} застарілих ключів)")
 
     log("\n[1] Пошук закупівель установи")
     discovered = discover_tender_ids()
@@ -609,6 +616,7 @@ def main():
     fetched = 0
     skipped = 0
     errors = 0
+    stubs = 0
     for tid in sorted(known, key=lambda k: known.get(k) or '', reverse=True):
         newer = discovered.get(tid, "")
         cached = state.get("tenders", {}).get(tid, {}).get("dateModified", "")
@@ -634,12 +642,15 @@ def main():
         if fetched % 25 == 0:
             log(f"  …{fetched} прочитано")
         t = resp.get("data") or resp or {}
+        if len(t) <= 2:
+            stubs += 1
+            continue
         p = parse_tender(t, _search_meta.get(tid))
         if p:
             parsed.append(p)
         time.sleep(0.25)
 
-    log(f"  завантажено: {fetched}, з кешу: {skipped}, помилок: {errors}")
+    log(f"  завантажено: {fetched}, з кешу: {skipped}, помилок: {errors}, порожніх: {stubs}")
     log(f"  підходять під фільтр: {len(parsed)}")
 
     if parsed:
@@ -700,7 +711,8 @@ def main():
         }
         new_state["seen"][t["id"]] = t.get("dateModified", "")
     for tid, dm in known.items():
-        new_state["seen"].setdefault(tid, dm)
+        if str(tid).startswith("UA-"):
+            new_state["seen"].setdefault(tid, dm)
     save_state(new_state)
     log(f"  {STATE_PATH}: {len(new_state['tenders'])} закупівель у стані")
 
