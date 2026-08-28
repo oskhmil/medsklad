@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-28T17:44:58.379472+00:00",
+ "generated": "2026-08-28T17:58:28.532411+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "tenders": [
@@ -12,6 +12,7 @@
    "method": "priceQuotation",
    "status": "active.awarded",
    "contractEnd": null,
+   "amount": 674100,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-008097-a",
    "counts": {
     "signed": 0,
@@ -39,6 +40,7 @@
    "method": "priceQuotation",
    "status": "active.awarded",
    "contractEnd": null,
+   "amount": 360000,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-008675-a",
    "counts": {
     "signed": 0,
@@ -52,7 +54,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 360000,
+     "amount": null,
      "lot": null
     },
     {
@@ -61,7 +63,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 360000,
+     "amount": null,
      "lot": null
     }
    ]
@@ -75,6 +77,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 29160,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-007359-a",
    "counts": {
     "signed": 0,
@@ -102,6 +105,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 46283.7,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-007094-a",
    "counts": {
     "signed": 0,
@@ -156,6 +160,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 39960,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-007955-a",
    "counts": {
     "signed": 0,
@@ -183,6 +188,7 @@
    "method": "priceQuotation",
    "status": "active.awarded",
    "contractEnd": null,
+   "amount": 171311.5,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-009152-a",
    "counts": {
     "signed": 0,
@@ -196,7 +202,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -205,7 +211,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -214,7 +220,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -223,7 +229,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -232,7 +238,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -241,7 +247,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -250,7 +256,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -259,7 +265,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -268,7 +274,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -277,7 +283,7 @@
      "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 171311.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -291,6 +297,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 24396,
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-11-002845-a",
    "counts": {
     "signed": 1,
@@ -318,6 +325,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 930579,
    "url": "https://prozorro.gov.ua/tender/UA-2026-07-14-004982-a",
    "counts": {
     "signed": 1,
@@ -345,6 +353,7 @@
    "method": "reporting",
    "status": "complete",
    "contractEnd": null,
+   "amount": 68103.36,
    "url": "https://prozorro.gov.ua/tender/UA-2026-07-23-001879-a",
    "counts": {
     "signed": 1,
@@ -372,6 +381,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 498780,
    "url": "https://prozorro.gov.ua/tender/UA-2026-07-14-001180-a",
    "counts": {
     "signed": 3,
@@ -385,7 +395,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АМЕТРІН ФК\"",
-     "amount": 498780,
+     "amount": null,
      "lot": null
     },
     {
@@ -394,7 +404,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АМЕТРІН ФК\"",
-     "amount": 498780,
+     "amount": null,
      "lot": null
     },
     {
@@ -403,7 +413,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АМЕТРІН ФК\"",
-     "amount": 498780,
+     "amount": null,
      "lot": null
     }
    ]
@@ -417,6 +427,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 154481.25,
    "url": "https://prozorro.gov.ua/tender/UA-2026-07-14-003362-a",
    "counts": {
     "signed": 1,
@@ -444,6 +455,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 71379.07,
    "url": "https://prozorro.gov.ua/tender/UA-2026-07-14-003897-a",
    "counts": {
     "signed": 0,
@@ -489,6 +501,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 22803.27,
    "url": "https://prozorro.gov.ua/tender/UA-2026-07-14-004427-a",
    "counts": {
     "signed": 0,
@@ -516,6 +529,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 470800,
    "url": "https://prozorro.gov.ua/tender/UA-2026-06-22-005733-a",
    "counts": {
     "signed": 1,
@@ -543,6 +557,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1125105,
    "url": "https://prozorro.gov.ua/tender/UA-2026-06-01-002418-a",
    "counts": {
     "signed": 2,
@@ -556,7 +571,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СОНА-ФАРМ\"",
-     "amount": 1125105,
+     "amount": null,
      "lot": null
     },
     {
@@ -565,7 +580,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СОНА-ФАРМ\"",
-     "amount": 1125105,
+     "amount": null,
      "lot": null
     }
    ]
@@ -579,6 +594,7 @@
    "method": "reporting",
    "status": "complete",
    "contractEnd": null,
+   "amount": 81000,
    "url": "https://prozorro.gov.ua/tender/UA-2026-05-29-008701-a",
    "counts": {
     "signed": 1,
@@ -606,6 +622,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 3413995.5,
    "url": "https://prozorro.gov.ua/tender/UA-2026-05-08-010412-a",
    "counts": {
     "signed": 8,
@@ -619,7 +636,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -628,7 +645,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -637,7 +654,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -646,7 +663,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -655,7 +672,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -664,7 +681,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -673,7 +690,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -682,7 +699,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 3413995.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -696,6 +713,7 @@
    "method": "reporting",
    "status": "complete",
    "contractEnd": null,
+   "amount": 38500,
    "url": "https://prozorro.gov.ua/tender/UA-2026-05-21-001217-a",
    "counts": {
     "signed": 1,
@@ -723,6 +741,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1219586,
    "url": "https://prozorro.gov.ua/tender/UA-2026-05-05-009025-a",
    "counts": {
     "signed": 5,
@@ -736,7 +755,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 1219586,
+     "amount": null,
      "lot": null
     },
     {
@@ -745,7 +764,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 1219586,
+     "amount": null,
      "lot": null
     },
     {
@@ -754,7 +773,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 1219586,
+     "amount": null,
      "lot": null
     },
     {
@@ -763,7 +782,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 1219586,
+     "amount": null,
      "lot": null
     },
     {
@@ -772,7 +791,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 1219586,
+     "amount": null,
      "lot": null
     }
    ]
@@ -786,6 +805,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 33705,
    "url": "https://prozorro.gov.ua/tender/UA-2026-05-06-001645-a",
    "counts": {
     "signed": 2,
@@ -799,7 +819,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 33705,
+     "amount": null,
      "lot": null
     },
     {
@@ -808,7 +828,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 33705,
+     "amount": null,
      "lot": null
     }
    ]
@@ -822,6 +842,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1257709.7,
    "url": "https://prozorro.gov.ua/tender/UA-2026-04-30-011428-a",
    "counts": {
     "signed": 14,
@@ -835,7 +856,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -844,7 +865,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -853,7 +874,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -862,7 +883,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -871,7 +892,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -880,7 +901,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -889,7 +910,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -898,7 +919,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -907,7 +928,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -916,7 +937,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -925,7 +946,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -934,7 +955,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -943,7 +964,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     },
     {
@@ -952,7 +973,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1257709.7,
+     "amount": null,
      "lot": null
     }
    ]
@@ -966,6 +987,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 170489.52,
    "url": "https://prozorro.gov.ua/tender/UA-2026-04-21-005669-a",
    "counts": {
     "signed": 1,
@@ -993,6 +1015,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 24227,
    "url": "https://prozorro.gov.ua/tender/UA-2026-04-30-011359-a",
    "counts": {
     "signed": 0,
@@ -1029,6 +1052,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 800,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-19-005614-a",
    "counts": {
     "signed": 1,
@@ -1056,6 +1080,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 206246.78,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-31-007081-a",
    "counts": {
     "signed": 6,
@@ -1069,7 +1094,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 206246.78,
+     "amount": null,
      "lot": null
     },
     {
@@ -1078,7 +1103,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 206246.78,
+     "amount": null,
      "lot": null
     },
     {
@@ -1087,7 +1112,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 206246.78,
+     "amount": null,
      "lot": null
     },
     {
@@ -1096,7 +1121,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 206246.78,
+     "amount": null,
      "lot": null
     },
     {
@@ -1105,7 +1130,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 206246.78,
+     "amount": null,
      "lot": null
     },
     {
@@ -1114,7 +1139,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 206246.78,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1128,6 +1153,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 49904.8,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-31-007479-a",
    "counts": {
     "signed": 1,
@@ -1155,6 +1181,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 4963195,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-16-009682-a",
    "counts": {
     "signed": 12,
@@ -1168,7 +1195,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1177,7 +1204,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1186,7 +1213,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1195,7 +1222,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1204,7 +1231,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1213,7 +1240,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1222,7 +1249,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1231,7 +1258,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1240,7 +1267,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1249,7 +1276,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1258,7 +1285,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     },
     {
@@ -1267,7 +1294,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 4963195,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1281,6 +1308,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 3277556.2,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-06-005009-a",
    "counts": {
     "signed": 23,
@@ -1294,7 +1322,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1303,7 +1331,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1312,7 +1340,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1321,7 +1349,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1330,7 +1358,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1339,7 +1367,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1348,7 +1376,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1357,7 +1385,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1366,7 +1394,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1375,7 +1403,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1384,7 +1412,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1393,7 +1421,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1402,7 +1430,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1411,7 +1439,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1420,7 +1448,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1429,7 +1457,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1438,7 +1466,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1447,7 +1475,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1456,7 +1484,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1465,7 +1493,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1474,7 +1502,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1483,7 +1511,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -1492,7 +1520,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 3277556.2,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1506,6 +1534,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 303195.2,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-06-003054-a",
    "counts": {
     "signed": 1,
@@ -1533,6 +1562,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 42158,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-06-000578-a",
    "counts": {
     "signed": 1,
@@ -1560,6 +1590,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 2247,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-06-003799-a",
    "counts": {
     "signed": 2,
@@ -1573,7 +1604,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 2247,
+     "amount": null,
      "lot": null
     },
     {
@@ -1582,7 +1613,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 2247,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1596,6 +1627,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 12082144.68,
    "url": "https://prozorro.gov.ua/tender/UA-2026-03-02-013161-a",
    "counts": {
     "signed": 6,
@@ -1609,7 +1641,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 12082144.68,
+     "amount": null,
      "lot": null
     },
     {
@@ -1618,7 +1650,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 12082144.68,
+     "amount": null,
      "lot": null
     },
     {
@@ -1627,7 +1659,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 12082144.68,
+     "amount": null,
      "lot": null
     },
     {
@@ -1636,7 +1668,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 12082144.68,
+     "amount": null,
      "lot": null
     },
     {
@@ -1645,7 +1677,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 12082144.68,
+     "amount": null,
      "lot": null
     },
     {
@@ -1654,7 +1686,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 12082144.68,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1668,6 +1700,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1076148.03,
    "url": "https://prozorro.gov.ua/tender/UA-2026-02-27-000798-a",
    "counts": {
     "signed": 2,
@@ -1681,7 +1714,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 1076148.03,
+     "amount": null,
      "lot": null
     },
     {
@@ -1690,7 +1723,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 1076148.03,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1704,6 +1737,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1145970,
    "url": "https://prozorro.gov.ua/tender/UA-2026-02-27-001162-a",
    "counts": {
     "signed": 1,
@@ -1731,6 +1765,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1077918,
    "url": "https://prozorro.gov.ua/tender/UA-2026-02-20-003008-a",
    "counts": {
     "signed": 1,
@@ -1758,6 +1793,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 17234915.77,
    "url": "https://prozorro.gov.ua/tender/UA-2026-02-13-011270-a",
    "counts": {
     "signed": 1,
@@ -1785,6 +1821,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 614227.08,
    "url": "https://prozorro.gov.ua/tender/UA-2026-01-20-001705-a",
    "counts": {
     "signed": 6,
@@ -1798,7 +1835,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 614227.08,
+     "amount": null,
      "lot": null
     },
     {
@@ -1807,7 +1844,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 614227.08,
+     "amount": null,
      "lot": null
     },
     {
@@ -1816,7 +1853,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 614227.08,
+     "amount": null,
      "lot": null
     },
     {
@@ -1825,7 +1862,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 614227.08,
+     "amount": null,
      "lot": null
     },
     {
@@ -1834,7 +1871,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 614227.08,
+     "amount": null,
      "lot": null
     },
     {
@@ -1843,7 +1880,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 614227.08,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1857,6 +1894,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 302703,
    "url": "https://prozorro.gov.ua/tender/UA-2026-01-21-017220-a",
    "counts": {
     "signed": 7,
@@ -1870,7 +1908,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     },
     {
@@ -1879,7 +1917,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     },
     {
@@ -1888,7 +1926,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     },
     {
@@ -1897,7 +1935,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     },
     {
@@ -1906,7 +1944,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     },
     {
@@ -1915,7 +1953,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     },
     {
@@ -1924,7 +1962,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ВІОЛА-МЕДФАРМ\"",
-     "amount": 302703,
+     "amount": null,
      "lot": null
     }
    ]
@@ -1938,6 +1976,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 75402.9,
    "url": "https://prozorro.gov.ua/tender/UA-2026-01-20-001368-a",
    "counts": {
     "signed": 1,
@@ -1965,6 +2004,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 454322,
    "url": "https://prozorro.gov.ua/tender/UA-2026-01-13-000161-a",
    "counts": {
     "signed": 1,
@@ -1992,6 +2032,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 216675,
    "url": "https://prozorro.gov.ua/tender/UA-2026-01-12-009291-a",
    "counts": {
     "signed": 1,
@@ -2019,6 +2060,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 11210657.46,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-22-005557-a",
    "counts": {
     "signed": 35,
@@ -2032,7 +2074,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2041,7 +2083,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2050,7 +2092,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2059,7 +2101,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2068,7 +2110,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2077,7 +2119,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2086,7 +2128,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2095,7 +2137,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2104,7 +2146,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2113,7 +2155,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2122,7 +2164,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2131,7 +2173,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2140,7 +2182,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2149,7 +2191,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2158,7 +2200,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2167,7 +2209,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2176,7 +2218,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2185,7 +2227,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2194,7 +2236,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2203,7 +2245,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2212,7 +2254,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2221,7 +2263,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2230,7 +2272,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2239,7 +2281,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2248,7 +2290,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2257,7 +2299,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2266,7 +2308,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2275,7 +2317,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2284,7 +2326,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2293,7 +2335,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2302,7 +2344,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2311,7 +2353,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2320,7 +2362,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2329,7 +2371,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -2338,7 +2380,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 11210657.46,
+     "amount": null,
      "lot": null
     }
    ]
@@ -2352,6 +2394,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 56904.5,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-17-019684-a",
    "counts": {
     "signed": 3,
@@ -2365,7 +2408,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 56904.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2374,7 +2417,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 56904.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2383,7 +2426,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 56904.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -2397,6 +2440,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 15237491.22,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-10-022370-a",
    "counts": {
     "signed": 24,
@@ -2410,7 +2454,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2419,7 +2463,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2428,7 +2472,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2437,7 +2481,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2446,7 +2490,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2455,7 +2499,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2464,7 +2508,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2473,7 +2517,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2482,7 +2526,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2491,7 +2535,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2500,7 +2544,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2509,7 +2553,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2518,7 +2562,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2527,7 +2571,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2536,7 +2580,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2545,7 +2589,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2554,7 +2598,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2563,7 +2607,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2572,7 +2616,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2581,7 +2625,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2590,7 +2634,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2599,7 +2643,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2608,7 +2652,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -2617,7 +2661,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 15237491.22,
+     "amount": null,
      "lot": null
     }
    ]
@@ -2631,6 +2675,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 95472.89,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-10-022174-a",
    "counts": {
     "signed": 2,
@@ -2644,7 +2689,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 95472.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2653,7 +2698,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 95472.89,
+     "amount": null,
      "lot": null
     }
    ]
@@ -2667,6 +2712,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 370587,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-10-022520-a",
    "counts": {
     "signed": 1,
@@ -2694,6 +2740,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 8316828.89,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-011530-a",
    "counts": {
     "signed": 15,
@@ -2707,7 +2754,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2716,7 +2763,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2725,7 +2772,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2734,7 +2781,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2743,7 +2790,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2752,7 +2799,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2761,7 +2808,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2770,7 +2817,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2779,7 +2826,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2788,7 +2835,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2797,7 +2844,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2806,7 +2853,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2815,7 +2862,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2824,7 +2871,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     },
     {
@@ -2833,7 +2880,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 8316828.89,
+     "amount": null,
      "lot": null
     }
    ]
@@ -2847,6 +2894,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 10983687.5,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-10-022096-a",
    "counts": {
     "signed": 39,
@@ -2860,7 +2908,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2869,7 +2917,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2878,7 +2926,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2887,7 +2935,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2896,7 +2944,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2905,7 +2953,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2914,7 +2962,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2923,7 +2971,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2932,7 +2980,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2941,7 +2989,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2950,7 +2998,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2959,7 +3007,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2968,7 +3016,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2977,7 +3025,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2986,7 +3034,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -2995,7 +3043,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3004,7 +3052,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3013,7 +3061,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3022,7 +3070,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3031,7 +3079,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3040,7 +3088,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3049,7 +3097,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3058,7 +3106,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3067,7 +3115,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3076,7 +3124,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3085,7 +3133,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3094,7 +3142,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3103,7 +3151,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3112,7 +3160,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3121,7 +3169,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3130,7 +3178,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3139,7 +3187,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3148,7 +3196,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3157,7 +3205,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3166,7 +3214,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3175,7 +3223,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3184,7 +3232,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3193,7 +3241,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -3202,7 +3250,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СМ-ФАРМ\"",
-     "amount": 10983687.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -3216,6 +3264,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 11608456.75,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-009299-a",
    "counts": {
     "signed": 13,
@@ -3229,7 +3278,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3238,7 +3287,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3247,7 +3296,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3256,7 +3305,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3265,7 +3314,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3274,7 +3323,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3283,7 +3332,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3292,7 +3341,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3301,7 +3350,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3310,7 +3359,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3319,7 +3368,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3328,7 +3377,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -3337,7 +3386,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 11608456.75,
+     "amount": null,
      "lot": null
     }
    ]
@@ -3351,6 +3400,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 4449466.6,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-007823-a",
    "counts": {
     "signed": 5,
@@ -3364,7 +3414,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 4449466.6,
+     "amount": null,
      "lot": null
     },
     {
@@ -3373,7 +3423,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 4449466.6,
+     "amount": null,
      "lot": null
     },
     {
@@ -3382,7 +3432,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 4449466.6,
+     "amount": null,
      "lot": null
     },
     {
@@ -3391,7 +3441,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 4449466.6,
+     "amount": null,
      "lot": null
     },
     {
@@ -3400,7 +3450,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 4449466.6,
+     "amount": null,
      "lot": null
     }
    ]
@@ -3414,6 +3464,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 154481.25,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-007149-a",
    "counts": {
     "signed": 1,
@@ -3441,6 +3492,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1819,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-005314-a",
    "counts": {
     "signed": 1,
@@ -3468,6 +3520,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 24733863.2,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-03-004554-a",
    "counts": {
     "signed": 21,
@@ -3481,7 +3534,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3490,7 +3543,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3499,7 +3552,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3508,7 +3561,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3517,7 +3570,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3526,7 +3579,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3535,7 +3588,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3544,7 +3597,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3553,7 +3606,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3562,7 +3615,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3571,7 +3624,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3580,7 +3633,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3589,7 +3642,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3598,7 +3651,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3607,7 +3660,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3616,7 +3669,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3625,7 +3678,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3634,7 +3687,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3643,7 +3696,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3652,7 +3705,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     },
     {
@@ -3661,7 +3714,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 24733863.2,
+     "amount": null,
      "lot": null
     }
    ]
@@ -3675,6 +3728,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 609900,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-009575-a",
    "counts": {
     "signed": 1,
@@ -3702,6 +3756,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 7003280.54,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-03-006416-a",
    "counts": {
     "signed": 4,
@@ -3715,7 +3770,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"МЕДІТЕК ФАРМ\"",
-     "amount": 7003280.54,
+     "amount": null,
      "lot": null
     },
     {
@@ -3724,7 +3779,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"МЕДІТЕК ФАРМ\"",
-     "amount": 7003280.54,
+     "amount": null,
      "lot": null
     },
     {
@@ -3733,7 +3788,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"МЕДІТЕК ФАРМ\"",
-     "amount": 7003280.54,
+     "amount": null,
      "lot": null
     },
     {
@@ -3742,7 +3797,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"МЕДІТЕК ФАРМ\"",
-     "amount": 7003280.54,
+     "amount": null,
      "lot": null
     }
    ]
@@ -3756,6 +3811,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 446832,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-04-012603-a",
    "counts": {
     "signed": 1,
@@ -3783,6 +3839,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 13957041.48,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-05-006031-a",
    "counts": {
     "signed": 20,
@@ -3796,7 +3853,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3805,7 +3862,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3814,7 +3871,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3823,7 +3880,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3832,7 +3889,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3841,7 +3898,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3850,7 +3907,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3859,7 +3916,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3868,7 +3925,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3877,7 +3934,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3886,7 +3943,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3895,7 +3952,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3904,7 +3961,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3913,7 +3970,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3922,7 +3979,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3931,7 +3988,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3940,7 +3997,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3949,7 +4006,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3958,7 +4015,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     },
     {
@@ -3967,7 +4024,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 13957041.48,
+     "amount": null,
      "lot": null
     }
    ]
@@ -3981,6 +4038,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 20264756.75,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-02-003550-a",
    "counts": {
     "signed": 6,
@@ -3994,7 +4052,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 20264756.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -4003,7 +4061,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 20264756.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -4012,7 +4070,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 20264756.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -4021,7 +4079,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 20264756.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -4030,7 +4088,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 20264756.75,
+     "amount": null,
      "lot": null
     },
     {
@@ -4039,7 +4097,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 20264756.75,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4053,6 +4111,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 8418032.4,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-02-007769-a",
    "counts": {
     "signed": 2,
@@ -4066,7 +4125,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8418032.4,
+     "amount": null,
      "lot": null
     },
     {
@@ -4075,7 +4134,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8418032.4,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4089,6 +4148,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 2625606.52,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-01-016829-a",
    "counts": {
     "signed": 1,
@@ -4116,6 +4176,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 8276552.72,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-03-002575-a",
    "counts": {
     "signed": 14,
@@ -4129,7 +4190,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4138,7 +4199,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4147,7 +4208,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4156,7 +4217,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4165,7 +4226,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4174,7 +4235,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4183,7 +4244,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4192,7 +4253,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4201,7 +4262,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4210,7 +4271,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4219,7 +4280,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4228,7 +4289,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4237,7 +4298,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     },
     {
@@ -4246,7 +4307,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 8276552.72,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4260,6 +4321,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1555792.84,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-01-002901-a",
    "counts": {
     "signed": 3,
@@ -4273,7 +4335,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Комунальне підприємство Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": 1555792.84,
+     "amount": null,
      "lot": null
     },
     {
@@ -4282,7 +4344,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Комунальне підприємство Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": 1555792.84,
+     "amount": null,
      "lot": null
     },
     {
@@ -4291,7 +4353,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Комунальне підприємство Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": 1555792.84,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4305,6 +4367,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 15710,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-10-022487-a",
    "counts": {
     "signed": 0,
@@ -4332,6 +4395,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 2494,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-10-021880-a",
    "counts": {
     "signed": 0,
@@ -4359,6 +4423,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 15413061.1,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-04-004427-a",
    "counts": {
     "signed": 12,
@@ -4372,7 +4437,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4381,7 +4446,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4390,7 +4455,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4399,7 +4464,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4408,7 +4473,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4417,7 +4482,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4426,7 +4491,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4435,7 +4500,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4444,7 +4509,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4453,7 +4518,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4462,7 +4527,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -4471,7 +4536,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 15413061.1,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4485,6 +4550,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 25070367.5,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-03-020434-a",
    "counts": {
     "signed": 17,
@@ -4498,7 +4564,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4507,7 +4573,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4516,7 +4582,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4525,7 +4591,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4534,7 +4600,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4543,7 +4609,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4552,7 +4618,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4561,7 +4627,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4570,7 +4636,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4579,7 +4645,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4588,7 +4654,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4597,7 +4663,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4606,7 +4672,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4615,7 +4681,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4624,7 +4690,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4633,7 +4699,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4642,7 +4708,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 25070367.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4656,6 +4722,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 13696,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-02-008109-a",
    "counts": {
     "signed": 1,
@@ -4683,6 +4750,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 13499055.8,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-28-006274-a",
    "counts": {
     "signed": 6,
@@ -4696,7 +4764,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 13499055.8,
+     "amount": null,
      "lot": null
     },
     {
@@ -4705,7 +4773,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 13499055.8,
+     "amount": null,
      "lot": null
     },
     {
@@ -4714,7 +4782,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 13499055.8,
+     "amount": null,
      "lot": null
     },
     {
@@ -4723,7 +4791,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 13499055.8,
+     "amount": null,
      "lot": null
     },
     {
@@ -4732,7 +4800,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 13499055.8,
+     "amount": null,
      "lot": null
     },
     {
@@ -4741,7 +4809,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 13499055.8,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4755,6 +4823,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 325012.5,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-28-002329-a",
    "counts": {
     "signed": 2,
@@ -4768,7 +4837,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 325012.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -4777,7 +4846,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 325012.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -4791,6 +4860,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 56916.43,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-08-016516-a",
    "counts": {
     "signed": 0,
@@ -4836,6 +4906,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 40163.52,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-28-007465-a",
    "counts": {
     "signed": 1,
@@ -4863,6 +4934,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 14267192.43,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-28-007304-a",
    "counts": {
     "signed": 26,
@@ -4876,7 +4948,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4885,7 +4957,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4894,7 +4966,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4903,7 +4975,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4912,7 +4984,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4921,7 +4993,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4930,7 +5002,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4939,7 +5011,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4948,7 +5020,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4957,7 +5029,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4966,7 +5038,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4975,7 +5047,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4984,7 +5056,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -4993,7 +5065,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5002,7 +5074,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5011,7 +5083,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5020,7 +5092,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5029,7 +5101,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5038,7 +5110,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5047,7 +5119,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5056,7 +5128,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5065,7 +5137,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5074,7 +5146,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5083,7 +5155,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5092,7 +5164,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     },
     {
@@ -5101,7 +5173,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 14267192.43,
+     "amount": null,
      "lot": null
     }
    ]
@@ -5115,6 +5187,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 16040509.1,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-20-008348-a",
    "counts": {
     "signed": 5,
@@ -5128,7 +5201,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 16040509.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -5137,7 +5210,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 16040509.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -5146,7 +5219,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 16040509.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -5155,7 +5228,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 16040509.1,
+     "amount": null,
      "lot": null
     },
     {
@@ -5164,7 +5237,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 16040509.1,
+     "amount": null,
      "lot": null
     }
    ]
@@ -5178,6 +5251,7 @@
    "method": "priceQuotation",
    "status": "cancelled",
    "contractEnd": null,
+   "amount": 13962515.12,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-04-011915-a",
    "counts": {
     "signed": 0,
@@ -5376,6 +5450,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 12878295.3,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-20-017184-a",
    "counts": {
     "signed": 1,
@@ -5403,6 +5478,7 @@
    "method": "priceQuotation",
    "status": "cancelled",
    "contractEnd": null,
+   "amount": 8934500.49,
    "url": "https://prozorro.gov.ua/tender/UA-2025-12-02-002851-a",
    "counts": {
     "signed": 0,
@@ -5547,6 +5623,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 1556488,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-20-011267-a",
    "counts": {
     "signed": 0,
@@ -5592,6 +5669,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 2628624,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-24-003568-a",
    "counts": {
     "signed": 0,
@@ -5619,6 +5697,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 7036264.41,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-24-002192-a",
    "counts": {
     "signed": 0,
@@ -5673,6 +5752,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 567100,
    "url": "https://prozorro.gov.ua/tender/UA-2025-11-05-001961-a",
    "counts": {
     "signed": 1,
@@ -5700,6 +5780,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 92676,
    "url": "https://prozorro.gov.ua/tender/UA-2025-10-24-012998-a",
    "counts": {
     "signed": 1,
@@ -5727,6 +5808,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 5107801.22,
    "url": "https://prozorro.gov.ua/tender/UA-2025-10-03-005775-a",
    "counts": {
     "signed": 5,
@@ -5740,7 +5822,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 5107801.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -5749,7 +5831,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 5107801.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -5758,7 +5840,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 5107801.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -5767,7 +5849,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 5107801.22,
+     "amount": null,
      "lot": null
     },
     {
@@ -5776,7 +5858,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 5107801.22,
+     "amount": null,
      "lot": null
     }
    ]
@@ -5790,6 +5872,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 496480,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-25-001033-a",
    "counts": {
     "signed": 1,
@@ -5817,6 +5900,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 5650,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-25-004353-a",
    "counts": {
     "signed": 1,
@@ -5844,6 +5928,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 892828.46,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-19-011967-a",
    "counts": {
     "signed": 25,
@@ -5857,7 +5942,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5866,7 +5951,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5875,7 +5960,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5884,7 +5969,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5893,7 +5978,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5902,7 +5987,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5911,7 +5996,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5920,7 +6005,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5929,7 +6014,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5938,7 +6023,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5947,7 +6032,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5956,7 +6041,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5965,7 +6050,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5974,7 +6059,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5983,7 +6068,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -5992,7 +6077,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6001,7 +6086,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6010,7 +6095,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6019,7 +6104,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6028,7 +6113,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6037,7 +6122,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6046,7 +6131,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6055,7 +6140,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6064,7 +6149,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     },
     {
@@ -6073,7 +6158,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 892828.46,
+     "amount": null,
      "lot": null
     }
    ]
@@ -6087,6 +6172,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 392240.6,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-08-004367-a",
    "counts": {
     "signed": 3,
@@ -6100,7 +6186,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ДІАЛІЗ МЕДИК\"",
-     "amount": 392240.6,
+     "amount": null,
      "lot": null
     },
     {
@@ -6109,7 +6195,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ДІАЛІЗ МЕДИК\"",
-     "amount": 392240.6,
+     "amount": null,
      "lot": null
     },
     {
@@ -6118,7 +6204,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ДІАЛІЗ МЕДИК\"",
-     "amount": 392240.6,
+     "amount": null,
      "lot": null
     }
    ]
@@ -6132,6 +6218,7 @@
    "method": "priceQuotation",
    "status": "unsuccessful",
    "contractEnd": null,
+   "amount": 5657,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-19-011908-a",
    "counts": {
     "signed": 0,
@@ -6159,6 +6246,7 @@
    "method": "priceQuotation",
    "status": "cancelled",
    "contractEnd": null,
+   "amount": 902646,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-17-009208-a",
    "counts": {
     "signed": 0,
@@ -6402,6 +6490,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1558508.5,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-08-009441-a",
    "counts": {
     "signed": 7,
@@ -6415,7 +6504,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -6424,7 +6513,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -6433,7 +6522,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -6442,7 +6531,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -6451,7 +6540,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -6460,7 +6549,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     },
     {
@@ -6469,7 +6558,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": 1558508.5,
+     "amount": null,
      "lot": null
     }
    ]
@@ -6483,6 +6572,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 3725740,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-05-001691-a",
    "counts": {
     "signed": 3,
@@ -6496,7 +6586,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 3725740,
+     "amount": null,
      "lot": null
     },
     {
@@ -6505,7 +6595,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 3725740,
+     "amount": null,
      "lot": null
     },
     {
@@ -6514,7 +6604,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 3725740,
+     "amount": null,
      "lot": null
     }
    ]
@@ -6528,6 +6618,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 1573483.15,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-05-007534-a",
    "counts": {
     "signed": 10,
@@ -6541,7 +6632,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6550,7 +6641,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6559,7 +6650,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6568,7 +6659,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6577,7 +6668,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6586,7 +6677,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6595,7 +6686,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6604,7 +6695,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6613,7 +6704,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     },
     {
@@ -6622,7 +6713,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 1573483.15,
+     "amount": null,
      "lot": null
     }
    ]
@@ -6636,6 +6727,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 182405.04,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-05-006265-a",
    "counts": {
     "signed": 2,
@@ -6649,7 +6741,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 182405.04,
+     "amount": null,
      "lot": null
     },
     {
@@ -6658,7 +6750,7 @@
      "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 182405.04,
+     "amount": null,
      "lot": null
     }
    ]
@@ -6672,6 +6764,7 @@
    "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
+   "amount": 419440,
    "url": "https://prozorro.gov.ua/tender/UA-2025-09-08-003964-a",
    "counts": {
     "signed": 1,
