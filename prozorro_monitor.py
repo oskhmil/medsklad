@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 9
+PARSER_VERSION = 10
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -248,16 +248,28 @@ def discover_tender_ids():
         group = "Матеріали" if code.startswith("3314") else "Ліки"
         page = 1
         got = 0
+        retries = 0
         while page <= 60:
             try:
                 status, payload, raw = post_json(
                     SEARCH_URL, {BUYER_FIELD: [EDRPOU], "cpv": [code], "page": page})
             except Exception as ex:
                 log(f"    {code} стор.{page}: {ex}")
-                break
+                time.sleep(5)
+                retries += 1
+                if retries > 3:
+                    break
+                continue
             rows = extract_rows(payload) or []
             if not rows:
+                # Порожня сторінка при недобраних записах — це майже завжди
+                # придушення запитів порталом, а не кінець даних. Чекаємо і пробуємо ще.
+                if got < expected and retries < 4:
+                    retries += 1
+                    time.sleep(4 * retries)
+                    continue
                 break
+            retries = 0
             for r in rows:
                 d = record_date(r)
                 got += 1
@@ -280,8 +292,10 @@ def discover_tender_ids():
                 elif group == "Ліки" and _search_meta.get(tid, {}).get("group") == "Матеріали":
                     _search_meta[tid]["group"] = "Ліки"
             page += 1
-            time.sleep(0.15)
-        log(f"    {code} ({group}): переглянуто {got}, очікувалось {expected}")
+            time.sleep(0.4)
+        flag = "" if got >= expected else "  ← НЕДОБІР"
+        log(f"    {code} ({group}): переглянуто {got}, очікувалось {expected}{flag}")
+        time.sleep(1.0)
 
     groups = {}
     for m in _search_meta.values():
@@ -465,7 +479,8 @@ def parse_tender(t, meta=None):
     return {
         "id": t.get("tenderID") or t.get("id"),
         "tenderID": t.get("tenderID"),
-        "title": (t.get("title") or (meta.get("title") if meta else "") or "").strip(),
+        "title": ((t.get("title") or (meta.get("title") if meta else "")
+                   or (items[0]["name"] if items else "")) or "").strip(),
         "date": t.get("date") or (meta.get("date") if meta else None),
         "dateModified": t.get("dateModified") or (meta.get("date") if meta else None),
         "method": t.get("procurementMethodType"),
@@ -709,7 +724,12 @@ def main():
         if len(t) <= 2:
             stubs += 1
             continue
-        p = parse_tender(t, _search_meta.get(tid))
+        meta = _search_meta.get(tid)
+        if not meta:
+            arch = archive.get(tid)
+            if arch and arch.get("t"):
+                meta = {"title": arch["t"], "date": arch.get("d")}
+        p = parse_tender(t, meta)
         if p:
             parsed.append(p)
         time.sleep(0.25)
@@ -783,6 +803,7 @@ def main():
             new_state["archive"][t["id"]] = {
                 "s": tender_state(t),
                 "d": (t.get("dateModified") or "")[:10],
+                "t": (t.get("title") or "")[:80],
             }
         new_state["seen"][t["id"]] = t.get("dateModified", "")
 
