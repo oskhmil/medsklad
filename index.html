@@ -1440,6 +1440,47 @@
     .an-kpi-grid { grid-template-columns: 1fr; }
     .an-node-title { font-size: 12px; }
   }
+
+  /* ── 🛒 Закупівлі ─────────────────────────────────────────────────── */
+  .choice-btn.proc .choice-ico { background: rgba(167,139,250,.14); }
+  .proc-kpis { display: flex; gap: 8px; margin-bottom: 14px; }
+  .proc-kpi {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 6px; text-align: center; cursor: pointer;
+  }
+  .proc-kpi-num { font-size: 20px; font-weight: 800; }
+  .proc-kpi-lbl { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.25; }
+  .proc-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+  .proc-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 9px; overflow: hidden;
+  }
+  .proc-card.problem { border-color: rgba(248,113,113,.35); }
+  .proc-head { padding: 11px 13px; display: flex; gap: 9px; align-items: flex-start; }
+  .proc-head.clickable { cursor: pointer; }
+  .proc-title { font-size: 13px; font-weight: 600; line-height: 1.35; }
+  .proc-meta { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .proc-chev { font-size: 13px; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
+  .proc-items { border-top: 1px solid var(--border); padding: 6px 13px 10px; }
+  .proc-item { padding: 7px 0; border-bottom: 1px solid rgba(37,43,68,.4); }
+  .proc-item:last-child { border-bottom: none; }
+  .proc-item-top { display: flex; gap: 8px; align-items: flex-start; justify-content: space-between; }
+  .proc-item-name { font-size: 12.5px; line-height: 1.4; flex: 1; }
+  .proc-item-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .proc-st {
+    font-size: 11px; font-weight: 600; border-radius: 6px;
+    padding: 2px 7px; white-space: nowrap; flex-shrink: 0;
+  }
+  .proc-st.signed  { background: rgba(52,211,153,.15); color: var(--green); }
+  .proc-st.winner  { background: rgba(245,158,11,.15); color: var(--warn); }
+  .proc-st.prog    { background: rgba(79,142,247,.15); color: var(--accent); }
+  .proc-st.failed  { background: rgba(248,113,113,.15); color: var(--danger); }
+  .proc-link {
+    display: block; text-align: center; margin-top: 9px; padding: 7px;
+    border: 1px solid var(--border); border-radius: 8px;
+    color: var(--accent); font-size: 12px; text-decoration: none;
+  }
+  .proc-more { font-size: 11px; color: var(--accent); padding: 7px 0 2px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -1545,6 +1586,71 @@
           </div>
           <div class="choice-arrow">›</div>
         </button>
+        <button class="choice-btn proc" onclick="openProc()">
+          <div class="choice-ico">🛒</div>
+          <div class="choice-body">
+            <div class="choice-title">Закупівлі Prozorro</div>
+            <div class="choice-sub">Статуси позицій: переможець, договір, зрив торгів</div>
+          </div>
+          <div class="choice-arrow">›</div>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <!--                  ЗАКУПІВЛІ (Prozorro)                        -->
+    <!-- ════════════════════════════════════════════════════════════ -->
+    <div id="proc-screen">
+      <div class="hp-back-row">
+        <button class="back-btn" onclick="goStart()">← До розділів</button>
+      </div>
+
+      <div id="proc-loading" style="text-align:center;padding:50px 20px;color:var(--muted)">
+        <div style="font-size:44px;margin-bottom:14px;">🛒</div>
+        <div style="font-size:15px" id="proc-loading-text">Завантажуємо закупівлі Prozorro...</div>
+      </div>
+
+      <div id="proc-error" style="display:none;text-align:center;padding:50px 20px;">
+        <div style="font-size:44px;margin-bottom:14px;">⚠️</div>
+        <div style="font-size:15px;margin-bottom:8px;">Не вдалось завантажити закупівлі Prozorro</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;" id="proc-error-details"></div>
+        <button class="big-btn" style="max-width:240px;" onclick="loadProc(true)">🔄 Спробувати ще</button>
+      </div>
+
+      <div id="proc-content" style="display:none">
+        <div class="proc-kpis">
+          <div class="proc-kpi" onclick="procSetFilter('all')">
+            <div class="proc-kpi-num" style="color:var(--accent)" id="proc-k-total">0</div>
+            <div class="proc-kpi-lbl">Позицій за рік</div>
+          </div>
+          <div class="proc-kpi" onclick="procSetFilter('progress')">
+            <div class="proc-kpi-num" style="color:var(--warn)" id="proc-k-prog">0</div>
+            <div class="proc-kpi-lbl">В процесі</div>
+          </div>
+          <div class="proc-kpi" onclick="procSetFilter('problem')">
+            <div class="proc-kpi-num" style="color:var(--danger)" id="proc-k-fail">0</div>
+            <div class="proc-kpi-lbl">Проблемних</div>
+          </div>
+        </div>
+
+        <div class="search-wrap" style="margin-bottom:10px">
+          <input id="proc-search" type="text" placeholder="Пошук по позиції або препарату..."
+                 oninput="procOnSearch(this.value)"
+                 style="width:100%;background:#2a3050;border:1.5px solid #4f8ef7;border-radius:12px;
+                        padding:10px 38px 10px 14px;color:#fff;font-size:14px;outline:none;">
+          <span class="search-ico">🔍</span>
+        </div>
+
+        <div class="proc-bar">
+          <button class="filter-btn active" id="proc-f-all"      onclick="procSetFilter('all',this)">Всі</button>
+          <button class="filter-btn"        id="proc-f-problem"  onclick="procSetFilter('problem',this)">⛔ Проблемні</button>
+          <button class="filter-btn"        id="proc-f-progress" onclick="procSetFilter('progress',this)">⏳ В процесі</button>
+          <button class="filter-btn"        id="proc-f-signed"   onclick="procSetFilter('signed',this)">✅ Підписані</button>
+        </div>
+
+        <div id="proc-summary" style="font-size:11px;color:var(--muted);margin-bottom:10px"></div>
+        <div id="proc-list"></div>
       </div>
     </div>
 
@@ -2154,7 +2260,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.154";
+const APP_VERSION = "v.156";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2980,6 +3086,7 @@ function show(screen) {
   document.getElementById("hospital-picker-screen").style.display  = screen==="hospitalpicker" ? "block" : "none";
   document.getElementById("infcontrol-screen").style.display       = screen==="infcontrol" ? "block" : "none";
   document.getElementById("dls-screen").style.display              = screen==="dls"       ? "block" : "none";
+  document.getElementById("proc-screen").style.display             = screen==="proc"      ? "block" : "none";
   document.getElementById("analytics-screen").style.display        = screen==="analytics"? "block" : "none";
   document.getElementById("sub-detail-screen").style.display       = screen==="subdetail"? "block" : "none";
   document.getElementById("demand-screen").style.display           = screen==="demand"   ? "block" : "none";
@@ -12966,6 +13073,245 @@ async function _storageWipe() {
   } catch (_) {}
   alert("Кеші очищено. Додаток перезавантажиться.");
   location.reload();
+}
+
+
+// ── 🛒 Закупівлі Prozorro ────────────────────────────────────────────────────
+// Дані готує prozorro_monitor.py у цьому ж репозиторії: GitHub Actions щогодини
+// опитує пошук Prozorro по ЄДРПОУ 44496574 та кодах ДК 336*, читає деталі
+// кожної закупівлі й комітить data/procurement.json. Фронт читає файл напряму
+// з тієї ж гілки — той самий origin, без проксі й CORS.
+
+const PROC_JSON_URL   = "data/procurement.json";
+const PROC_CACHE_KEY  = "medsklad_proc_cache";
+const PROC_TTL_MS     = 30 * 60 * 1000;   // 30 хв — монітор оновлюється щогодини
+
+let procData     = null;   // payload з procurement.json
+let procFilter   = "all";
+let procQuery    = "";
+let procExpanded = {};     // tenderID → розгорнуто вручну
+
+function _procSaveCache(payload) {
+  try { Store.set(PROC_CACHE_KEY, JSON.stringify({ payload, time: Date.now() })); } catch (_) {}
+}
+
+function _procLoadCache() {
+  try {
+    const raw = Store.get(PROC_CACHE_KEY);
+    if (!raw) return null;
+    const rec = JSON.parse(raw);
+    if (rec && rec.payload && rec.time) return { payload: rec.payload, time: new Date(rec.time) };
+  } catch (_) {}
+  return null;
+}
+
+async function _procFetch() {
+  const resp = await fetch(PROC_JSON_URL + "?t=" + Date.now(), { cache: "no-store" });
+  if (!resp.ok) throw new Error("HTTP " + resp.status);
+  const payload = await resp.json();
+  if (!payload || !Array.isArray(payload.tenders)) throw new Error("Неочікуваний формат procurement.json");
+  return payload;
+}
+
+async function openProc() {
+  await Store.ready();
+  show("proc");
+  loadProc(false);
+}
+
+async function loadProc(force) {
+  const elLoad = document.getElementById("proc-loading");
+  const elErr  = document.getElementById("proc-error");
+  const elCont = document.getElementById("proc-content");
+  elErr.style.display = "none";
+
+  if (!force) {
+    const c = _procLoadCache();
+    if (c && (Date.now() - c.time.getTime()) < PROC_TTL_MS) {
+      procData = c.payload;
+      elLoad.style.display = "none";
+      elCont.style.display = "block";
+      procRender();
+      return;
+    }
+  }
+
+  elLoad.style.display = "block";
+  elCont.style.display = "none";
+
+  try {
+    procData = await _procFetch();
+    _procSaveCache(procData);
+    elLoad.style.display = "none";
+    elCont.style.display = "block";
+    procRender();
+  } catch (err) {
+    elLoad.style.display = "none";
+    elErr.style.display = "block";
+    document.getElementById("proc-error-details").textContent = err.message;
+  }
+}
+
+// Довгі юридичні назви ріжемо до того, що в лапках: із
+// «ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ "ОПТІМА-ФАРМ"» лишається «ОПТІМА-ФАРМ».
+function procSupplier(name) {
+  if (!name) return "";
+  // Лапки бувають вкладені: ПРАТ "ФАРМАЦЕВТИЧНА ФІРМА "ДАРНИЦЯ"" — беремо останній
+  // фрагмент, це власне назва. Якщо лапок немає, зрізаємо організаційну форму.
+  const quoted = String(name).split(/[«»"'"']/).map(x => x.trim()).filter(x => x.length >= 3);
+  let out;
+  if (quoted.length > 1) {
+    out = quoted[quoted.length - 1];
+  } else {
+    out = String(name).replace(
+      /^(ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ|ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО|АКЦІОНЕРНЕ ТОВАРИСТВО|ДЕРЖАВНЕ ПІДПРИЄМСТВО|ПРИВАТНЕ ПІДПРИЄМСТВО|КОМУНАЛЬНЕ ПІДПРИЄМСТВО|ТОВ|ПРАТ|АТ|ПП|ДП|КП)\s+/i, "");
+  }
+  out = out.trim().replace(/^[«»"'"',\s]+|[«»"'"',\s]+$/g, "");
+  return out.length > 42 ? out.slice(0, 41) + "…" : out;
+}
+
+function procStatusClass(st) {
+  if (st === "Підписано")  return "signed";
+  if (st === "Переможець") return "winner";
+  if (st === "Не відбулось" || st === "Скасовано") return "failed";
+  return "prog";
+}
+
+function procIsProblem(st) { return st === "Не відбулось" || st === "Скасовано"; }
+
+function procMoney(v) {
+  if (v == null || isNaN(v)) return "";
+  return Math.round(v).toLocaleString("uk-UA") + " грн";
+}
+
+function procDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return isNaN(d) ? "" : d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+function procOnSearch(v) {
+  procQuery = String(v || "").trim();
+  procRender();
+}
+
+function procSetFilter(val, btn) {
+  procFilter = val;
+  document.querySelectorAll(".proc-bar .filter-btn").forEach(b => b.classList.remove("active"));
+  const target = btn || document.getElementById("proc-f-" + val);
+  if (target) target.classList.add("active");
+  procRender();
+}
+
+function procToggle(id) {
+  procExpanded[id] = !procExpanded[id];
+  procRender();
+}
+
+// Позиція проходить, якщо збігається і з фільтром статусу, і з пошуковим рядком.
+function procItemMatches(item) {
+  if (procFilter === "problem"  && !procIsProblem(item.status)) return false;
+  if (procFilter === "progress" && item.status !== "Переможець" && item.status !== "В процесі") return false;
+  if (procFilter === "signed"   && item.status !== "Підписано") return false;
+  if (procQuery) {
+    const q = normalize(procQuery);
+    if (!normalize(item.name).includes(q)) return false;
+  }
+  return true;
+}
+
+function procRender() {
+  if (!procData) return;
+  const tenders = procData.tenders || [];
+
+  let nTotal = 0, nProg = 0, nFail = 0;
+  tenders.forEach(t => (t.items || []).forEach(i => {
+    nTotal++;
+    if (procIsProblem(i.status)) nFail++;
+    else if (i.status !== "Підписано") nProg++;
+  }));
+  document.getElementById("proc-k-total").textContent = nTotal;
+  document.getElementById("proc-k-prog").textContent  = nProg;
+  document.getElementById("proc-k-fail").textContent  = nFail;
+
+  // Фільтрація на двох рівнях: спершу позиції, потім закупівлі без збігів.
+  const rows = [];
+  tenders.forEach(t => {
+    const items = (t.items || []).filter(procItemMatches);
+    if (items.length) rows.push({ t, items });
+  });
+
+  rows.sort((a, b) => String(b.t.dateModified || b.t.date || "").localeCompare(
+                      String(a.t.dateModified || a.t.date || "")));
+
+  const shownItems = rows.reduce((s, r) => s + r.items.length, 0);
+  const gen = procData.generated ? procDate(procData.generated) : "";
+  document.getElementById("proc-summary").innerHTML =
+    `${shownItems} позицій у ${rows.length} закупівлях` +
+    (gen ? ` · дані на ${gen}` : "");
+
+  const list = document.getElementById("proc-list");
+  if (!rows.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div>
+      <div class="empty-title">Нічого не знайдено</div>
+      <div class="empty-sub">Спробуйте інший запит або зніміть фільтр</div></div>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(({ t, items }) => {
+    const c = t.counts || {};
+    const hasProblem = (c.failed || 0) > 0;
+    // Закупівлі-одиночки і ті, де є проблеми, показуємо розгорнутими одразу:
+    // після змін у законі дорогі позиції йдуть окремими лотами, і згортати нічого.
+    const small = items.length <= 2;
+    const auto  = small || hasProblem || !!procQuery;
+    const open  = procExpanded[t.tenderID] !== undefined ? procExpanded[t.tenderID] : auto;
+    const collapsible = !small;
+
+    const parts = [];
+    if (c.signed)   parts.push(`${c.signed} підписано`);
+    if (c.progress) parts.push(`${c.progress} в процесі`);
+    if (c.failed)   parts.push(`<span style="color:var(--danger)">${c.failed} проблемних</span>`);
+
+    const itemsHtml = items.map(i => {
+      const sub = [];
+      if (i.qty)      sub.push(`${i.qty} ${esc(i.unit || "")}`.trim());
+      if (i.supplier) sub.push(esc(procSupplier(i.supplier)));
+      if (i.amount)   sub.push(procMoney(i.amount));
+      return `<div class="proc-item">
+        <div class="proc-item-top">
+          <div class="proc-item-name">${esc(String(i.name || "").slice(0, 160))}</div>
+          <span class="proc-st ${procStatusClass(i.status)}">${esc(i.status)}</span>
+        </div>
+        ${sub.length ? `<div class="proc-item-sub">${sub.join(" · ")}</div>` : ""}
+      </div>`;
+    }).join("");
+
+    const hiddenCount = (t.items || []).length - items.length;
+
+    return `<div class="proc-card${hasProblem ? " problem" : ""}">
+      <div class="proc-head${collapsible ? " clickable" : ""}"
+           ${collapsible ? `onclick="procToggle('${esc(t.tenderID)}')"` : ""}>
+        <div style="flex:1">
+          <div class="proc-title">${esc(String(t.title || "Без назви").slice(0, 110))}</div>
+          <div class="proc-meta">
+            ${procDate(t.dateModified || t.date)} ·
+            ${(t.items || []).length} ${(t.items || []).length === 1 ? "позиція" : "позицій"}
+            ${parts.length ? " · " + parts.join(" · ") : ""}
+            ${t.amount ? " · " + procMoney(t.amount) : ""}
+          </div>
+        </div>
+        ${collapsible ? `<div class="proc-chev">${open ? "▲" : "▼"}</div>` : ""}
+      </div>
+      ${open ? `<div class="proc-items">
+        ${itemsHtml}
+        ${hiddenCount > 0 ? `<div class="proc-item-sub" style="padding-top:6px">
+            ще ${hiddenCount} позицій приховано фільтром</div>` : ""}
+        <a class="proc-link" href="${esc(t.url)}" target="_blank" rel="noopener">
+          Відкрити в Prozorro ↗</a>
+      </div>` : ""}
+    </div>`;
+  }).join("");
 }
 
 </script>
