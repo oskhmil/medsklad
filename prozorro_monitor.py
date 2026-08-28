@@ -228,76 +228,61 @@ def discover_tender_ids():
             log(f"    {code}: {n}")
         log(f"  разом кодів: {len(good)} з {len(CPV_CHILDREN)}")
 
-    best = None
-    codes = [c for c, _ in good]
-    if codes:
-        total, sample, err = probe({BUYER_FIELD: [EDRPOU], "cpv": codes, "page": 1})
-        if not err and total:
-            log(f"  об'єднаний фільтр: {total} закупівель")
-            best = (codes, total, "підкоди")
-    if best is None:
-        total, sample, err = probe({BUYER_FIELD: [EDRPOU], "cpv": [CPV_ROOT], "page": 1})
-        if not err and total:
-            log(f"  запасний варіант — лише корінь: {total}")
-            best = ([CPV_ROOT], total, "корінь")
+    if not good:
+        log("  ЖОДЕН код ДК не дав результату — далі не йдемо")
+        return found
 
-    if not best:
-        log("  ДК-фільтр не працює — беру всі закупівлі замовника")
-        _cpv_used = None
-        body_fn = lambda p: {BUYER_FIELD: [EDRPOU], "page": p}
-    else:
-        _cpv_used = best[0]
-        log(f"  ОБРАНО ДК: {best[2]} ({best[1]} закупівель)")
-        body_fn = lambda p: build_body(p)
+    # Кожен код опитуємо окремо і зливаємо результати. Складений запит
+    # з десятка кодів портал обрізає: 18 кодів дали менше записів, ніж один.
+    _cpv_used = [c for c, _ in good]
+    cutoff_hit = 0
 
-    page = 1
-    stale = 0
-    seen = 0
-    ordered = None
-    prev_date = None
+    for code, expected in sorted(good, key=lambda x: -x[1]):
+        group = "Матеріали" if code.startswith("3314") else "Ліки"
+        page = 1
+        got = 0
+        while page <= 60:
+            try:
+                status, payload, raw = post_json(
+                    SEARCH_URL, {BUYER_FIELD: [EDRPOU], "cpv": [code], "page": page})
+            except Exception as ex:
+                log(f"    {code} стор.{page}: {ex}")
+                break
+            rows = extract_rows(payload) or []
+            if not rows:
+                break
+            for r in rows:
+                d = record_date(r)
+                got += 1
+                if d and d < cutoff:
+                    cutoff_hit += 1
+                    continue
+                tid = pick(r, "id", "tender_id", "_id") or pick(r, "tenderID")
+                if not tid:
+                    continue
+                if tid not in found:
+                    found[tid] = d
+                    _search_meta[tid] = {
+                        "title": r.get("title"),
+                        "status": r.get("status"),
+                        "date": d,
+                        "value": r.get("value"),
+                        "group": group,
+                        "cpv": code,
+                    }
+                elif group == "Ліки" and _search_meta.get(tid, {}).get("group") == "Матеріали":
+                    _search_meta[tid]["group"] = "Ліки"
+            page += 1
+            time.sleep(0.15)
+        log(f"    {code} ({group}): переглянуто {got}, очікувалось {expected}")
 
-    while page <= 120:
-        try:
-            status, payload, raw = post_json(SEARCH_URL, body_fn(page))
-        except Exception as ex:
-            log(f"  сторінка {page}: {ex}")
-            break
-        rows = extract_rows(payload) or []
-        if not rows:
-            break
-
-        if page == 1:
-            log(f"  дати першої сторінки: {[record_date(r)[:10] for r in rows[:5]]}")
-
-        fresh = 0
-        for r in rows:
-            d = record_date(r)
-            seen += 1
-            if prev_date is not None and d and prev_date:
-                if d > prev_date and ordered is not False:
-                    ordered = False
-            if d:
-                prev_date = d
-            if d and d < cutoff:
-                continue
-            fresh += 1
-            tid = pick(r, "id", "tender_id", "_id") or pick(r, "tenderID")
-            if tid:
-                found[tid] = d
-                _search_meta[tid] = {
-                    "title": r.get("title"),
-                    "status": r.get("status"),
-                    "date": d,
-                    "value": r.get("value"),
-                }
-
-        page += 1
-        time.sleep(0.2)
-
-    if ordered is False:
-        log("  УВАГА: видача не впорядкована за датою, зупинка за межею ненадійна")
-    log(f"  переглянуто {seen} записів на {page - 1} сторінках")
-    log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель")
+    groups = {}
+    for m in _search_meta.values():
+        g = m.get("group") or "?"
+        groups[g] = groups.get(g, 0) + 1
+    log(f"  старших за межу відкинуто: {cutoff_hit}")
+    log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель · " +
+        ", ".join(f"{k} {v}" for k, v in sorted(groups.items())))
     return found
 
 
@@ -480,6 +465,8 @@ def parse_tender(t, meta=None):
         "status": t.get("status"),
         "contractEnd": contract_end,
         "amount": total,
+        "group": (meta or {}).get("group") or "Ліки",
+        "cpv": (meta or {}).get("cpv"),
         "url": f"{PORTAL}/tender/{t.get('tenderID')}",
         "counts": counts,
         "items": items,
@@ -500,7 +487,7 @@ def fetch_tender(tid):
     urls = [_detail_url] if _detail_url else DETAIL_URLS
     for u in urls:
         try:
-            data = get_json(u.format(id=tid), tries=1)
+            data = get_json(u.format(id=tid), tries=3)
         except Exception:
             continue
         if data:
@@ -656,6 +643,7 @@ def main():
         return 1
 
     log("\n[2] Читання деталей з офіційного API")
+    time.sleep(2)
     parsed = []
     fetched = 0
     skipped = 0
@@ -672,11 +660,11 @@ def main():
                 continue
         resp = fetch_tender(tid)
         if resp is None:
-            if fetched == 0 and errors == 0:
-                diagnose_detail(tid)
-                log("  деталі не читаються — далі не йдемо, дивись пробу вище")
-                return 1
             errors += 1
+            if fetched == 0 and errors == 10:
+                diagnose_detail(tid)
+                log("  жодна закупівля не прочиталась — далі не йдемо")
+                return 1
             if errors <= 5:
                 log(f"  {tid}: не вдалось прочитати")
             elif errors == 6:
