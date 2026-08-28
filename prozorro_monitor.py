@@ -67,50 +67,102 @@ def get_json(url, tries=3):
 
 # ── пошук закупівель установи ───────────────────────────────────────────────
 # ЦБД Prozorro не має пошуку, тому первинний перелік беремо з пошукового
-# сервісу порталу. Він не задокументований, тому пробуємо кілька форматів.
+# сервісу порталу. Він не задокументований і приймає POST (GET дає 405),
+# тому пробуємо кілька форматів тіла і друкуємо відповідь сервера.
 
-SEARCH_CANDIDATES = [
-    PORTAL + "/api/search/tenders?edrpou={e}&page={p}",
-    PORTAL + "/api/search/tenders?text={e}&page={p}",
-    PORTAL + "/api/search/tenders?query={e}&page={p}",
+SEARCH_URL = PORTAL + "/api/search/tenders"
+
+BODY_CANDIDATES = [
+    ("text", lambda e, p: {"text": e, "page": p}),
+    ("edrpou", lambda e, p: {"edrpou": e, "page": p}),
+    ("edrpou-list", lambda e, p: {"edrpou": [e], "page": p}),
+    ("query-text", lambda e, p: {"query": {"text": e}, "page": p}),
+    ("filters", lambda e, p: {"filters": {"edrpou": [e]}, "page": p}),
+    ("searchText", lambda e, p: {"searchText": e, "page": p}),
 ]
+
+
+def post_json(url, body, timeout=45):
+    """Повертає (статус, розібраний_json_або_None, сирий_текст)."""
+    data = json.dumps(body).encode("utf-8")
+    req = urllib.request.Request(url, data=data, method="POST", headers={
+        "User-Agent": UA,
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read().decode("utf-8", "replace")
+            try:
+                return resp.status, json.loads(raw), raw
+            except json.JSONDecodeError:
+                return resp.status, None, raw
+    except urllib.error.HTTPError as e:
+        raw = e.read().decode("utf-8", "replace")
+        try:
+            return e.code, json.loads(raw), raw
+        except json.JSONDecodeError:
+            return e.code, None, raw
+
+
+def extract_rows(payload):
+    if not isinstance(payload, dict):
+        return None
+    for key in ("data", "items", "results", "tenders", "hits"):
+        v = payload.get(key)
+        if isinstance(v, list):
+            return v
+        if isinstance(v, dict):
+            for k2 in ("items", "data", "hits"):
+                if isinstance(v.get(k2), list):
+                    return v[k2]
+    return None
 
 
 def discover_tender_ids():
     found = {}
     working = None
-    for tpl in SEARCH_CANDIDATES:
+
+    for label, build in BODY_CANDIDATES:
+        body = build(EDRPOU, 0)
         try:
-            probe = tpl.format(e=EDRPOU, p=0)
-            data = get_json(probe, tries=1)
+            status, payload, raw = post_json(SEARCH_URL, body)
         except Exception as ex:
-            log(f"  пошук {tpl.split('?')[1].split('=')[0]}: недоступний ({ex})")
+            log(f"  [{label}] мережева помилка: {ex}")
             continue
-        if not isinstance(data, dict):
-            continue
-        rows = data.get("data") or data.get("items") or data.get("results") or []
-        if rows:
-            working = tpl
-            log(f"  пошуковий ендпоінт працює: {tpl}")
-            break
-        log(f"  пошук {tpl.split('?')[1].split('=')[0]}: порожня відповідь")
+
+        rows = extract_rows(payload)
+        if status == 200 and rows is not None:
+            log(f"  [{label}] HTTP 200, записів на сторінці: {len(rows)}")
+            if rows:
+                working = build
+                log(f"  ФОРМАТ ЗНАЙДЕНО: {label}")
+                log(f"  приклад запису: {json.dumps(rows[0], ensure_ascii=False)[:400]}")
+                break
+        else:
+            snippet = (raw or "").replace("\n", " ")[:300]
+            log(f"  [{label}] HTTP {status}: {snippet}")
 
     if not working:
-        log("  ЖОДЕН пошуковий ендпоінт не відповів — працюємо лише з відомими id")
+        log("  ЖОДЕН формат не спрацював — дивись відповіді сервера вище")
+        seed = seed_from_file()
+        if seed:
+            log(f"  але є prozorro_seed.txt: {len(seed)} id")
+            return {s: "" for s in seed}
         return found
 
     page = 0
-    while page < 40:
+    while page < 60:
         try:
-            data = get_json(working.format(e=EDRPOU, p=page))
+            status, payload, raw = post_json(SEARCH_URL, working(EDRPOU, page))
         except Exception as ex:
             log(f"  сторінка {page}: помилка {ex}")
             break
-        rows = data.get("data") or data.get("items") or data.get("results") or []
+        rows = extract_rows(payload) or []
         if not rows:
             break
         for r in rows:
-            tid = r.get("id") or r.get("tenderID")
+            tid = r.get("id") or r.get("tenderID") or r.get("tender_id")
             if tid:
                 found[tid] = r.get("dateModified", "")
         page += 1
@@ -118,6 +170,19 @@ def discover_tender_ids():
 
     log(f"  знайдено закупівель у пошуку: {len(found)}")
     return found
+
+
+def seed_from_file():
+    """Запасний варіант: список id вручну в prozorro_seed.txt, по одному в рядок."""
+    if not os.path.exists("prozorro_seed.txt"):
+        return []
+    out = []
+    with open("prozorro_seed.txt", encoding="utf-8") as f:
+        for line in f:
+            s = line.strip()
+            if s and not s.startswith("#"):
+                out.append(s)
+    return out
 
 
 # ── розбір закупівлі ────────────────────────────────────────────────────────
