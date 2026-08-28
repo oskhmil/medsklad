@@ -286,9 +286,14 @@ def seed_from_file():
 # ── розбір закупівлі ────────────────────────────────────────────────────────
 
 def lot_status(tender, lot_id):
-    """Статус конкретного лота: перемога, договір, зрив."""
-    lots = {l["id"]: l for l in tender.get("lots", [])}
-    lot = lots.get(lot_id)
+    """Статус лота (або всієї закупівлі, якщо лотів немає).
+
+    Портал віддає договори без посилання на нагороду (awardID відсутній),
+    тому зв'язок відновлюємо за структурою: коли лот один або лотів немає,
+    будь-який чинний договір стосується цієї нагороди.
+    """
+    lots = {l["id"]: l for l in (tender.get("lots") or []) if l.get("id")}
+    lot = lots.get(lot_id) if lot_id else None
 
     if lot:
         if lot.get("status") == "unsuccessful":
@@ -296,33 +301,48 @@ def lot_status(tender, lot_id):
         if lot.get("status") == "cancelled":
             return ST_CANCELLED, None, None
 
-    awards = [a for a in tender.get("awards", [])
-              if (lot_id is None or a.get("lotID") == lot_id)]
+    all_awards = tender.get("awards") or []
+    if lot_id and lots:
+        awards = [a for a in all_awards if a.get("lotID") == lot_id]
+    else:
+        awards = all_awards
+
     active = [a for a in awards if a.get("status") == "active"]
 
-    supplier = None
-    amount = None
     if active:
         a = active[-1]
         sup = (a.get("suppliers") or [{}])[0]
         supplier = sup.get("name")
-        val = a.get("value") or {}
-        amount = val.get("amount")
+        amount = (a.get("value") or {}).get("amount")
 
-        for c in tender.get("contracts", []):
-            if c.get("awardID") == a.get("id") and c.get("status") == "active":
-                cv = c.get("value") or {}
-                return ST_SIGNED, supplier, cv.get("amount", amount)
+        contracts = [c for c in (tender.get("contracts") or []) if c.get("status") == "active"]
+
+        linked = [c for c in contracts if c.get("awardID") == a.get("id")]
+        if linked:
+            return ST_SIGNED, supplier, (linked[0].get("value") or {}).get("amount", amount)
+
+        if lot_id:
+            tag = str(lot_id)[:8]
+            byid = [c for c in contracts if tag in str(c.get("contractID", ""))]
+            if byid:
+                return ST_SIGNED, supplier, (byid[0].get("value") or {}).get("amount", amount)
+
+        active_awards = [x for x in all_awards if x.get("status") == "active"]
+        if contracts and (not lots or len(contracts) >= len(active_awards)):
+            return ST_SIGNED, supplier, (contracts[0].get("value") or {}).get("amount", amount)
+
         return ST_WINNER, supplier, amount
 
     if awards and all(a.get("status") == "unsuccessful" for a in awards):
         return ST_FAILED, None, None
 
     tstatus = tender.get("status", "")
-    if tstatus in ("unsuccessful",):
+    if tstatus == "unsuccessful":
         return ST_FAILED, None, None
-    if tstatus in ("cancelled",):
+    if tstatus == "cancelled":
         return ST_CANCELLED, None, None
+    if tstatus == "complete" and not active:
+        return ST_FAILED, None, None
     return ST_PROGRESS, None, None
 
 
@@ -331,9 +351,6 @@ def matches_cpv(tender):
     for it in tender.get("items", []):
         codes.append(((it.get("classification") or {}).get("id") or ""))
     return any(c.startswith(CPV_PREFIX) for c in codes)
-
-
-_diag_left = 3
 
 
 def entity_edrpou(t):
@@ -360,37 +377,9 @@ def item_codes(t):
 
 def parse_tender(t, meta=None):
     """Плоский опис закупівлі: позиції зі статусами лотів."""
-    global _diag_left
-
     edr = entity_edrpou(t)
     codes = item_codes(t)
     root = ((t.get("classification") or {}).get("id") or "")
-
-    has_content = bool(t.get("items") or t.get("awards") or t.get("lots"))
-    if _diag_left > 0 and has_content:
-        _diag_left -= 1
-        aw = t.get("awards") or []
-        co = t.get("contracts") or []
-        lo = t.get("lots") or []
-        its = t.get("items") or []
-        log(f"  [діаг] {t.get('tenderID')} · статус={t.get('status')} · title={str(t.get('title'))[:30]}")
-        log(f"         lots={len(lo)} awards={len(aw)} contracts={len(co)} items={len(its)}")
-        if aw:
-            log(f"         award[0] ключі: {sorted(aw[0].keys())[:14]}")
-            log(f"         award[0] status={aw[0].get('status')} lotID={aw[0].get('lotID')}")
-        if co:
-            log(f"         contract[0] ключі: {sorted(co[0].keys())[:14]}")
-            log(f"         contract[0] status={co[0].get('status')} awardID={co[0].get('awardID')}")
-        if lo:
-            log(f"         lot[0] ключі: {sorted(lo[0].keys())[:12]} status={lo[0].get('status')}")
-        if its:
-            log(f"         item[0] ключі: {sorted(its[0].keys())[:14]}")
-            log(f"         item[0] relatedLot={its[0].get('relatedLot')} descr={str(its[0].get('description'))[:40]}")
-        log(f"         ключі тендера: {sorted(t.keys())}")
-        if co:
-            log(f"         contract[0] повністю: {json.dumps(co[0], ensure_ascii=False)[:400]}")
-        elif aw:
-            log(f"         award[0] повністю: {json.dumps(aw[0], ensure_ascii=False)[:400]}")
 
     # пошук уже відфільтрував за buyer, тому розбіжність лише логуємо
     if edr and edr != EDRPOU:
