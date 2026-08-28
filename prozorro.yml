@@ -1,0 +1,47 @@
+name: Prozorro monitor
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: prozorro-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test branch
+        uses: actions/checkout@v4
+        with:
+          ref: test
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run monitor
+        id: run
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python3 prozorro_monitor.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "prozorro-bot"
+          git config user.email "actions@github.com"
+          git add data/procurement.json prozorro_state.json
+          if git diff --cached --quiet; then
+            echo "без змін — коміт пропущено"
+            exit 0
+          fi
+          COUNT="${{ steps.run.outputs.events }}"
+          git commit -m "[bot] procurement: ${COUNT:-0} змін"
+          git push origin HEAD:test
