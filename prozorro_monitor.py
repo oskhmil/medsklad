@@ -18,7 +18,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 EDRPOU = "44496574"
-CPV_PREFIX = ("336",)
+CPV_PREFIX = ("336", "3314")
 
 API = "https://public-api.prozorro.gov.ua/api/2.5"
 PORTAL = "https://prozorro.gov.ua"
@@ -29,7 +29,7 @@ OUT_PATH = "data/procurement.json"
 RETENTION_MONTHS = 12
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 4
+PARSER_VERSION = 5
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -79,10 +79,20 @@ SEARCH_URL = PORTAL + "/api/search/tenders"
 # код ДК — у повному форматі 33600000-6. Стеля видачі пошуку — 10000.
 BUYER_FIELD = "buyer"
 CPV_ROOT = "33600000-6"
-# підлеглі коди розділу 336 — на випадок, якщо пошук не розкриває групу сам
+# Розділ 336 (фармацевтична продукція) + група 3314 (медичні матеріали).
+# Пошук не розкриває групу за кореневим кодом, тому перелічуємо підкоди явно.
+# Неіснуючі коди відсіються самі — скрипт опитує кожен і лишає результативні.
 CPV_CHILDREN = [
+    # 336 — фармацевтична продукція
     "33600000-6", "33610000-9", "33620000-2", "33630000-5", "33640000-8",
     "33650000-1", "33660000-4", "33670000-7", "33680000-0", "33690000-3",
+    # 3314 — медичні матеріали
+    "33140000-3", "33141000-0", "33141100-1", "33141110-4", "33141120-7",
+    "33141200-2", "33141300-3", "33141310-6", "33141320-9", "33141400-4",
+    "33141500-5", "33141600-6", "33141610-9", "33141620-2", "33141640-8",
+    "33141700-7", "33141800-8", "33141900-9", "33142000-7", "33143000-4",
+    "33144000-1", "33145000-8", "33146000-5", "33147000-2", "33148000-9",
+    "33149000-6",
 ]
 
 # як може називатись поле замовника — перевіряємо перебором
@@ -200,18 +210,36 @@ def discover_tender_ids():
     base_total, _, err = probe({BUYER_FIELD: [EDRPOU], "page": 1})
     log(f"  тільки buyer: {base_total if not err else err}")
 
-    # який варіант ДК ловить більше — корінь групи чи перелік підкодів
-    variants = [("корінь", [CPV_ROOT]), ("підкоди", CPV_CHILDREN)]
-    best = None
-    for label, codes in variants:
-        total, sample, err = probe({BUYER_FIELD: [EDRPOU], "cpv": codes, "page": 1})
+    # Опитуємо кожен код окремо: неіснуючі відсіються, а заразом видно,
+    # яка категорія скільки дає. Далі шукаємо одним запитом по робочих кодах.
+    good = []
+    for code in CPV_CHILDREN:
+        total, _, err = probe({BUYER_FIELD: [EDRPOU], "cpv": [code], "page": 1})
         if err:
-            log(f"  ДК {label}: {err}")
+            log(f"  ДК {code}: {err[:70]}")
             continue
-        title = str((sample or {}).get("title", ""))[:50]
-        log(f"  ДК {label}: всього {total} · {title}")
-        if total and (best is None or total > best[1]):
-            best = (codes, total, label)
+        if total:
+            good.append((code, total))
+        time.sleep(0.15)
+
+    if good:
+        log("  робочі коди ДК:")
+        for code, n in sorted(good, key=lambda x: -x[1]):
+            log(f"    {code}: {n}")
+        log(f"  разом кодів: {len(good)} з {len(CPV_CHILDREN)}")
+
+    best = None
+    codes = [c for c, _ in good]
+    if codes:
+        total, sample, err = probe({BUYER_FIELD: [EDRPOU], "cpv": codes, "page": 1})
+        if not err and total:
+            log(f"  об'єднаний фільтр: {total} закупівель")
+            best = (codes, total, "підкоди")
+    if best is None:
+        total, sample, err = probe({BUYER_FIELD: [EDRPOU], "cpv": [CPV_ROOT], "page": 1})
+        if not err and total:
+            log(f"  запасний варіант — лише корінь: {total}")
+            best = ([CPV_ROOT], total, "корінь")
 
     if not best:
         log("  ДК-фільтр не працює — беру всі закупівлі замовника")
@@ -228,7 +256,7 @@ def discover_tender_ids():
     ordered = None
     prev_date = None
 
-    while page <= 40:
+    while page <= 120:
         try:
             status, payload, raw = post_json(SEARCH_URL, body_fn(page))
         except Exception as ex:
@@ -601,7 +629,7 @@ def in_window(t, cutoff_iso, now_iso):
 
 def main():
     log("=" * 60)
-    log(f"Монітор закупівель · ЄДРПОУ {EDRPOU} · ДК {'/'.join(CPV_PREFIX)}*")
+    log(f"Монітор закупівель · ЄДРПОУ {EDRPOU} · ДК {', '.join(c + '*' for c in CPV_PREFIX)}")
     log("=" * 60)
 
     state = load_state()
