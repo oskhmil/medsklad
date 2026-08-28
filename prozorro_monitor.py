@@ -72,18 +72,15 @@ def get_json(url, tries=3):
 
 SEARCH_URL = PORTAL + "/api/search/tenders"
 
-BODY_CANDIDATES = [
-    # структуровані фільтри — те, чим користується сам портал
-    ("edrpou+cpv", lambda e, p: {"edrpou": [e], "cpv": ["336"], "page": p}),
-    ("edrpou+classification", lambda e, p: {"edrpou": [e], "classification": ["336"], "page": p}),
-    ("procuringEntity+cpv", lambda e, p: {"procuringEntity": [e], "cpv": ["336"], "page": p}),
-    ("edrpou-only", lambda e, p: {"edrpou": [e], "page": p}),
-    ("procuringEntity-only", lambda e, p: {"procuringEntity": [e], "page": p}),
-    ("edrpou-str", lambda e, p: {"edrpou": e, "page": p}),
-    ("text+cpv", lambda e, p: {"text": e, "cpv": ["336"], "page": p}),
-    # запасний варіант — просто текст (працює, але тягне зайве)
-    ("text", lambda e, p: {"text": e, "page": p}),
+CPV_FORMATS = ["336*****-*", "33600000-6", "33600000", "336"]
+
+# як може називатись поле замовника — перевіряємо перебором
+ENTITY_FIELDS = [
+    "edrpou", "procuringEntity", "procuringEntityEdrpou", "procuringEntityId",
+    "customer", "customers", "buyer", "entity", "identifier", "organization",
 ]
+
+IGNORED_TOTAL = 9000  # якщо результатів стільки — фільтр не спрацював
 
 
 def post_json(url, body, timeout=45):
@@ -151,83 +148,127 @@ def record_date(rec):
     return ""
 
 
+def msg_of(payload, raw):
+    """Читабельне пояснення помилки замість \\u-екранування."""
+    if isinstance(payload, dict):
+        m = payload.get("message")
+        if m:
+            errs = payload.get("errors")
+            if isinstance(errs, dict):
+                return f"{m} | {json.dumps(errs, ensure_ascii=False)[:160]}"
+            return str(m)[:200]
+    return (raw or "")[:160]
+
+
+def probe(body):
+    """Повертає (total, перший_запис, пояснення)."""
+    try:
+        status, payload, raw = post_json(SEARCH_URL, body)
+    except Exception as ex:
+        return None, None, f"мережа: {ex}"
+    rows = extract_rows(payload)
+    if status != 200 or rows is None:
+        return None, None, f"HTTP {status}: {msg_of(payload, raw)}"
+    return total_count(payload), (rows[0] if rows else None), ""
+
+
 def discover_tender_ids():
-    """Повертає {внутрішній_id_або_tenderID: dateModified} за останні RETENTION місяців."""
     found = {}
-    working = None
     cutoff = (datetime.now(timezone.utc) - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
     log(f"  межа за датою: {cutoff[:10]}")
 
-    results = []
-    for label, build in BODY_CANDIDATES:
-        try:
-            status, payload, raw = post_json(SEARCH_URL, build(EDRPOU, 1))
-        except Exception as ex:
-            log(f"  [{label}] мережева помилка: {ex}")
+    # 1. формат коду ДК
+    log("  -- формат cpv --")
+    cpv_ok = None
+    for fmt in CPV_FORMATS:
+        total, sample, err = probe({"cpv": [fmt], "page": 1})
+        if err:
+            log(f"  cpv={fmt}: {err}")
             continue
-        rows = extract_rows(payload)
-        if status != 200 or rows is None:
-            log(f"  [{label}] HTTP {status}: {(raw or '')[:140]}")
-            continue
-        total = total_count(payload)
-        log(f"  [{label}] 200 · на сторінці {len(rows)} · всього {total if total is not None else '?'}"
-            + (f" · перший: {str(rows[0].get('title'))[:40]}" if rows else " · порожньо"))
-        if rows:
-            results.append((label, build, total if total is not None else 10 ** 9, rows[0]))
+        title = str((sample or {}).get("title", ""))[:40]
+        log(f"  cpv={fmt}: всього {total} · перший: {title}")
+        if total and total < IGNORED_TOTAL and cpv_ok is None:
+            cpv_ok = fmt
+    if cpv_ok:
+        log(f"  ФОРМАТ ДК: {cpv_ok}")
+    else:
+        log("  жоден формат ДК не звузив вибірку")
 
-    if results:
-        # найкращий формат — той, що дав найменше зайвого
-        label, working, total, sample = min(results, key=lambda r: r[2])
-        log(f"  ОБРАНО: {label} (всього {total})")
-        log(f"  КЛЮЧІ ЗАПИСУ: {sorted(sample.keys())}")
-        for k in ("id", "tenderID", "dateModified", "date", "status", "title"):
-            if k in sample:
-                log(f"    {k} = {str(sample[k])[:70]}")
-        if isinstance(sample.get("tenderPeriod"), dict):
-            log(f"    tenderPeriod = {json.dumps(sample['tenderPeriod'], ensure_ascii=False)[:120]}")
+    # 2. назва поля замовника
+    log("  -- поле замовника --")
+    ent_ok = None
+    base = {"cpv": [cpv_ok]} if cpv_ok else {}
+    for field in ENTITY_FIELDS:
+        for val in ([EDRPOU], EDRPOU):
+            body = dict(base)
+            body[field] = val
+            body["page"] = 1
+            total, sample, err = probe(body)
+            shape = "list" if isinstance(val, list) else "str"
+            if err:
+                log(f"  {field}({shape}): {err}")
+                continue
+            title = str((sample or {}).get("title", ""))[:40]
+            ent = ""
+            if sample:
+                pe = sample.get("procuringEntity") or {}
+                ent = str(((pe.get("identifier") or {}).get("id")) or "")
+            log(f"  {field}({shape}): всього {total} · ЄДРПОУ={ent or '?'} · {title}")
+            if total and 0 < total < IGNORED_TOTAL and ent == EDRPOU:
+                ent_ok = (field, val)
+                break
+        if ent_ok:
+            break
 
-    if not working:
-        log("  ЖОДЕН формат не спрацював")
+    if not ent_ok:
+        log("  ЖОДНЕ поле замовника не спрацювало — далі не йдемо")
         seed = seed_from_file()
         if seed:
             log(f"  використовую prozorro_seed.txt: {len(seed)} id")
             return {s: "" for s in seed}
         return found
 
+    field, val = ent_ok
+    log(f"  ПОЛЕ ЗАМОВНИКА: {field} = {val}")
+
+    def build(page):
+        b = dict(base)
+        b[field] = val
+        b["page"] = page
+        return b
+
     page = 1
-    stale_pages = 0
+    stale = 0
     while page <= 200:
+        total, sample, err = None, None, ""
         try:
-            status, payload, raw = post_json(SEARCH_URL, working(EDRPOU, page))
+            status, payload, raw = post_json(SEARCH_URL, build(page))
         except Exception as ex:
-            log(f"  сторінка {page}: помилка {ex}")
+            log(f"  сторінка {page}: {ex}")
             break
         rows = extract_rows(payload) or []
         if not rows:
             break
-
-        fresh_here = 0
+        fresh = 0
         for r in rows:
             d = record_date(r)
             if d and d < cutoff:
                 continue
-            fresh_here += 1
+            fresh += 1
             tid = pick(r, "id", "tender_id", "_id") or pick(r, "tenderID")
             if tid:
                 found[tid] = d
-
-        if fresh_here == 0:
-            stale_pages += 1
-            if stale_pages >= 2:
-                log(f"  сторінка {page}: усе старше межі — зупиняюсь")
+        if fresh == 0:
+            stale += 1
+            if stale >= 2:
+                log(f"  сторінка {page}: усе старше межі — стоп")
                 break
         else:
-            stale_pages = 0
-
+            stale = 0
         page += 1
         time.sleep(0.3)
 
-    log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель, сторінок пройдено: {page - 1}")
+    log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель")
     return found
 
 
