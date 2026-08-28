@@ -224,7 +224,7 @@ def discover_tender_ids():
     ordered = None
     prev_date = None
 
-    while page <= 500:
+    while page <= 40:
         try:
             status, payload, raw = post_json(SEARCH_URL, body_fn(page))
         except Exception as ex:
@@ -253,15 +253,8 @@ def discover_tender_ids():
             if tid:
                 found[tid] = d
 
-        if fresh == 0:
-            stale += 1
-            if stale >= 3:
-                log(f"  сторінка {page}: три сторінки поспіль старші межі — стоп")
-                break
-        else:
-            stale = 0
         page += 1
-        time.sleep(0.25)
+        time.sleep(0.2)
 
     if ordered is False:
         log("  УВАГА: видача не впорядкована за датою, зупинка за межею ненадійна")
@@ -394,9 +387,7 @@ def parse_tender(t):
 
 
 DETAIL_URLS = [
-    PORTAL + "/api/tenders/{id}",
-    PORTAL + "/api/tender/{id}",
-    API + "/tenders/{id}",
+    PORTAL + "/api/tenders/{id}/details",
 ]
 _detail_url = None
 
@@ -615,6 +606,8 @@ def main():
                 log("  …подальші помилки не друкую")
             continue
         fetched += 1
+        if fetched % 25 == 0:
+            log(f"  …{fetched} прочитано")
         t = resp.get("data") or resp or {}
         p = parse_tender(t)
         if p:
