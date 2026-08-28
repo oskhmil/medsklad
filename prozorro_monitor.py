@@ -181,6 +181,7 @@ def probe(body):
 
 
 _cpv_used = None
+_search_meta = {}
 
 
 def build_body(page, cpv=None):
@@ -252,6 +253,12 @@ def discover_tender_ids():
             tid = pick(r, "id", "tender_id", "_id") or pick(r, "tenderID")
             if tid:
                 found[tid] = d
+                _search_meta[tid] = {
+                    "title": r.get("title"),
+                    "status": r.get("status"),
+                    "date": d,
+                    "value": r.get("value"),
+                }
 
         page += 1
         time.sleep(0.2)
@@ -351,7 +358,7 @@ def item_codes(t):
     return out
 
 
-def parse_tender(t):
+def parse_tender(t, meta=None):
     """Плоский опис закупівлі: позиції зі статусами лотів."""
     global _diag_left
 
@@ -361,10 +368,25 @@ def parse_tender(t):
 
     if _diag_left > 0:
         _diag_left -= 1
-        log(f"  [діаг] {t.get('tenderID')} · ЄДРПОУ={edr} · ДК тендера={root or '—'}"
-            f" · позицій={len(t.get('items') or [])} · ДК позицій={sorted(set(codes))[:4]}")
-        if edr is None:
-            log(f"         ключі: {sorted(t.keys())[:25]}")
+        aw = t.get("awards") or []
+        co = t.get("contracts") or []
+        lo = t.get("lots") or []
+        its = t.get("items") or []
+        log(f"  [діаг] {t.get('tenderID')} · статус={t.get('status')} · title={str(t.get('title'))[:30]}")
+        log(f"         lots={len(lo)} awards={len(aw)} contracts={len(co)} items={len(its)}")
+        if aw:
+            log(f"         award[0] ключі: {sorted(aw[0].keys())[:14]}")
+            log(f"         award[0] status={aw[0].get('status')} lotID={aw[0].get('lotID')}")
+        if co:
+            log(f"         contract[0] ключі: {sorted(co[0].keys())[:14]}")
+            log(f"         contract[0] status={co[0].get('status')} awardID={co[0].get('awardID')}")
+        if lo:
+            log(f"         lot[0] ключі: {sorted(lo[0].keys())[:12]} status={lo[0].get('status')}")
+        if its:
+            log(f"         item[0] ключі: {sorted(its[0].keys())[:14]}")
+            log(f"         item[0] relatedLot={its[0].get('relatedLot')} descr={str(its[0].get('description'))[:40]}")
+        if not aw and not co:
+            log(f"         УСІ ключі: {sorted(t.keys())}")
 
     # пошук уже відфільтрував за buyer, тому розбіжність лише логуємо
     if edr and edr != EDRPOU:
@@ -409,9 +431,9 @@ def parse_tender(t):
     return {
         "id": t.get("id") or t.get("tenderID"),
         "tenderID": t.get("tenderID"),
-        "title": (t.get("title") or "").strip(),
-        "date": t.get("date"),
-        "dateModified": t.get("dateModified"),
+        "title": (t.get("title") or (meta.get("title") if meta else "") or "").strip(),
+        "date": t.get("date") or (meta.get("date") if meta else None),
+        "dateModified": t.get("dateModified") or (meta.get("date") if meta else None),
         "method": t.get("procurementMethodType"),
         "status": t.get("status"),
         "contractEnd": contract_end,
@@ -612,7 +634,7 @@ def main():
         if fetched % 25 == 0:
             log(f"  …{fetched} прочитано")
         t = resp.get("data") or resp or {}
-        p = parse_tender(t)
+        p = parse_tender(t, _search_meta.get(tid))
         if p:
             parsed.append(p)
         time.sleep(0.25)
