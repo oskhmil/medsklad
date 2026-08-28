@@ -26,10 +26,17 @@ PORTAL = "https://prozorro.gov.ua"
 STATE_PATH = "prozorro_state.json"
 OUT_PATH = "data/procurement.json"
 
-RETENTION_MONTHS = 12
+# Скільки тримати закупівлю в data/procurement.json.
+# Незавершені лишаються завжди; решта живе рівно стільки, скільки має
+# практичний сенс: підписаний договір ще їде на склад, зірваний торг ще
+# треба перезапустити. Далі закупівля забувається.
+RETENTION_MONTHS = 12          # глибина сканування пошуку
+KEEP_ACTIVE_DAYS  = 60         # незавершені: далі це вже покинуті торги
+KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає на склад і тема закрита
+KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 5
+PARSER_VERSION = 9
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -540,10 +547,12 @@ def item_key(t_id, item):
     return f"{t_id}|{item['lot'] or ''}|{item['name'][:80]}"
 
 
-def diff_statuses(old, parsed):
+def diff_statuses(old, parsed, archived=()):
     """Що змінилось порівняно з попереднім запуском."""
     events = []
     for t in parsed:
+        if t["id"] in archived:
+            continue
         prev = old.get(t["id"])
         if prev is None:
             events.append(("new", t, None, None))
@@ -605,13 +614,27 @@ def notify(events):
 
 # ── зріз для додатку ────────────────────────────────────────────────────────
 
-def in_window(t, cutoff_iso, now_iso):
-    if (t.get("dateModified") or "") >= cutoff_iso:
-        return True
-    ce = t.get("contractEnd")
-    if ce and ce >= now_iso:
-        return True
-    return False
+def tender_state(t):
+    """active — ще в торгах; problem — зірвана; done — все підписано."""
+    c = t.get("counts") or {}
+    if c.get("progress"):
+        return "active"
+    if c.get("failed"):
+        return "problem"
+    return "done"
+
+
+def in_window(t, now):
+    """Що лишається у файлі для додатку."""
+    state = tender_state(t)
+    dm = t.get("dateModified") or t.get("date") or ""
+    if not dm:
+        return True                      # без дати не викидаємо, щоб не загубити
+    days = {"active": KEEP_ACTIVE_DAYS,
+            "problem": KEEP_PROBLEM_DAYS}.get(state, KEEP_SIGNED_DAYS)
+    edge = (now - timedelta(days=days)).isoformat()
+    return dm >= edge
+
 
 
 def main():
@@ -649,7 +672,16 @@ def main():
     skipped = 0
     errors = 0
     stubs = 0
+    archive = state.get("archive") or {}
+    archived_skipped = 0
+
     for tid in sorted(known, key=lambda k: known.get(k) or '', reverse=True):
+        # Закупівля, яку ми вже відпрацювали й забули: якщо пошук показує ту саму
+        # дату, читати деталі немає сенсу — вона більше не змінюється.
+        arch = archive.get(tid)
+        if arch and discovered.get(tid, "")[:10] == arch.get("d", ""):
+            archived_skipped += 1
+            continue
         newer = discovered.get(tid, "")
         cached = state.get("tenders", {}).get(tid, {}).get("dateModified", "")
         if newer and cached and newer <= cached and tid in state.get("tenders", {}):
@@ -682,7 +714,8 @@ def main():
             parsed.append(p)
         time.sleep(0.25)
 
-    log(f"  завантажено: {fetched}, з кешу: {skipped}, помилок: {errors}, порожніх: {stubs}")
+    log(f"  завантажено: {fetched}, з кешу: {skipped}, з архіву пропущено: {archived_skipped},"
+        f" помилок: {errors}, порожніх: {stubs}")
     log(f"  підходять під фільтр: {len(parsed)}")
 
     if parsed:
@@ -693,7 +726,7 @@ def main():
         log(f"  позицій: {total_items} · підписано {sig} · в процесі {prg} · проблемних {fail}")
 
     log("\n[3] Порівняння зі станом")
-    events = diff_statuses(state.get("tenders", {}), parsed)
+    events = diff_statuses(state.get("tenders", {}), parsed, set((state.get("archive") or {}).keys()))
     log(f"  подій: {len(events)}")
     for kind, t, item, was in events[:10]:
         if kind == "new":
@@ -712,7 +745,7 @@ def main():
     cutoff = (now - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
     now_iso = now.isoformat()
 
-    window = [t for t in parsed if in_window(t, cutoff, now_iso)]
+    window = [t for t in parsed if in_window(t, now)]
     window.sort(key=lambda t: t.get("dateModified") or "", reverse=True)
     log(f"  у зрізі за {RETENTION_MONTHS} міс.: {len(window)} з {len(parsed)}")
 
@@ -734,14 +767,28 @@ def main():
         f.write(payload)
     log(f"  {OUT_PATH}: {len(payload) // 1024} КБ, змінено: {changed}")
 
-    new_state = {"parser": PARSER_VERSION, "tenders": {}, "seen": {}}
+    # Знімки тримаємо лише для того, що лишилось у вікні. Решта йде в архів:
+    # id + підсумковий статус + дата, кілька десятків байтів на закупівлю.
+    # Архів потрібен, щоб забута закупівля не повернулась як "нова".
+    in_window_ids = {t["id"] for t in window}
+    new_state = {"parser": PARSER_VERSION, "tenders": {}, "seen": {}, "archive": {}}
     for t in parsed:
-        new_state["tenders"][t["id"]] = {
-            "dateModified": t.get("dateModified"),
-            "items": {item_key(t["id"], i): i["status"] for i in t["items"]},
-            "snapshot": t,
-        }
+        if t["id"] in in_window_ids:
+            new_state["tenders"][t["id"]] = {
+                "dateModified": t.get("dateModified"),
+                "items": {item_key(t["id"], i): i["status"] for i in t["items"]},
+                "snapshot": t,
+            }
+        else:
+            new_state["archive"][t["id"]] = {
+                "s": tender_state(t),
+                "d": (t.get("dateModified") or "")[:10],
+            }
         new_state["seen"][t["id"]] = t.get("dateModified", "")
+
+    # архів попередніх прогонів переносимо далі
+    for tid, rec in (state.get("archive") or {}).items():
+        new_state["archive"].setdefault(tid, rec)
     for tid, dm in known.items():
         if str(tid).startswith("UA-"):
             new_state["seen"].setdefault(tid, dm)
