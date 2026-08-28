@@ -75,7 +75,12 @@ SEARCH_URL = PORTAL + "/api/search/tenders"
 # Знайдено дослідним шляхом: поле замовника — buyer (масив),
 # код ДК — у повному форматі 33600000-6. Стеля видачі пошуку — 10000.
 BUYER_FIELD = "buyer"
-CPV_CODE = "33600000-6"
+CPV_ROOT = "33600000-6"
+# підлеглі коди розділу 336 — на випадок, якщо пошук не розкриває групу сам
+CPV_CHILDREN = [
+    "33600000-6", "33610000-9", "33620000-2", "33630000-5", "33640000-8",
+    "33650000-1", "33660000-4", "33670000-7", "33680000-0", "33690000-3",
+]
 
 # як може називатись поле замовника — перевіряємо перебором
 ENTITY_FIELDS = [
@@ -175,35 +180,53 @@ def probe(body):
     return total_count(payload), (rows[0] if rows else None), ""
 
 
-def build_body(page):
-    return {BUYER_FIELD: [EDRPOU], "cpv": [CPV_CODE], "page": page}
+_cpv_used = None
+
+
+def build_body(page, cpv=None):
+    return {BUYER_FIELD: [EDRPOU], "cpv": cpv or _cpv_used or [CPV_ROOT], "page": page}
 
 
 def discover_tender_ids():
+    global _cpv_used
     found = {}
     cutoff = (datetime.now(timezone.utc) - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
     log(f"  межа за датою: {cutoff[:10]}")
 
-    # контрольний замір: скільки дає кожен фільтр окремо і разом
-    for label, body in (
-        ("тільки buyer", {BUYER_FIELD: [EDRPOU], "page": 1}),
-        ("buyer + cpv", build_body(1)),
-    ):
-        total, sample, err = probe(body)
+    base_total, _, err = probe({BUYER_FIELD: [EDRPOU], "page": 1})
+    log(f"  тільки buyer: {base_total if not err else err}")
+
+    # який варіант ДК ловить більше — корінь групи чи перелік підкодів
+    variants = [("корінь", [CPV_ROOT]), ("підкоди", CPV_CHILDREN)]
+    best = None
+    for label, codes in variants:
+        total, sample, err = probe({BUYER_FIELD: [EDRPOU], "cpv": codes, "page": 1})
         if err:
-            log(f"  {label}: {err}")
+            log(f"  ДК {label}: {err}")
             continue
-        log(f"  {label}: всього {total}")
-        if label == "buyer + cpv" and sample:
-            log(f"    перший: {str(sample.get('title'))[:60]}")
-            log(f"    дата: {record_date(sample)[:19]}")
+        title = str((sample or {}).get("title", ""))[:50]
+        log(f"  ДК {label}: всього {total} · {title}")
+        if total and (best is None or total > best[1]):
+            best = (codes, total, label)
+
+    if not best:
+        log("  ДК-фільтр не працює — беру всі закупівлі замовника")
+        _cpv_used = None
+        body_fn = lambda p: {BUYER_FIELD: [EDRPOU], "page": p}
+    else:
+        _cpv_used = best[0]
+        log(f"  ОБРАНО ДК: {best[2]} ({best[1]} закупівель)")
+        body_fn = lambda p: build_body(p)
 
     page = 1
     stale = 0
-    dates_seen = []
-    while page <= 400:
+    seen = 0
+    ordered = None
+    prev_date = None
+
+    while page <= 500:
         try:
-            status, payload, raw = post_json(SEARCH_URL, build_body(page))
+            status, payload, raw = post_json(SEARCH_URL, body_fn(page))
         except Exception as ex:
             log(f"  сторінка {page}: {ex}")
             break
@@ -211,14 +234,18 @@ def discover_tender_ids():
         if not rows:
             break
 
-        if page <= 2:
-            ds = [record_date(r)[:10] for r in rows[:5]]
-            log(f"  сторінка {page}, дати: {ds}")
+        if page == 1:
+            log(f"  дати першої сторінки: {[record_date(r)[:10] for r in rows[:5]]}")
 
         fresh = 0
         for r in rows:
             d = record_date(r)
-            dates_seen.append(d)
+            seen += 1
+            if prev_date is not None and d and prev_date:
+                if d > prev_date and ordered is not False:
+                    ordered = False
+            if d:
+                prev_date = d
             if d and d < cutoff:
                 continue
             fresh += 1
@@ -236,7 +263,9 @@ def discover_tender_ids():
         page += 1
         time.sleep(0.25)
 
-    log(f"  переглянуто записів: {len(dates_seen)}, сторінок: {page - 1}")
+    if ordered is False:
+        log("  УВАГА: видача не впорядкована за датою, зупинка за межею ненадійна")
+    log(f"  переглянуто {seen} записів на {page - 1} сторінках")
     log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель")
     return found
 
@@ -365,28 +394,86 @@ def parse_tender(t):
 
 
 DETAIL_URLS = [
-    API + "/tenders/{id}",
     PORTAL + "/api/tenders/{id}",
+    PORTAL + "/api/tender/{id}",
+    API + "/tenders/{id}",
 ]
 _detail_url = None
 
 
-def fetch_tender(tid):
-    """Читає закупівлю. Пошук може віддавати внутрішній id або tenderID —
-    ендпоінти для них різні, тому перший вдалий варіант запам'ятовуємо."""
+def fetch_tender(tid, verbose=False):
+    """Читає закупівлю за номером. Ендпоінт визначаємо один раз на перших спробах."""
     global _detail_url
     urls = [_detail_url] if _detail_url else DETAIL_URLS
     for u in urls:
         try:
             data = get_json(u.format(id=tid), tries=1)
-        except Exception:
+        except Exception as ex:
+            if verbose:
+                log(f"    {u.split('/api')[-1]}: {ex}")
             continue
         if data:
+            payload = data.get("data") if isinstance(data, dict) else None
+            keys = sorted((payload or data).keys())[:12] if isinstance(payload or data, dict) else []
             if _detail_url is None:
                 _detail_url = u
-                log(f"  ендпоінт деталей: {u}")
+                log(f"  ЕНДПОІНТ ДЕТАЛЕЙ: {u}")
+                log(f"  ключі відповіді: {keys}")
             return data
     return None
+
+
+def diagnose_detail(tid):
+    """Одноразова проба: як узагалі прочитати закупівлю за номером."""
+    log("")
+    log("  === ПРОБА ЕНДПОІНТІВ ДЕТАЛЕЙ ===")
+    log(f"  номер: {tid}")
+
+    gets = [
+        PORTAL + "/api/tenders/{id}",
+        PORTAL + "/api/tender/{id}",
+        PORTAL + "/api/tenders/{id}/details",
+        PORTAL + "/api/search/tenders/{id}",
+        API + "/tenders/{id}",
+        "https://public.api.openprocurement.org/api/2.5/tenders/{id}",
+    ]
+    for u in gets:
+        url = u.format(id=tid)
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=25) as r:
+                raw = r.read().decode("utf-8", "replace")
+                try:
+                    d = json.loads(raw)
+                    keys = sorted(d.keys())[:10] if isinstance(d, dict) else type(d).__name__
+                    log(f"  GET {u.split('.ua')[-1] or u}: 200 · ключі {keys}")
+                except json.JSONDecodeError:
+                    log(f"  GET {u.split('.ua')[-1] or u}: 200 · не JSON · {raw[:80]}")
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", "replace")[:120]
+            log(f"  GET {u.split('.ua')[-1] or u}: {e.code} · {body}")
+        except Exception as ex:
+            log(f"  GET {u.split('.ua')[-1] or u}: {ex}")
+
+    posts = [
+        (SEARCH_URL, {"tenderID": [tid], "page": 1}),
+        (SEARCH_URL, {"tenderID": tid, "page": 1}),
+        (SEARCH_URL, {"text": tid, "page": 1}),
+        (PORTAL + "/api/tenders", {"tenderID": tid}),
+    ]
+    for url, body in posts:
+        try:
+            status, payload, raw = post_json(url, body)
+        except Exception as ex:
+            log(f"  POST {url.split('.ua')[-1]} {list(body)[0]}: {ex}")
+            continue
+        rows = extract_rows(payload)
+        if status == 200 and rows:
+            log(f"  POST {url.split('.ua')[-1]} {list(body)[0]}: 200 · записів {len(rows)} · ключі {sorted(rows[0].keys())[:10]}")
+        else:
+            log(f"  POST {url.split('.ua')[-1]} {list(body)[0]}: {status} · {msg_of(payload, raw)[:120]}")
+    log("  === КІНЕЦЬ ПРОБИ ===")
+    log("")
 
 
 # ── стан і сповіщення ───────────────────────────────────────────────────────
@@ -506,7 +593,7 @@ def main():
     fetched = 0
     skipped = 0
     errors = 0
-    for tid in list(known.keys()):
+    for tid in sorted(known, key=lambda k: known.get(k) or '', reverse=True):
         newer = discovered.get(tid, "")
         cached = state.get("tenders", {}).get(tid, {}).get("dateModified", "")
         if newer and cached and newer <= cached and tid in state.get("tenders", {}):
@@ -517,6 +604,10 @@ def main():
                 continue
         resp = fetch_tender(tid)
         if resp is None:
+            if fetched == 0 and errors == 0:
+                diagnose_detail(tid)
+                log("  деталі не читаються — далі не йдемо, дивись пробу вище")
+                return 1
             errors += 1
             if errors <= 5:
                 log(f"  {tid}: не вдалось прочитати")
