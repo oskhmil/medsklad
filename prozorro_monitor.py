@@ -29,7 +29,7 @@ OUT_PATH = "data/procurement.json"
 RETENTION_MONTHS = 12
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 3
+PARSER_VERSION = 4
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -424,6 +424,24 @@ def parse_tender(t, meta=None):
         if p and (contract_end is None or p > contract_end):
             contract_end = p
 
+    # Сума належить закупівлі, а не позиції: нагорода видається на лот цілком.
+    # Тому в позиції лишаємо суму тільки тоді, коли позиція одна.
+    active_contracts = [c for c in (t.get("contracts") or []) if c.get("status") == "active"]
+    active_awards = [a for a in (t.get("awards") or []) if a.get("status") == "active"]
+    src_vals = active_contracts or active_awards
+    total = None
+    if src_vals:
+        vals = [(v.get("value") or {}).get("amount") for v in src_vals]
+        vals = [v for v in vals if isinstance(v, (int, float))]
+        if vals:
+            total = round(sum(vals), 2)
+    if total is None:
+        total = (t.get("value") or {}).get("amount")
+
+    if len(items) > 1:
+        for i in items:
+            i["amount"] = None
+
     return {
         "id": t.get("tenderID") or t.get("id"),
         "tenderID": t.get("tenderID"),
@@ -433,6 +451,7 @@ def parse_tender(t, meta=None):
         "method": t.get("procurementMethodType"),
         "status": t.get("status"),
         "contractEnd": contract_end,
+        "amount": total,
         "url": f"{PORTAL}/tender/{t.get('tenderID')}",
         "counts": counts,
         "items": items,
