@@ -421,6 +421,55 @@ def parse_tender(t):
     }
 
 
+# ── читання деталей ─────────────────────────────────────────────────────────
+# Знайдено дослідним шляхом: закупівля читається за публічним номером
+# через портальний ендпоінт /api/tenders/{tenderID}/details.
+DETAIL_URLS = [
+    PORTAL + "/api/tenders/{id}/details",
+]
+_detail_url = None
+
+
+def fetch_tender(tid):
+    global _detail_url
+    urls = [_detail_url] if _detail_url else DETAIL_URLS
+    for u in urls:
+        try:
+            data = get_json(u.format(id=tid), tries=1)
+        except Exception:
+            continue
+        if data:
+            if _detail_url is None:
+                _detail_url = u
+                log(f"  ЕНДПОІНТ ДЕТАЛЕЙ: {u}")
+            return data
+    return None
+
+
+def diagnose_detail(tid):
+    """Проба на випадок, якщо ендпоінт колись зміниться."""
+    log("")
+    log("  === ПРОБА ЕНДПОІНТІВ ДЕТАЛЕЙ ===")
+    log(f"  номер: {tid}")
+    for u in (PORTAL + "/api/tenders/{id}/details",
+              PORTAL + "/api/tenders/{id}",
+              API + "/tenders/{id}"):
+        url = u.format(id=tid)
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+            with urllib.request.urlopen(req, timeout=25) as r:
+                raw = r.read().decode("utf-8", "replace")
+                d = json.loads(raw)
+                keys = sorted(d.keys())[:10] if isinstance(d, dict) else type(d).__name__
+                log(f"  GET {u.split('.ua')[-1]}: 200 · ключі {keys}")
+        except urllib.error.HTTPError as e:
+            log(f"  GET {u.split('.ua')[-1]}: {e.code} · {e.read().decode('utf-8','replace')[:100]}")
+        except Exception as ex:
+            log(f"  GET {u.split('.ua')[-1]}: {ex}")
+    log("  === КІНЕЦЬ ПРОБИ ===")
+    log("")
+
+
 # ── стан і сповіщення ───────────────────────────────────────────────────────
 
 def load_state():
