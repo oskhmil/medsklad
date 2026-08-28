@@ -119,40 +119,56 @@ def extract_rows(payload):
     return None
 
 
+def pick(rec, *keys):
+    for k in keys:
+        v = rec.get(k)
+        if v:
+            return v
+    return None
+
+
+def record_date(rec):
+    return pick(rec, "dateModified", "date", "datePublished", "dateCreated") or ""
+
+
 def discover_tender_ids():
+    """Повертає {внутрішній_id_або_tenderID: dateModified} за останні RETENTION місяців."""
     found = {}
     working = None
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
+    log(f"  межа за датою: {cutoff[:10]}")
 
     for label, build in BODY_CANDIDATES:
-        body = build(EDRPOU, 1)
         try:
-            status, payload, raw = post_json(SEARCH_URL, body)
+            status, payload, raw = post_json(SEARCH_URL, build(EDRPOU, 1))
         except Exception as ex:
             log(f"  [{label}] мережева помилка: {ex}")
             continue
-
         rows = extract_rows(payload)
-        if status == 200 and rows is not None:
-            log(f"  [{label}] HTTP 200, записів на сторінці: {len(rows)}")
-            if rows:
-                working = build
-                log(f"  ФОРМАТ ЗНАЙДЕНО: {label}")
-                log(f"  приклад запису: {json.dumps(rows[0], ensure_ascii=False)[:400]}")
-                break
-        else:
-            snippet = (raw or "").replace("\n", " ")[:300]
-            log(f"  [{label}] HTTP {status}: {snippet}")
+        if status == 200 and rows:
+            working = build
+            log(f"  ФОРМАТ: {label}, записів на сторінці: {len(rows)}")
+            log(f"  КЛЮЧІ ЗАПИСУ: {sorted(rows[0].keys())}")
+            for k in ("id", "tenderID", "tender_id", "_id", "dateModified", "date",
+                      "status", "procurementMethodType", "title"):
+                if k in rows[0]:
+                    v = str(rows[0][k])[:70]
+                    log(f"    {k} = {v}")
+            break
+        snippet = (raw or "")[:200]
+        log(f"  [{label}] HTTP {status}: {snippet}")
 
     if not working:
-        log("  ЖОДЕН формат не спрацював — дивись відповіді сервера вище")
+        log("  ЖОДЕН формат не спрацював")
         seed = seed_from_file()
         if seed:
-            log(f"  але є prozorro_seed.txt: {len(seed)} id")
+            log(f"  використовую prozorro_seed.txt: {len(seed)} id")
             return {s: "" for s in seed}
         return found
 
     page = 1
-    while page <= 60:
+    stale_pages = 0
+    while page <= 200:
         try:
             status, payload, raw = post_json(SEARCH_URL, working(EDRPOU, page))
         except Exception as ex:
@@ -161,14 +177,29 @@ def discover_tender_ids():
         rows = extract_rows(payload) or []
         if not rows:
             break
-        for r in rows:
-            tid = r.get("id") or r.get("tenderID") or r.get("tender_id")
-            if tid:
-                found[tid] = r.get("dateModified", "")
-        page += 1
-        time.sleep(0.4)
 
-    log(f"  знайдено закупівель у пошуку: {len(found)}")
+        fresh_here = 0
+        for r in rows:
+            d = record_date(r)
+            if d and d < cutoff:
+                continue
+            fresh_here += 1
+            tid = pick(r, "id", "tender_id", "_id") or pick(r, "tenderID")
+            if tid:
+                found[tid] = d
+
+        if fresh_here == 0:
+            stale_pages += 1
+            if stale_pages >= 2:
+                log(f"  сторінка {page}: усе старше межі — зупиняюсь")
+                break
+        else:
+            stale_pages = 0
+
+        page += 1
+        time.sleep(0.3)
+
+    log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель, сторінок пройдено: {page - 1}")
     return found
 
 
@@ -293,6 +324,31 @@ def parse_tender(t):
         "counts": counts,
         "items": items,
     }
+
+
+DETAIL_URLS = [
+    API + "/tenders/{id}",
+    PORTAL + "/api/tenders/{id}",
+]
+_detail_url = None
+
+
+def fetch_tender(tid):
+    """Читає закупівлю. Пошук може віддавати внутрішній id або tenderID —
+    ендпоінти для них різні, тому перший вдалий варіант запам'ятовуємо."""
+    global _detail_url
+    urls = [_detail_url] if _detail_url else DETAIL_URLS
+    for u in urls:
+        try:
+            data = get_json(u.format(id=tid), tries=1)
+        except Exception:
+            continue
+        if data:
+            if _detail_url is None:
+                _detail_url = u
+                log(f"  ендпоінт деталей: {u}")
+            return data
+    return None
 
 
 # ── стан і сповіщення ───────────────────────────────────────────────────────
@@ -421,14 +477,16 @@ def main():
                 parsed.append(snap)
                 skipped += 1
                 continue
-        try:
-            resp = get_json(f"{API}/tenders/{tid}")
-            fetched += 1
-        except Exception as ex:
-            log(f"  {tid}: помилка {ex}")
+        resp = fetch_tender(tid)
+        if resp is None:
             errors += 1
+            if errors <= 5:
+                log(f"  {tid}: не вдалось прочитати")
+            elif errors == 6:
+                log("  …подальші помилки не друкую")
             continue
-        t = resp.get("data") or {}
+        fetched += 1
+        t = resp.get("data") or resp or {}
         p = parse_tender(t)
         if p:
             parsed.append(p)
