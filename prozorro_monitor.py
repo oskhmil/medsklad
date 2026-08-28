@@ -326,19 +326,54 @@ def matches_cpv(tender):
     return any(c.startswith(CPV_PREFIX) for c in codes)
 
 
+_diag_left = 3
+
+
+def entity_edrpou(t):
+    """ЄДРПОУ замовника: у портальній відповіді він може бути в buyers[]."""
+    pe = t.get("procuringEntity") or {}
+    ident = pe.get("identifier") or {}
+    if ident.get("id"):
+        return str(ident["id"])
+    for b in (t.get("buyers") or []):
+        bi = (b or {}).get("identifier") or {}
+        if bi.get("id"):
+            return str(bi["id"])
+    return None
+
+
+def item_codes(t):
+    out = []
+    for it in t.get("items", []):
+        cls = (it.get("classification") or {}).get("id") or ""
+        if cls:
+            out.append(cls)
+    return out
+
+
 def parse_tender(t):
     """Плоский опис закупівлі: позиції зі статусами лотів."""
-    entity = t.get("procuringEntity") or {}
-    ident = entity.get("identifier") or {}
-    if ident.get("id") != EDRPOU:
-        return None
-    if not matches_cpv(t):
+    global _diag_left
+
+    edr = entity_edrpou(t)
+    codes = item_codes(t)
+    root = ((t.get("classification") or {}).get("id") or "")
+
+    if _diag_left > 0:
+        _diag_left -= 1
+        log(f"  [діаг] {t.get('tenderID')} · ЄДРПОУ={edr} · ДК тендера={root or '—'}"
+            f" · позицій={len(t.get('items') or [])} · ДК позицій={sorted(set(codes))[:4]}")
+        if edr is None:
+            log(f"         ключі: {sorted(t.keys())[:25]}")
+
+    # пошук уже відфільтрував за buyer, тому розбіжність лише логуємо
+    if edr and edr != EDRPOU:
         return None
 
     items = []
     for it in t.get("items", []):
         cls = (it.get("classification") or {}).get("id") or ""
-        if not cls.startswith(CPV_PREFIX):
+        if cls and not cls.startswith(CPV_PREFIX):
             continue
         lot_id = it.get("relatedLot")
         st, supplier, amount = lot_status(t, lot_id)
@@ -372,7 +407,7 @@ def parse_tender(t):
             contract_end = p
 
     return {
-        "id": t.get("id"),
+        "id": t.get("id") or t.get("tenderID"),
         "tenderID": t.get("tenderID"),
         "title": (t.get("title") or "").strip(),
         "date": t.get("date"),
@@ -384,87 +419,6 @@ def parse_tender(t):
         "counts": counts,
         "items": items,
     }
-
-
-DETAIL_URLS = [
-    PORTAL + "/api/tenders/{id}/details",
-]
-_detail_url = None
-
-
-def fetch_tender(tid, verbose=False):
-    """Читає закупівлю за номером. Ендпоінт визначаємо один раз на перших спробах."""
-    global _detail_url
-    urls = [_detail_url] if _detail_url else DETAIL_URLS
-    for u in urls:
-        try:
-            data = get_json(u.format(id=tid), tries=1)
-        except Exception as ex:
-            if verbose:
-                log(f"    {u.split('/api')[-1]}: {ex}")
-            continue
-        if data:
-            payload = data.get("data") if isinstance(data, dict) else None
-            keys = sorted((payload or data).keys())[:12] if isinstance(payload or data, dict) else []
-            if _detail_url is None:
-                _detail_url = u
-                log(f"  ЕНДПОІНТ ДЕТАЛЕЙ: {u}")
-                log(f"  ключі відповіді: {keys}")
-            return data
-    return None
-
-
-def diagnose_detail(tid):
-    """Одноразова проба: як узагалі прочитати закупівлю за номером."""
-    log("")
-    log("  === ПРОБА ЕНДПОІНТІВ ДЕТАЛЕЙ ===")
-    log(f"  номер: {tid}")
-
-    gets = [
-        PORTAL + "/api/tenders/{id}",
-        PORTAL + "/api/tender/{id}",
-        PORTAL + "/api/tenders/{id}/details",
-        PORTAL + "/api/search/tenders/{id}",
-        API + "/tenders/{id}",
-        "https://public.api.openprocurement.org/api/2.5/tenders/{id}",
-    ]
-    for u in gets:
-        url = u.format(id=tid)
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
-            with urllib.request.urlopen(req, timeout=25) as r:
-                raw = r.read().decode("utf-8", "replace")
-                try:
-                    d = json.loads(raw)
-                    keys = sorted(d.keys())[:10] if isinstance(d, dict) else type(d).__name__
-                    log(f"  GET {u.split('.ua')[-1] or u}: 200 · ключі {keys}")
-                except json.JSONDecodeError:
-                    log(f"  GET {u.split('.ua')[-1] or u}: 200 · не JSON · {raw[:80]}")
-        except urllib.error.HTTPError as e:
-            body = e.read().decode("utf-8", "replace")[:120]
-            log(f"  GET {u.split('.ua')[-1] or u}: {e.code} · {body}")
-        except Exception as ex:
-            log(f"  GET {u.split('.ua')[-1] or u}: {ex}")
-
-    posts = [
-        (SEARCH_URL, {"tenderID": [tid], "page": 1}),
-        (SEARCH_URL, {"tenderID": tid, "page": 1}),
-        (SEARCH_URL, {"text": tid, "page": 1}),
-        (PORTAL + "/api/tenders", {"tenderID": tid}),
-    ]
-    for url, body in posts:
-        try:
-            status, payload, raw = post_json(url, body)
-        except Exception as ex:
-            log(f"  POST {url.split('.ua')[-1]} {list(body)[0]}: {ex}")
-            continue
-        rows = extract_rows(payload)
-        if status == 200 and rows:
-            log(f"  POST {url.split('.ua')[-1]} {list(body)[0]}: 200 · записів {len(rows)} · ключі {sorted(rows[0].keys())[:10]}")
-        else:
-            log(f"  POST {url.split('.ua')[-1]} {list(body)[0]}: {status} · {msg_of(payload, raw)[:120]}")
-    log("  === КІНЕЦЬ ПРОБИ ===")
-    log("")
 
 
 # ── стан і сповіщення ───────────────────────────────────────────────────────
