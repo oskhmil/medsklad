@@ -73,12 +73,16 @@ def get_json(url, tries=3):
 SEARCH_URL = PORTAL + "/api/search/tenders"
 
 BODY_CANDIDATES = [
+    # структуровані фільтри — те, чим користується сам портал
+    ("edrpou+cpv", lambda e, p: {"edrpou": [e], "cpv": ["336"], "page": p}),
+    ("edrpou+classification", lambda e, p: {"edrpou": [e], "classification": ["336"], "page": p}),
+    ("procuringEntity+cpv", lambda e, p: {"procuringEntity": [e], "cpv": ["336"], "page": p}),
+    ("edrpou-only", lambda e, p: {"edrpou": [e], "page": p}),
+    ("procuringEntity-only", lambda e, p: {"procuringEntity": [e], "page": p}),
+    ("edrpou-str", lambda e, p: {"edrpou": e, "page": p}),
+    ("text+cpv", lambda e, p: {"text": e, "cpv": ["336"], "page": p}),
+    # запасний варіант — просто текст (працює, але тягне зайве)
     ("text", lambda e, p: {"text": e, "page": p}),
-    ("edrpou", lambda e, p: {"edrpou": e, "page": p}),
-    ("edrpou-list", lambda e, p: {"edrpou": [e], "page": p}),
-    ("query-text", lambda e, p: {"query": {"text": e}, "page": p}),
-    ("filters", lambda e, p: {"filters": {"edrpou": [e]}, "page": p}),
-    ("searchText", lambda e, p: {"searchText": e, "page": p}),
 ]
 
 
@@ -127,8 +131,24 @@ def pick(rec, *keys):
     return None
 
 
+def total_count(payload):
+    if not isinstance(payload, dict):
+        return None
+    for k in ("total", "count", "totalCount", "found"):
+        v = payload.get(k)
+        if isinstance(v, int):
+            return v
+    return None
+
+
 def record_date(rec):
-    return pick(rec, "dateModified", "date", "datePublished", "dateCreated") or ""
+    d = pick(rec, "dateModified", "date", "datePublished", "dateCreated")
+    if d:
+        return d
+    tp = rec.get("tenderPeriod")
+    if isinstance(tp, dict):
+        return tp.get("startDate") or tp.get("endDate") or ""
+    return ""
 
 
 def discover_tender_ids():
@@ -138,6 +158,7 @@ def discover_tender_ids():
     cutoff = (datetime.now(timezone.utc) - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
     log(f"  межа за датою: {cutoff[:10]}")
 
+    results = []
     for label, build in BODY_CANDIDATES:
         try:
             status, payload, raw = post_json(SEARCH_URL, build(EDRPOU, 1))
@@ -145,18 +166,25 @@ def discover_tender_ids():
             log(f"  [{label}] мережева помилка: {ex}")
             continue
         rows = extract_rows(payload)
-        if status == 200 and rows:
-            working = build
-            log(f"  ФОРМАТ: {label}, записів на сторінці: {len(rows)}")
-            log(f"  КЛЮЧІ ЗАПИСУ: {sorted(rows[0].keys())}")
-            for k in ("id", "tenderID", "tender_id", "_id", "dateModified", "date",
-                      "status", "procurementMethodType", "title"):
-                if k in rows[0]:
-                    v = str(rows[0][k])[:70]
-                    log(f"    {k} = {v}")
-            break
-        snippet = (raw or "")[:200]
-        log(f"  [{label}] HTTP {status}: {snippet}")
+        if status != 200 or rows is None:
+            log(f"  [{label}] HTTP {status}: {(raw or '')[:140]}")
+            continue
+        total = total_count(payload)
+        log(f"  [{label}] 200 · на сторінці {len(rows)} · всього {total if total is not None else '?'}"
+            + (f" · перший: {str(rows[0].get('title'))[:40]}" if rows else " · порожньо"))
+        if rows:
+            results.append((label, build, total if total is not None else 10 ** 9, rows[0]))
+
+    if results:
+        # найкращий формат — той, що дав найменше зайвого
+        label, working, total, sample = min(results, key=lambda r: r[2])
+        log(f"  ОБРАНО: {label} (всього {total})")
+        log(f"  КЛЮЧІ ЗАПИСУ: {sorted(sample.keys())}")
+        for k in ("id", "tenderID", "dateModified", "date", "status", "title"):
+            if k in sample:
+                log(f"    {k} = {str(sample[k])[:70]}")
+        if isinstance(sample.get("tenderPeriod"), dict):
+            log(f"    tenderPeriod = {json.dumps(sample['tenderPeriod'], ensure_ascii=False)[:120]}")
 
     if not working:
         log("  ЖОДЕН формат не спрацював")
