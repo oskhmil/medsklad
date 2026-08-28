@@ -1589,8 +1589,8 @@
         <button class="choice-btn proc" onclick="openProc()">
           <div class="choice-ico">🛒</div>
           <div class="choice-body">
-            <div class="choice-title">Закупівлі Prozorro</div>
-            <div class="choice-sub">Статуси позицій: переможець, договір, зрив торгів</div>
+            <div class="choice-title">Закупівлі Prozorro 🔒</div>
+            <div class="choice-sub">Work in progress · статуси позицій, договори, зриви торгів</div>
           </div>
           <div class="choice-arrow">›</div>
         </button>
@@ -1640,6 +1640,12 @@
                  style="width:100%;background:#2a3050;border:1.5px solid #4f8ef7;border-radius:12px;
                         padding:10px 38px 10px 14px;color:#fff;font-size:14px;outline:none;">
           <span class="search-ico">🔍</span>
+        </div>
+
+        <div class="proc-bar" id="proc-groups">
+          <button class="filter-btn active" id="proc-g-all"  onclick="procSetGroup('all',this)">Все</button>
+          <button class="filter-btn"        id="proc-g-drug" onclick="procSetGroup('Ліки',this)">💊 Ліки</button>
+          <button class="filter-btn"        id="proc-g-mat"  onclick="procSetGroup('Матеріали',this)">🧰 Матеріали</button>
         </div>
 
         <div class="proc-bar">
@@ -2260,7 +2266,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.156";
+const APP_VERSION = "v.160";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3178,6 +3184,8 @@ const ANALYTICS_AUTH_KEY = "medsklad_analytics_auth";
 const FINPLAN_AUTH_KEY   = "medsklad_finplan_auth";
 const INFCTRL_PWD_HASH   = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
 const INFCTRL_AUTH_KEY   = "medsklad_infcontrol_auth";
+const PROC_PWD_HASH      = "fc6b69b3f4824bd10855d0cae7d8b8d51dd5d0556cc5ada582189789a0c879e1"; // sha256("solutionis")
+const PROC_AUTH_KEY      = "medsklad_proc_auth";
 
 // Which section the password modal is currently gating: "analytics" | "finplan"
 let _pwdTarget = "analytics";
@@ -3201,6 +3209,12 @@ function _isFinplanAuthorized() {
   } catch (_) { return false; }
 }
 
+function _isProcAuthorized() {
+  try {
+    return sessionStorage.getItem(PROC_AUTH_KEY) === "1";
+  } catch (_) { return false; }
+}
+
 function _isInfCtrlAuthorized() {
   try {
     return sessionStorage.getItem(INFCTRL_AUTH_KEY) === "1";
@@ -3209,12 +3223,7 @@ function _isInfCtrlAuthorized() {
 
 async function openInfControl() {
   await Store.ready();
-  _pwdTarget = "infcontrol";
-  if (_isInfCtrlAuthorized()) {
-    openInfControlPicker();
-    return;
-  }
-  _showPwdOverlay("Введіть пароль відділу інфекційного контролю", "text");
+  openInfControlPicker();
 }
 
 function openAnalytics() {
@@ -3298,14 +3307,19 @@ async function submitAnalyticsPassword() {
   }
   const expected  = _pwdTarget === "finplan" ? FINPLAN_PWD_HASH
                   : _pwdTarget === "infcontrol" ? INFCTRL_PWD_HASH
+                  : _pwdTarget === "proc" ? PROC_PWD_HASH
                   : ANALYTICS_PWD_HASH;
   const authKey   = _pwdTarget === "finplan" ? FINPLAN_AUTH_KEY
                   : _pwdTarget === "infcontrol" ? INFCTRL_AUTH_KEY
+                  : _pwdTarget === "proc" ? PROC_AUTH_KEY
                   : ANALYTICS_AUTH_KEY;
   if (hash === expected) {
     try { sessionStorage.setItem(authKey, "1"); } catch (_) {}
     closePwdOverlay();
-    if (_pwdTarget === "finplan") {
+    if (_pwdTarget === "proc") {
+      show("proc");
+      loadProc(false);
+    } else if (_pwdTarget === "finplan") {
       show("finplan");
       loadFinplan(false);
     } else if (_pwdTarget === "infcontrol") {
@@ -13088,6 +13102,8 @@ const PROC_TTL_MS     = 30 * 60 * 1000;   // 30 хв — монітор онов
 
 let procData     = null;   // payload з procurement.json
 let procFilter   = "all";
+let procGroup    = "all";   // все / Ліки / Матеріали
+let procLimit    = 40;      // скільки карток малюємо за раз (мобільні гальмують на 178)
 let procQuery    = "";
 let procExpanded = {};     // tenderID → розгорнуто вручну
 
@@ -13115,8 +13131,13 @@ async function _procFetch() {
 
 async function openProc() {
   await Store.ready();
-  show("proc");
-  loadProc(false);
+  _pwdTarget = "proc";
+  if (_isProcAuthorized()) {
+    show("proc");
+    loadProc(false);
+    return;
+  }
+  _showPwdOverlay("Work in progress — введіть пароль", "text");
 }
 
 async function loadProc(force) {
@@ -13192,12 +13213,24 @@ function procDate(iso) {
 
 function procOnSearch(v) {
   procQuery = String(v || "").trim();
+  procLimit = 40;
+  procRender();
+}
+
+function procSetGroup(val, btn) {
+  procGroup = val;
+  procLimit = 40;
+  document.querySelectorAll("#proc-groups .filter-btn").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
   procRender();
 }
 
 function procSetFilter(val, btn) {
   procFilter = val;
-  document.querySelectorAll(".proc-bar .filter-btn").forEach(b => b.classList.remove("active"));
+  procLimit = 40;
+  document.querySelectorAll("#proc-list, .proc-bar:not(#proc-groups) .filter-btn").forEach(b => {
+    if (b.classList) b.classList.remove("active");
+  });
   const target = btn || document.getElementById("proc-f-" + val);
   if (target) target.classList.add("active");
   procRender();
@@ -13224,8 +13257,12 @@ function procRender() {
   if (!procData) return;
   const tenders = procData.tenders || [];
 
+  // Група фільтрує ще до KPI: цифри мають описувати те, що видно на екрані.
+  const inGroup = t => procGroup === "all" || (t.group || "Ліки") === procGroup;
+  const scope = tenders.filter(inGroup);
+
   let nTotal = 0, nProg = 0, nFail = 0;
-  tenders.forEach(t => (t.items || []).forEach(i => {
+  scope.forEach(t => (t.items || []).forEach(i => {
     nTotal++;
     if (procIsProblem(i.status)) nFail++;
     else if (i.status !== "Підписано") nProg++;
@@ -13236,7 +13273,7 @@ function procRender() {
 
   // Фільтрація на двох рівнях: спершу позиції, потім закупівлі без збігів.
   const rows = [];
-  tenders.forEach(t => {
+  scope.forEach(t => {
     const items = (t.items || []).filter(procItemMatches);
     if (items.length) rows.push({ t, items });
   });
@@ -13258,7 +13295,8 @@ function procRender() {
     return;
   }
 
-  list.innerHTML = rows.map(({ t, items }) => {
+  const visible = rows.slice(0, procLimit);
+  list.innerHTML = visible.map(({ t, items }) => {
     const c = t.counts || {};
     const hasProblem = (c.failed || 0) > 0;
     // Закупівлі-одиночки і ті, де є проблеми, показуємо розгорнутими одразу:
@@ -13299,6 +13337,7 @@ function procRender() {
             ${(t.items || []).length} ${(t.items || []).length === 1 ? "позиція" : "позицій"}
             ${parts.length ? " · " + parts.join(" · ") : ""}
             ${t.amount ? " · " + procMoney(t.amount) : ""}
+            ${procGroup === "all" && (t.group || "") === "Матеріали" ? " · 🧰" : ""}
           </div>
         </div>
         ${collapsible ? `<div class="proc-chev">${open ? "▲" : "▼"}</div>` : ""}
@@ -13311,7 +13350,15 @@ function procRender() {
           Відкрити в Prozorro ↗</a>
       </div>` : ""}
     </div>`;
-  }).join("");
+  }).join("") + (rows.length > procLimit
+    ? `<div class="proc-more" style="text-align:center;padding:12px;border:1px solid var(--border);
+                border-radius:12px" onclick="procShowMore()">Показати ще ${Math.min(40, rows.length - procLimit)} з ${rows.length - procLimit}</div>`
+    : "");
+}
+
+function procShowMore() {
+  procLimit += 40;
+  procRender();
 }
 
 </script>
