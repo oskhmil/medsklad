@@ -124,7 +124,7 @@ def discover_tender_ids():
     working = None
 
     for label, build in BODY_CANDIDATES:
-        body = build(EDRPOU, 0)
+        body = build(EDRPOU, 1)
         try:
             status, payload, raw = post_json(SEARCH_URL, body)
         except Exception as ex:
@@ -151,8 +151,8 @@ def discover_tender_ids():
             return {s: "" for s in seed}
         return found
 
-    page = 0
-    while page < 60:
+    page = 1
+    while page <= 60:
         try:
             status, payload, raw = post_json(SEARCH_URL, working(EDRPOU, page))
         except Exception as ex:
