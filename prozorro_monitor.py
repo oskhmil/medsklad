@@ -72,7 +72,10 @@ def get_json(url, tries=3):
 
 SEARCH_URL = PORTAL + "/api/search/tenders"
 
-CPV_FORMATS = ["336*****-*", "33600000-6", "33600000", "336"]
+# Знайдено дослідним шляхом: поле замовника — buyer (масив),
+# код ДК — у повному форматі 33600000-6. Стеля видачі пошуку — 10000.
+BUYER_FIELD = "buyer"
+CPV_CODE = "33600000-6"
 
 # як може називатись поле замовника — перевіряємо перебором
 ENTITY_FIELDS = [
@@ -172,102 +175,68 @@ def probe(body):
     return total_count(payload), (rows[0] if rows else None), ""
 
 
+def build_body(page):
+    return {BUYER_FIELD: [EDRPOU], "cpv": [CPV_CODE], "page": page}
+
+
 def discover_tender_ids():
     found = {}
     cutoff = (datetime.now(timezone.utc) - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
     log(f"  межа за датою: {cutoff[:10]}")
 
-    # 1. формат коду ДК
-    log("  -- формат cpv --")
-    cpv_ok = None
-    for fmt in CPV_FORMATS:
-        total, sample, err = probe({"cpv": [fmt], "page": 1})
+    # контрольний замір: скільки дає кожен фільтр окремо і разом
+    for label, body in (
+        ("тільки buyer", {BUYER_FIELD: [EDRPOU], "page": 1}),
+        ("buyer + cpv", build_body(1)),
+    ):
+        total, sample, err = probe(body)
         if err:
-            log(f"  cpv={fmt}: {err}")
+            log(f"  {label}: {err}")
             continue
-        title = str((sample or {}).get("title", ""))[:40]
-        log(f"  cpv={fmt}: всього {total} · перший: {title}")
-        if total and total < IGNORED_TOTAL and cpv_ok is None:
-            cpv_ok = fmt
-    if cpv_ok:
-        log(f"  ФОРМАТ ДК: {cpv_ok}")
-    else:
-        log("  жоден формат ДК не звузив вибірку")
-
-    # 2. назва поля замовника
-    log("  -- поле замовника --")
-    ent_ok = None
-    base = {"cpv": [cpv_ok]} if cpv_ok else {}
-    for field in ENTITY_FIELDS:
-        for val in ([EDRPOU], EDRPOU):
-            body = dict(base)
-            body[field] = val
-            body["page"] = 1
-            total, sample, err = probe(body)
-            shape = "list" if isinstance(val, list) else "str"
-            if err:
-                log(f"  {field}({shape}): {err}")
-                continue
-            title = str((sample or {}).get("title", ""))[:40]
-            ent = ""
-            if sample:
-                pe = sample.get("procuringEntity") or {}
-                ent = str(((pe.get("identifier") or {}).get("id")) or "")
-            log(f"  {field}({shape}): всього {total} · ЄДРПОУ={ent or '?'} · {title}")
-            if total and 0 < total < IGNORED_TOTAL and ent == EDRPOU:
-                ent_ok = (field, val)
-                break
-        if ent_ok:
-            break
-
-    if not ent_ok:
-        log("  ЖОДНЕ поле замовника не спрацювало — далі не йдемо")
-        seed = seed_from_file()
-        if seed:
-            log(f"  використовую prozorro_seed.txt: {len(seed)} id")
-            return {s: "" for s in seed}
-        return found
-
-    field, val = ent_ok
-    log(f"  ПОЛЕ ЗАМОВНИКА: {field} = {val}")
-
-    def build(page):
-        b = dict(base)
-        b[field] = val
-        b["page"] = page
-        return b
+        log(f"  {label}: всього {total}")
+        if label == "buyer + cpv" and sample:
+            log(f"    перший: {str(sample.get('title'))[:60]}")
+            log(f"    дата: {record_date(sample)[:19]}")
 
     page = 1
     stale = 0
-    while page <= 200:
-        total, sample, err = None, None, ""
+    dates_seen = []
+    while page <= 400:
         try:
-            status, payload, raw = post_json(SEARCH_URL, build(page))
+            status, payload, raw = post_json(SEARCH_URL, build_body(page))
         except Exception as ex:
             log(f"  сторінка {page}: {ex}")
             break
         rows = extract_rows(payload) or []
         if not rows:
             break
+
+        if page <= 2:
+            ds = [record_date(r)[:10] for r in rows[:5]]
+            log(f"  сторінка {page}, дати: {ds}")
+
         fresh = 0
         for r in rows:
             d = record_date(r)
+            dates_seen.append(d)
             if d and d < cutoff:
                 continue
             fresh += 1
             tid = pick(r, "id", "tender_id", "_id") or pick(r, "tenderID")
             if tid:
                 found[tid] = d
+
         if fresh == 0:
             stale += 1
-            if stale >= 2:
-                log(f"  сторінка {page}: усе старше межі — стоп")
+            if stale >= 3:
+                log(f"  сторінка {page}: три сторінки поспіль старші межі — стоп")
                 break
         else:
             stale = 0
         page += 1
-        time.sleep(0.3)
+        time.sleep(0.25)
 
+    log(f"  переглянуто записів: {len(dates_seen)}, сторінок: {page - 1}")
     log(f"  у межах {RETENTION_MONTHS} міс.: {len(found)} закупівель")
     return found
 
