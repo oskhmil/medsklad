@@ -8,6 +8,12 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#13172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Liki.on!">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Liki.on!</title>
@@ -1589,7 +1595,7 @@
         <button class="choice-btn proc" onclick="openProc()">
           <div class="choice-ico">🛒</div>
           <div class="choice-body">
-            <div class="choice-title">Закупівлі Prozorro 🔒</div>
+            <div class="choice-title">Закупівлі Prozorro 🔒<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
             <div class="choice-sub">Work in progress · статуси позицій, договори, зриви торгів</div>
           </div>
           <div class="choice-arrow">›</div>
@@ -1619,6 +1625,10 @@
       </div>
 
       <div id="proc-content" style="display:none">
+        <div style="margin-bottom:12px">
+          <div style="font-size:15px;font-weight:600;color:#e2e8f7">Закупівлі Prozorro</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5" id="proc-period"></div>
+        </div>
         <div class="proc-kpis">
           <div class="proc-kpi" onclick="procSetFilter('all')">
             <div class="proc-kpi-num" style="color:var(--accent)" id="proc-k-total">0</div>
@@ -1645,7 +1655,7 @@
         <div class="proc-bar" id="proc-groups">
           <button class="filter-btn active" id="proc-g-all"  onclick="procSetGroup('all',this)">Все</button>
           <button class="filter-btn"        id="proc-g-drug" onclick="procSetGroup('Ліки',this)">💊 Ліки</button>
-          <button class="filter-btn"        id="proc-g-mat"  onclick="procSetGroup('Матеріали',this)">🧰 Матеріали</button>
+          <button class="filter-btn"        id="proc-g-mat"  onclick="procSetGroup('Матеріали',this)">🧰 ВМП</button>
         </div>
 
         <div class="proc-bar">
@@ -2266,7 +2276,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.160";
+const APP_VERSION = "v.164";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3137,6 +3147,7 @@ function goStart() {
   const si = document.getElementById("search-input");
   if (si) si.value = "";
   show("sections");
+  procUpdateBadge();
 }
 
 // Auto-refresh the medsearch dataset only if cache is older than this.
@@ -12317,6 +12328,7 @@ function exportFinplanXlsx() {
 show("sections");
 startFreshWatcher();
 updateMicVisibility();
+procUpdateBadge();
 
 
 // ── Мінімальний генератор стилізованого XLSX через JSZip ─────────────────────
@@ -13104,6 +13116,7 @@ let procData     = null;   // payload з procurement.json
 let procFilter   = "all";
 let procGroup    = "all";   // все / Ліки / Матеріали
 let procLimit    = 40;      // скільки карток малюємо за раз (мобільні гальмують на 178)
+const PROC_SEEN_KEY = "medsklad_proc_seen";   // коли востаннє відкривали розділ
 let procQuery    = "";
 let procExpanded = {};     // tenderID → розгорнуто вручну
 
@@ -13127,6 +13140,53 @@ async function _procFetch() {
   const payload = await resp.json();
   if (!payload || !Array.isArray(payload.tenders)) throw new Error("Неочікуваний формат procurement.json");
   return payload;
+}
+
+// Значок на плитці розділів: скільки закупівель змінилось із останнього
+// перегляду. Рахуємо з кешу, а як його немає — тихо тягнемо файл.
+// Помилки глушимо: значок другорядний і не має ламати головний екран.
+function _procLastSeen() {
+  try { return parseInt(Store.get(PROC_SEEN_KEY) || "0", 10) || 0; } catch (_) { return 0; }
+}
+
+function procMarkSeen() {
+  try { Store.set(PROC_SEEN_KEY, String(Date.now())); } catch (_) {}
+  const b = document.getElementById("proc-badge");
+  if (b) b.style.display = "none";
+}
+
+function _procCountNew(payload, since) {
+  if (!payload || !Array.isArray(payload.tenders)) return 0;
+  if (!since) return 0;
+  return payload.tenders.filter(t => {
+    const d = Date.parse(t.dateModified || t.date || "");
+    return d && d > since;
+  }).length;
+}
+
+async function procUpdateBadge() {
+  const badge = document.getElementById("proc-badge");
+  if (!badge) return;
+  try {
+    await Store.ready();
+    const since = _procLastSeen();
+    if (!since) return;                       // ще жодного разу не відкривали
+    let payload = null;
+    const c = _procLoadCache();
+    if (c && (Date.now() - c.time.getTime()) < PROC_TTL_MS) {
+      payload = c.payload;
+    } else {
+      payload = await _procFetch();
+      _procSaveCache(payload);
+    }
+    const n = _procCountNew(payload, since);
+    if (n > 0) {
+      badge.textContent = n;
+      badge.style.display = "inline-block";
+    } else {
+      badge.style.display = "none";
+    }
+  } catch (_) { /* значок не критичний */ }
 }
 
 async function openProc() {
@@ -13153,6 +13213,7 @@ async function loadProc(force) {
       elLoad.style.display = "none";
       elCont.style.display = "block";
       procRender();
+      procMarkSeen();
       return;
     }
   }
@@ -13166,6 +13227,7 @@ async function loadProc(force) {
     elLoad.style.display = "none";
     elCont.style.display = "block";
     procRender();
+    procMarkSeen();
   } catch (err) {
     elLoad.style.display = "none";
     elErr.style.display = "block";
@@ -13287,6 +13349,16 @@ function procRender() {
     `${shownItems} позицій у ${rows.length} закупівлях` +
     (gen ? ` · дані на ${gen}` : "");
 
+  // Період рахуємо з самих даних: у файлі тримається лише актуальне
+  // (незавершене, свіжі договори і зриви), тож межі рухаються самі.
+  const dates = tenders.map(t => t.dateModified || t.date).filter(Boolean).sort();
+  const periodEl = document.getElementById("proc-period");
+  if (periodEl) {
+    periodEl.textContent = dates.length
+      ? `Моніторинг за період ${procDate(dates[0])} — ${procDate(dates[dates.length - 1])}`
+      : "Моніторинг закупівель ТМО";
+  }
+
   const list = document.getElementById("proc-list");
   if (!rows.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div>
@@ -13311,10 +13383,17 @@ function procRender() {
     if (c.progress) parts.push(`${c.progress} в процесі`);
     if (c.failed)   parts.push(`<span style="color:var(--danger)">${c.failed} проблемних</span>`);
 
+    // Постачальник майже завжди один на всю закупівлю — виносимо його в шапку,
+    // щоб не доводилось розгортати картку заради одного рядка.
+    const sups = [...new Set((t.items || []).map(i => i.supplier).filter(Boolean))];
+    const supLine = sups.length === 1 ? procSupplier(sups[0])
+                  : sups.length > 1  ? sups.length + " постачальники"
+                  : "";
+
     const itemsHtml = items.map(i => {
       const sub = [];
       if (i.qty)      sub.push(`${i.qty} ${esc(i.unit || "")}`.trim());
-      if (i.supplier) sub.push(esc(procSupplier(i.supplier)));
+      if (i.supplier && sups.length !== 1) sub.push(esc(procSupplier(i.supplier)));
       if (i.amount)   sub.push(procMoney(i.amount));
       return `<div class="proc-item">
         <div class="proc-item-top">
@@ -13339,6 +13418,7 @@ function procRender() {
             ${t.amount ? " · " + procMoney(t.amount) : ""}
             ${procGroup === "all" && (t.group || "") === "Матеріали" ? " · 🧰" : ""}
           </div>
+          ${supLine ? `<div class="proc-meta" style="margin-top:2px;color:var(--green)">${esc(supLine)}</div>` : ""}
         </div>
         ${collapsible ? `<div class="proc-chev">${open ? "▲" : "▼"}</div>` : ""}
       </div>
