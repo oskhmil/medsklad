@@ -396,13 +396,15 @@
     letter-spacing: .06em;
   }
   .choice-wrap {
-    display: flex; flex-direction: column; gap: 12px;
+    display: flex; flex-direction: column; gap: 16px;
     max-width: 420px; margin: 28px auto 0;
   }
   .choice-btn {
     display: flex; align-items: center; gap: 14px;
-    padding: 18px 20px; border-radius: 16px; border: 1px solid var(--border);
-    background: var(--card); color: var(--text);
+    padding: 18px 20px; border-radius: 16px;
+    border: 1px solid #333c5c;
+    background: var(--card2); color: var(--text);
+    box-shadow: 0 2px 10px rgba(0,0,0,.35);
     font-size: 16px; font-weight: 700; cursor: pointer;
     transition: border-color .15s, transform .1s, background .15s;
     text-align: left;
@@ -1458,16 +1460,23 @@
   .proc-kpi-lbl { font-size: 10px; color: var(--muted); margin-top: 3px; line-height: 1.25; }
   .proc-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
   .proc-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 14px; margin-bottom: 9px; overflow: hidden;
+    background: var(--card2); border: 1px solid #333c5c;
+    border-radius: 14px; margin-bottom: 14px; overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,.35);
   }
-  .proc-card.problem { border-color: rgba(248,113,113,.35); }
+  .proc-card.problem {
+    border-color: rgba(248,113,113,.5);
+    box-shadow: 0 2px 10px rgba(248,113,113,.12);
+  }
+  /* Перелік позицій — на тон темніший за шапку, щоб було видно,
+     де закінчується одна закупівля і починається наступна. */
+  .proc-items { background: rgba(11,14,24,.45); }
   .proc-head { padding: 11px 13px; display: flex; gap: 9px; align-items: flex-start; }
   .proc-head.clickable { cursor: pointer; }
   .proc-title { font-size: 13px; font-weight: 600; line-height: 1.35; }
   .proc-meta { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
   .proc-chev { font-size: 13px; color: var(--muted); flex-shrink: 0; margin-top: 2px; }
-  .proc-items { border-top: 1px solid var(--border); padding: 6px 13px 10px; }
+  .proc-items { border-top: 1px solid #333c5c; padding: 6px 13px 10px; }
   .proc-item { padding: 7px 0; border-bottom: 1px solid rgba(37,43,68,.4); }
   .proc-item:last-child { border-bottom: none; }
   .proc-item-top { display: flex; gap: 8px; align-items: flex-start; justify-content: space-between; }
@@ -2276,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.164";
+const APP_VERSION = "v.166";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
