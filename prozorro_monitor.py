@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 14
+PARSER_VERSION = 15
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -331,6 +331,10 @@ def lot_status(tender, lot_id):
     """
     lots = {l["id"]: l for l in (tender.get("lots") or []) if l.get("id")}
     lot = lots.get(lot_id) if lot_id else None
+    # Лот з /lots може не збігтися з переліком у /details — тоді статус
+    # рахуємо на рівні закупівлі, а не вигадуємо зрив.
+    if lot_id and lot is None and len(lots) == 1:
+        lot = next(iter(lots.values()))
 
     if lot:
         if lot.get("status") == "unsuccessful":
@@ -341,6 +345,11 @@ def lot_status(tender, lot_id):
     all_awards = tender.get("awards") or []
     if lot_id and lots:
         awards = [a for a in all_awards if a.get("lotID") == lot_id]
+        # Позиції відкритих торгів приходять з окремого ендпоінта і несуть
+        # номер лота, а нагороди в /details його не мають. Тоді зіставляти
+        # нема за чим — беремо всі нагороди закупівлі.
+        if not awards and not any(a.get("lotID") for a in all_awards):
+            awards = all_awards
     else:
         awards = all_awards
 
