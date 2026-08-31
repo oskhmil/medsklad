@@ -1834,10 +1834,10 @@
                    style="width:100%;background:#2a3050;border:1.5px solid var(--border);border-radius:10px;padding:9px 36px 9px 14px;color:#fff;font-size:13px;outline:none;">
             <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔍</span>
           </div>
-          <button class="hbtn primary" onclick="loadAnalytics(true)"
+          <button class="hbtn" onclick="loadAnalytics(true)"
                   style="padding:9px 12px;font-size:12px;white-space:nowrap;flex-shrink:0;"
                   title="Оновити дані з Google Диску">
-            🔄 Оновити
+            🔄
           </button>
           <button class="hbtn primary" onclick="exportDepartmentsToXlsx()"
                   style="padding:9px 12px;font-size:12px;white-space:nowrap;flex-shrink:0;"
@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.167";
+const APP_VERSION = "v.168";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4528,12 +4528,6 @@ let _abxFromInfControl = false;
 
 const ANALYTICS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours silent refresh
 
-// Коли аналітику востаннє взяли з Диску. Потрібно, щоб відрізняти дві різні
-// «застарілості»: період усередині файлу (рядок «Дані по …») і момент
-// завантаження. Без цього не видно, чи новий файл на Диску вже підтягнувся,
-// чи додаток працює на кеші — а кеш живе 12 годин.
-let _analyticsLoadedAt = null;
-
 let analyticsData = null;
 let currentMonthKey = null;
 let compareMonthKey = null;  // legacy single-month compare key (kept in sync below)
@@ -4945,7 +4939,6 @@ async function loadAnalytics(forceRefresh) {
       if (cached) {
         if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length > 0) {
           analyticsData = cached.data;
-          _analyticsLoadedAt = cached.ts || null;
           _expenseByItemPerMonth = null;
   _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
           initAnalyticsUI();
@@ -7532,7 +7525,6 @@ async function fetchAnalytics({ silent }) {
     // analytics payload is multi-MB per hospital and would blow the ~5 MB LS
     // wall (it was crowding out the medsearch cache before this migration).
     const _anPayload = { ts: Date.now(), data: analyticsData };
-    _analyticsLoadedAt = _anPayload.ts;
     if (IDB.available) {
       try { await IDB.set(cacheKey, _anPayload); }
       catch (e) { try { await IDB.del(cacheKey); } catch (_) {} }
@@ -7744,27 +7736,7 @@ function renderWarnings() {
       }
     }
   }
-  // Друга дата — коли ці дані взято з Диску. Період усередині файлу і момент
-  // завантаження — різні речі: після заливки нового файлу додаток ще до 12
-  // годин працює на кеші, і без цього рядка відрізнити одне від одного
-  // неможливо. Кнопка тут же, щоб не шукати її вгорі.
-  let _loadedLine = "";
-  if (_analyticsLoadedAt) {
-    const _mins = Math.round((Date.now() - _analyticsLoadedAt) / 60000);
-    const _ago = _mins < 1 ? "щойно"
-               : _mins < 60 ? `${_mins} хв тому`
-               : _mins < 1440 ? `${Math.round(_mins / 60)} год тому`
-               : `${Math.round(_mins / 1440)} дн тому`;
-    const _stale = _mins > 720;
-    _loadedLine = `<div style="font-size:11px;color:${_stale ? "var(--warn)" : "var(--muted)"};padding:0 2px 8px;line-height:1.45;">`
-      + `⬇️ Завантажено з Диску: ${new Date(_analyticsLoadedAt).toLocaleString("uk-UA",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})} · ${_ago}`
-      + `${_stale ? " — можливо, на Диску вже новіший файл" : ""}`
-      + ` <span onclick="loadAnalytics(true)" style="color:var(--accent);cursor:pointer;text-decoration:underline;white-space:nowrap;">оновити зараз</span>`
-      + `</div>`;
-  }
-
   el.innerHTML =
-    _loadedLine +
     (_windowLine
       ? `<div style="font-size:11px;color:var(--muted);padding:6px 2px 8px;line-height:1.45;">📅 ${esc(_windowLine)}</div>`
       : "")
@@ -13304,6 +13276,13 @@ function procMoney(v) {
   return Math.round(v).toLocaleString("uk-UA") + " грн";
 }
 
+// Портал у полі date віддає час останньої зміни, тому дату оголошення
+// беремо з самого номера: UA-2026-08-11-005208-a → 11.08.2026.
+function procAnnounced(tenderID) {
+  const m = String(tenderID || "").match(/^UA-(\d{4})-(\d{2})-(\d{2})-/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : "";
+}
+
 function procDate(iso) {
   if (!iso) return "";
   const d = new Date(iso);
@@ -13388,11 +13367,17 @@ function procRender() {
 
   // Період рахуємо з самих даних: у файлі тримається лише актуальне
   // (незавершене, свіжі договори і зриви), тож межі рухаються самі.
-  const dates = tenders.map(t => t.dateModified || t.date).filter(Boolean).sort();
+  // Рахуємо за датою оголошення — тією ж, що показана в картках,
+  // інакше період і список суперечать одне одному.
+  const keys = tenders.map(t => {
+    const m = String(t.tenderID || "").match(/^UA-(\d{4}-\d{2}-\d{2})-/);
+    return m ? m[1] : (t.dateModified || t.date || "").slice(0, 10);
+  }).filter(Boolean).sort();
   const periodEl = document.getElementById("proc-period");
+  const fmt = k => k.split("-").reverse().join(".");
   if (periodEl) {
-    periodEl.textContent = dates.length
-      ? `Моніторинг за період ${procDate(dates[0])} — ${procDate(dates[dates.length - 1])}`
+    periodEl.textContent = keys.length
+      ? `Моніторинг за період ${fmt(keys[0])} — ${fmt(keys[keys.length - 1])}`
       : "Моніторинг закупівель ТМО";
   }
 
@@ -13427,6 +13412,12 @@ function procRender() {
                   : sups.length > 1  ? sups.length + " постачальники"
                   : "";
 
+    // Коли позиція одна і повторює назву закупівлі, друге згадування зайве —
+    // лишаємо тільки кількість і статус.
+    const norm = v => String(v || "").trim().toLowerCase().slice(0, 40);
+    const single = items.length === 1 && (t.items || []).length === 1
+                   && norm(t.title) === norm(items[0].name);
+
     const itemsHtml = items.map(i => {
       const sub = [];
       if (i.qty)      sub.push(`${i.qty} ${esc(i.unit || "")}`.trim());
@@ -13434,7 +13425,7 @@ function procRender() {
       if (i.amount)   sub.push(procMoney(i.amount));
       return `<div class="proc-item">
         <div class="proc-item-top">
-          <div class="proc-item-name">${esc(String(i.name || "").slice(0, 160))}</div>
+          <div class="proc-item-name">${single ? "" : esc(String(i.name || "").slice(0, 160))}</div>
           <span class="proc-st ${procStatusClass(i.status)}">${esc(i.status)}</span>
         </div>
         ${sub.length ? `<div class="proc-item-sub">${sub.join(" · ")}</div>` : ""}
@@ -13449,7 +13440,7 @@ function procRender() {
         <div style="flex:1">
           <div class="proc-title">${esc(String(t.title || "Без назви").slice(0, 110))}</div>
           <div class="proc-meta">
-            ${procDate(t.dateModified || t.date)} ·
+            ${procAnnounced(t.tenderID) || procDate(t.dateModified || t.date)} ·
             ${(t.items || []).length} ${(t.items || []).length === 1 ? "позиція" : "позицій"}
             ${parts.length ? " · " + parts.join(" · ") : ""}
             ${t.amount ? " · " + procMoney(t.amount) : ""}
