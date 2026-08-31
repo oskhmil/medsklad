@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 12
+PARSER_VERSION = 13
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -460,14 +460,27 @@ def parse_tender(t, meta=None):
         })
 
     if not items:
-        lots = t.get("lots") or []
-        why = (f"немає позицій · тип={t.get('procurementMethodType')}"
-               f" · статус={t.get('status')} · лотів={len(lots)}")
-        if len(_drop_log) < 3:
-            why += f" · ключі={sorted(t.keys())[:18]}"
-            if lots:
-                why += f" · ключі лота={sorted(lots[0].keys())[:12]}"
-        _drop_log.append((t.get("tenderID"), why))
+        # У відкритих торгах портал не віддає номенклатуру — ні на верхньому
+        # рівні, ні в лотах. Але лот має назву, суму й статус, а для великих
+        # закупівель саме лот і є одиницею, за якою стежать. Тому будуємо
+        # позиції з лотів: краще показати лот, ніж загубити закупівлю.
+        for lot in (t.get("lots") or []):
+            st, supplier, amount = lot_status(t, lot.get("id"))
+            items.append({
+                "name": (lot.get("title") or t.get("title") or "Лот").strip(),
+                "qty": None,
+                "unit": "",
+                "status": st,
+                "supplier": supplier,
+                "amount": (lot.get("value") or {}).get("amount"),
+                "lot": lot.get("id"),
+                "fromLot": True,
+            })
+
+    if not items:
+        _drop_log.append((t.get("tenderID"),
+                          f"немає ні позицій, ні лотів · тип={t.get('procurementMethodType')}"
+                          f" · статус={t.get('status')}"))
         return None
 
     counts = {"signed": 0, "progress": 0, "failed": 0}
@@ -569,6 +582,36 @@ def diagnose_detail(tid):
             log(f"  GET {u.split('.ua')[-1]}: {ex}")
     log("  === КІНЕЦЬ ПРОБИ ===")
     log("")
+
+
+_items_probe_done = False
+
+
+def probe_items_endpoint(tid):
+    """Разова перевірка: чи можна дістати позиції відкритих торгів окремо.
+    У /details портал їх не кладе, тож шукаємо запасний шлях."""
+    global _items_probe_done
+    if _items_probe_done:
+        return
+    _items_probe_done = True
+    log("  -- проба ендпоінтів з позиціями --")
+    for path in ("/api/tenders/{id}/items",
+                 "/api/tenders/{id}/lots",
+                 "/api/tenders/{id}/lot-items",
+                 "/api/tenders/{id}/details/items"):
+        url = (PORTAL + path).format(id=tid)
+        try:
+            data = get_json(url, tries=1)
+            if isinstance(data, list):
+                log(f"    {path}: 200 · список {len(data)}"
+                    + (f" · ключі {sorted(data[0].keys())[:10]}" if data else ""))
+            elif isinstance(data, dict):
+                log(f"    {path}: 200 · ключі {sorted(data.keys())[:12]}")
+            else:
+                log(f"    {path}: 200 · {type(data).__name__}")
+        except Exception as ex:
+            log(f"    {path}: {ex}")
+    log("  -- кінець проби --")
 
 
 # ── стан і сповіщення ───────────────────────────────────────────────────────
@@ -757,6 +800,8 @@ def main():
             arch = archive.get(tid)
             if arch and arch.get("t"):
                 meta = {"title": arch["t"], "date": arch.get("d")}
+        if not (t.get("items") or []) and (t.get("lots") or []):
+            probe_items_endpoint(tid)
         p = parse_tender(t, meta)
         if p:
             parsed.append(p)
