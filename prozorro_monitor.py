@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 16
+PARSER_VERSION = 17
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -202,6 +202,7 @@ def probe(body):
 
 _cpv_used = None
 _search_meta = {}
+_stats = {"short_codes": [], "expected": 0, "seen": 0}
 
 
 def build_body(page, cpv=None):
@@ -293,6 +294,10 @@ def discover_tender_ids():
                     _search_meta[tid]["group"] = "Ліки"
             page += 1
             time.sleep(0.4)
+        _stats["expected"] += expected
+        _stats["seen"] += got
+        if got < expected:
+            _stats["short_codes"].append(f"{code} ({got}/{expected})")
         flag = "" if got >= expected else "  ← НЕДОБІР"
         log(f"    {code} ({group}): переглянуто {got}, очікувалось {expected}{flag}")
         time.sleep(1.0)
@@ -909,10 +914,37 @@ def main():
     log(f"  у зрізі за {RETENTION_MONTHS} міс.: {len(window)} з {len(parsed)}")
 
     os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
+    # Самоперевірка: монітор може відпрацювати "успішно", але тихо недобрати
+    # даних (портал придушує запити, змінює формат). Тому кладемо в файл
+    # звірку "знайдено проти очікуваного" — додаток покаже попередження.
+    problems = []
+    if _stats["short_codes"]:
+        problems.append("недобір по кодах: " + ", ".join(_stats["short_codes"][:5]))
+    if errors:
+        problems.append(f"не прочитано закупівель: {errors}")
+    if _drop_log:
+        problems.append(f"відсіяно без позицій: {len(_drop_log)}")
+
+    health = {
+        "checked": now_iso,
+        "expected": _stats["expected"],
+        "seen": _stats["seen"],
+        "tenders": len(parsed),
+        "errors": errors,
+        "dropped": len(_drop_log),
+        "status": "ok" if not problems else "warn",
+        "problems": problems,
+    }
+    log("\n[5] Самоперевірка")
+    log(f"  очікувалось {_stats['expected']}, переглянуто {_stats['seen']}"
+        f", розібрано {len(parsed)}, помилок {errors}")
+    log(f"  стан: {health['status']}" + ("" if not problems else " · " + "; ".join(problems)))
+
     out = {
         "generated": now_iso,
         "edrpou": EDRPOU,
         "source": "prozorro.gov.ua",
+        "health": health,
         "tenders": window,
     }
     payload = json.dumps(out, ensure_ascii=False, indent=1)
@@ -921,7 +953,35 @@ def main():
         with open(OUT_PATH, encoding="utf-8") as f:
             old_payload = f.read()
 
-    changed = payload.strip() != old_payload.strip()
+    # Час перевірки змінюється щогодини, тому порівнюємо лише змістовну
+    # частину — інакше репозиторій заростав би порожніми комітами.
+    def _meat(text):
+        try:
+            o = json.loads(text)
+        except Exception:
+            return text
+        o.pop("generated", None)
+        h = o.get("health") or {}
+        h.pop("checked", None)
+        return json.dumps(o, ensure_ascii=False, sort_keys=True)
+
+    data_changed = _meat(payload) != _meat(old_payload)
+
+    # Але раз на 12 годин записуємо все одно, щоб у додатку було видно,
+    # що монітор живий, навіть коли в закупівлях тиша.
+    stale = True
+    try:
+        prev = json.loads(old_payload)
+        prev_at = (prev.get("health") or {}).get("checked") or prev.get("generated")
+        if prev_at:
+            age = (now - datetime.fromisoformat(prev_at)).total_seconds()
+            stale = age > 12 * 3600
+    except Exception:
+        pass
+
+    changed = data_changed or stale
+    if changed and not data_changed:
+        log("  дані не змінились — оновлюю лише час перевірки")
     with open(OUT_PATH, "w", encoding="utf-8") as f:
         f.write(payload)
     log(f"  {OUT_PATH}: {len(payload) // 1024} КБ, змінено: {changed}")

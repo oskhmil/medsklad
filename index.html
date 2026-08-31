@@ -1637,6 +1637,9 @@
         <div style="margin-bottom:12px">
           <div style="font-size:15px;font-weight:600;color:#e2e8f7">Закупівлі Prozorro</div>
           <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5" id="proc-period"></div>
+          <div id="proc-health" style="display:none;margin-top:8px;padding:8px 11px;
+               background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.4);
+               border-radius:10px;font-size:11px;color:var(--warn);line-height:1.5"></div>
         </div>
         <div class="proc-kpis">
           <div class="proc-kpi" onclick="procSetFilter('all')">
@@ -2285,7 +2288,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.168";
+const APP_VERSION = "v.169";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -13360,10 +13363,37 @@ function procRender() {
                       String(a.t.dateModified || a.t.date || "")));
 
   const shownItems = rows.reduce((s, r) => s + r.items.length, 0);
-  const gen = procData.generated ? procDate(procData.generated) : "";
+  const h = procData.health || {};
+
+  // Показуємо саме час перевірки, а не час зміни даних: монітор може
+  // справно працювати тижнями, поки в закупівлях нічого не відбувається.
+  const checkedIso = h.checked || procData.generated;
+  let checkedStr = "";
+  if (checkedIso) {
+    const d = new Date(checkedIso);
+    if (!isNaN(d)) {
+      const hours = (Date.now() - d.getTime()) / 3600000;
+      const when = hours < 24
+        ? "сьогодні о " + d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" })
+        : procDate(checkedIso);
+      checkedStr = ` · перевірено ${when}`;
+      if (hours > 30) checkedStr += " ⚠️";
+    }
+  }
   document.getElementById("proc-summary").innerHTML =
-    `${shownItems} позицій у ${rows.length} закупівлях` +
-    (gen ? ` · дані на ${gen}` : "");
+    `${shownItems} позицій у ${rows.length} закупівлях${checkedStr}`;
+
+  // Монітор сам звіряє знайдене з очікуваним і зізнається, якщо недобрав.
+  const hEl = document.getElementById("proc-health");
+  if (hEl) {
+    const probs = Array.isArray(h.problems) ? h.problems : [];
+    if (h.status && h.status !== "ok" && probs.length) {
+      hEl.innerHTML = "⚠️ Дані можуть бути неповними — " + esc(probs.join("; "));
+      hEl.style.display = "block";
+    } else {
+      hEl.style.display = "none";
+    }
+  }
 
   // Період рахуємо з самих даних: у файлі тримається лише актуальне
   // (незавершене, свіжі договори і зриви), тож межі рухаються самі.
