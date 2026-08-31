@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 11
+PARSER_VERSION = 12
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -403,9 +403,24 @@ def entity_edrpou(t):
     return None
 
 
+def tender_items(t):
+    """Позиції закупівлі. У частини процедур портал не кладе їх на верхній
+    рівень, а ховає всередину лотів — тоді збираємо звідти, підставляючи
+    relatedLot, щоб статус рахувався по своєму лоту."""
+    items = list(t.get("items") or [])
+    if items:
+        return items
+    for lot in (t.get("lots") or []):
+        for it in (lot.get("items") or []):
+            it = dict(it)
+            it.setdefault("relatedLot", lot.get("id"))
+            items.append(it)
+    return items
+
+
 def item_codes(t):
     out = []
-    for it in t.get("items", []):
+    for it in tender_items(t):
         cls = (it.get("classification") or {}).get("id") or ""
         if cls:
             out.append(cls)
@@ -427,7 +442,7 @@ def parse_tender(t, meta=None):
         return None
 
     items = []
-    for it in t.get("items", []):
+    for it in tender_items(t):
         cls = (it.get("classification") or {}).get("id") or ""
         if cls and not cls.startswith(CPV_PREFIX):
             continue
@@ -445,9 +460,14 @@ def parse_tender(t, meta=None):
         })
 
     if not items:
-        raw_items = len(t.get("items") or [])
-        _drop_log.append((t.get("tenderID"),
-                          f"немає позицій (у відповіді {raw_items}, ДК {sorted(set(codes))[:3]})"))
+        lots = t.get("lots") or []
+        why = (f"немає позицій · тип={t.get('procurementMethodType')}"
+               f" · статус={t.get('status')} · лотів={len(lots)}")
+        if len(_drop_log) < 3:
+            why += f" · ключі={sorted(t.keys())[:18]}"
+            if lots:
+                why += f" · ключі лота={sorted(lots[0].keys())[:12]}"
+        _drop_log.append((t.get("tenderID"), why))
         return None
 
     counts = {"signed": 0, "progress": 0, "failed": 0}
