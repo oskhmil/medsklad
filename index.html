@@ -1834,10 +1834,10 @@
                    style="width:100%;background:#2a3050;border:1.5px solid var(--border);border-radius:10px;padding:9px 36px 9px 14px;color:#fff;font-size:13px;outline:none;">
             <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔍</span>
           </div>
-          <button class="hbtn" onclick="loadAnalytics(true)"
+          <button class="hbtn primary" onclick="loadAnalytics(true)"
                   style="padding:9px 12px;font-size:12px;white-space:nowrap;flex-shrink:0;"
                   title="Оновити дані з Google Диску">
-            🔄
+            🔄 Оновити
           </button>
           <button class="hbtn primary" onclick="exportDepartmentsToXlsx()"
                   style="padding:9px 12px;font-size:12px;white-space:nowrap;flex-shrink:0;"
@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.166";
+const APP_VERSION = "v.167";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4528,6 +4528,12 @@ let _abxFromInfControl = false;
 
 const ANALYTICS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours silent refresh
 
+// Коли аналітику востаннє взяли з Диску. Потрібно, щоб відрізняти дві різні
+// «застарілості»: період усередині файлу (рядок «Дані по …») і момент
+// завантаження. Без цього не видно, чи новий файл на Диску вже підтягнувся,
+// чи додаток працює на кеші — а кеш живе 12 годин.
+let _analyticsLoadedAt = null;
+
 let analyticsData = null;
 let currentMonthKey = null;
 let compareMonthKey = null;  // legacy single-month compare key (kept in sync below)
@@ -4939,6 +4945,7 @@ async function loadAnalytics(forceRefresh) {
       if (cached) {
         if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length > 0) {
           analyticsData = cached.data;
+          _analyticsLoadedAt = cached.ts || null;
           _expenseByItemPerMonth = null;
   _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
           initAnalyticsUI();
@@ -7525,6 +7532,7 @@ async function fetchAnalytics({ silent }) {
     // analytics payload is multi-MB per hospital and would blow the ~5 MB LS
     // wall (it was crowding out the medsearch cache before this migration).
     const _anPayload = { ts: Date.now(), data: analyticsData };
+    _analyticsLoadedAt = _anPayload.ts;
     if (IDB.available) {
       try { await IDB.set(cacheKey, _anPayload); }
       catch (e) { try { await IDB.del(cacheKey); } catch (_) {} }
@@ -7736,7 +7744,27 @@ function renderWarnings() {
       }
     }
   }
+  // Друга дата — коли ці дані взято з Диску. Період усередині файлу і момент
+  // завантаження — різні речі: після заливки нового файлу додаток ще до 12
+  // годин працює на кеші, і без цього рядка відрізнити одне від одного
+  // неможливо. Кнопка тут же, щоб не шукати її вгорі.
+  let _loadedLine = "";
+  if (_analyticsLoadedAt) {
+    const _mins = Math.round((Date.now() - _analyticsLoadedAt) / 60000);
+    const _ago = _mins < 1 ? "щойно"
+               : _mins < 60 ? `${_mins} хв тому`
+               : _mins < 1440 ? `${Math.round(_mins / 60)} год тому`
+               : `${Math.round(_mins / 1440)} дн тому`;
+    const _stale = _mins > 720;
+    _loadedLine = `<div style="font-size:11px;color:${_stale ? "var(--warn)" : "var(--muted)"};padding:0 2px 8px;line-height:1.45;">`
+      + `⬇️ Завантажено з Диску: ${new Date(_analyticsLoadedAt).toLocaleString("uk-UA",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})} · ${_ago}`
+      + `${_stale ? " — можливо, на Диску вже новіший файл" : ""}`
+      + ` <span onclick="loadAnalytics(true)" style="color:var(--accent);cursor:pointer;text-decoration:underline;white-space:nowrap;">оновити зараз</span>`
+      + `</div>`;
+  }
+
   el.innerHTML =
+    _loadedLine +
     (_windowLine
       ? `<div style="font-size:11px;color:var(--muted);padding:6px 2px 8px;line-height:1.45;">📅 ${esc(_windowLine)}</div>`
       : "")
