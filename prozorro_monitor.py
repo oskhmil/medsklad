@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 13
+PARSER_VERSION = 14
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -459,6 +459,23 @@ def parse_tender(t, meta=None):
             "lot": lot_id,
         })
 
+    if not items and t.get("lots"):
+        extra = fetch_lot_items(t.get("tenderID"))
+        if extra:
+            for it in extra:
+                cls = (it.get("classification") or {}).get("id") or ""
+                if cls and not cls.startswith(CPV_PREFIX):
+                    continue
+                lot_id = it.get("relatedLot")
+                st, supplier, amount = lot_status(t, lot_id)
+                items.append({
+                    "name": (it.get("description") or it.get("title") or "").strip(),
+                    "qty": it.get("quantity"),
+                    "unit": (it.get("unit") or {}).get("name") or "",
+                    "status": st, "supplier": supplier, "amount": amount,
+                    "lot": lot_id,
+                })
+
     if not items:
         # У відкритих торгах портал не віддає номенклатуру — ні на верхньому
         # рівні, ні в лотах. Але лот має назву, суму й статус, а для великих
@@ -538,6 +555,8 @@ def parse_tender(t, meta=None):
 # ── читання деталей ─────────────────────────────────────────────────────────
 # Знайдено дослідним шляхом: закупівля читається за публічним номером
 # через портальний ендпоінт /api/tenders/{tenderID}/details.
+LOTS_URL = PORTAL + "/api/tenders/{id}/lots"
+
 DETAIL_URLS = [
     PORTAL + "/api/tenders/{id}/details",
 ]
@@ -588,30 +607,44 @@ _items_probe_done = False
 
 
 def probe_items_endpoint(tid):
-    """Разова перевірка: чи можна дістати позиції відкритих торгів окремо.
-    У /details портал їх не кладе, тож шукаємо запасний шлях."""
+    """Разова розвідка будови /lots: чи є там справжня номенклатура."""
     global _items_probe_done
     if _items_probe_done:
         return
     _items_probe_done = True
-    log("  -- проба ендпоінтів з позиціями --")
-    for path in ("/api/tenders/{id}/items",
-                 "/api/tenders/{id}/lots",
-                 "/api/tenders/{id}/lot-items",
-                 "/api/tenders/{id}/details/items"):
-        url = (PORTAL + path).format(id=tid)
-        try:
-            data = get_json(url, tries=1)
-            if isinstance(data, list):
-                log(f"    {path}: 200 · список {len(data)}"
-                    + (f" · ключі {sorted(data[0].keys())[:10]}" if data else ""))
-            elif isinstance(data, dict):
-                log(f"    {path}: 200 · ключі {sorted(data.keys())[:12]}")
-            else:
-                log(f"    {path}: 200 · {type(data).__name__}")
-        except Exception as ex:
-            log(f"    {path}: {ex}")
+    try:
+        data = get_json(LOTS_URL.format(id=tid), tries=1)
+    except Exception as ex:
+        log(f"  проба /lots: {ex}")
+        return
+    lots = (data or {}).get("lots") or []
+    log(f"  -- будова /lots для {tid}: лотів {len(lots)} --")
+    for lot in lots[:2]:
+        log(f"    ключі лота: {sorted(lot.keys())[:16]}")
+        for key in ("items", "lotItems", "nomenclature", "products"):
+            v = lot.get(key)
+            if isinstance(v, list) and v:
+                log(f"    {key}: {len(v)} шт · ключі {sorted(v[0].keys())[:12]}")
+                log(f"      приклад: {json.dumps(v[0], ensure_ascii=False)[:220]}")
     log("  -- кінець проби --")
+
+
+def fetch_lot_items(tid):
+    """Позиції з окремого ендпоінта лотів. У /details їх немає для
+    відкритих торгів, а тут портал може віддавати номенклатуру."""
+    try:
+        data = get_json(LOTS_URL.format(id=tid), tries=2)
+    except Exception:
+        return []
+    out = []
+    for lot in ((data or {}).get("lots") or []):
+        for key in ("items", "lotItems", "nomenclature", "products"):
+            for it in (lot.get(key) or []):
+                if isinstance(it, dict):
+                    it = dict(it)
+                    it.setdefault("relatedLot", lot.get("id"))
+                    out.append(it)
+    return out
 
 
 # ── стан і сповіщення ───────────────────────────────────────────────────────
