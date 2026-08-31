@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 10
+PARSER_VERSION = 11
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -412,6 +412,9 @@ def item_codes(t):
     return out
 
 
+_drop_log = []
+
+
 def parse_tender(t, meta=None):
     """Плоский опис закупівлі: позиції зі статусами лотів."""
     edr = entity_edrpou(t)
@@ -420,6 +423,7 @@ def parse_tender(t, meta=None):
 
     # пошук уже відфільтрував за buyer, тому розбіжність лише логуємо
     if edr and edr != EDRPOU:
+        _drop_log.append((t.get("tenderID"), f"чужий ЄДРПОУ {edr}"))
         return None
 
     items = []
@@ -441,6 +445,9 @@ def parse_tender(t, meta=None):
         })
 
     if not items:
+        raw_items = len(t.get("items") or [])
+        _drop_log.append((t.get("tenderID"),
+                          f"немає позицій (у відповіді {raw_items}, ДК {sorted(set(codes))[:3]})"))
         return None
 
     counts = {"signed": 0, "progress": 0, "failed": 0}
@@ -723,6 +730,7 @@ def main():
         t = resp.get("data") or resp or {}
         if len(t) <= 2:
             stubs += 1
+            _drop_log.append((tid, f"порожня відповідь ({len(t)} полів)"))
             continue
         meta = _search_meta.get(tid)
         if not meta:
@@ -737,6 +745,12 @@ def main():
     log(f"  завантажено: {fetched}, з кешу: {skipped}, з архіву пропущено: {archived_skipped},"
         f" помилок: {errors}, порожніх: {stubs}")
     log(f"  підходять під фільтр: {len(parsed)}")
+    if _drop_log:
+        log(f"  відсіяно: {len(_drop_log)}")
+        for tid, why in _drop_log[:12]:
+            log(f"    {tid}: {why}")
+        if len(_drop_log) > 12:
+            log(f"    …і ще {len(_drop_log) - 12}")
 
     if parsed:
         total_items = sum(len(p["items"]) for p in parsed)
