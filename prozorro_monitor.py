@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 15
+PARSER_VERSION = 16
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -469,21 +469,9 @@ def parse_tender(t, meta=None):
         })
 
     if not items and t.get("lots"):
-        extra = fetch_lot_items(t.get("tenderID"))
-        if extra:
-            for it in extra:
-                cls = (it.get("classification") or {}).get("id") or ""
-                if cls and not cls.startswith(CPV_PREFIX):
-                    continue
-                lot_id = it.get("relatedLot")
-                st, supplier, amount = lot_status(t, lot_id)
-                items.append({
-                    "name": (it.get("description") or it.get("title") or "").strip(),
-                    "qty": it.get("quantity"),
-                    "unit": (it.get("unit") or {}).get("name") or "",
-                    "status": st, "supplier": supplier, "amount": amount,
-                    "lot": lot_id,
-                })
+        full_lots = fetch_lots(t.get("tenderID"))
+        if full_lots:
+            items = items_from_lots(t, full_lots)
 
     if not items:
         # У відкритих торгах портал не віддає номенклатуру — ні на верхньому
@@ -638,21 +626,51 @@ def probe_items_endpoint(tid):
     log("  -- кінець проби --")
 
 
-def fetch_lot_items(tid):
-    """Позиції з окремого ендпоінта лотів. У /details їх немає для
-    відкритих торгів, а тут портал може віддавати номенклатуру."""
+def fetch_lots(tid):
+    """Повні лоти з окремого ендпоінта: там є і номенклатура, і власні
+    нагороди та договори лота. У /details цього немає для відкритих торгів."""
     try:
         data = get_json(LOTS_URL.format(id=tid), tries=2)
     except Exception:
         return []
+    return (data or {}).get("lots") or []
+
+
+def items_from_lots(tender, lots):
+    """Позиції з лотів зі статусом, порахованим по самому лоту.
+
+    Нагороди й договори лежать усередині лота, тому будуємо для кожного
+    окремий контекст — інакше завершена закупівля виглядає як суцільний зрив.
+    """
     out = []
-    for lot in ((data or {}).get("lots") or []):
-        for key in ("items", "lotItems", "nomenclature", "products"):
-            for it in (lot.get(key) or []):
-                if isinstance(it, dict):
-                    it = dict(it)
-                    it.setdefault("relatedLot", lot.get("id"))
-                    out.append(it)
+    for lot in lots:
+        ctx = {
+            "status": tender.get("status"),
+            "lots": [{"id": lot.get("id"), "status": lot.get("status")}],
+            "awards": lot.get("awards") or [],
+            "contracts": lot.get("contracts") or [],
+        }
+        st, supplier, amount = lot_status(ctx, lot.get("id"))
+        lot_items = [i for i in (lot.get("items") or []) if isinstance(i, dict)]
+        if not lot_items:
+            out.append({
+                "name": (lot.get("title") or lot.get("description") or "Лот").strip(),
+                "qty": None, "unit": "", "status": st, "supplier": supplier,
+                "amount": (lot.get("value") or {}).get("amount"),
+                "lot": lot.get("id"), "fromLot": True,
+            })
+            continue
+        for it in lot_items:
+            cls = (it.get("classification") or {}).get("id") or ""
+            if cls and not cls.startswith(CPV_PREFIX):
+                continue
+            out.append({
+                "name": (it.get("description") or it.get("title") or "").strip(),
+                "qty": it.get("quantity"),
+                "unit": (it.get("unit") or {}).get("name") or "",
+                "status": st, "supplier": supplier, "amount": None,
+                "lot": lot.get("id"),
+            })
     return out
 
 
