@@ -44,4 +44,13 @@ jobs:
           fi
           COUNT="${{ steps.run.outputs.events }}"
           git commit -m "[bot] procurement: ${COUNT:-0} змін"
-          git push origin HEAD:test
+          # Прогін триває кілька хвилин, і за цей час гілка могла піти вперед
+          # (наприклад, ручне завантаження файлу). Тому перед відправкою
+          # переносимо свій коміт поверх свіжого стану.
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin test && git push origin HEAD:test && exit 0
+            echo "спроба $i не вдалась, повторюю"
+            sleep 5
+          done
+          echo "не вдалось відправити після 3 спроб"
+          exit 1
