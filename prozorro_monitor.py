@@ -37,7 +37,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 19
+PARSER_VERSION = 20
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -719,13 +719,30 @@ def announced(t):
 
 
 def mark_resolved(parsed):
-    """Проставляє позиціям позначку, що їх згодом успішно закупили."""
-    signed = []
+    """Позначає зірвані позиції, які згодом переоголосили.
+
+    Розрізняємо два ступені: торги вже відбулися (є переможець або договір)
+    і торги лише тривають. Перше знімає проблему, друге лише пояснює, що
+    процес пішов, — тому проблема лишається відкритою.
+    """
+    done, pending = [], []
     for t in parsed:
         d = announced(t)
         for i in t.get("items", []):
-            if i.get("status") == ST_SIGNED:
-                signed.append((item_tokens(i.get("name")), d, t.get("tenderID")))
+            st = i.get("status")
+            tok = item_tokens(i.get("name"))
+            if st in (ST_SIGNED, ST_WINNER):
+                done.append((tok, d, t.get("tenderID")))
+            elif st == ST_PROGRESS:
+                pending.append((tok, d, t.get("tenderID")))
+
+    def best(tok, d, pool):
+        hit = None
+        for st, sd, stid in pool:
+            if sd > d and same_item(tok, st):
+                if hit is None or sd < hit[0]:
+                    hit = (sd, stid)
+        return hit
 
     marked = 0
     for t in parsed:
@@ -738,24 +755,21 @@ def mark_resolved(parsed):
                 continue
             failed_items += 1
             tok = item_tokens(i.get("name"))
-            hit = None
-            for st, sd, stid in signed:
-                if sd > d and same_item(tok, st):
-                    if hit is None or sd < hit[0]:
-                        hit = (sd, stid)
+            hit = best(tok, d, done)
+            kind = "done"
+            if not hit:
+                hit = best(tok, d, pending)
+                kind = "pending"
             if hit:
-                i["resolved"] = {"d": hit[0], "t": hit[1]}
-                resolved_items += 1
+                i["resolved"] = {"d": hit[0], "t": hit[1], "k": kind}
                 marked += 1
-                if last is None or hit[0] > last[0]:
-                    last = hit
+                if kind == "done":
+                    resolved_items += 1
+                    if last is None or hit[0] > last[0]:
+                        last = hit
         if resolved_items and last:
-            t["resolved"] = {
-                "count": resolved_items,
-                "of": failed_items,
-                "d": last[0],
-                "t": last[1],
-            }
+            t["resolved"] = {"count": resolved_items, "of": failed_items,
+                             "d": last[0], "t": last[1]}
     return marked
 
 

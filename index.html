@@ -2293,7 +2293,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.170";
+const APP_VERSION = "v.171";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -13330,7 +13330,9 @@ function procToggle(id) {
 
 // Позиція проходить, якщо збігається і з фільтром статусу, і з пошуковим рядком.
 function procItemMatches(item) {
-  if (procFilter === "problem"  && (!procIsProblem(item.status) || item.resolved)) return false;
+  if (procFilter === "problem" &&
+      (!procIsProblem(item.status) ||
+       (item.resolved && item.resolved.k !== "pending"))) return false;
   if (procFilter === "progress" && item.status !== "Переможець" && item.status !== "В процесі") return false;
   if (procFilter === "signed"   && item.status !== "Підписано") return false;
   if (procQuery) {
@@ -13353,7 +13355,9 @@ function procRender() {
   let nTotal = 0, nProg = 0, nFail = 0;
   scope.forEach(t => (t.items || []).forEach(i => {
     nTotal++;
-    if (procIsProblem(i.status)) { if (!i.resolved) nFail++; }
+    if (procIsProblem(i.status)) {
+      if (!i.resolved || i.resolved.k === "pending") nFail++;
+    }
     else if (i.status !== "Підписано") nProg++;
   }));
   document.getElementById("proc-k-total").textContent = nTotal;
@@ -13472,10 +13476,11 @@ function procRender() {
       return `<div class="proc-item">
         <div class="proc-item-top">
           <div class="proc-item-name">${single ? "" : esc(String(i.name || "").slice(0, 160))}</div>
-          <span class="proc-st ${rs ? "resolved" : procStatusClass(i.status)}">${esc(i.status)}</span>
+          <span class="proc-st ${rs && rs.k !== "pending" ? "resolved" : procStatusClass(i.status)}">${esc(i.status)}</span>
         </div>
         ${sub.length ? `<div class="proc-item-sub">${sub.join(" · ")}</div>` : ""}
-        ${rs ? `<div class="proc-resolved">✅ перезакуплено ${esc(procDate(rs.d))}
+        ${rs ? `<div class="proc-resolved" style="color:${rs.k === "pending" ? "var(--warn)" : "var(--green)"}">
+             ${rs.k === "pending" ? "🔄 переоголошено" : "✅ перезакуплено"} ${esc(procDate(rs.d))}
              <a href="${PROC_TENDER_URL}${esc(rs.t)}" target="_blank" rel="noopener"
                 style="color:var(--accent);text-decoration:none">${esc(rs.t)} ↗</a></div>` : ""}
       </div>`;
