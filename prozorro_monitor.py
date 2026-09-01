@@ -10,6 +10,7 @@
 
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -36,7 +37,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 18
+PARSER_VERSION = 19
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -705,18 +706,30 @@ def same_item(a, b):
     return len(sa & sb) >= 2 or (len(sa) == 1 and len(sb) == 1)
 
 
+def announced(t):
+    """Дата оголошення з номера: UA-2026-08-11-005208-a → 2026-08-11.
+
+    Поле dateModified для цього не годиться — воно оновлюється щоразу, коли
+    монітор перечитує закупівлю, і всі дати збігаються до дня прогону.
+    """
+    m = re.match(r"^UA-(\d{4}-\d{2}-\d{2})-", str(t.get("tenderID") or ""))
+    if m:
+        return m.group(1)
+    return (t.get("date") or t.get("dateModified") or "")[:10]
+
+
 def mark_resolved(parsed):
     """Проставляє позиціям позначку, що їх згодом успішно закупили."""
     signed = []
     for t in parsed:
-        d = t.get("dateModified") or t.get("date") or ""
+        d = announced(t)
         for i in t.get("items", []):
             if i.get("status") == ST_SIGNED:
                 signed.append((item_tokens(i.get("name")), d, t.get("tenderID")))
 
     marked = 0
     for t in parsed:
-        d = t.get("dateModified") or t.get("date") or ""
+        d = announced(t)
         resolved_items = 0
         failed_items = 0
         last = None
@@ -731,7 +744,7 @@ def mark_resolved(parsed):
                     if hit is None or sd < hit[0]:
                         hit = (sd, stid)
             if hit:
-                i["resolved"] = {"d": hit[0][:10], "t": hit[1]}
+                i["resolved"] = {"d": hit[0], "t": hit[1]}
                 resolved_items += 1
                 marked += 1
                 if last is None or hit[0] > last[0]:
@@ -740,7 +753,7 @@ def mark_resolved(parsed):
             t["resolved"] = {
                 "count": resolved_items,
                 "of": failed_items,
-                "d": last[0][:10],
+                "d": last[0],
                 "t": last[1],
             }
     return marked
