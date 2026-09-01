@@ -1,18 +1,48 @@
 {
- "generated": "2026-09-01T06:29:02.868355+00:00",
+ "generated": "2026-09-01T11:56:16.688319+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-01T06:29:02.868355+00:00",
-  "expected": 1205,
-  "seen": 1205,
-  "tenders": 405,
+  "checked": "2026-09-01T11:56:16.688319+00:00",
+  "expected": 1206,
+  "seen": 1206,
+  "tenders": 406,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-01-002074-a",
+   "tenderID": "UA-2026-09-01-002074-a",
+   "title": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+   "date": "2026-09-01T10:46:14.778458+03:00",
+   "dateModified": "2026-09-01T10:46:14.778458+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 4044.02,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+     "qty": 10,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 9884.11,
    "contractEnd": null,
