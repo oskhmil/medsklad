@@ -1496,6 +1496,11 @@
     color: var(--accent); font-size: 12px; text-decoration: none;
   }
   .proc-more { font-size: 11px; color: var(--accent); padding: 7px 0 2px; cursor: pointer; }
+  .proc-resolved {
+    font-size: 11px; color: var(--green); margin-top: 3px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .proc-st.resolved { background: rgba(107,122,153,.18); color: var(--muted); }
 </style>
 </head>
 <body>
@@ -2288,7 +2293,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.169";
+const APP_VERSION = "v.170";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -13121,6 +13126,7 @@ async function _storageWipe() {
 // з тієї ж гілки — той самий origin, без проксі й CORS.
 
 const PROC_JSON_URL   = "data/procurement.json";
+const PROC_TENDER_URL = "https://prozorro.gov.ua/tender/";
 const PROC_CACHE_KEY  = "medsklad_proc_cache";
 const PROC_TTL_MS     = 30 * 60 * 1000;   // 30 хв — монітор оновлюється щогодини
 
@@ -13324,7 +13330,7 @@ function procToggle(id) {
 
 // Позиція проходить, якщо збігається і з фільтром статусу, і з пошуковим рядком.
 function procItemMatches(item) {
-  if (procFilter === "problem"  && !procIsProblem(item.status)) return false;
+  if (procFilter === "problem"  && (!procIsProblem(item.status) || item.resolved)) return false;
   if (procFilter === "progress" && item.status !== "Переможець" && item.status !== "В процесі") return false;
   if (procFilter === "signed"   && item.status !== "Підписано") return false;
   if (procQuery) {
@@ -13342,10 +13348,12 @@ function procRender() {
   const inGroup = t => procGroup === "all" || (t.group || "Ліки") === procGroup;
   const scope = tenders.filter(inGroup);
 
+  // Позицію, яку згодом перезакупили, не рахуємо відкритою проблемою —
+  // інакше лічильник лякає тим, що вже вирішено.
   let nTotal = 0, nProg = 0, nFail = 0;
   scope.forEach(t => (t.items || []).forEach(i => {
     nTotal++;
-    if (procIsProblem(i.status)) nFail++;
+    if (procIsProblem(i.status)) { if (!i.resolved) nFail++; }
     else if (i.status !== "Підписано") nProg++;
   }));
   document.getElementById("proc-k-total").textContent = nTotal;
@@ -13422,7 +13430,10 @@ function procRender() {
   const visible = rows.slice(0, procLimit);
   list.innerHTML = visible.map(({ t, items }) => {
     const c = t.counts || {};
-    const hasProblem = (c.failed || 0) > 0;
+    const res = t.resolved;
+    // Червону рамку лишаємо тільки там, де проблема справді відкрита.
+    const openProblems = (c.failed || 0) - (res ? res.count : 0);
+    const hasProblem = openProblems > 0;
     // Закупівлі-одиночки і ті, де є проблеми, показуємо розгорнутими одразу:
     // після змін у законі дорогі позиції йдуть окремими лотами, і згортати нічого.
     const small = items.length <= 2;
@@ -13433,7 +13444,11 @@ function procRender() {
     const parts = [];
     if (c.signed)   parts.push(`${c.signed} підписано`);
     if (c.progress) parts.push(`${c.progress} в процесі`);
-    if (c.failed)   parts.push(`<span style="color:var(--danger)">${c.failed} проблемних</span>`);
+    if (c.failed) {
+      parts.push(openProblems > 0
+        ? `<span style="color:var(--danger)">${openProblems} проблемних</span>`
+        : `<span style="color:var(--green)">перезакуплено</span>`);
+    }
 
     // Постачальник майже завжди один на всю закупівлю — виносимо його в шапку,
     // щоб не доводилось розгортати картку заради одного рядка.
@@ -13453,12 +13468,16 @@ function procRender() {
       if (i.qty)      sub.push(`${i.qty} ${esc(i.unit || "")}`.trim());
       if (i.supplier && sups.length !== 1) sub.push(esc(procSupplier(i.supplier)));
       if (i.amount)   sub.push(procMoney(i.amount));
+      const rs = i.resolved;
       return `<div class="proc-item">
         <div class="proc-item-top">
           <div class="proc-item-name">${single ? "" : esc(String(i.name || "").slice(0, 160))}</div>
-          <span class="proc-st ${procStatusClass(i.status)}">${esc(i.status)}</span>
+          <span class="proc-st ${rs ? "resolved" : procStatusClass(i.status)}">${esc(i.status)}</span>
         </div>
         ${sub.length ? `<div class="proc-item-sub">${sub.join(" · ")}</div>` : ""}
+        ${rs ? `<div class="proc-resolved">✅ перезакуплено ${esc(procDate(rs.d))}
+             <a href="${PROC_TENDER_URL}${esc(rs.t)}" target="_blank" rel="noopener"
+                style="color:var(--accent);text-decoration:none">${esc(rs.t)} ↗</a></div>` : ""}
       </div>`;
     }).join("");
 

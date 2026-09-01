@@ -36,7 +36,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 17
+PARSER_VERSION = 18
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -679,6 +679,73 @@ def items_from_lots(tender, lots):
     return out
 
 
+# ── позначка "перезакуплено" ────────────────────────────────────────────────
+# Prozorro не звʼязує повторні торги з початковими. Тому зірвану позицію
+# зіставляємо за назвою з тими, що згодом успішно закупили: перше значуще
+# слово це фактично МНН, і ще одне спільне слово відсікає однофамільців
+# ("натрію хлорид" проти "натрію гідрокарбонат"). Закупівлю не ховаємо —
+# лише позначаємо, щоб хибне зіставлення було видно, а не мовчки шкодило.
+
+_STOP_TOKENS = {"для", "по", "та", "і", "й", "з", "у", "в", "на", "мл", "мг", "г",
+                "шт", "штука", "флакон", "розчин", "таблетки", "порошок",
+                "інєкцій", "ін'єкцій", "інфузій", "приготування", "концентрат"}
+
+
+def item_tokens(name):
+    s = str(name or "").lower().replace("'", "").replace("\u2019", "")
+    s = "".join(ch if ch.isalnum() else " " for ch in s)
+    return [w for w in s.split()
+            if len(w) > 2 and w not in _STOP_TOKENS and not w.isdigit()][:8]
+
+
+def same_item(a, b):
+    if not a or not b or a[0] != b[0]:
+        return False
+    sa, sb = set(a), set(b)
+    return len(sa & sb) >= 2 or (len(sa) == 1 and len(sb) == 1)
+
+
+def mark_resolved(parsed):
+    """Проставляє позиціям позначку, що їх згодом успішно закупили."""
+    signed = []
+    for t in parsed:
+        d = t.get("dateModified") or t.get("date") or ""
+        for i in t.get("items", []):
+            if i.get("status") == ST_SIGNED:
+                signed.append((item_tokens(i.get("name")), d, t.get("tenderID")))
+
+    marked = 0
+    for t in parsed:
+        d = t.get("dateModified") or t.get("date") or ""
+        resolved_items = 0
+        failed_items = 0
+        last = None
+        for i in t.get("items", []):
+            if i.get("status") not in PROBLEM:
+                continue
+            failed_items += 1
+            tok = item_tokens(i.get("name"))
+            hit = None
+            for st, sd, stid in signed:
+                if sd > d and same_item(tok, st):
+                    if hit is None or sd < hit[0]:
+                        hit = (sd, stid)
+            if hit:
+                i["resolved"] = {"d": hit[0][:10], "t": hit[1]}
+                resolved_items += 1
+                marked += 1
+                if last is None or hit[0] > last[0]:
+                    last = hit
+        if resolved_items and last:
+            t["resolved"] = {
+                "count": resolved_items,
+                "of": failed_items,
+                "d": last[0][:10],
+                "t": last[1],
+            }
+    return marked
+
+
 # ── стан і сповіщення ───────────────────────────────────────────────────────
 
 def load_state():
@@ -909,6 +976,9 @@ def main():
     cutoff = (now - timedelta(days=30 * RETENTION_MONTHS)).isoformat()
     now_iso = now.isoformat()
 
+    marked = mark_resolved(parsed)
+    if marked:
+        log(f"  позначено як перезакуплені: {marked} позицій")
     window = [t for t in parsed if in_window(t, now)]
     window.sort(key=lambda t: t.get("dateModified") or "", reverse=True)
     log(f"  у зрізі за {RETENTION_MONTHS} міс.: {len(window)} з {len(parsed)}")
