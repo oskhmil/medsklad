@@ -1,12 +1,12 @@
 {
- "generated": "2026-09-02T09:09:23.934271+00:00",
+ "generated": "2026-09-02T13:42:48.690122+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-02T09:09:23.934271+00:00",
+  "checked": "2026-09-02T13:42:48.690122+00:00",
   "expected": 1210,
   "seen": 1210,
-  "tenders": 408,
+  "tenders": 398,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,319 +14,319 @@
  },
  "tenders": [
   {
-   "amount": 1217032.34,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 12,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-09-01T17:18:39.909765+03:00",
-   "dateModified": "2026-09-01T17:18:39.909765+03:00",
-   "group": "Ліки",
    "id": "UA-2026-09-01-010865-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Амоксицилін/клавуланова кислота таблетки, вкриті плівковою оболонкою, по 875 мг/125 мг",
-     "qty": 4050,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Меропенем, порошок для ін'єкцій/інфузій, по 1 г",
-     "qty": 750,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Меропенем,порошок для ін'єкцій по 0,5 г",
-     "qty": 220,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Прегабалін, капсули, по 75 мг",
-     "qty": 10000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Прегабалін, капсули, по 150 мг",
-     "qty": 6000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Ванкоміцин ліофілізат/порощок для розчину для інфузій по 500 мг",
-     "qty": 500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Колістин порошок для розчину для ін'єкцій або інфузій 1 000 000 МО",
-     "qty": 500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Азитроміцин, ліофілізат/порошок для розчину, по 500 мг",
-     "qty": 200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Вориконазол, порошок/ліофілізат, по 200 мг",
-     "qty": 64,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 0,4 мл",
-     "qty": 1950,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Цефотаксим,порошок для ін'єкцій  по 1 г",
-     "qty": 1900,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Вориконазол, таблетки, по 200 мг",
-     "qty": 100,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
    "tenderID": "UA-2026-09-01-010865-a",
    "title": "Цефотаксим,порошок для ін'єкцій  по 1 г, Меропенем,порошок для ін'єкцій по 0,5 г, Амоксицилін/клавуланова кислота таблетки, вкриті плівковою оболонкою, по 875 мг/125 мг, Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 0,4 мл, Прегабалін, капсули, по 75 мг, Прегабалін, капсули, по 150 мг, Азитроміцин, ліофілізат/порошок для розчину, по 500 мг, Вориконазол, таблетки, по 200 мг, Вориконазол, порошок/ліофілізат, по 200 мг, Колістин порошок для розчину для ін'єкцій або інфузій 1 000 000 МО, Ванкоміцин ліофілізат/порощок для розчину для інфузій по 500 мг, Меропенем, порошок для ін'єкцій/інфузій, по 1 г",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-010865-a"
-  },
-  {
-   "amount": 1114220,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 15,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-09-01T16:22:02.772051+03:00",
-   "dateModified": "2026-09-01T16:24:12.249413+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-09-01-009836-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "12-колірний реагент, що містить антитіла проти: Kappa/CD8,\nLambda/CD4, CD19, CD56, CD10, CD34, CD5, CD20, CD3, CD45 (25 визначень)",
-     "qty": 2,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "10-колірний реагент, що містить антитіла проти антигенів В-лімфоцитів: Kappa, Lambda, CD10, CD5, CD200, CD34, CD38, CD20, CD19, CD45 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "10-колірний реагент, що містить антитіла проти антигенів Т-лімфоцитів: TCRγδ, CD4, CD2, CD56, CD5, CD34, CD7, CD8, CD3, CD45 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD16, CD7, CD10, CD13, CD64, CD34, CD14, HLA-DR, CD11b, CD45 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD15, CD123, CD117, CD13, CD33, CD34, CD38, HLA-DR, CD19, CD45 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "7-колірний реагент, що містить антитіла проти: CD58, CD34, CD10, CD19, CD38, CD20, CD45 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "8-колірний реагент, що містить антитіла проти: CD81, CD27, CD19, CD200, CD138, CD56, CD38, CD45 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Контрольний реагент  патологічного рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Контрольний реагент  нормального рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Частинки для компенсації сигналів флюоресценції  проточного цитометра",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Фіксуючий розчин",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Лізуючий розчин (100 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Лізуючий розчин з активною речовиною NH4Cl (100 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Програмний інструмент для проточного цитометра з безстроковою ліцензією",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c",
-     "name": "Моноклональне антитіло проти CD45-PC7 (100 визначень)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-09-01-009836-a",
-   "title": "Лабораторні реагенти",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-009836-a"
-  },
-  {
-   "amount": 4044.02,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33620000-2",
-   "date": "2026-09-01T10:46:14.778458+03:00",
-   "dateModified": "2026-09-01T10:46:14.778458+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-09-01-002074-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    }
-   ],
+   "date": "2026-09-04T00:00:00+03:00",
+   "dateModified": "2026-09-01T17:18:39.909765+03:00",
    "method": "priceQuotation",
    "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1217032.34,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-010865-a",
+   "counts": {
+    "signed": 0,
+    "progress": 12,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Амоксицилін/клавуланова кислота таблетки, вкриті плівковою оболонкою, по 875 мг/125 мг",
+     "qty": 4050,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Меропенем, порошок для ін'єкцій/інфузій, по 1 г",
+     "qty": 750,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Меропенем,порошок для ін'єкцій по 0,5 г",
+     "qty": 220,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Прегабалін, капсули, по 75 мг",
+     "qty": 10000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Прегабалін, капсули, по 150 мг",
+     "qty": 6000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Ванкоміцин ліофілізат/порощок для розчину для інфузій по 500 мг",
+     "qty": 500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Колістин порошок для розчину для ін'єкцій або інфузій 1 000 000 МО",
+     "qty": 500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Азитроміцин, ліофілізат/порошок для розчину, по 500 мг",
+     "qty": 200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Вориконазол, порошок/ліофілізат, по 200 мг",
+     "qty": 64,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 0,4 мл",
+     "qty": 1950,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Цефотаксим,порошок для ін'єкцій  по 1 г",
+     "qty": 1900,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Вориконазол, таблетки, по 200 мг",
+     "qty": 100,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-01-009836-a",
+   "tenderID": "UA-2026-09-01-009836-a",
+   "title": "Лабораторні реагенти",
+   "date": "2026-09-17T09:00:00+03:00",
+   "dateModified": "2026-09-01T16:24:12.249413+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1114220,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-009836-a",
+   "counts": {
+    "signed": 0,
+    "progress": 15,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "12-колірний реагент, що містить антитіла проти: Kappa/CD8,\nLambda/CD4, CD19, CD56, CD10, CD34, CD5, CD20, CD3, CD45 (25 визначень)",
+     "qty": 2,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "10-колірний реагент, що містить антитіла проти антигенів В-лімфоцитів: Kappa, Lambda, CD10, CD5, CD200, CD34, CD38, CD20, CD19, CD45 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "10-колірний реагент, що містить антитіла проти антигенів Т-лімфоцитів: TCRγδ, CD4, CD2, CD56, CD5, CD34, CD7, CD8, CD3, CD45 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD16, CD7, CD10, CD13, CD64, CD34, CD14, HLA-DR, CD11b, CD45 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD15, CD123, CD117, CD13, CD33, CD34, CD38, HLA-DR, CD19, CD45 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "7-колірний реагент, що містить антитіла проти: CD58, CD34, CD10, CD19, CD38, CD20, CD45 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "8-колірний реагент, що містить антитіла проти: CD81, CD27, CD19, CD200, CD138, CD56, CD38, CD45 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Контрольний реагент  патологічного рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Контрольний реагент  нормального рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Частинки для компенсації сигналів флюоресценції  проточного цитометра",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Фіксуючий розчин",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Лізуючий розчин (100 визначень)",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Лізуючий розчин з активною речовиною NH4Cl (100 визначень)",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Програмний інструмент для проточного цитометра з безстроковою ліцензією",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    },
+    {
+     "name": "Моноклональне антитіло проти CD45-PC7 (100 визначень)",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-01-002074-a",
    "tenderID": "UA-2026-09-01-002074-a",
    "title": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a"
+   "date": "2026-09-04T08:00:00+03:00",
+   "dateModified": "2026-09-01T10:46:14.778458+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 4044.02,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+     "qty": 10,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
   },
   {
    "amount": 1327152,
@@ -470,184 +470,184 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-27-000379-a"
   },
   {
-   "amount": 9884.11,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-08-31T18:50:53.879414+03:00",
-   "dateModified": "2026-08-31T18:50:53.879414+03:00",
-   "group": "Ліки",
    "id": "UA-2026-08-31-012471-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Хлорпромазин, таблетки, по 100 мг",
-     "qty": 800,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
    "tenderID": "UA-2026-08-31-012471-a",
    "title": "Хлорпромазин, таблетки, по 100 мг",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-012471-a"
-  },
-  {
-   "amount": 426511.59,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 11,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-08-31T18:41:07.657483+03:00",
-   "dateModified": "2026-08-31T18:41:07.657483+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-08-31-012391-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Хлорпромазин, розчин для ін'єкцій, 25 мг/мл, по 2 мл",
-     "qty": 1500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Аміодарон, розчин для ін’єкцій, 50 мг/мл, по 3 мл",
-     "qty": 3000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Галоперидол, розчин для ін'єкцій, 5 мг/мл, по 1 мл",
-     "qty": 500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Галоперидол, таблетки, по 5 мг",
-     "qty": 200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-     "qty": 1965,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Кальцію хлорид розчин для ін'єкцій, 100 мг/мл 10мл",
-     "qty": 600,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Налоксон розчин для ін'єкцій, 0,4 мг/мл по 1 мл",
-     "qty": 300,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Протамін, розчин для ін'єкцій, 1000 МО/мл, по 10 мл",
-     "qty": 400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Мікофенолова кислота, таблетки/капсули, по 250 мг",
-     "qty": 200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Ністатин, таблетки, по 500000 ОД",
-     "qty": 2000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Такролімус таблетки/капсули по 0.75 мг",
-     "qty": 300,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    }
-   ],
+   "date": "2026-09-03T09:00:00+03:00",
+   "dateModified": "2026-08-31T18:50:53.879414+03:00",
    "method": "priceQuotation",
    "status": "active.tendering",
-   "tenderID": "UA-2026-08-31-012391-a",
-   "title": "Лікарські засоби для лікування хвороб нервової системи та захворювань органів чуття",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-012391-a"
-  },
-  {
-   "amount": 50450,
    "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-08-31T17:38:50.382536+03:00",
-   "dateModified": "2026-08-31T17:39:50.499233+03:00",
+   "amount": 9884.11,
    "group": "Ліки",
-   "id": "UA-2026-08-31-011817-a",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-012471-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
    "items": [
     {
-     "amount": null,
-     "lot": "a11c9c5569734b3780aa1089dacde87d",
-     "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-     "qty": 1,
+     "name": "Хлорпромазин, таблетки, по 100 мг",
+     "qty": 800,
+     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "unit": "набір"
+     "amount": null,
+     "lot": null
     }
-   ],
-   "method": "aboveThreshold",
+   ]
+  },
+  {
+   "id": "UA-2026-08-31-012391-a",
+   "tenderID": "UA-2026-08-31-012391-a",
+   "title": "Лікарські засоби для лікування хвороб нервової системи та захворювань органів чуття",
+   "date": "2026-09-03T08:00:00+03:00",
+   "dateModified": "2026-08-31T18:41:07.657483+03:00",
+   "method": "priceQuotation",
    "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 426511.59,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-012391-a",
+   "counts": {
+    "signed": 0,
+    "progress": 11,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Хлорпромазин, розчин для ін'єкцій, 25 мг/мл, по 2 мл",
+     "qty": 1500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Аміодарон, розчин для ін’єкцій, 50 мг/мл, по 3 мл",
+     "qty": 3000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Галоперидол, розчин для ін'єкцій, 5 мг/мл, по 1 мл",
+     "qty": 500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Галоперидол, таблетки, по 5 мг",
+     "qty": 200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+     "qty": 1965,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Кальцію хлорид розчин для ін'єкцій, 100 мг/мл 10мл",
+     "qty": 600,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Налоксон розчин для ін'єкцій, 0,4 мг/мл по 1 мл",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Протамін, розчин для ін'єкцій, 1000 МО/мл, по 10 мл",
+     "qty": 400,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Мікофенолова кислота, таблетки/капсули, по 250 мг",
+     "qty": 200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Ністатин, таблетки, по 500000 ОД",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Такролімус таблетки/капсули по 0.75 мг",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-08-31-011817-a",
    "tenderID": "UA-2026-08-31-011817-a",
    "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
+   "date": "2026-09-08T09:00:00+03:00",
+   "dateModified": "2026-08-31T17:39:50.499233+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 50450,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+     "qty": 1,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "a11c9c5569734b3780aa1089dacde87d"
+    }
+   ]
   },
   {
    "amount": 1339811.21,
@@ -908,124 +908,124 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-008097-a"
   },
   {
-   "amount": 771711,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 11,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-08-26T16:31:10.401012+03:00",
-   "dateModified": "2026-08-26T16:32:51.170286+03:00",
-   "group": "Ліки",
    "id": "UA-2026-08-26-012063-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "Контролі електролітів Sensa Trilevel Quality Controls (L,N,H)",
-     "qty": 12,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "Миючий розчин Sensa Daily Cleaning Solution 12*15 мл - електроліти",
-     "qty": 26,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "Реагент-пак ST-200 aQua Reagent Pack (740ml+200ml)",
-     "qty": 26,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "Референсний електрод ST Reference Electrode - aQua",
-     "qty": 2,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "pH/B/Cl електрод UltraSmart",
-     "qty": 9,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "Na/K/iCa електрод UltraSmart",
-     "qty": 6,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "Розчин референсного електроду Sensa Core",
-     "qty": 2,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "115-035753-00 Кювети до CL1000i (Cuvettes for CL-1000i)",
-     "qty": 15,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "105-006173-00 Мікроальбумін (2×18мл+2×5мл)",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "105-002315-00 Калібратор MALB (1×5 рівнів×1мл)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    },
-    {
-     "amount": null,
-     "lot": "4e511a40f6644146b3404d993061ddcc",
-     "name": "105-002316-00 Контроль MALB (1×1рівень×1мл)",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання"
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.tendering",
    "tenderID": "UA-2026-08-26-012063-a",
    "title": "Лабораторні реагенти",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-26-012063-a"
+   "date": "2026-09-03T09:00:00+03:00",
+   "dateModified": "2026-08-26T16:32:51.170286+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 771711,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-26-012063-a",
+   "counts": {
+    "signed": 0,
+    "progress": 11,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Контролі електролітів Sensa Trilevel Quality Controls (L,N,H)",
+     "qty": 12,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "Миючий розчин Sensa Daily Cleaning Solution 12*15 мл - електроліти",
+     "qty": 26,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "Реагент-пак ST-200 aQua Reagent Pack (740ml+200ml)",
+     "qty": 26,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "Референсний електрод ST Reference Electrode - aQua",
+     "qty": 2,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "pH/B/Cl електрод UltraSmart",
+     "qty": 9,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "Na/K/iCa електрод UltraSmart",
+     "qty": 6,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "Розчин референсного електроду Sensa Core",
+     "qty": 2,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "115-035753-00 Кювети до CL1000i (Cuvettes for CL-1000i)",
+     "qty": 15,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "105-006173-00 Мікроальбумін (2×18мл+2×5мл)",
+     "qty": 10,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "105-002315-00 Калібратор MALB (1×5 рівнів×1мл)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    },
+    {
+     "name": "105-002316-00 Контроль MALB (1×1рівень×1мл)",
+     "qty": 1,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "4e511a40f6644146b3404d993061ddcc"
+    }
+   ]
   },
   {
    "amount": 2067016.2,
