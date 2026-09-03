@@ -1,18 +1,140 @@
 {
- "generated": "2026-09-03T00:44:40.344872+00:00",
+ "generated": "2026-09-03T05:08:27.887519+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-03T00:44:40.344872+00:00",
+  "checked": "2026-09-03T05:08:27.887519+00:00",
   "expected": 1210,
   "seen": 1210,
-  "tenders": 398,
-  "errors": 0,
+  "tenders": 397,
+  "errors": 1,
   "dropped": 0,
-  "status": "ok",
-  "problems": []
+  "status": "warn",
+  "problems": [
+   "не прочитано закупівель: 1"
+  ]
  },
  "tenders": [
+  {
+   "id": "UA-2026-08-31-012391-a",
+   "tenderID": "UA-2026-08-31-012391-a",
+   "title": "Лікарські засоби для лікування хвороб нервової системи та захворювань органів чуття",
+   "date": "2026-09-03T08:00:00+03:00",
+   "dateModified": "2026-09-03T08:00:06.458512+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 426511.59,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-012391-a",
+   "counts": {
+    "signed": 0,
+    "progress": 11,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Хлорпромазин, розчин для ін'єкцій, 25 мг/мл, по 2 мл",
+     "qty": 1500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Аміодарон, розчин для ін’єкцій, 50 мг/мл, по 3 мл",
+     "qty": 3000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Галоперидол, розчин для ін'єкцій, 5 мг/мл, по 1 мл",
+     "qty": 500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Галоперидол, таблетки, по 5 мг",
+     "qty": 200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+     "qty": 1965,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Кальцію хлорид розчин для ін'єкцій, 100 мг/мл 10мл",
+     "qty": 600,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Налоксон розчин для ін'єкцій, 0,4 мг/мл по 1 мл",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Протамін, розчин для ін'єкцій, 1000 МО/мл, по 10 мл",
+     "qty": 400,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Мікофенолова кислота, таблетки/капсули, по 250 мг",
+     "qty": 200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Ністатин, таблетки, по 500000 ОД",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Такролімус таблетки/капсули по 0.75 мг",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-01-010865-a",
    "tenderID": "UA-2026-09-01-010865-a",
@@ -491,126 +613,6 @@
     {
      "name": "Хлорпромазин, таблетки, по 100 мг",
      "qty": 800,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-08-31-012391-a",
-   "tenderID": "UA-2026-08-31-012391-a",
-   "title": "Лікарські засоби для лікування хвороб нервової системи та захворювань органів чуття",
-   "date": "2026-09-03T08:00:00+03:00",
-   "dateModified": "2026-08-31T18:41:07.657483+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 426511.59,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-012391-a",
-   "counts": {
-    "signed": 0,
-    "progress": 11,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Хлорпромазин, розчин для ін'єкцій, 25 мг/мл, по 2 мл",
-     "qty": 1500,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Аміодарон, розчин для ін’єкцій, 50 мг/мл, по 3 мл",
-     "qty": 3000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Галоперидол, розчин для ін'єкцій, 5 мг/мл, по 1 мл",
-     "qty": 500,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Галоперидол, таблетки, по 5 мг",
-     "qty": 200,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-     "qty": 1965,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Кальцію хлорид розчин для ін'єкцій, 100 мг/мл 10мл",
-     "qty": 600,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Налоксон розчин для ін'єкцій, 0,4 мг/мл по 1 мл",
-     "qty": 300,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Протамін, розчин для ін'єкцій, 1000 МО/мл, по 10 мл",
-     "qty": 400,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Мікофенолова кислота, таблетки/капсули, по 250 мг",
-     "qty": 200,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Ністатин, таблетки, по 500000 ОД",
-     "qty": 2000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
-    },
-    {
-     "name": "Такролімус таблетки/капсули по 0.75 мг",
-     "qty": 300,
      "unit": "штука",
      "status": "В процесі",
      "supplier": null,
