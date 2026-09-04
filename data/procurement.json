@@ -1,18 +1,174 @@
 {
- "generated": "2026-09-04T11:52:19.441540+00:00",
+ "generated": "2026-09-04T16:27:27.277806+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-04T11:52:19.441540+00:00",
-  "expected": 1213,
-  "seen": 1213,
-  "tenders": 401,
+  "checked": "2026-09-04T16:27:27.277806+00:00",
+  "expected": 1217,
+  "seen": 1217,
+  "tenders": 405,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-04-013369-a",
+   "tenderID": "UA-2026-09-04-013369-a",
+   "title": "Голки епідуральні, канюлі для аспірації",
+   "date": "2026-09-25T09:00:00+03:00",
+   "dateModified": "2026-09-04T18:10:38.198901+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 635000,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013369-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Голка епідуральна",
+     "qty": 850,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+    },
+    {
+     "name": "Канюля для аспірації з повітряним фільтром",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+    },
+    {
+     "name": "Канюля для аспірації з повітряним та рідинним фільтрами",
+     "qty": 1500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-04-013005-a",
+   "tenderID": "UA-2026-09-04-013005-a",
+   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "date": "2026-09-09T09:00:00+03:00",
+   "dateModified": "2026-09-04T17:13:47.712770+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1143925.23,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013005-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+     "qty": 12000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-04-012817-a",
+   "tenderID": "UA-2026-09-04-012817-a",
+   "title": "Абіратерон, таблетки по 250 мг; Абіратерон, таблетки, по 500 мг",
+   "date": "2026-09-09T09:00:00+03:00",
+   "dateModified": "2026-09-04T16:58:39.628299+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 420560.75,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012817-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Абіратерон, таблетки по 250 мг",
+     "qty": 2400,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Абіратерон, таблетки, по 500 мг",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-04-012532-a",
+   "tenderID": "UA-2026-09-04-012532-a",
+   "title": "Фенілефрину розчин для ін'єкцій, 10 мг/мл по 1 мл; Нітрогліцерин, концентрат для розчину для інфузій, 10 мг/мл, по 2 мл",
+   "date": "2026-09-09T08:00:00+03:00",
+   "dateModified": "2026-09-04T16:31:51.903047+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 38609.72,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012532-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Фенілефрину розчин для ін'єкцій, 10 мг/мл по 1 мл",
+     "qty": 600,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    },
+    {
+     "name": "Нітрогліцерин, концентрат для розчину для інфузій, 10 мг/мл, по 2 мл",
+     "qty": 1000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 3670,
    "contractEnd": null,
@@ -2467,7 +2623,12 @@
      "qty": 2000,
      "status": "Не відбулось",
      "supplier": null,
-     "unit": "штука"
+     "unit": "штука",
+     "resolved": {
+      "d": "2026-09-04",
+      "t": "UA-2026-09-04-013005-a",
+      "k": "pending"
+     }
     }
    ],
    "method": "priceQuotation",
