@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-04T01:27:42.966628+00:00",
+ "generated": "2026-09-04T06:42:06.337058+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-04T01:27:42.966628+00:00",
+  "checked": "2026-09-04T06:42:06.337058+00:00",
   "expected": 1213,
   "seen": 1213,
   "tenders": 401,
@@ -13,6 +13,36 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-01-002074-a",
+   "tenderID": "UA-2026-09-01-002074-a",
+   "title": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+   "date": "2026-09-04T08:00:00+03:00",
+   "dateModified": "2026-09-04T08:05:37.557146+03:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 3670,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+     "qty": 10,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "amount": 3670,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 1217032.34,
    "contractEnd": null,
@@ -898,36 +928,6 @@
      "supplier": null,
      "amount": null,
      "lot": "88ee3bb728274edba7119e407bfc0b6c"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-01-002074-a",
-   "tenderID": "UA-2026-09-01-002074-a",
-   "title": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
-   "date": "2026-09-04T08:00:00+03:00",
-   "dateModified": "2026-09-01T10:46:14.778458+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 4044.02,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
-     "qty": 10,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "lot": null
     }
    ]
   },
