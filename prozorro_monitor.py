@@ -37,7 +37,7 @@ KEEP_SIGNED_DAYS  = 30         # підписані: товар доїжджає
 KEEP_PROBLEM_DAYS = 30         # зірвані й скасовані: місяць, далі забуваємо
 # Версія логіки розбору. Зміна цього числа знецінює збережені знімки:
 # статуси перечитуються заново, а масові "зміни" не йдуть у Telegram.
-PARSER_VERSION = 20
+PARSER_VERSION = 21
 UA = "likion-procurement-monitor/1.0 (+https://github.com/oskhmil/medsklad)"
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
@@ -464,13 +464,21 @@ def parse_tender(t, meta=None):
         lot_id = it.get("relatedLot")
         st, supplier, amount = lot_status(t, lot_id)
         unit = (it.get("unit") or {}).get("name") or ""
+        qty = it.get("quantity")
+        unit_price = None
+        if len(t.get("items") or []) == 1 and amount and qty:
+            try:
+                unit_price = round(float(amount) / float(qty), 2)
+            except Exception:
+                unit_price = None
         items.append({
             "name": (it.get("description") or "").strip(),
-            "qty": it.get("quantity"),
+            "qty": qty,
             "unit": unit,
             "status": st,
             "supplier": supplier,
             "amount": amount,
+            "unitPrice": unit_price,
             "lot": lot_id,
         })
 
@@ -629,6 +637,13 @@ def probe_items_endpoint(tid):
             if isinstance(v, list) and v:
                 log(f"    {key}: {len(v)} шт · ключі {sorted(v[0].keys())[:12]}")
                 log(f"      приклад: {json.dumps(v[0], ensure_ascii=False)[:220]}")
+    for lot in lots[:1]:
+        for c in (lot.get("contracts") or [])[:1]:
+            log(f"    ключі договору: {sorted(c.keys())[:16]}")
+            ci = c.get("items") or []
+            if ci:
+                log(f"    позицій у договорі: {len(ci)} · ключі {sorted(ci[0].keys())[:12]}")
+                log(f"      приклад: {json.dumps(ci[0], ensure_ascii=False)[:260]}")
     log("  -- кінець проби --")
 
 
@@ -666,15 +681,26 @@ def items_from_lots(tender, lots):
                 "lot": lot.get("id"), "fromLot": True,
             })
             continue
+        # Ціна за одиницю виводиться лише коли в лоті одна позиція: інакше
+        # сума лота стосується всіх позицій разом і ділити її нема сенсу.
+        lot_total = amount if amount is not None else (lot.get("value") or {}).get("amount")
         for it in lot_items:
             cls = (it.get("classification") or {}).get("id") or ""
             if cls and not cls.startswith(CPV_PREFIX):
                 continue
+            qty = it.get("quantity")
+            unit_price = None
+            if len(lot_items) == 1 and lot_total and qty:
+                try:
+                    unit_price = round(float(lot_total) / float(qty), 2)
+                except Exception:
+                    unit_price = None
             out.append({
                 "name": (it.get("description") or it.get("title") or "").strip(),
-                "qty": it.get("quantity"),
+                "qty": qty,
                 "unit": (it.get("unit") or {}).get("name") or "",
                 "status": st, "supplier": supplier, "amount": None,
+                "unitPrice": unit_price,
                 "lot": lot.get("id"),
             })
     return out

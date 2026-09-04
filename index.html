@@ -2293,7 +2293,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.171";
+const APP_VERSION = "v.173";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3178,6 +3178,7 @@ async function openMedsearch() {
   // інакше на свіжому пристрої (кешу немає → екран «Завантажити дані») префетч
   // не спрацює взагалі, і бейджі ⛔ не з'являться, поки не зайти в розділ ДЛС.
   _dlsPrefetch();
+  _procPrefetch();
   // If cached medsearch data exists → jump straight to home, else entry screen
   const cache = loadCache();
   if (cache) {
@@ -3628,8 +3629,15 @@ function renderResults() {
 function renderResultsList(res, correction) {
   document.getElementById("result-count").textContent = res.length + " записів";
   const list = document.getElementById("results-list");
+
+  // Закупівлі дивимось лише при пошуку за назвою чи МНН — для серії
+  // та відділення це не має сенсу.
+  const procWords = (searchMode === "name" || searchMode === "mnn") && currentQuery !== "*"
+    ? normalize(currentQuery).split(/\s+/).filter(w => w.length > 1)
+    : [];
+
   if (!res.length) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div>${procStockBlock(procWords, false)}</div>`;
     return;
   }
 
@@ -3650,7 +3658,7 @@ function renderResultsList(res, correction) {
   });
 
   const visibleGroups = groupOrder.slice(0, displayLimit);
-  let html = visibleGroups.map((key, gIdx) => {
+  let html = procStockBlock(procWords, true) + visibleGroups.map((key, gIdx) => {
     const items = groups[key];
     const displayName = items[0].name;
     const mnn = items.find(it => it.mnn)?.mnn || null;
@@ -13207,6 +13215,90 @@ async function procUpdateBadge() {
   } catch (_) { /* значок не критичний */ }
 }
 
+// ── Зв'язок із залишками ────────────────────────────────────────────────────
+// У медпошуку паралельно дивимось у закупівлі: препарату немає на складі —
+// показуємо, що він у торгах і на якому етапі. Дані ті самі, що в модулі.
+let _procPrefetching = false;
+
+async function _procPrefetch() {
+  if (procData || _procPrefetching) return;
+  _procPrefetching = true;
+  try {
+    await Store.ready();
+    const c = _procLoadCache();
+    if (c && (Date.now() - c.time.getTime()) < PROC_TTL_MS) {
+      procData = c.payload;
+    } else {
+      procData = await _procFetch();
+      _procSaveCache(procData);
+    }
+    // якщо людина вже щось шукає — домалюємо блок закупівель
+    if (typeof currentQuery === "string" && currentQuery && typeof renderResults === "function"
+        && document.getElementById("results-screen")?.style.display === "block") {
+      renderResults();
+    }
+  } catch (_) { /* блок у пошуку — доповнення, не привід ламати пошук */ }
+  finally { _procPrefetching = false; }
+}
+
+function procMatchesForWords(words) {
+  if (!procData || !Array.isArray(procData.tenders) || !words.length) return [];
+  const out = [];
+  procData.tenders.forEach(t => (t.items || []).forEach(i => {
+    if (multiWordMatch(i.name, words)) out.push({ t, i });
+  }));
+  // свіжі закупівлі вгорі
+  out.sort((a, b) => String(b.t.tenderID).localeCompare(String(a.t.tenderID)));
+  return out;
+}
+
+function procStageText(st) {
+  if (st === "Підписано")  return "договір підписано";
+  if (st === "Переможець") return "переможець визначений";
+  if (st === "В процесі")  return "торги тривають";
+  return "торги зірвались";
+}
+
+function procStockBlock(words, hasStock) {
+  const hits = procMatchesForWords(words);
+  if (!hits.length) return "";
+  const shown = hits.slice(0, 5);
+  const rows = shown.map(({ t, i }) => {
+    const cls = procStatusClass(i.status);
+    const when = procAnnounced(t.tenderID);
+    const sup = i.supplier ? " · " + esc(procSupplier(i.supplier)) : "";
+    return `<div style="padding:7px 0;border-bottom:1px solid rgba(37,43,68,.4)">
+      <div style="display:flex;gap:8px;justify-content:space-between;align-items:flex-start">
+        <div style="font-size:12.5px;line-height:1.4;flex:1">${esc(String(i.name).slice(0, 120))}</div>
+        <span class="proc-st ${cls}">${esc(procStageText(i.status))}</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">
+        ${when}${i.qty ? " · " + i.qty + " " + esc(i.unit || "") : ""}${i.unitPrice ? " · " + procMoney(i.unitPrice) + "/" + esc(i.unit || "од") : ""}${sup}
+        · <a href="${PROC_TENDER_URL}${esc(t.tenderID)}" target="_blank" rel="noopener"
+             style="color:var(--accent);text-decoration:none">Prozorro ↗</a>
+      </div>
+    </div>`;
+  }).join("");
+  const more = hits.length > shown.length
+    ? `<div style="font-size:11px;color:var(--muted);padding-top:6px">…і ще ${hits.length - shown.length}. Повний список у розділі «Закупівлі Prozorro».</div>`
+    : "";
+
+  if (!hasStock) {
+    return `<div style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.4);
+                        border-radius:14px;padding:12px 14px;margin-top:12px;text-align:left">
+      <div style="font-size:13px;font-weight:600;margin-bottom:6px">🛒 Немає на залишку, але є в закупівлях</div>
+      ${rows}${more}
+    </div>`;
+  }
+  return `<details style="background:var(--card);border:1px solid var(--border);border-radius:12px;
+                          padding:9px 14px;margin-bottom:12px">
+    <summary style="font-size:12px;color:var(--muted);cursor:pointer;list-style:none">
+      🛒 Також у закупівлях: ${hits.length} ${hits.length === 1 ? "позиція" : "позицій"} ▾
+    </summary>
+    <div style="margin-top:6px">${rows}${more}</div>
+  </details>`;
+}
+
 async function openProc() {
   await Store.ready();
   _pwdTarget = "proc";
@@ -13470,6 +13562,7 @@ function procRender() {
     const itemsHtml = items.map(i => {
       const sub = [];
       if (i.qty)      sub.push(`${i.qty} ${esc(i.unit || "")}`.trim());
+      if (i.unitPrice) sub.push(`<b style="color:var(--text)">${procMoney(i.unitPrice)}/${esc(i.unit || "од")}</b>`);
       if (i.supplier && sups.length !== 1) sub.push(esc(procSupplier(i.supplier)));
       if (i.amount)   sub.push(procMoney(i.amount));
       const rs = i.resolved;
