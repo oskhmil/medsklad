@@ -1360,6 +1360,22 @@
     padding: 4px 6px;
     line-height: 1;
   }
+  #proc-mic-btn {
+    display: none;
+    position: absolute;
+    right: 38px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+  }
+  #proc-mic-btn.listening {
+    animation: micPulse 1s ease-in-out infinite;
+  }
   #mic-btn.listening {
     animation: micPulse 1s ease-in-out infinite;
   }
@@ -1665,8 +1681,9 @@
           <input id="proc-search" type="text" placeholder="Пошук по позиції або препарату..."
                  oninput="procOnSearch(this.value)"
                  style="width:100%;background:#2a3050;border:1.5px solid #4f8ef7;border-radius:12px;
-                        padding:10px 38px 10px 14px;color:#fff;font-size:14px;outline:none;">
+                        padding:10px 68px 10px 14px;color:#fff;font-size:14px;outline:none;">
           <span class="search-ico">🔍</span>
+          <button id="proc-mic-btn" onclick="procToggleMic()" title="Голосовий ввід">🎤</button>
         </div>
 
         <div class="proc-bar" id="proc-groups">
@@ -2293,7 +2310,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.173";
+const APP_VERSION = "v.176";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3156,6 +3173,7 @@ function show(screen) {
 }
 
 function goStart() {
+  if (_procMicActive) { try { _procMicRec.stop(); } catch (_) {} }
   // Reset medsearch state so returning via logo behaves naturally
   currentQuery = "";
   currentFilter = "all";
@@ -13324,6 +13342,7 @@ async function loadProc(force) {
       elCont.style.display = "block";
       procRender();
       procMarkSeen();
+      procUpdateMicVisibility();
       return;
     }
   }
@@ -13338,6 +13357,7 @@ async function loadProc(force) {
     elCont.style.display = "block";
     procRender();
     procMarkSeen();
+    procUpdateMicVisibility();
   } catch (err) {
     elLoad.style.display = "none";
     elErr.style.display = "block";
@@ -13388,6 +13408,41 @@ function procDate(iso) {
   if (!iso) return "";
   const d = new Date(iso);
   return isNaN(d) ? "" : d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+// Голосовий ввід — та сама механіка, що в медпошуку, але власне поле й кнопка,
+// щоб два розділи не гасили розпізнавання один одному.
+let _procMicRec = null;
+let _procMicActive = false;
+
+function procUpdateMicVisibility() {
+  const b = document.getElementById("proc-mic-btn");
+  if (b) b.style.display = _micSupported() ? "block" : "none";
+}
+
+function procToggleMic() {
+  const btn = document.getElementById("proc-mic-btn");
+  if (_procMicActive) {
+    try { _procMicRec.stop(); } catch (_) {}
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  _procMicRec = new SR();
+  _procMicRec.lang = "uk-UA";
+  _procMicRec.interimResults = false;
+  _procMicRec.maxAlternatives = 1;
+  _procMicRec.onstart = () => { _procMicActive = true; btn.classList.add("listening"); };
+  _procMicRec.onend   = () => { _procMicActive = false; btn.classList.remove("listening"); };
+  _procMicRec.onerror = () => { _procMicActive = false; btn.classList.remove("listening"); };
+  _procMicRec.onresult = (ev) => {
+    const t = ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
+    if (!t) return;
+    const el = document.getElementById("proc-search");
+    if (el) el.value = t;
+    procOnSearch(t);
+  };
+  try { _procMicRec.start(); } catch (_) {}
 }
 
 function procOnSearch(v) {
@@ -13532,10 +13587,16 @@ function procRender() {
     const hasProblem = openProblems > 0;
     // Закупівлі-одиночки і ті, де є проблеми, показуємо розгорнутими одразу:
     // після змін у законі дорогі позиції йдуть окремими лотами, і згортати нічого.
-    const small = items.length <= 2;
-    const auto  = small || hasProblem || !!procQuery;
-    const open  = procExpanded[t.tenderID] !== undefined ? procExpanded[t.tenderID] : auto;
-    const collapsible = !small;
+    // До восьми позицій показуємо одразу: згорнута картка з кількома рядками
+    // виглядає як порожня, а не як компактна.
+    const small = items.length <= 8;
+    const auto  = small || hasProblem;
+    // Під час пошуку розкриваємо примусово: людина шукала конкретну позицію,
+    // і згорнута картка ховає саме те, що вона знайшла. Ручне згортання
+    // памʼятаємо лише для звичайного перегляду.
+    const open  = procQuery ? true
+                : (procExpanded[t.tenderID] !== undefined ? procExpanded[t.tenderID] : auto);
+    const collapsible = !small && !procQuery;
 
     const parts = [];
     if (c.signed)   parts.push(`${c.signed} підписано`);
