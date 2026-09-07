@@ -1,18 +1,59 @@
 {
- "generated": "2026-09-07T15:56:01.445541+00:00",
+ "generated": "2026-09-07T20:02:49.697106+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-07T15:56:01.445541+00:00",
-  "expected": 1217,
-  "seen": 1217,
-  "tenders": 405,
+  "checked": "2026-09-07T20:02:49.697106+00:00",
+  "expected": 1218,
+  "seen": 1218,
+  "tenders": 406,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-07-014409-a",
+   "tenderID": "UA-2026-09-07-014409-a",
+   "title": "Катетер пупковий",
+   "date": "2026-09-10T08:00:00+03:00",
+   "dateModified": "2026-09-07T18:55:47.212070+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 48060.75,
+   "group": "Матеріали",
+   "cpv": "33141000-0",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014409-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Катетер пупковий, одноразовий, з додатковим ін'єкційним портом, 4Fr, №1",
+     "qty": 150,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Катетер пупковий, одноразовий, з додатковим ін'єкційним портом, 5Fr, №1",
+     "qty": 150,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-04-013369-a",
    "tenderID": "UA-2026-09-04-013369-a",
