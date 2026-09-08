@@ -1,16 +1,18 @@
 {
- "generated": "2026-09-08T11:18:14.378752+00:00",
+ "generated": "2026-09-08T15:27:03.809063+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-08T11:18:14.378752+00:00",
+  "checked": "2026-09-08T15:27:03.809063+00:00",
   "expected": 1219,
   "seen": 1219,
-  "tenders": 407,
-  "errors": 0,
+  "tenders": 406,
+  "errors": 1,
   "dropped": 0,
-  "status": "ok",
-  "problems": []
+  "status": "warn",
+  "problems": [
+   "не прочитано закупівель: 1"
+  ]
  },
  "tenders": [
   {
@@ -65,35 +67,35 @@
    ]
   },
   {
-   "id": "UA-2026-08-31-011817-a",
-   "tenderID": "UA-2026-08-31-011817-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "amount": 50450,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-08T09:00:00+03:00",
    "dateModified": "2026-09-08T09:00:44.715226+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 50450,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-08-31-011817-a",
    "items": [
     {
+     "amount": null,
+     "lot": "a11c9c5569734b3780aa1089dacde87d",
      "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
      "qty": 1,
-     "unit": "набір",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": 50450.0,
-     "lot": "a11c9c5569734b3780aa1089dacde87d"
+     "unit": "набір",
+     "unitPrice": 50450.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-08-31-011817-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
   },
   {
    "amount": 2649860,
