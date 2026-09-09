@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-09T09:18:11.301756+00:00",
+ "generated": "2026-09-09T14:03:51.863597+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-09T09:18:11.301756+00:00",
+  "checked": "2026-09-09T14:03:51.863597+00:00",
   "expected": 1220,
   "seen": 1220,
   "tenders": 408,
@@ -55,117 +55,117 @@
    ]
   },
   {
-   "id": "UA-2026-09-04-013005-a",
-   "tenderID": "UA-2026-09-04-013005-a",
-   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "amount": 1020000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-09-09T09:00:00+03:00",
    "dateModified": "2026-09-09T09:11:50.475766+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1020000,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013005-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-09-04-013005-a",
    "items": [
     {
+     "amount": 1020000,
+     "lot": null,
      "name": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
      "qty": 12000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 1020000,
-     "unitPrice": 85.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 85.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-04-013005-a",
+   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013005-a"
   },
   {
-   "id": "UA-2026-09-04-012817-a",
-   "tenderID": "UA-2026-09-04-012817-a",
-   "title": "Абіратерон, таблетки по 250 мг; Абіратерон, таблетки, по 500 мг",
+   "amount": 420000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-09-09T09:00:00+03:00",
    "dateModified": "2026-09-09T09:09:07.250727+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 420000,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012817-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-04-012817-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Абіратерон, таблетки по 250 мг",
      "qty": 2400,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Абіратерон, таблетки, по 500 мг",
      "qty": 300,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-09-04-012532-a",
-   "tenderID": "UA-2026-09-04-012532-a",
-   "title": "Фенілефрину розчин для ін'єкцій, 10 мг/мл по 1 мл; Нітрогліцерин, концентрат для розчину для інфузій, 10 мг/мл, по 2 мл",
-   "date": "2026-09-09T08:00:00+03:00",
-   "dateModified": "2026-09-09T08:03:49.782326+03:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-09-04-012817-a",
+   "title": "Абіратерон, таблетки по 250 мг; Абіратерон, таблетки, по 500 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012817-a"
+  },
+  {
    "amount": 34680,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012532-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 2,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33620000-2",
+   "date": "2026-09-09T08:00:00+03:00",
+   "dateModified": "2026-09-09T08:03:49.782326+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-04-012532-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Фенілефрину розчин для ін'єкцій, 10 мг/мл по 1 мл",
      "qty": 600,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Нітрогліцерин, концентрат для розчину для інфузій, 10 мг/мл, по 2 мл",
      "qty": 1000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-04-012532-a",
+   "title": "Фенілефрину розчин для ін'єкцій, 10 мг/мл по 1 мл; Нітрогліцерин, концентрат для розчину для інфузій, 10 мг/мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012532-a"
   },
   {
    "id": "UA-2026-09-08-007509-a",
@@ -3255,16 +3255,16 @@
     }
    ],
    "method": "priceQuotation",
-   "status": "unsuccessful",
-   "tenderID": "UA-2026-08-21-007955-a",
-   "title": "Ампіцилін,порошок для розчину для ін'єкцій 1 г",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-007955-a",
    "resolved": {
     "count": 1,
     "of": 1,
     "d": "2026-09-04",
     "t": "UA-2026-09-04-013005-a"
-   }
+   },
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-08-21-007955-a",
+   "title": "Ампіцилін,порошок для розчину для ін'єкцій 1 г",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-007955-a"
   },
   {
    "amount": 1091010,
