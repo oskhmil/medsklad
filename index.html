@@ -1625,8 +1625,8 @@
         <button class="choice-btn proc" onclick="openProc()">
           <div class="choice-ico">🛒</div>
           <div class="choice-body">
-            <div class="choice-title">Закупівлі Prozorro 🔒<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
-            <div class="choice-sub">Work in progress · статуси позицій, договори, зриви торгів</div>
+            <div class="choice-title">Закупівлі Prozorro<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
+            <div class="choice-sub">Статуси позицій, договори, зриви торгів</div>
           </div>
           <div class="choice-arrow">›</div>
         </button>
@@ -2258,6 +2258,10 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.177 — знято пароль з розділу "Закупівлі Prozorro": розділ відкривається
+//   напряму, з плитки прибрано 🔒 і позначку "Work in progress". Константи
+//   PROC_PWD_HASH/PROC_AUTH_KEY лишились у коді — замок повертається однією
+//   перевіркою в openProc().
 // v.154 — колонки файлу залишків визначаються за рядком заголовка, а не
 //   жорстко. Файл на Диску змінився з обробленого (назва в M) на сире
 //   вивантаження 1С (назва в H) — парсер шукав M, отримував порожньо і
@@ -2310,7 +2314,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.176";
+const APP_VERSION = "v.177";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -13317,15 +13321,14 @@ function procStockBlock(words, hasStock) {
   </details>`;
 }
 
+// Пароль на розділі знято — закупівлі відкриті всім користувачам додатка.
+// Константи PROC_PWD_HASH / PROC_AUTH_KEY і гілка "proc" у
+// submitAnalyticsPassword() лишені навмисно: щоб повернути замок, достатньо
+// відновити перевірку _isProcAuthorized() нижче.
 async function openProc() {
   await Store.ready();
-  _pwdTarget = "proc";
-  if (_isProcAuthorized()) {
-    show("proc");
-    loadProc(false);
-    return;
-  }
-  _showPwdOverlay("Work in progress — введіть пароль", "text");
+  show("proc");
+  loadProc(false);
 }
 
 async function loadProc(force) {
