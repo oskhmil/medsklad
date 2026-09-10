@@ -1,12 +1,12 @@
 {
- "generated": "2026-09-10T06:48:00.446975+00:00",
+ "generated": "2026-09-10T07:01:05.761475+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-10T06:48:00.446975+00:00",
+  "checked": "2026-09-10T07:01:05.761475+00:00",
   "expected": 1471,
   "seen": 1471,
-  "tenders": 485,
+  "tenders": 482,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,166 +14,166 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-07-014377-a",
-   "tenderID": "UA-2026-09-07-014377-a",
-   "title": "Трубка ендотрахеальна",
+   "amount": 109319.63,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 10,
+    "signed": 0
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-10T09:00:00+03:00",
    "dateModified": "2026-09-10T09:00:04.088186+03:00",
-   "method": "priceQuotation",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 109319.63,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014377-a",
-   "counts": {
-    "signed": 0,
-    "progress": 10,
-    "failed": 0
-   },
+   "id": "UA-2026-09-07-014377-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 6.50 мм, З манжетою",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 5.00 мм, З манжетою",
      "qty": 300,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 3.00 мм, З манжетою",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 3.50 мм, З манжетою",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Стерильна, Кількість використань: Одноразова, Діаметр трубки: 3.00 мм",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Стерильна, Кількість використань: Одноразова, Діаметр трубки: 3.50 мм",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:3.5(O.D.:5.3) довжина 47 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 10,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:4(O.D.:5.9) довжина 54 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 20,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:4.5(O.D.:6.5) довжина 54 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 20,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:5(O.D.:7) довжина 57 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 20,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-07-014377-a",
+   "title": "Трубка ендотрахеальна",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014377-a"
   },
   {
-   "id": "UA-2026-09-07-014409-a",
-   "tenderID": "UA-2026-09-07-014409-a",
-   "title": "Катетер пупковий",
+   "amount": 47400,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-09-10T08:00:00+03:00",
    "dateModified": "2026-09-10T08:02:53.026408+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 47400,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014409-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-07-014409-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер пупковий, одноразовий, з додатковим ін'єкційним портом, 4Fr, №1",
      "qty": 150,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Фізична особа-підприємець Волошина Анна Анатоліївна",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер пупковий, одноразовий, з додатковим ін'єкційним портом, 5Fr, №1",
      "qty": 150,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Фізична особа-підприємець Волошина Анна Анатоліївна",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-07-014409-a",
+   "title": "Катетер пупковий",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014409-a"
   },
   {
    "id": "UA-2026-09-09-015410-a",
@@ -541,75 +541,75 @@
    ]
   },
   {
-   "id": "UA-2026-08-27-005005-a",
-   "tenderID": "UA-2026-08-27-005005-a",
-   "title": "Медичне обладнання",
+   "amount": 6160761.68,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 5,
+    "signed": 0
+   },
+   "cpv": "33190000-8",
    "date": "2026-09-09T10:00:00+03:00",
    "dateModified": "2026-09-09T10:00:28.243341+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 6160761.68,
    "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-27-005005-a",
-   "counts": {
-    "signed": 0,
-    "progress": 5,
-    "failed": 0
-   },
+   "id": "UA-2026-08-27-005005-a",
    "items": [
     {
+     "amount": null,
+     "lot": "ba45071d57fd42f9acde3f9071b2ac73",
      "name": "Монітор пацієнта",
      "qty": 36,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ba45071d57fd42f9acde3f9071b2ac73"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "ba45071d57fd42f9acde3f9071b2ac73",
      "name": "Стійка інфузійна",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ba45071d57fd42f9acde3f9071b2ac73"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "ba45071d57fd42f9acde3f9071b2ac73",
      "name": "Медичний аспіратор",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ba45071d57fd42f9acde3f9071b2ac73"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "ba45071d57fd42f9acde3f9071b2ac73",
      "name": "Стійка інфузійна мобільна для звичайного догляду",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ba45071d57fd42f9acde3f9071b2ac73"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "ba45071d57fd42f9acde3f9071b2ac73",
      "name": "Шприцевий інфузійний насос",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ba45071d57fd42f9acde3f9071b2ac73"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-08-27-005005-a",
+   "title": "Медичне обладнання",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-27-005005-a"
   },
   {
    "id": "UA-2026-09-09-001031-a",
@@ -4587,35 +4587,35 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-04-011793-a"
   },
   {
-   "id": "UA-2026-07-27-004997-a",
-   "tenderID": "UA-2026-07-27-004997-a",
-   "title": "Низькотемпературний морозильник для застосування в медицині",
+   "amount": 186000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33190000-8",
    "date": "2026-08-19T16:19:29.543076+03:00",
    "dateModified": "2026-08-19T16:19:29.543076+03:00",
-   "method": "aboveThreshold",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 186000,
    "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-07-27-004997-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-07-27-004997-a",
    "items": [
     {
+     "amount": null,
+     "lot": "a4644c96760d4688b9dc1b5ec8936d99",
      "name": "Низькотемпературний морозильник для застосування в медицині",
      "qty": 2,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ЛЕДУМ\"",
-     "amount": null,
-     "unitPrice": 98440.0,
-     "lot": "a4644c96760d4688b9dc1b5ec8936d99"
+     "unit": "штука",
+     "unitPrice": 98440.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-07-27-004997-a",
+   "title": "Низькотемпературний морозильник для застосування в медицині",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-07-27-004997-a"
   },
   {
    "amount": 24396,
@@ -4649,45 +4649,45 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-11-002845-a"
   },
   {
-   "id": "UA-2026-08-10-010139-a",
-   "tenderID": "UA-2026-08-10-010139-a",
-   "title": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 6.00 мм, З манжетою; Трубка ендотрахеальна: Одноразова, Діаметр трубки: 4.00 мм, З манжетою",
+   "amount": 14700,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 2
+   },
+   "cpv": "33171000-9",
    "date": "2026-08-19T15:13:27.233120+03:00",
    "dateModified": "2026-08-19T15:13:27.233120+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 14700,
    "group": "Матеріали",
-   "cpv": "33171000-9",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-10-010139-a",
-   "counts": {
-    "signed": 2,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-08-10-010139-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 6.00 мм, З манжетою",
      "qty": 300,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ВІОЛА МЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 4.00 мм, З манжетою",
      "qty": 300,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ВІОЛА МЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-08-10-010139-a",
+   "title": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 6.00 мм, З манжетою; Трубка ендотрахеальна: Одноразова, Діаметр трубки: 4.00 мм, З манжетою",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-10-010139-a"
   },
   {
    "amount": 321107,
