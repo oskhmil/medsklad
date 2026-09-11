@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-11T20:12:18.568262+00:00",
+ "generated": "2026-09-11T22:41:16.063461+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-11T20:12:18.568262+00:00",
+  "checked": "2026-09-11T22:41:16.063461+00:00",
   "expected": 1477,
   "seen": 1477,
   "tenders": 487,
@@ -15,6 +15,57 @@
   ]
  },
  "tenders": [
+  {
+   "id": "UA-2026-08-25-013611-a",
+   "tenderID": "UA-2026-08-25-013611-a",
+   "title": "Обладнання для анестезії та реанімації",
+   "date": "2026-09-12T00:00:02.991790+03:00",
+   "dateModified": "2026-09-12T00:00:02.991790+03:00",
+   "method": "aboveThreshold",
+   "status": "cancelled",
+   "contractEnd": null,
+   "amount": 3706600,
+   "group": "Матеріали",
+   "cpv": "33170000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-25-013611-a",
+   "counts": {
+    "signed": 0,
+    "progress": 0,
+    "failed": 2
+   },
+   "items": [
+    {
+     "name": "Апарат подачі киснево-повітряної суміші з зволоженням",
+     "qty": 7,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "149faec5e3cc4b90a0a2496a8e5a9ef4",
+     "resolved": {
+      "d": "2026-09-03",
+      "t": "UA-2026-09-03-013597-a",
+      "k": "pending"
+     }
+    },
+    {
+     "name": "Реанімаційна система для новонароджених",
+     "qty": 3,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "149faec5e3cc4b90a0a2496a8e5a9ef4",
+     "resolved": {
+      "d": "2026-09-03",
+      "t": "UA-2026-09-03-013597-a",
+      "k": "pending"
+     }
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-11-011784-a",
    "tenderID": "UA-2026-09-11-011784-a",
@@ -2983,47 +3034,6 @@
      "amount": null,
      "unitPrice": null,
      "lot": "88ee3bb728274edba7119e407bfc0b6c"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-08-25-013611-a",
-   "tenderID": "UA-2026-08-25-013611-a",
-   "title": "Обладнання для анестезії та реанімації",
-   "date": "2026-09-03T10:00:00+03:00",
-   "dateModified": "2026-09-01T14:15:12.831347+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 3706600,
-   "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-25-013611-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Апарат подачі киснево-повітряної суміші з зволоженням",
-     "qty": 7,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "149faec5e3cc4b90a0a2496a8e5a9ef4"
-    },
-    {
-     "name": "Реанімаційна система для новонароджених",
-     "qty": 3,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "149faec5e3cc4b90a0a2496a8e5a9ef4"
     }
    ]
   },
