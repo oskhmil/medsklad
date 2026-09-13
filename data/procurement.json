@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-13T19:33:00.049949+00:00",
+ "generated": "2026-09-13T21:50:33.659081+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-13T19:33:00.049949+00:00",
+  "checked": "2026-09-13T21:50:33.659081+00:00",
   "expected": 1477,
   "seen": 1477,
   "tenders": 488,
@@ -13,6 +13,97 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-02-014174-a",
+   "tenderID": "UA-2026-09-02-014174-a",
+   "title": "Медичне обладнання",
+   "date": "2026-09-14T00:00:03.273495+03:00",
+   "dateModified": "2026-09-14T00:00:03.273495+03:00",
+   "method": "aboveThreshold",
+   "status": "cancelled",
+   "contractEnd": null,
+   "amount": 6160761.68,
+   "group": "Матеріали",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-02-014174-a",
+   "counts": {
+    "signed": 0,
+    "progress": 0,
+    "failed": 5
+   },
+   "items": [
+    {
+     "name": "Монітор пацієнта",
+     "qty": 36,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
+     "resolved": {
+      "d": "2026-09-07",
+      "t": "UA-2026-09-07-000966-a",
+      "k": "pending"
+     }
+    },
+    {
+     "name": "Стійка інфузійна",
+     "qty": 40,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
+     "resolved": {
+      "d": "2026-09-07",
+      "t": "UA-2026-09-07-000966-a",
+      "k": "pending"
+     }
+    },
+    {
+     "name": "Медичний аспіратор",
+     "qty": 40,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3"
+    },
+    {
+     "name": "Стійка інфузійна мобільна для звичайного догляду",
+     "qty": 1,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
+     "resolved": {
+      "d": "2026-09-07",
+      "t": "UA-2026-09-07-000966-a",
+      "k": "pending"
+     }
+    },
+    {
+     "name": "Шприцевий інфузійний насос",
+     "qty": 1,
+     "unit": "штука",
+     "status": "Скасовано",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
+     "resolved": {
+      "d": "2026-09-04",
+      "t": "UA-2026-09-04-010141-a",
+      "k": "pending"
+     }
+    }
+   ]
+  },
   {
    "amount": 3706600,
    "contractEnd": null,
@@ -2375,77 +2466,6 @@
      "amount": null,
      "unitPrice": 1739.0,
      "lot": "8f6f21441a9145bfa91d3d6c63477b20"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-02-014174-a",
-   "tenderID": "UA-2026-09-02-014174-a",
-   "title": "Медичне обладнання",
-   "date": "2026-09-21T08:00:00+03:00",
-   "dateModified": "2026-09-03T10:13:29.854828+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 6160761.68,
-   "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-02-014174-a",
-   "counts": {
-    "signed": 0,
-    "progress": 5,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Монітор пацієнта",
-     "qty": 36,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3"
-    },
-    {
-     "name": "Стійка інфузійна",
-     "qty": 40,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3"
-    },
-    {
-     "name": "Медичний аспіратор",
-     "qty": 40,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3"
-    },
-    {
-     "name": "Стійка інфузійна мобільна для звичайного догляду",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3"
-    },
-    {
-     "name": "Шприцевий інфузійний насос",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3"
     }
    ]
   },
