@@ -1604,8 +1604,8 @@
         <button class="choice-btn proc" onclick="openProc()">
           <div class="choice-ico">🛒</div>
           <div class="choice-body">
-            <div class="choice-title">Закупівлі Prozorro 🔒<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
-            <div class="choice-sub">Work in progress · статуси позицій, договори, зриви торгів</div>
+            <div class="choice-title">Закупівлі Prozorro<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
+            <div class="choice-sub">Статуси позицій, договори, зриви торгів</div>
           </div>
           <div class="choice-arrow">›</div>
         </button>
@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.169";
+const APP_VERSION = "v.170";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -13262,15 +13262,14 @@ async function procUpdateBadge() {
   } catch (_) { /* значок не критичний */ }
 }
 
+// Розділ закупівель відкритий без пароля: дані Prozorro публічні (їх і так
+// видно на prozorro.gov.ua), а статус «у розробці» знято — модуль у роботі.
+// PROC_PWD_HASH / PROC_AUTH_KEY лишаються в коді на випадок, якщо доступ
+// колись доведеться повернути: достатньо відновити перевірку нижче.
 async function openProc() {
   await Store.ready();
-  _pwdTarget = "proc";
-  if (_isProcAuthorized()) {
-    show("proc");
-    loadProc(false);
-    return;
-  }
-  _showPwdOverlay("Work in progress — введіть пароль", "text");
+  show("proc");
+  loadProc(false);
 }
 
 async function loadProc(force) {
