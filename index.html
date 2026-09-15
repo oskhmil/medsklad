@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.168";
+const APP_VERSION = "v.169";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4496,6 +4496,10 @@ function getAnalyticsHospital(id) {
   return ANALYTICS_HOSPITALS.find(h => h.id === id) || null;
 }
 function analyticsHospitalCacheKey(id) {
+  // v11 = «лікарня» в _anLooksLikeGroupName шукається на межі слова.
+  //       Кеш зберігає ВЖЕ РОЗІБРАНУ структуру, тому без цього підняття
+  //       старий розбір («Міжлікарняне опікове» як окрема лікарня) жив би
+  //       до 12 годин навіть на новому коді.
   // v10 = напрями діяльності розділено: directions = лише 03-НСЗУ,
   //       other_directions = решта (для потреби й АМП). Старий кеш не має
   //       other_directions взагалі, тому мусить бути перерозібраний.
@@ -4503,7 +4507,7 @@ function analyticsHospitalCacheKey(id) {
   // v8 = items of person-less departments are attached to "(без МВО)" —
   // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
-  return "medsklad_analytics_cache_v10__" + id;
+  return "medsklad_analytics_cache_v11__" + id;
 }
 
 // Remove analytics caches of OLDER versions (v7 and below) so they don't eat
@@ -4513,11 +4517,24 @@ function analyticsHospitalCacheKey(id) {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v10__")) {
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v11__")) {
         toRemove.push(k);
       }
     }
     toRemove.forEach(k => localStorage.removeItem(k));
+
+    // Аналітика зберігається в IndexedDB, а не в localStorage — цикл вище її
+    // не бачить. Тому проходимо по відомих лікарнях і прибираємо їхні ключі
+    // попередніх версій явно, інакше кеш v10 висів би там без потреби.
+    if (IDB.available) {
+      try {
+        for (const h of ANALYTICS_HOSPITALS) {
+          for (let v = 7; v <= 10; v++) {
+            IDB.del("medsklad_analytics_cache_v" + v + "__" + h.id).catch(() => {});
+          }
+        }
+      } catch (_) {}
+    }
   } catch (e) { /* localStorage may be unavailable; nothing to clean */ }
 })();
 
