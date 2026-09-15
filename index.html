@@ -1360,22 +1360,6 @@
     padding: 4px 6px;
     line-height: 1;
   }
-  #proc-mic-btn {
-    display: none;
-    position: absolute;
-    right: 38px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 4px 6px;
-    line-height: 1;
-  }
-  #proc-mic-btn.listening {
-    animation: micPulse 1s ease-in-out infinite;
-  }
   #mic-btn.listening {
     animation: micPulse 1s ease-in-out infinite;
   }
@@ -1512,11 +1496,6 @@
     color: var(--accent); font-size: 12px; text-decoration: none;
   }
   .proc-more { font-size: 11px; color: var(--accent); padding: 7px 0 2px; cursor: pointer; }
-  .proc-resolved {
-    font-size: 11px; color: var(--green); margin-top: 3px;
-    display: flex; align-items: center; gap: 4px;
-  }
-  .proc-st.resolved { background: rgba(107,122,153,.18); color: var(--muted); }
 </style>
 </head>
 <body>
@@ -1625,8 +1604,8 @@
         <button class="choice-btn proc" onclick="openProc()">
           <div class="choice-ico">🛒</div>
           <div class="choice-body">
-            <div class="choice-title">Закупівлі Prozorro<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
-            <div class="choice-sub">Статуси позицій, договори, зриви торгів</div>
+            <div class="choice-title">Закупівлі Prozorro 🔒<span id="proc-badge" style="display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;vertical-align:middle"></span></div>
+            <div class="choice-sub">Work in progress · статуси позицій, договори, зриви торгів</div>
           </div>
           <div class="choice-arrow">›</div>
         </button>
@@ -1658,9 +1637,6 @@
         <div style="margin-bottom:12px">
           <div style="font-size:15px;font-weight:600;color:#e2e8f7">Закупівлі Prozorro</div>
           <div style="font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5" id="proc-period"></div>
-          <div id="proc-health" style="display:none;margin-top:8px;padding:8px 11px;
-               background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.4);
-               border-radius:10px;font-size:11px;color:var(--warn);line-height:1.5"></div>
         </div>
         <div class="proc-kpis">
           <div class="proc-kpi" onclick="procSetFilter('all')">
@@ -1681,9 +1657,8 @@
           <input id="proc-search" type="text" placeholder="Пошук по позиції або препарату..."
                  oninput="procOnSearch(this.value)"
                  style="width:100%;background:#2a3050;border:1.5px solid #4f8ef7;border-radius:12px;
-                        padding:10px 68px 10px 14px;color:#fff;font-size:14px;outline:none;">
+                        padding:10px 38px 10px 14px;color:#fff;font-size:14px;outline:none;">
           <span class="search-ico">🔍</span>
-          <button id="proc-mic-btn" onclick="procToggleMic()" title="Голосовий ввід">🎤</button>
         </div>
 
         <div class="proc-bar" id="proc-groups">
@@ -1859,10 +1834,10 @@
                    style="width:100%;background:#2a3050;border:1.5px solid var(--border);border-radius:10px;padding:9px 36px 9px 14px;color:#fff;font-size:13px;outline:none;">
             <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;">🔍</span>
           </div>
-          <button class="hbtn" onclick="loadAnalytics(true)"
+          <button class="hbtn primary" onclick="loadAnalytics(true)"
                   style="padding:9px 12px;font-size:12px;white-space:nowrap;flex-shrink:0;"
                   title="Оновити дані з Google Диску">
-            🔄
+            🔄 Оновити
           </button>
           <button class="hbtn primary" onclick="exportDepartmentsToXlsx()"
                   style="padding:9px 12px;font-size:12px;white-space:nowrap;flex-shrink:0;"
@@ -2258,10 +2233,6 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
-// v.177 — знято пароль з розділу "Закупівлі Prozorro": розділ відкривається
-//   напряму, з плитки прибрано 🔒 і позначку "Work in progress". Константи
-//   PROC_PWD_HASH/PROC_AUTH_KEY лишились у коді — замок повертається однією
-//   перевіркою в openProc().
 // v.154 — колонки файлу залишків визначаються за рядком заголовка, а не
 //   жорстко. Файл на Диску змінився з обробленого (назва в M) на сире
 //   вивантаження 1С (назва в H) — парсер шукав M, отримував порожньо і
@@ -2314,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.177";
+const APP_VERSION = "v.168";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -3177,7 +3148,6 @@ function show(screen) {
 }
 
 function goStart() {
-  if (_procMicActive) { try { _procMicRec.stop(); } catch (_) {} }
   // Reset medsearch state so returning via logo behaves naturally
   currentQuery = "";
   currentFilter = "all";
@@ -3200,7 +3170,6 @@ async function openMedsearch() {
   // інакше на свіжому пристрої (кешу немає → екран «Завантажити дані») префетч
   // не спрацює взагалі, і бейджі ⛔ не з'являться, поки не зайти в розділ ДЛС.
   _dlsPrefetch();
-  _procPrefetch();
   // If cached medsearch data exists → jump straight to home, else entry screen
   const cache = loadCache();
   if (cache) {
@@ -3651,15 +3620,8 @@ function renderResults() {
 function renderResultsList(res, correction) {
   document.getElementById("result-count").textContent = res.length + " записів";
   const list = document.getElementById("results-list");
-
-  // Закупівлі дивимось лише при пошуку за назвою чи МНН — для серії
-  // та відділення це не має сенсу.
-  const procWords = (searchMode === "name" || searchMode === "mnn") && currentQuery !== "*"
-    ? normalize(currentQuery).split(/\s+/).filter(w => w.length > 1)
-    : [];
-
   if (!res.length) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div>${procStockBlock(procWords, false)}</div>`;
+    list.innerHTML = `<div class="empty-state"><div class="empty-ico">🔎</div><div class="empty-title">Нічого не знайдено</div><div class="empty-sub">Спробуйте інший запит</div></div>`;
     return;
   }
 
@@ -3680,7 +3642,7 @@ function renderResultsList(res, correction) {
   });
 
   const visibleGroups = groupOrder.slice(0, displayLimit);
-  let html = procStockBlock(procWords, true) + visibleGroups.map((key, gIdx) => {
+  let html = visibleGroups.map((key, gIdx) => {
     const items = groups[key];
     const displayName = items[0].name;
     const mnn = items.find(it => it.mnn)?.mnn || null;
@@ -4566,6 +4528,12 @@ let _abxFromInfControl = false;
 
 const ANALYTICS_CACHE_TTL = 12 * 60 * 60 * 1000; // 12 hours silent refresh
 
+// Коли аналітику востаннє взяли з Диску. Потрібно, щоб відрізняти дві різні
+// «застарілості»: період усередині файлу (рядок «Дані по …») і момент
+// завантаження. Без цього не видно, чи новий файл на Диску вже підтягнувся,
+// чи додаток працює на кеші — а кеш живе 12 годин.
+let _analyticsLoadedAt = null;
+
 let analyticsData = null;
 let currentMonthKey = null;
 let compareMonthKey = null;  // legacy single-month compare key (kept in sync below)
@@ -4977,6 +4945,7 @@ async function loadAnalytics(forceRefresh) {
       if (cached) {
         if (cached && cached.data && cached.data.months && Object.keys(cached.data.months).length > 0) {
           analyticsData = cached.data;
+          _analyticsLoadedAt = cached.ts || null;
           _expenseByItemPerMonth = null;
   _deadDaysCache = new Map(); _itemFirstMonthCache = new Map();
           initAnalyticsUI();
@@ -5581,9 +5550,28 @@ function _anIsTotalRow(text) {
   return AN_TOTAL_ROW_NAMES.indexOf(String(text || "").trim().toLowerCase()) !== -1;
 }
 
+// Рівень «лікарня» вгадується за назвою лише тоді, коли alignment.indent
+// зрізаний (файл пройшов через Google Sheets). Раніше тут стояв простий
+// indexOf("лікарня") — і слово «Між-ЛІКАРНЯ-не» його задовольняло, тож
+// «Міжлікарняне опікове відділення» піднімалось на рівень лікарні й забирало
+// з собою шість відділень: дерево показувало дві лікарні замість однієї.
+// Тепер «лікарня» мусить стояти на межі слова: збіг усередині іншого слова
+// не рахується. Межею вважаємо початок/кінець рядка або не-літеру —
+//  у JS не працює з кирилицею, тому перевіряємо символи вручну.
 function _anLooksLikeGroupName(text) {
   const s = String(text || "").trim().toLowerCase();
-  return s.startsWith("вп ") || s.indexOf("лікарня") !== -1;
+  if (s.startsWith("вп ")) return true;
+  const WORD = /[a-zа-яіїєґ0-9']/;
+  let from = 0;
+  for (;;) {
+    const i = s.indexOf("лікарн", from);
+    if (i === -1) return false;
+    const before = i > 0 ? s[i - 1] : "";
+    // Дозволяємо лише закінчення самого слова: лікарня, лікарні, лікарню…
+    const after = s.slice(i + 6).replace(/^[яіюеь]/, "")[0] || "";
+    if (!WORD.test(before) && !WORD.test(after)) return true;
+    from = i + 1;
+  }
 }
 
 function _anNormalizeGroupName(text) {
@@ -7563,6 +7551,7 @@ async function fetchAnalytics({ silent }) {
     // analytics payload is multi-MB per hospital and would blow the ~5 MB LS
     // wall (it was crowding out the medsearch cache before this migration).
     const _anPayload = { ts: Date.now(), data: analyticsData };
+    _analyticsLoadedAt = _anPayload.ts;
     if (IDB.available) {
       try { await IDB.set(cacheKey, _anPayload); }
       catch (e) { try { await IDB.del(cacheKey); } catch (_) {} }
@@ -7774,7 +7763,27 @@ function renderWarnings() {
       }
     }
   }
+  // Друга дата — коли ці дані взято з Диску. Період усередині файлу і момент
+  // завантаження — різні речі: після заливки нового файлу додаток ще до 12
+  // годин працює на кеші, і без цього рядка відрізнити одне від одного
+  // неможливо. Кнопка тут же, щоб не шукати її вгорі.
+  let _loadedLine = "";
+  if (_analyticsLoadedAt) {
+    const _mins = Math.round((Date.now() - _analyticsLoadedAt) / 60000);
+    const _ago = _mins < 1 ? "щойно"
+               : _mins < 60 ? `${_mins} хв тому`
+               : _mins < 1440 ? `${Math.round(_mins / 60)} год тому`
+               : `${Math.round(_mins / 1440)} дн тому`;
+    const _stale = _mins > 720;
+    _loadedLine = `<div style="font-size:11px;color:${_stale ? "var(--warn)" : "var(--muted)"};padding:0 2px 8px;line-height:1.45;">`
+      + `⬇️ Завантажено з Диску: ${new Date(_analyticsLoadedAt).toLocaleString("uk-UA",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})} · ${_ago}`
+      + `${_stale ? " — можливо, на Диску вже новіший файл" : ""}`
+      + ` <span onclick="loadAnalytics(true)" style="color:var(--accent);cursor:pointer;text-decoration:underline;white-space:nowrap;">оновити зараз</span>`
+      + `</div>`;
+  }
+
   el.innerHTML =
+    _loadedLine +
     (_windowLine
       ? `<div style="font-size:11px;color:var(--muted);padding:6px 2px 8px;line-height:1.45;">📅 ${esc(_windowLine)}</div>`
       : "")
@@ -13156,7 +13165,6 @@ async function _storageWipe() {
 // з тієї ж гілки — той самий origin, без проксі й CORS.
 
 const PROC_JSON_URL   = "data/procurement.json";
-const PROC_TENDER_URL = "https://prozorro.gov.ua/tender/";
 const PROC_CACHE_KEY  = "medsklad_proc_cache";
 const PROC_TTL_MS     = 30 * 60 * 1000;   // 30 хв — монітор оновлюється щогодини
 
@@ -13237,98 +13245,15 @@ async function procUpdateBadge() {
   } catch (_) { /* значок не критичний */ }
 }
 
-// ── Зв'язок із залишками ────────────────────────────────────────────────────
-// У медпошуку паралельно дивимось у закупівлі: препарату немає на складі —
-// показуємо, що він у торгах і на якому етапі. Дані ті самі, що в модулі.
-let _procPrefetching = false;
-
-async function _procPrefetch() {
-  if (procData || _procPrefetching) return;
-  _procPrefetching = true;
-  try {
-    await Store.ready();
-    const c = _procLoadCache();
-    if (c && (Date.now() - c.time.getTime()) < PROC_TTL_MS) {
-      procData = c.payload;
-    } else {
-      procData = await _procFetch();
-      _procSaveCache(procData);
-    }
-    // якщо людина вже щось шукає — домалюємо блок закупівель
-    if (typeof currentQuery === "string" && currentQuery && typeof renderResults === "function"
-        && document.getElementById("results-screen")?.style.display === "block") {
-      renderResults();
-    }
-  } catch (_) { /* блок у пошуку — доповнення, не привід ламати пошук */ }
-  finally { _procPrefetching = false; }
-}
-
-function procMatchesForWords(words) {
-  if (!procData || !Array.isArray(procData.tenders) || !words.length) return [];
-  const out = [];
-  procData.tenders.forEach(t => (t.items || []).forEach(i => {
-    if (multiWordMatch(i.name, words)) out.push({ t, i });
-  }));
-  // свіжі закупівлі вгорі
-  out.sort((a, b) => String(b.t.tenderID).localeCompare(String(a.t.tenderID)));
-  return out;
-}
-
-function procStageText(st) {
-  if (st === "Підписано")  return "договір підписано";
-  if (st === "Переможець") return "переможець визначений";
-  if (st === "В процесі")  return "торги тривають";
-  return "торги зірвались";
-}
-
-function procStockBlock(words, hasStock) {
-  const hits = procMatchesForWords(words);
-  if (!hits.length) return "";
-  const shown = hits.slice(0, 5);
-  const rows = shown.map(({ t, i }) => {
-    const cls = procStatusClass(i.status);
-    const when = procAnnounced(t.tenderID);
-    const sup = i.supplier ? " · " + esc(procSupplier(i.supplier)) : "";
-    return `<div style="padding:7px 0;border-bottom:1px solid rgba(37,43,68,.4)">
-      <div style="display:flex;gap:8px;justify-content:space-between;align-items:flex-start">
-        <div style="font-size:12.5px;line-height:1.4;flex:1">${esc(String(i.name).slice(0, 120))}</div>
-        <span class="proc-st ${cls}">${esc(procStageText(i.status))}</span>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:3px">
-        ${when}${i.qty ? " · " + i.qty + " " + esc(i.unit || "") : ""}${i.unitPrice ? " · " + procMoney(i.unitPrice) + "/" + esc(i.unit || "од") : ""}${sup}
-        · <a href="${PROC_TENDER_URL}${esc(t.tenderID)}" target="_blank" rel="noopener"
-             style="color:var(--accent);text-decoration:none">Prozorro ↗</a>
-      </div>
-    </div>`;
-  }).join("");
-  const more = hits.length > shown.length
-    ? `<div style="font-size:11px;color:var(--muted);padding-top:6px">…і ще ${hits.length - shown.length}. Повний список у розділі «Закупівлі Prozorro».</div>`
-    : "";
-
-  if (!hasStock) {
-    return `<div style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.4);
-                        border-radius:14px;padding:12px 14px;margin-top:12px;text-align:left">
-      <div style="font-size:13px;font-weight:600;margin-bottom:6px">🛒 Немає на залишку, але є в закупівлях</div>
-      ${rows}${more}
-    </div>`;
-  }
-  return `<details style="background:var(--card);border:1px solid var(--border);border-radius:12px;
-                          padding:9px 14px;margin-bottom:12px">
-    <summary style="font-size:12px;color:var(--muted);cursor:pointer;list-style:none">
-      🛒 Також у закупівлях: ${hits.length} ${hits.length === 1 ? "позиція" : "позицій"} ▾
-    </summary>
-    <div style="margin-top:6px">${rows}${more}</div>
-  </details>`;
-}
-
-// Пароль на розділі знято — закупівлі відкриті всім користувачам додатка.
-// Константи PROC_PWD_HASH / PROC_AUTH_KEY і гілка "proc" у
-// submitAnalyticsPassword() лишені навмисно: щоб повернути замок, достатньо
-// відновити перевірку _isProcAuthorized() нижче.
 async function openProc() {
   await Store.ready();
-  show("proc");
-  loadProc(false);
+  _pwdTarget = "proc";
+  if (_isProcAuthorized()) {
+    show("proc");
+    loadProc(false);
+    return;
+  }
+  _showPwdOverlay("Work in progress — введіть пароль", "text");
 }
 
 async function loadProc(force) {
@@ -13345,7 +13270,6 @@ async function loadProc(force) {
       elCont.style.display = "block";
       procRender();
       procMarkSeen();
-      procUpdateMicVisibility();
       return;
     }
   }
@@ -13360,7 +13284,6 @@ async function loadProc(force) {
     elCont.style.display = "block";
     procRender();
     procMarkSeen();
-    procUpdateMicVisibility();
   } catch (err) {
     elLoad.style.display = "none";
     elErr.style.display = "block";
@@ -13400,52 +13323,10 @@ function procMoney(v) {
   return Math.round(v).toLocaleString("uk-UA") + " грн";
 }
 
-// Портал у полі date віддає час останньої зміни, тому дату оголошення
-// беремо з самого номера: UA-2026-08-11-005208-a → 11.08.2026.
-function procAnnounced(tenderID) {
-  const m = String(tenderID || "").match(/^UA-(\d{4})-(\d{2})-(\d{2})-/);
-  return m ? `${m[3]}.${m[2]}.${m[1]}` : "";
-}
-
 function procDate(iso) {
   if (!iso) return "";
   const d = new Date(iso);
   return isNaN(d) ? "" : d.toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "numeric" });
-}
-
-// Голосовий ввід — та сама механіка, що в медпошуку, але власне поле й кнопка,
-// щоб два розділи не гасили розпізнавання один одному.
-let _procMicRec = null;
-let _procMicActive = false;
-
-function procUpdateMicVisibility() {
-  const b = document.getElementById("proc-mic-btn");
-  if (b) b.style.display = _micSupported() ? "block" : "none";
-}
-
-function procToggleMic() {
-  const btn = document.getElementById("proc-mic-btn");
-  if (_procMicActive) {
-    try { _procMicRec.stop(); } catch (_) {}
-    return;
-  }
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) return;
-  _procMicRec = new SR();
-  _procMicRec.lang = "uk-UA";
-  _procMicRec.interimResults = false;
-  _procMicRec.maxAlternatives = 1;
-  _procMicRec.onstart = () => { _procMicActive = true; btn.classList.add("listening"); };
-  _procMicRec.onend   = () => { _procMicActive = false; btn.classList.remove("listening"); };
-  _procMicRec.onerror = () => { _procMicActive = false; btn.classList.remove("listening"); };
-  _procMicRec.onresult = (ev) => {
-    const t = ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
-    if (!t) return;
-    const el = document.getElementById("proc-search");
-    if (el) el.value = t;
-    procOnSearch(t);
-  };
-  try { _procMicRec.start(); } catch (_) {}
 }
 
 function procOnSearch(v) {
@@ -13480,9 +13361,7 @@ function procToggle(id) {
 
 // Позиція проходить, якщо збігається і з фільтром статусу, і з пошуковим рядком.
 function procItemMatches(item) {
-  if (procFilter === "problem" &&
-      (!procIsProblem(item.status) ||
-       (item.resolved && item.resolved.k !== "pending"))) return false;
+  if (procFilter === "problem"  && !procIsProblem(item.status)) return false;
   if (procFilter === "progress" && item.status !== "Переможець" && item.status !== "В процесі") return false;
   if (procFilter === "signed"   && item.status !== "Підписано") return false;
   if (procQuery) {
@@ -13500,14 +13379,10 @@ function procRender() {
   const inGroup = t => procGroup === "all" || (t.group || "Ліки") === procGroup;
   const scope = tenders.filter(inGroup);
 
-  // Позицію, яку згодом перезакупили, не рахуємо відкритою проблемою —
-  // інакше лічильник лякає тим, що вже вирішено.
   let nTotal = 0, nProg = 0, nFail = 0;
   scope.forEach(t => (t.items || []).forEach(i => {
     nTotal++;
-    if (procIsProblem(i.status)) {
-      if (!i.resolved || i.resolved.k === "pending") nFail++;
-    }
+    if (procIsProblem(i.status)) nFail++;
     else if (i.status !== "Підписано") nProg++;
   }));
   document.getElementById("proc-k-total").textContent = nTotal;
@@ -13525,51 +13400,18 @@ function procRender() {
                       String(a.t.dateModified || a.t.date || "")));
 
   const shownItems = rows.reduce((s, r) => s + r.items.length, 0);
-  const h = procData.health || {};
-
-  // Показуємо саме час перевірки, а не час зміни даних: монітор може
-  // справно працювати тижнями, поки в закупівлях нічого не відбувається.
-  const checkedIso = h.checked || procData.generated;
-  let checkedStr = "";
-  if (checkedIso) {
-    const d = new Date(checkedIso);
-    if (!isNaN(d)) {
-      const hours = (Date.now() - d.getTime()) / 3600000;
-      const when = hours < 24
-        ? "сьогодні о " + d.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" })
-        : procDate(checkedIso);
-      checkedStr = ` · перевірено ${when}`;
-      if (hours > 30) checkedStr += " ⚠️";
-    }
-  }
+  const gen = procData.generated ? procDate(procData.generated) : "";
   document.getElementById("proc-summary").innerHTML =
-    `${shownItems} позицій у ${rows.length} закупівлях${checkedStr}`;
-
-  // Монітор сам звіряє знайдене з очікуваним і зізнається, якщо недобрав.
-  const hEl = document.getElementById("proc-health");
-  if (hEl) {
-    const probs = Array.isArray(h.problems) ? h.problems : [];
-    if (h.status && h.status !== "ok" && probs.length) {
-      hEl.innerHTML = "⚠️ Дані можуть бути неповними — " + esc(probs.join("; "));
-      hEl.style.display = "block";
-    } else {
-      hEl.style.display = "none";
-    }
-  }
+    `${shownItems} позицій у ${rows.length} закупівлях` +
+    (gen ? ` · дані на ${gen}` : "");
 
   // Період рахуємо з самих даних: у файлі тримається лише актуальне
   // (незавершене, свіжі договори і зриви), тож межі рухаються самі.
-  // Рахуємо за датою оголошення — тією ж, що показана в картках,
-  // інакше період і список суперечать одне одному.
-  const keys = tenders.map(t => {
-    const m = String(t.tenderID || "").match(/^UA-(\d{4}-\d{2}-\d{2})-/);
-    return m ? m[1] : (t.dateModified || t.date || "").slice(0, 10);
-  }).filter(Boolean).sort();
+  const dates = tenders.map(t => t.dateModified || t.date).filter(Boolean).sort();
   const periodEl = document.getElementById("proc-period");
-  const fmt = k => k.split("-").reverse().join(".");
   if (periodEl) {
-    periodEl.textContent = keys.length
-      ? `Моніторинг за період ${fmt(keys[0])} — ${fmt(keys[keys.length - 1])}`
+    periodEl.textContent = dates.length
+      ? `Моніторинг за період ${procDate(dates[0])} — ${procDate(dates[dates.length - 1])}`
       : "Моніторинг закупівель ТМО";
   }
 
@@ -13584,31 +13426,18 @@ function procRender() {
   const visible = rows.slice(0, procLimit);
   list.innerHTML = visible.map(({ t, items }) => {
     const c = t.counts || {};
-    const res = t.resolved;
-    // Червону рамку лишаємо тільки там, де проблема справді відкрита.
-    const openProblems = (c.failed || 0) - (res ? res.count : 0);
-    const hasProblem = openProblems > 0;
+    const hasProblem = (c.failed || 0) > 0;
     // Закупівлі-одиночки і ті, де є проблеми, показуємо розгорнутими одразу:
     // після змін у законі дорогі позиції йдуть окремими лотами, і згортати нічого.
-    // До восьми позицій показуємо одразу: згорнута картка з кількома рядками
-    // виглядає як порожня, а не як компактна.
-    const small = items.length <= 8;
-    const auto  = small || hasProblem;
-    // Під час пошуку розкриваємо примусово: людина шукала конкретну позицію,
-    // і згорнута картка ховає саме те, що вона знайшла. Ручне згортання
-    // памʼятаємо лише для звичайного перегляду.
-    const open  = procQuery ? true
-                : (procExpanded[t.tenderID] !== undefined ? procExpanded[t.tenderID] : auto);
-    const collapsible = !small && !procQuery;
+    const small = items.length <= 2;
+    const auto  = small || hasProblem || !!procQuery;
+    const open  = procExpanded[t.tenderID] !== undefined ? procExpanded[t.tenderID] : auto;
+    const collapsible = !small;
 
     const parts = [];
     if (c.signed)   parts.push(`${c.signed} підписано`);
     if (c.progress) parts.push(`${c.progress} в процесі`);
-    if (c.failed) {
-      parts.push(openProblems > 0
-        ? `<span style="color:var(--danger)">${openProblems} проблемних</span>`
-        : `<span style="color:var(--green)">перезакуплено</span>`);
-    }
+    if (c.failed)   parts.push(`<span style="color:var(--danger)">${c.failed} проблемних</span>`);
 
     // Постачальник майже завжди один на всю закупівлю — виносимо його в шапку,
     // щоб не доводилось розгортати картку заради одного рядка.
@@ -13617,29 +13446,17 @@ function procRender() {
                   : sups.length > 1  ? sups.length + " постачальники"
                   : "";
 
-    // Коли позиція одна і повторює назву закупівлі, друге згадування зайве —
-    // лишаємо тільки кількість і статус.
-    const norm = v => String(v || "").trim().toLowerCase().slice(0, 40);
-    const single = items.length === 1 && (t.items || []).length === 1
-                   && norm(t.title) === norm(items[0].name);
-
     const itemsHtml = items.map(i => {
       const sub = [];
       if (i.qty)      sub.push(`${i.qty} ${esc(i.unit || "")}`.trim());
-      if (i.unitPrice) sub.push(`<b style="color:var(--text)">${procMoney(i.unitPrice)}/${esc(i.unit || "од")}</b>`);
       if (i.supplier && sups.length !== 1) sub.push(esc(procSupplier(i.supplier)));
       if (i.amount)   sub.push(procMoney(i.amount));
-      const rs = i.resolved;
       return `<div class="proc-item">
         <div class="proc-item-top">
-          <div class="proc-item-name">${single ? "" : esc(String(i.name || "").slice(0, 160))}</div>
-          <span class="proc-st ${rs && rs.k !== "pending" ? "resolved" : procStatusClass(i.status)}">${esc(i.status)}</span>
+          <div class="proc-item-name">${esc(String(i.name || "").slice(0, 160))}</div>
+          <span class="proc-st ${procStatusClass(i.status)}">${esc(i.status)}</span>
         </div>
         ${sub.length ? `<div class="proc-item-sub">${sub.join(" · ")}</div>` : ""}
-        ${rs ? `<div class="proc-resolved" style="color:${rs.k === "pending" ? "var(--warn)" : "var(--green)"}">
-             ${rs.k === "pending" ? "🔄 переоголошено" : "✅ перезакуплено"} ${esc(procDate(rs.d))}
-             <a href="${PROC_TENDER_URL}${esc(rs.t)}" target="_blank" rel="noopener"
-                style="color:var(--accent);text-decoration:none">${esc(rs.t)} ↗</a></div>` : ""}
       </div>`;
     }).join("");
 
@@ -13651,7 +13468,7 @@ function procRender() {
         <div style="flex:1">
           <div class="proc-title">${esc(String(t.title || "Без назви").slice(0, 110))}</div>
           <div class="proc-meta">
-            ${procAnnounced(t.tenderID) || procDate(t.dateModified || t.date)} ·
+            ${procDate(t.dateModified || t.date)} ·
             ${(t.items || []).length} ${(t.items || []).length === 1 ? "позиція" : "позицій"}
             ${parts.length ? " · " + parts.join(" · ") : ""}
             ${t.amount ? " · " + procMoney(t.amount) : ""}
