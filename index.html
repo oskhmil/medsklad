@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.170";
+const APP_VERSION = "v.173";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -13339,6 +13339,30 @@ function procMoney(v) {
   return Math.round(v).toLocaleString("uk-UA") + " грн";
 }
 
+// Момент останнього прогону моніторингу з датою І годиною. Сама лише дата
+// нічого не каже: prozorro_monitor.py ганяється щогодини через GitHub Actions,
+// і «15.09.2026» однаково виглядає для прогону 5 хвилин тому і для вчорашнього
+// о 23:00. Тому поруч показуємо, скільки часу минуло, а якщо більше трьох
+// годин — підсвічуємо: щогодинний воркфлоу мав би відпрацювати раніше, отже
+// найімовірніше він упав або GitHub Actions підвис.
+function procGeneratedLine(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d)) return "";
+  const stamp = d.toLocaleString("uk-UA", {
+    day: "2-digit", month: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  });
+  // Показуємо саму мітку часу без «N хв тому»: абсолютна година читається
+  // однозначно, а відносний вік лише подовжував рядок. Підсвітка лишається:
+  // якщо прогін старший за три години, щогодинний воркфлоу десь застряг.
+  const mins = Math.round((Date.now() - d.getTime()) / 60000);
+  const stale = mins > 180;
+  const color = stale ? "var(--warn)" : "inherit";
+  return `<span style="color:${color}"> · дані на ${stamp}`
+       + `${stale ? " ⚠️ моніторинг мав оновитись раніше" : ""}</span>`;
+}
+
 function procDate(iso) {
   if (!iso) return "";
   const d = new Date(iso);
@@ -13416,10 +13440,9 @@ function procRender() {
                       String(a.t.dateModified || a.t.date || "")));
 
   const shownItems = rows.reduce((s, r) => s + r.items.length, 0);
-  const gen = procData.generated ? procDate(procData.generated) : "";
   document.getElementById("proc-summary").innerHTML =
-    `${shownItems} позицій у ${rows.length} закупівлях` +
-    (gen ? ` · дані на ${gen}` : "");
+    `${shownItems} позицій у ${rows.length} закупівлях`
+    + procGeneratedLine(procData.generated);
 
   // Період рахуємо з самих даних: у файлі тримається лише актуальне
   // (незавершене, свіжі договори і зриви), тож межі рухаються самі.
