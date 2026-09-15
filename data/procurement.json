@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-15T12:52:33.454630+00:00",
+ "generated": "2026-09-15T17:52:27.144993+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-15T12:52:33.454630+00:00",
+  "checked": "2026-09-15T17:52:27.144993+00:00",
   "expected": 1477,
   "seen": 1477,
   "tenders": 488,
@@ -14,35 +14,35 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-10-013519-a",
-   "tenderID": "UA-2026-09-10-013519-a",
-   "title": "Рулон марлевий 0,9 x 1000,00 м.",
+   "amount": 548000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33141110-4",
    "date": "2026-09-15T10:00:00+03:00",
    "dateModified": "2026-09-15T11:36:21.376453+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 548000,
    "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-013519-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-09-10-013519-a",
    "items": [
     {
+     "amount": 548000,
+     "lot": null,
      "name": "Рулон марлевий 0,9 x 1000,00 м.",
      "qty": 80,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "\"МК МЕДГРУПП\" ТОВ",
-     "amount": 548000,
-     "unitPrice": 6850.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 6850.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-10-013519-a",
+   "title": "Рулон марлевий 0,9 x 1000,00 м.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-013519-a"
   },
   {
    "amount": 209000,
