@@ -1,18 +1,49 @@
 {
- "generated": "2026-09-16T10:05:50.736050+00:00",
+ "generated": "2026-09-16T15:03:32.728762+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-16T10:05:50.736050+00:00",
-  "expected": 1478,
-  "seen": 1478,
-  "tenders": 489,
+  "checked": "2026-09-16T15:03:32.728762+00:00",
+  "expected": 1479,
+  "seen": 1479,
+  "tenders": 490,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-16-011334-a",
+   "tenderID": "UA-2026-09-16-011334-a",
+   "title": "Оптичний контроль (ДК 021:2015: 33690000-3 — Лікарські засоби різні)",
+   "date": "2026-09-16T15:29:20.747360+03:00",
+   "dateModified": "2026-09-16T15:29:20.747360+03:00",
+   "method": "reporting",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 8667,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-16-011334-a",
+   "counts": {
+    "signed": 1,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Оптичний контроль",
+     "qty": 3,
+     "unit": "набір",
+     "status": "Підписано",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ДІАМЕБ ТРЕЙД\"",
+     "amount": 8667,
+     "unitPrice": 2889.0,
+     "lot": null
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-16-003263-a",
    "tenderID": "UA-2026-09-16-003263-a",
@@ -45,35 +76,35 @@
    ]
   },
   {
-   "id": "UA-2026-09-10-011773-a",
-   "tenderID": "UA-2026-09-10-011773-a",
-   "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
+   "amount": 3740000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-09-16T10:00:00+03:00",
    "dateModified": "2026-09-16T10:00:01.705486+03:00",
-   "method": "priceQuotation",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 3740000,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-09-10-011773-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
      "qty": 4000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-10-011773-a",
+   "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a"
   },
   {
    "amount": 548000,
