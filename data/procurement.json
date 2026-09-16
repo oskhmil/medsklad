@@ -1,18 +1,80 @@
 {
- "generated": "2026-09-16T04:52:17.438918+00:00",
+ "generated": "2026-09-16T10:05:50.736050+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-16T04:52:17.438918+00:00",
-  "expected": 1477,
-  "seen": 1477,
-  "tenders": 488,
+  "checked": "2026-09-16T10:05:50.736050+00:00",
+  "expected": 1478,
+  "seen": 1478,
+  "tenders": 489,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-16-003263-a",
+   "tenderID": "UA-2026-09-16-003263-a",
+   "title": "Лабораторні реагенти",
+   "date": "2026-09-16T11:02:55.016571+03:00",
+   "dateModified": "2026-09-16T11:02:55.016571+03:00",
+   "method": "reporting",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 26190.22,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-16-003263-a",
+   "counts": {
+    "signed": 1,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Лабораторні реагенти (тест для оцінки фрагмантації ДНК)",
+     "qty": 1,
+     "unit": "набір",
+     "status": "Підписано",
+     "supplier": "ФОП ЧОБОТАР МИКОЛА МИКОЛАЙОВИЧ",
+     "amount": 26190.22,
+     "unitPrice": 26190.22,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-10-011773-a",
+   "tenderID": "UA-2026-09-10-011773-a",
+   "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
+   "date": "2026-09-16T10:00:00+03:00",
+   "dateModified": "2026-09-16T10:00:01.705486+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 3740000,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
+     "qty": 4000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 548000,
    "contractEnd": null,
@@ -765,37 +827,6 @@
    "tenderID": "UA-2026-09-08-014375-a",
    "title": "Обладнання для анестезії та реанімації",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-014375-a"
-  },
-  {
-   "id": "UA-2026-09-10-011773-a",
-   "tenderID": "UA-2026-09-10-011773-a",
-   "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
-   "date": "2026-09-16T10:00:00+03:00",
-   "dateModified": "2026-09-10T15:50:15.058637+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 3740000,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
-     "qty": 4000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
   },
   {
    "amount": 109319.63,
