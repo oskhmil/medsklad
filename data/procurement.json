@@ -1,18 +1,16 @@
 {
- "generated": "2026-09-17T19:26:32.695041+00:00",
+ "generated": "2026-09-17T22:36:56.950028+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-17T19:26:32.695041+00:00",
+  "checked": "2026-09-17T22:36:56.950028+00:00",
   "expected": 1479,
   "seen": 1479,
-  "tenders": 489,
-  "errors": 1,
+  "tenders": 490,
+  "errors": 0,
   "dropped": 0,
-  "status": "warn",
-  "problems": [
-   "не прочитано закупівель: 1"
-  ]
+  "status": "ok",
+  "problems": []
  },
  "tenders": [
   {
