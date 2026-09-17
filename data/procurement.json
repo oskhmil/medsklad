@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-17T10:34:04.302906+00:00",
+ "generated": "2026-09-17T15:56:43.909918+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-17T10:34:04.302906+00:00",
+  "checked": "2026-09-17T15:56:43.909918+00:00",
   "expected": 1479,
   "seen": 1479,
   "tenders": 490,
@@ -14,175 +14,175 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-01-009836-a",
-   "tenderID": "UA-2026-09-01-009836-a",
-   "title": "Лабораторні реагенти",
+   "amount": 1114220,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 15,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-17T09:00:00+03:00",
    "dateModified": "2026-09-17T09:00:27.633239+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 1114220,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-009836-a",
-   "counts": {
-    "signed": 0,
-    "progress": 15,
-    "failed": 0
-   },
+   "id": "UA-2026-09-01-009836-a",
    "items": [
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "12-колірний реагент, що містить антитіла проти: Kappa/CD8,\nLambda/CD4, CD19, CD56, CD10, CD34, CD5, CD20, CD3, CD45 (25 визначень)",
      "qty": 2,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів В-лімфоцитів: Kappa, Lambda, CD10, CD5, CD200, CD34, CD38, CD20, CD19, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів Т-лімфоцитів: TCRγδ, CD4, CD2, CD56, CD5, CD34, CD7, CD8, CD3, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD16, CD7, CD10, CD13, CD64, CD34, CD14, HLA-DR, CD11b, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD15, CD123, CD117, CD13, CD33, CD34, CD38, HLA-DR, CD19, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "7-колірний реагент, що містить антитіла проти: CD58, CD34, CD10, CD19, CD38, CD20, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "8-колірний реагент, що містить антитіла проти: CD81, CD27, CD19, CD200, CD138, CD56, CD38, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Контрольний реагент  патологічного рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Контрольний реагент  нормального рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Частинки для компенсації сигналів флюоресценції  проточного цитометра",
      "qty": 1,
-     "unit": "паковання",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Фіксуючий розчин",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Лізуючий розчин (100 визначень)",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Лізуючий розчин з активною речовиною NH4Cl (100 визначень)",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Програмний інструмент для проточного цитометра з безстроковою ліцензією",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Моноклональне антитіло проти CD45-PC7 (100 визначень)",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-01-009836-a",
+   "title": "Лабораторні реагенти",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-009836-a"
   },
   {
    "id": "UA-2026-09-16-011334-a",
