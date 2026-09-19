@@ -1,12 +1,12 @@
 {
- "generated": "2026-09-19T06:45:26.859559+00:00",
+ "generated": "2026-09-19T11:38:38.466207+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-19T06:45:26.859559+00:00",
+  "checked": "2026-09-19T11:38:38.466207+00:00",
   "expected": 1480,
   "seen": 1480,
-  "tenders": 491,
+  "tenders": 492,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,35 +14,35 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-03-009277-a",
-   "tenderID": "UA-2026-09-03-009277-a",
-   "title": "Лабораторні реактиви \nКод НК 024:2023 62225 - Ємність для лабораторного аналізатора ІВД",
+   "amount": 12173,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-19T09:00:00+03:00",
    "dateModified": "2026-09-19T09:00:21.585495+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 12173,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-009277-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-09-03-009277-a",
    "items": [
     {
+     "amount": null,
+     "lot": "8f6f21441a9145bfa91d3d6c63477b20",
      "name": "LAB EQUIP, TEST TUBE, 12 х 75 mm, POLYPROPYLENE (250/PK)   Тестові пробірки ЛАБ ЕКВІП, 12 x 75 мм (mm), поліпропілен (250шт/упак)",
      "qty": 7,
-     "unit": "пачка",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": 1739.0,
-     "lot": "8f6f21441a9145bfa91d3d6c63477b20"
+     "unit": "пачка",
+     "unitPrice": 1739.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-03-009277-a",
+   "title": "Лабораторні реактиви \nКод НК 024:2023 62225 - Ємність для лабораторного аналізатора ІВД",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-009277-a"
   },
   {
    "id": "UA-2026-09-07-000966-a",
