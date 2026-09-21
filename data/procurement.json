@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-21T07:15:31.331569+00:00",
+ "generated": "2026-09-21T14:10:52.809000+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-21T07:15:31.331569+00:00",
+  "checked": "2026-09-21T14:10:52.809000+00:00",
   "expected": 1480,
   "seen": 1480,
   "tenders": 492,
@@ -14,133 +14,11 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-03-012697-a",
-   "tenderID": "UA-2026-09-03-012697-a",
-   "title": "Медичні матеріали",
-   "date": "2026-09-21T09:00:00+03:00",
-   "dateModified": "2026-09-21T09:00:20.903894+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 2668500,
-   "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-012697-a",
-   "counts": {
-    "signed": 0,
-    "progress": 7,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Комплект для артеріальної катетериза-ції 20 Га (Ga). X 1-3/4’’ (4,45 см (cm))",
-     "qty": 300,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    },
-    {
-     "name": "Ендобронхіальний блокатор",
-     "qty": 150,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    },
-    {
-     "name": "Плівка хірургічна антимікробна, 56см*45см",
-     "qty": 1150,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    },
-    {
-     "name": "Пов'язка неткана  агдезивна на поліуретановій основі  з подушеч-кою 9х15 см",
-     "qty": 1000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    },
-    {
-     "name": "ЕКГ електроди одноразові рентгенпрозорі",
-     "qty": 600,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    },
-    {
-     "name": "Простирадло з спанбонду в рулоні  0,8 * 100м",
-     "qty": 1000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    },
-    {
-     "name": "Тепловологообмінник для використання з трахеостомічною трубкою",
-     "qty": 1000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
-    }
-   ]
-  },
-  {
-   "amount": 12173,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-09-19T09:00:00+03:00",
-   "dateModified": "2026-09-19T09:00:21.585495+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-09-03-009277-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "8f6f21441a9145bfa91d3d6c63477b20",
-     "name": "LAB EQUIP, TEST TUBE, 12 х 75 mm, POLYPROPYLENE (250/PK)   Тестові пробірки ЛАБ ЕКВІП, 12 x 75 мм (mm), поліпропілен (250шт/упак)",
-     "qty": 7,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "пачка",
-     "unitPrice": 1739.0
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "tenderID": "UA-2026-09-03-009277-a",
-   "title": "Лабораторні реактиви \nКод НК 024:2023 62225 - Ємність для лабораторного аналізатора ІВД",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-009277-a"
-  },
-  {
    "id": "UA-2026-09-07-000966-a",
    "tenderID": "UA-2026-09-07-000966-a",
    "title": "Медичне обладнання",
    "date": "2026-09-25T10:00:00+03:00",
-   "dateModified": "2026-09-18T17:33:21.442133+03:00",
+   "dateModified": "2026-09-21T12:54:09.286674+03:00",
    "method": "aboveThreshold",
    "status": "active.tendering",
    "contractEnd": null,
@@ -195,6 +73,128 @@
      "lot": "e10666908827410ea17d3d8ccb6d5901"
     }
    ]
+  },
+  {
+   "amount": 2668500,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 7,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
+   "date": "2026-09-21T09:00:00+03:00",
+   "dateModified": "2026-09-21T09:00:20.903894+03:00",
+   "group": "Матеріали",
+   "id": "UA-2026-09-03-012697-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "Комплект для артеріальної катетериза-ції 20 Га (Ga). X 1-3/4’’ (4,45 см (cm))",
+     "qty": 300,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "Ендобронхіальний блокатор",
+     "qty": 150,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "Плівка хірургічна антимікробна, 56см*45см",
+     "qty": 1150,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "Пов'язка неткана  агдезивна на поліуретановій основі  з подушеч-кою 9х15 см",
+     "qty": 1000,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "ЕКГ електроди одноразові рентгенпрозорі",
+     "qty": 600,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "Простирадло з спанбонду в рулоні  0,8 * 100м",
+     "qty": 1000,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
+     "name": "Тепловологообмінник для використання з трахеостомічною трубкою",
+     "qty": 1000,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-03-012697-a",
+   "title": "Медичні матеріали",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-012697-a"
+  },
+  {
+   "amount": 12173,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
+   "date": "2026-09-19T09:00:00+03:00",
+   "dateModified": "2026-09-19T09:00:21.585495+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-03-009277-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": "8f6f21441a9145bfa91d3d6c63477b20",
+     "name": "LAB EQUIP, TEST TUBE, 12 х 75 mm, POLYPROPYLENE (250/PK)   Тестові пробірки ЛАБ ЕКВІП, 12 x 75 мм (mm), поліпропілен (250шт/упак)",
+     "qty": 7,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "пачка",
+     "unitPrice": 1739.0
+    }
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-03-009277-a",
+   "title": "Лабораторні реактиви \nКод НК 024:2023 62225 - Ємність для лабораторного аналізатора ІВД",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-009277-a"
   },
   {
    "id": "UA-2026-09-18-006441-a",
