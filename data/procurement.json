@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-22T12:45:54.114324+00:00",
+ "generated": "2026-09-22T17:28:29.478945+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-22T12:45:54.114324+00:00",
+  "checked": "2026-09-22T17:28:29.478945+00:00",
   "expected": 1483,
   "seen": 1483,
   "tenders": 496,
@@ -365,45 +365,45 @@
    ]
   },
   {
-   "id": "UA-2026-09-03-013597-a",
-   "tenderID": "UA-2026-09-03-013597-a",
-   "title": "Обладнання для анестезії та реанімації\n(ДК 021:2015: 33170000-2 — Обладнання для анестезії та реанімації, НК 024:2023 – 42411 - Апарат штучної вентиляції легенів для інтенсивної терапії неонатальний / для дорослих, НК 031:2024 - R060202 Системи подачі зволоженого кисню, НК 024:2023 - 36685 Столик реанімації для немовлят, НК 031:2024 - Z12080405 Ліжка неонатальної реанімації)",
+   "amount": 3706600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-22T10:00:00+03:00",
    "dateModified": "2026-09-22T10:00:08.957486+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 3706600,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-013597-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-03-013597-a",
    "items": [
     {
+     "amount": null,
+     "lot": "91995a5ad4ad4681a2de1df152f6ade0",
      "name": "Апарат подачі киснево-повітряної суміші з зволоженням",
      "qty": 7,
-     "unit": "комплект",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "91995a5ad4ad4681a2de1df152f6ade0"
+     "unit": "комплект",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "91995a5ad4ad4681a2de1df152f6ade0",
      "name": "Реанімаційна система для новонароджених",
      "qty": 3,
-     "unit": "комплект",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "91995a5ad4ad4681a2de1df152f6ade0"
+     "unit": "комплект",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-03-013597-a",
+   "title": "Обладнання для анестезії та реанімації\n(ДК 021:2015: 33170000-2 — Обладнання для анестезії та реанімації, НК 024:2023 – 42411 - Апарат штучної вентиляції легенів для інтенсивної терапії неонатальний / для дорослих, НК 031:2024 - R060202 Системи подачі зволоженого кисню, НК 024:2023 - 36685 Столик реанімації для немовлят, НК 031:2024 - Z12080405 Ліжка неонатальної реанімації)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-013597-a"
   },
   {
    "id": "UA-2026-09-21-015184-a",
@@ -945,55 +945,55 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-013089-a"
   },
   {
-   "id": "UA-2026-09-09-015209-a",
-   "tenderID": "UA-2026-09-09-015209-a",
-   "title": "Меропенем",
+   "amount": 2495240,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 3
+   },
+   "cpv": "33650000-1",
    "date": "2026-09-21T08:31:24.176983+03:00",
    "dateModified": "2026-09-21T08:31:24.176983+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 2495240,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-015209-a",
-   "counts": {
-    "signed": 3,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-09-015209-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
      "qty": 1000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем, порошок для ін'єкцій/інфузій, по 1 г",
      "qty": 8000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем,порошок для ін'єкцій по 0,5 г",
      "qty": 2000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-09-015209-a",
+   "title": "Меропенем",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-015209-a"
   },
   {
    "amount": 6160761.68,
@@ -2253,61 +2253,61 @@
    ]
   },
   {
-   "id": "UA-2026-09-07-014409-a",
-   "tenderID": "UA-2026-09-07-014409-a",
-   "title": "Катетер пупковий",
+   "amount": 48060.75,
+   "contractEnd": null,
+   "counts": {
+    "failed": 2,
+    "progress": 0,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-09-11T15:10:08.414981+03:00",
    "dateModified": "2026-09-11T15:10:08.414981+03:00",
-   "method": "priceQuotation",
-   "status": "unsuccessful",
-   "contractEnd": null,
-   "amount": 48060.75,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014409-a",
-   "counts": {
-    "signed": 0,
-    "progress": 0,
-    "failed": 2
-   },
+   "id": "UA-2026-09-07-014409-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер пупковий, одноразовий, з додатковим ін'єкційним портом, 4Fr, №1",
      "qty": 150,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-09-09",
       "t": "UA-2026-09-09-015338-a",
       "k": "done"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер пупковий, одноразовий, з додатковим ін'єкційним портом, 5Fr, №1",
      "qty": 150,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-09-09",
       "t": "UA-2026-09-09-015338-a",
       "k": "done"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     }
    ],
+   "method": "priceQuotation",
    "resolved": {
     "count": 2,
     "of": 2,
     "d": "2026-09-09",
     "t": "UA-2026-09-09-015338-a"
-   }
+   },
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-09-07-014409-a",
+   "title": "Катетер пупковий",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014409-a"
   },
   {
    "amount": 1286458.86,
@@ -3167,35 +3167,35 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-27-001382-a"
   },
   {
-   "id": "UA-2026-09-01-002074-a",
-   "tenderID": "UA-2026-09-01-002074-a",
-   "title": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+   "amount": 3926.9,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33620000-2",
    "date": "2026-09-08T09:01:46.177131+03:00",
    "dateModified": "2026-09-08T09:01:46.177131+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 3926.9,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-01-002074-a",
    "items": [
     {
+     "amount": 3926.9,
+     "lot": null,
      "name": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
      "qty": 10,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 3926.9,
-     "unitPrice": 392.69,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 392.69
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-01-002074-a",
+   "title": "Добутамін  розчин для інфузій, 250 мг/50 мл, по 50 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-002074-a"
   },
   {
    "amount": 9416,
