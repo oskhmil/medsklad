@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-24T04:47:42.956224+00:00",
+ "generated": "2026-09-24T09:43:37.845945+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-24T04:47:42.956224+00:00",
+  "checked": "2026-09-24T09:43:37.845945+00:00",
   "expected": 1485,
   "seen": 1485,
   "tenders": 498,
@@ -13,6 +13,139 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-04-010141-a",
+   "tenderID": "UA-2026-09-04-010141-a",
+   "title": "Інфузійні насоси",
+   "date": "2026-09-24T09:00:00+03:00",
+   "dateModified": "2026-09-24T09:00:24.197725+03:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 16397338,
+   "group": "Матеріали",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-010141-a",
+   "counts": {
+    "signed": 0,
+    "progress": 5,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "шприцева помпа",
+     "qty": 20,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "f5276035f9f34df297459d70be8389ac"
+    },
+    {
+     "name": "помпа ентерального харчування",
+     "qty": 70,
+     "unit": "комплект",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "f5276035f9f34df297459d70be8389ac"
+    },
+    {
+     "name": "шприцевий насос",
+     "qty": 170,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "f5276035f9f34df297459d70be8389ac"
+    },
+    {
+     "name": "волюметричний насос",
+     "qty": 191,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "f5276035f9f34df297459d70be8389ac"
+    },
+    {
+     "name": "шприцевий інфузійний насос",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "f5276035f9f34df297459d70be8389ac"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-21-015184-a",
+   "tenderID": "UA-2026-09-21-015184-a",
+   "title": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
+   "date": "2026-09-24T08:00:00+03:00",
+   "dateModified": "2026-09-24T08:13:23.753131+03:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 871808,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015184-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
+     "qty": 4448,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "amount": 871808,
+     "unitPrice": 196.0,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-21-015132-a",
+   "tenderID": "UA-2026-09-21-015132-a",
+   "title": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
+   "date": "2026-09-24T08:00:00+03:00",
+   "dateModified": "2026-09-24T08:12:23.363049+03:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 741000,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015132-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
+     "qty": 1300,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "amount": 741000,
+     "unitPrice": 570.0,
+     "lot": null
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-23-008060-a",
    "tenderID": "UA-2026-09-23-008060-a",
@@ -678,68 +811,6 @@
    "tenderID": "UA-2026-09-03-013597-a",
    "title": "Обладнання для анестезії та реанімації\n(ДК 021:2015: 33170000-2 — Обладнання для анестезії та реанімації, НК 024:2023 – 42411 - Апарат штучної вентиляції легенів для інтенсивної терапії неонатальний / для дорослих, НК 031:2024 - R060202 Системи подачі зволоженого кисню, НК 024:2023 - 36685 Столик реанімації для немовлят, НК 031:2024 - Z12080405 Ліжка неонатальної реанімації)",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-013597-a"
-  },
-  {
-   "id": "UA-2026-09-21-015184-a",
-   "tenderID": "UA-2026-09-21-015184-a",
-   "title": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
-   "date": "2026-09-24T08:00:00+03:00",
-   "dateModified": "2026-09-21T19:31:52.526124+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 872971.96,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015184-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
-     "qty": 4448,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-21-015132-a",
-   "tenderID": "UA-2026-09-21-015132-a",
-   "title": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
-   "date": "2026-09-24T08:00:00+03:00",
-   "dateModified": "2026-09-21T19:16:43.530211+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 935514.02,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015132-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
-     "qty": 1300,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
   },
   {
    "amount": 3740000,
@@ -3611,77 +3682,6 @@
      "amount": null,
      "unitPrice": null,
      "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-04-010141-a",
-   "tenderID": "UA-2026-09-04-010141-a",
-   "title": "Інфузійні насоси",
-   "date": "2026-09-24T09:00:00+03:00",
-   "dateModified": "2026-09-04T15:00:36.028279+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 16397338,
-   "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-010141-a",
-   "counts": {
-    "signed": 0,
-    "progress": 5,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "шприцева помпа",
-     "qty": 20,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
-    },
-    {
-     "name": "помпа ентерального харчування",
-     "qty": 70,
-     "unit": "комплект",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
-    },
-    {
-     "name": "шприцевий насос",
-     "qty": 170,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
-    },
-    {
-     "name": "волюметричний насос",
-     "qty": 191,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
-    },
-    {
-     "name": "шприцевий інфузійний насос",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
     }
    ]
   },
