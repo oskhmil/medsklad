@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-25T00:59:04.314460+00:00",
+ "generated": "2026-09-25T06:21:03.286694+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-25T00:59:04.314460+00:00",
+  "checked": "2026-09-25T06:21:03.286694+00:00",
   "expected": 1488,
   "seen": 1488,
   "tenders": 501,
@@ -13,6 +13,57 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-04-013369-a",
+   "tenderID": "UA-2026-09-04-013369-a",
+   "title": "Голки епідуральні, канюлі для аспірації",
+   "date": "2026-09-25T09:00:00+03:00",
+   "dateModified": "2026-09-25T09:00:17.702573+03:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 635000,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013369-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Голка епідуральна",
+     "qty": 850,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+    },
+    {
+     "name": "Канюля для аспірації з повітряним фільтром",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+    },
+    {
+     "name": "Канюля для аспірації з повітряним та рідинним фільтрами",
+     "qty": 1500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-24-012823-a",
    "tenderID": "UA-2026-09-24-012823-a",
@@ -3846,57 +3897,6 @@
    "tenderID": "UA-2026-08-18-001674-a",
    "title": "Внутрішньочерепний доставляючий мікрокатетер до пристрою для реваскуляризації",
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-18-001674-a"
-  },
-  {
-   "id": "UA-2026-09-04-013369-a",
-   "tenderID": "UA-2026-09-04-013369-a",
-   "title": "Голки епідуральні, канюлі для аспірації",
-   "date": "2026-09-25T09:00:00+03:00",
-   "dateModified": "2026-09-04T18:10:38.198901+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 635000,
-   "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013369-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Голка епідуральна",
-     "qty": 850,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
-    },
-    {
-     "name": "Канюля для аспірації з повітряним фільтром",
-     "qty": 2000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
-    },
-    {
-     "name": "Канюля для аспірації з повітряним та рідинним фільтрами",
-     "qty": 1500,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
-    }
-   ]
   },
   {
    "amount": 385200,
