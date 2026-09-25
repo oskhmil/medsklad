@@ -1,11 +1,11 @@
 {
- "generated": "2026-09-25T17:20:41.488470+00:00",
+ "generated": "2026-09-25T20:40:50.189122+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-25T17:20:41.488470+00:00",
-  "expected": 1489,
-  "seen": 1489,
+  "checked": "2026-09-25T20:40:50.189122+00:00",
+  "expected": 1499,
+  "seen": 1499,
   "tenders": 499,
   "errors": 0,
   "dropped": 0,
