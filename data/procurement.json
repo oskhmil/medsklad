@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-28T05:25:45.446337+00:00",
+ "generated": "2026-09-28T12:10:56.726084+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-28T05:25:45.446337+00:00",
+  "checked": "2026-09-28T12:10:56.726084+00:00",
   "expected": 1489,
   "seen": 1489,
   "tenders": 499,
@@ -14,18 +14,18 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-23-009019-a",
-   "tenderID": "UA-2026-09-23-009019-a",
-   "title": "Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
-   "date": "2026-09-28T08:00:00+03:00",
-   "dateModified": "2026-09-28T08:05:34.402264+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
+   "id": "UA-2026-09-08-007509-a",
+   "tenderID": "UA-2026-09-08-007509-a",
+   "title": "Вироби медичного призначення",
+   "date": "2026-09-28T10:00:00+03:00",
+   "dateModified": "2026-09-28T10:01:09.870894+03:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
    "contractEnd": null,
-   "amount": 2140000,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-009019-a",
+   "amount": 1122000,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a",
    "counts": {
     "signed": 0,
     "progress": 3,
@@ -33,36 +33,87 @@
    },
    "items": [
     {
-     "name": "Рінгера розчин для інфузій по 200 мл",
-     "qty": 20000,
+     "name": "Датчик тиску одноканальний",
+     "qty": 150,
      "unit": "штука",
-     "status": "Переможець",
-     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "status": "В процесі",
+     "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": null
+     "lot": "6a958616a49b4fec99390adcb06d2049"
     },
     {
-     "name": "Рінгера розчин для інфузій по 400 мл",
-     "qty": 24000,
+     "name": "Датчик тиску одноканальний",
+     "qty": 150,
      "unit": "штука",
-     "status": "Переможець",
-     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "status": "В процесі",
+     "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": null
+     "lot": "6a958616a49b4fec99390adcb06d2049"
     },
     {
-     "name": "Електроліти та комбінації розчин для інфузій, по 500 мл",
-     "qty": 4000,
+     "name": "Латка серцево-судинна",
+     "qty": 40,
      "unit": "штука",
-     "status": "Переможець",
-     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "status": "В процесі",
+     "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": null
+     "lot": "6a958616a49b4fec99390adcb06d2049"
     }
    ]
+  },
+  {
+   "amount": 2140000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
+   "date": "2026-09-28T08:00:00+03:00",
+   "dateModified": "2026-09-28T08:05:34.402264+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-23-009019-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Рінгера розчин для інфузій по 200 мл",
+     "qty": 20000,
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Рінгера розчин для інфузій по 400 мл",
+     "qty": 24000,
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Електроліти та комбінації розчин для інфузій, по 500 мл",
+     "qty": 4000,
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-23-009019-a",
+   "title": "Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-009019-a"
   },
   {
    "id": "UA-2026-09-25-006204-a",
@@ -3562,57 +3613,6 @@
     "d": "2026-09-09",
     "t": "UA-2026-09-09-014666-a"
    }
-  },
-  {
-   "id": "UA-2026-09-08-007509-a",
-   "tenderID": "UA-2026-09-08-007509-a",
-   "title": "Вироби медичного призначення",
-   "date": "2026-09-28T10:00:00+03:00",
-   "dateModified": "2026-09-08T13:31:46.936002+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1122000,
-   "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Датчик тиску одноканальний",
-     "qty": 150,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
-    },
-    {
-     "name": "Датчик тиску одноканальний",
-     "qty": 150,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
-    },
-    {
-     "name": "Латка серцево-судинна",
-     "qty": 40,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
-    }
-   ]
   },
   {
    "amount": 1420052.64,
