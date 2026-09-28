@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-28T00:09:05.241571+00:00",
+ "generated": "2026-09-28T05:25:45.446337+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-28T00:09:05.241571+00:00",
+  "checked": "2026-09-28T05:25:45.446337+00:00",
   "expected": 1489,
   "seen": 1489,
   "tenders": 499,
@@ -13,6 +13,57 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-23-009019-a",
+   "tenderID": "UA-2026-09-23-009019-a",
+   "title": "Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
+   "date": "2026-09-28T08:00:00+03:00",
+   "dateModified": "2026-09-28T08:05:34.402264+03:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 2140000,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-009019-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Рінгера розчин для інфузій по 200 мл",
+     "qty": 20000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Рінгера розчин для інфузій по 400 мл",
+     "qty": 24000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Електроліти та комбінації розчин для інфузій, по 500 мл",
+     "qty": 4000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-25-006204-a",
    "tenderID": "UA-2026-09-25-006204-a",
@@ -526,57 +577,6 @@
      "qty": 4000,
      "unit": "штука",
      "status": "Скасовано",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-23-009019-a",
-   "tenderID": "UA-2026-09-23-009019-a",
-   "title": "Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
-   "date": "2026-09-28T08:00:00+03:00",
-   "dateModified": "2026-09-23T14:25:31.611854+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2200000,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-009019-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Рінгера розчин для інфузій по 200 мл",
-     "qty": 20000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Рінгера розчин для інфузій по 400 мл",
-     "qty": 24000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Електроліти та комбінації розчин для інфузій, по 500 мл",
-     "qty": 4000,
-     "unit": "штука",
-     "status": "В процесі",
      "supplier": null,
      "amount": null,
      "unitPrice": null,
