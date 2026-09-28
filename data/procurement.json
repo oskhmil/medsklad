@@ -1,12 +1,12 @@
 {
- "generated": "2026-09-28T12:10:56.726084+00:00",
+ "generated": "2026-09-28T19:53:22.921807+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-28T12:10:56.726084+00:00",
-  "expected": 1489,
-  "seen": 1489,
-  "tenders": 499,
+  "checked": "2026-09-28T19:53:22.921807+00:00",
+  "expected": 1491,
+  "seen": 1491,
+  "tenders": 501,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,55 +14,168 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-08-007509-a",
-   "tenderID": "UA-2026-09-08-007509-a",
-   "title": "Вироби медичного призначення",
-   "date": "2026-09-28T10:00:00+03:00",
-   "dateModified": "2026-09-28T10:01:09.870894+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
+   "id": "UA-2026-09-28-013515-a",
+   "tenderID": "UA-2026-09-28-013515-a",
+   "title": "Катетер пупковий: розмір: 4 Fr, стерильний, одноразовий, довжина: 35-40 см; Катетер пупковий: розмір: 5 Fr, стерильний, одноразовий, довжина: 35-40 см",
+   "date": "2026-10-01T08:00:00+03:00",
+   "dateModified": "2026-09-28T21:39:24.082212+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
    "contractEnd": null,
-   "amount": 1122000,
+   "amount": 48060.75,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a",
+   "cpv": "33141000-0",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013515-a",
    "counts": {
     "signed": 0,
-    "progress": 3,
+    "progress": 2,
     "failed": 0
    },
    "items": [
     {
-     "name": "Датчик тиску одноканальний",
+     "name": "Катетер пупковий: розмір: 4 Fr, стерильний, одноразовий, довжина: 35-40 см",
      "qty": 150,
      "unit": "штука",
      "status": "В процесі",
      "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "lot": null
     },
     {
-     "name": "Датчик тиску одноканальний",
+     "name": "Катетер пупковий: розмір: 5 Fr, стерильний, одноразовий, довжина: 35-40 см",
      "qty": 150,
      "unit": "штука",
      "status": "В процесі",
      "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
-    },
-    {
-     "name": "Латка серцево-судинна",
-     "qty": 40,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "lot": null
     }
    ]
+  },
+  {
+   "id": "UA-2026-09-28-013482-a",
+   "tenderID": "UA-2026-09-28-013482-a",
+   "title": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+   "date": "2026-10-01T08:00:00+03:00",
+   "dateModified": "2026-09-28T21:29:30.887185+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1432710.28,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013482-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-11-011784-a",
+   "tenderID": "UA-2026-09-11-011784-a",
+   "title": "Антитіла \nКод за НК 024:2023/031:2024   57515 - Пухлинний білок p53 IVD (діагностика in vitro), антитіла/w0102030124- Пухлинний антиген p16; 62839 - Pms2, білок IVD (діагностика in vitro), антитіла/W0103080103 АНТИТІЛА ДЛЯ ВИЗНАЧЕННЯ ТИПУ ЛІМФОМИ (КРІМ ВИЗНАЧЕННЯ ТИПУ В І Т-КЛІТИН",
+   "date": "2026-09-28T15:24:00+03:00",
+   "dateModified": "2026-09-28T15:24:10.643063+03:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 16151.46,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-11-011784-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Антитіло до p53, 7 мл",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "37284b0ab3ca4fe18544cfda9009472e"
+    },
+    {
+     "name": "Антитіло до PMS2, 7 мл",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "37284b0ab3ca4fe18544cfda9009472e"
+    }
+   ]
+  },
+  {
+   "amount": 1122000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
+   "date": "2026-09-28T10:00:00+03:00",
+   "dateModified": "2026-09-28T10:01:09.870894+03:00",
+   "group": "Матеріали",
+   "id": "UA-2026-09-08-007509-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
+     "name": "Датчик тиску одноканальний",
+     "qty": 150,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
+     "name": "Датчик тиску одноканальний",
+     "qty": 150,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
+     "name": "Латка серцево-судинна",
+     "qty": 40,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-08-007509-a",
+   "title": "Вироби медичного призначення",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a"
   },
   {
    "amount": 2140000,
@@ -2790,47 +2903,6 @@
    "tenderID": "UA-2026-08-25-013611-a",
    "title": "Обладнання для анестезії та реанімації",
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-25-013611-a"
-  },
-  {
-   "id": "UA-2026-09-11-011784-a",
-   "tenderID": "UA-2026-09-11-011784-a",
-   "title": "Антитіла \nКод за НК 024:2023/031:2024   57515 - Пухлинний білок p53 IVD (діагностика in vitro), антитіла/w0102030124- Пухлинний антиген p16; 62839 - Pms2, білок IVD (діагностика in vitro), антитіла/W0103080103 АНТИТІЛА ДЛЯ ВИЗНАЧЕННЯ ТИПУ ЛІМФОМИ (КРІМ ВИЗНАЧЕННЯ ТИПУ В І Т-КЛІТИН",
-   "date": "2026-09-28T15:24:00+03:00",
-   "dateModified": "2026-09-11T15:43:42.154112+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 16151.46,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-11-011784-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Антитіло до p53, 7 мл",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "37284b0ab3ca4fe18544cfda9009472e"
-    },
-    {
-     "name": "Антитіло до PMS2, 7 мл",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "37284b0ab3ca4fe18544cfda9009472e"
-    }
-   ]
   },
   {
    "amount": 48060.75,
