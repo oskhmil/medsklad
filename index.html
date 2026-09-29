@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.175";
+const APP_VERSION = "v.176";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4483,6 +4483,17 @@ const ANALYTICS_HOSPITALS = [
     // Google Drive xlsx export URL — parsed in-browser (no JSON in repo).
     // To swap files: replace the document ID below.
     url:   "https://docs.google.com/spreadsheets/d/1yUd8_qlQhXJG8WlKx9xM499X8bMOLe1G/export?format=xlsx",
+    source: "xlsx",
+  },
+  {
+    id:    "leva",
+    name:  "ЦМЗ Лева",
+    sub:   "Відділення, МВО, рух, оборотність",
+    ico:   "🏥",
+    theme: "analytics",
+    // Google Drive xlsx export URL — parsed in-browser (no JSON in repo).
+    // To swap files: replace the document ID below.
+    url:   "https://docs.google.com/spreadsheets/d/1Y_HZVc0rBirmyLnhIALMn_WgxEHzN2_3/export?format=xlsx",
     source: "xlsx",
   },
   {
