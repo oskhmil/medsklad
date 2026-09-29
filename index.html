@@ -2285,7 +2285,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.174";
+const APP_VERSION = "v.175";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4477,10 +4477,12 @@ const ANALYTICS_HOSPITALS = [
   {
     id:    "nezlamni",
     name:  "Реаб. центр \"Незламні\"",
-    sub:   "Аналітика буде доступна після підключення даних",
+    sub:   "Відділення, МВО, рух, оборотність",
     ico:   "🏥",
-    theme: "",
-    url:   null, // not connected yet
+    theme: "analytics",
+    // Google Drive xlsx export URL — parsed in-browser (no JSON in repo).
+    // To swap files: replace the document ID below.
+    url:   "https://docs.google.com/spreadsheets/d/1yUd8_qlQhXJG8WlKx9xM499X8bMOLe1G/export?format=xlsx",
     source: "xlsx",
   },
   {
