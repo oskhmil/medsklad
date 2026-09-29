@@ -1,18 +1,49 @@
 {
- "generated": "2026-09-28T19:53:22.921807+00:00",
+ "generated": "2026-09-29T00:10:47.586937+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-28T19:53:22.921807+00:00",
-  "expected": 1491,
-  "seen": 1491,
-  "tenders": 501,
+  "checked": "2026-09-29T00:10:47.586937+00:00",
+  "expected": 1492,
+  "seen": 1492,
+  "tenders": 502,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-28-013684-a",
+   "tenderID": "UA-2026-09-28-013684-a",
+   "title": "Портативна тринога з кріпленням для рентгенівського детектора. ДК 021:2015: 33190000-8 — Медичне обладнання та вироби медичного призначення різні",
+   "date": "2026-10-14T08:00:00+03:00",
+   "dateModified": "2026-09-28T22:43:01.403410+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 96000,
+   "group": "Матеріали",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013684-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Портативна тринога з кріпленням для рентгенівського детектора",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": 96000.0,
+     "lot": "60a9d478bfdfa2582073cb63cf394b2d"
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-28-013515-a",
    "tenderID": "UA-2026-09-28-013515-a",
@@ -86,45 +117,45 @@
    ]
   },
   {
-   "id": "UA-2026-09-11-011784-a",
-   "tenderID": "UA-2026-09-11-011784-a",
-   "title": "Антитіла \nКод за НК 024:2023/031:2024   57515 - Пухлинний білок p53 IVD (діагностика in vitro), антитіла/w0102030124- Пухлинний антиген p16; 62839 - Pms2, білок IVD (діагностика in vitro), антитіла/W0103080103 АНТИТІЛА ДЛЯ ВИЗНАЧЕННЯ ТИПУ ЛІМФОМИ (КРІМ ВИЗНАЧЕННЯ ТИПУ В І Т-КЛІТИН",
+   "amount": 16151.46,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-28T15:24:00+03:00",
    "dateModified": "2026-09-28T15:24:10.643063+03:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 16151.46,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-11-011784-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-11-011784-a",
    "items": [
     {
+     "amount": null,
+     "lot": "37284b0ab3ca4fe18544cfda9009472e",
      "name": "Антитіло до p53, 7 мл",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "37284b0ab3ca4fe18544cfda9009472e"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "37284b0ab3ca4fe18544cfda9009472e",
      "name": "Антитіло до PMS2, 7 мл",
      "qty": 1,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "37284b0ab3ca4fe18544cfda9009472e"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-11-011784-a",
+   "title": "Антитіла \nКод за НК 024:2023/031:2024   57515 - Пухлинний білок p53 IVD (діагностика in vitro), антитіла/w0102030124- Пухлинний антиген p16; 62839 - Pms2, білок IVD (діагностика in vitro), антитіла/W0103080103 АНТИТІЛА ДЛЯ ВИЗНАЧЕННЯ ТИПУ ЛІМФОМИ (КРІМ ВИЗНАЧЕННЯ ТИПУ В І Т-КЛІТИН",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-11-011784-a"
   },
   {
    "amount": 1122000,
