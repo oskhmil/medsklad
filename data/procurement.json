@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-30T06:50:57.286290+00:00",
+ "generated": "2026-09-30T13:13:27.693673+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-30T06:50:57.286290+00:00",
+  "checked": "2026-09-30T13:13:27.693673+00:00",
   "expected": 1492,
   "seen": 1492,
   "tenders": 502,
@@ -14,35 +14,76 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-25-006204-a",
-   "tenderID": "UA-2026-09-25-006204-a",
-   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-   "date": "2026-09-30T08:00:07.001223+03:00",
-   "dateModified": "2026-09-30T08:00:07.001223+03:00",
-   "method": "priceQuotation",
-   "status": "unsuccessful",
+   "id": "UA-2026-09-24-012823-a",
+   "tenderID": "UA-2026-09-24-012823-a",
+   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
+   "date": "2026-10-12T09:00:00+03:00",
+   "dateModified": "2026-09-30T15:55:15.313342+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
    "contractEnd": null,
-   "amount": 500140.19,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-25-006204-a",
+   "amount": 425416.67,
+   "group": "Матеріали",
+   "cpv": "33192300-5",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a",
    "counts": {
     "signed": 0,
-    "progress": 0,
-    "failed": 1
+    "progress": 2,
+    "failed": 0
    },
    "items": [
     {
-     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-     "qty": 1000,
+     "name": "Операційний стіл",
+     "qty": 1,
      "unit": "штука",
-     "status": "Не відбулось",
+     "status": "В процесі",
      "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": null
+     "lot": "f3ec00bf50da4229aef51e3328d7a92b"
+    },
+    {
+     "name": "Гідравлічне медичне крісло",
+     "qty": 1,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "f3ec00bf50da4229aef51e3328d7a92b"
     }
    ]
+  },
+  {
+   "amount": 500140.19,
+   "contractEnd": null,
+   "counts": {
+    "failed": 1,
+    "progress": 0,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
+   "date": "2026-09-30T08:00:07.001223+03:00",
+   "dateModified": "2026-09-30T08:00:07.001223+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-25-006204-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+     "qty": 1000,
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-09-25-006204-a",
+   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-25-006204-a"
   },
   {
    "amount": 4394775,
@@ -573,47 +614,6 @@
    "tenderID": "UA-2026-09-04-013369-a",
    "title": "Голки епідуральні, канюлі для аспірації",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013369-a"
-  },
-  {
-   "id": "UA-2026-09-24-012823-a",
-   "tenderID": "UA-2026-09-24-012823-a",
-   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
-   "date": "2026-10-12T09:00:00+03:00",
-   "dateModified": "2026-09-24T16:19:07.710443+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 425416.67,
-   "group": "Матеріали",
-   "cpv": "33192300-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Операційний стіл",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f3ec00bf50da4229aef51e3328d7a92b"
-    },
-    {
-     "name": "Гідравлічне медичне крісло",
-     "qty": 1,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f3ec00bf50da4229aef51e3328d7a92b"
-    }
-   ]
   },
   {
    "amount": 16397338,
