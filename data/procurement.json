@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-30T01:00:21.199559+00:00",
+ "generated": "2026-09-30T06:50:57.286290+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-09-30T01:00:21.199559+00:00",
+  "checked": "2026-09-30T06:50:57.286290+00:00",
   "expected": 1492,
   "seen": 1492,
   "tenders": 502,
@@ -13,6 +13,37 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-25-006204-a",
+   "tenderID": "UA-2026-09-25-006204-a",
+   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+   "date": "2026-09-30T08:00:07.001223+03:00",
+   "dateModified": "2026-09-30T08:00:07.001223+03:00",
+   "method": "priceQuotation",
+   "status": "unsuccessful",
+   "contractEnd": null,
+   "amount": 500140.19,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-25-006204-a",
+   "counts": {
+    "signed": 0,
+    "progress": 0,
+    "failed": 1
+   },
+   "items": [
+    {
+     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+     "qty": 1000,
+     "unit": "штука",
+     "status": "Не відбулось",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 4394775,
    "contractEnd": null,
@@ -430,37 +461,6 @@
    "tenderID": "UA-2026-09-23-009019-a",
    "title": "Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-009019-a"
-  },
-  {
-   "id": "UA-2026-09-25-006204-a",
-   "tenderID": "UA-2026-09-25-006204-a",
-   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-   "date": "2026-09-30T08:00:00+03:00",
-   "dateModified": "2026-09-25T12:16:01.884279+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 500140.19,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-25-006204-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-     "qty": 1000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
   },
   {
    "amount": 6460429,
