@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-01T01:42:18.457504+00:00",
+ "generated": "2026-10-01T07:58:43.825169+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-01T01:42:18.457504+00:00",
+  "checked": "2026-10-01T07:58:43.825169+00:00",
   "expected": 1492,
   "seen": 1492,
   "tenders": 502,
@@ -13,6 +13,78 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-28-013515-a",
+   "tenderID": "UA-2026-09-28-013515-a",
+   "title": "Катетер пупковий: розмір: 4 Fr, стерильний, одноразовий, довжина: 35-40 см; Катетер пупковий: розмір: 5 Fr, стерильний, одноразовий, довжина: 35-40 см",
+   "date": "2026-10-01T08:00:00+03:00",
+   "dateModified": "2026-10-01T08:26:37.989454+03:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 5400,
+   "group": "Матеріали",
+   "cpv": "33141000-0",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013515-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Катетер пупковий: розмір: 4 Fr, стерильний, одноразовий, довжина: 35-40 см",
+     "qty": 150,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ФОП КОЛІСНИК ОЛЕКСАНДР МИХАЙЛОВИЧ",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Катетер пупковий: розмір: 5 Fr, стерильний, одноразовий, довжина: 35-40 см",
+     "qty": 150,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ФОП КОЛІСНИК ОЛЕКСАНДР МИХАЙЛОВИЧ",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-09-28-013482-a",
+   "tenderID": "UA-2026-09-28-013482-a",
+   "title": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+   "date": "2026-10-01T08:00:08.864586+03:00",
+   "dateModified": "2026-10-01T08:00:08.864586+03:00",
+   "method": "priceQuotation",
+   "status": "unsuccessful",
+   "contractEnd": null,
+   "amount": 1432710.28,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013482-a",
+   "counts": {
+    "signed": 0,
+    "progress": 0,
+    "failed": 1
+   },
+   "items": [
+    {
+     "name": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "Не відбулось",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "id": "UA-2026-09-24-012823-a",
    "tenderID": "UA-2026-09-24-012823-a",
@@ -285,78 +357,6 @@
      "amount": null,
      "unitPrice": 96000.0,
      "lot": "60a9d478bfdfa2582073cb63cf394b2d"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-28-013515-a",
-   "tenderID": "UA-2026-09-28-013515-a",
-   "title": "Катетер пупковий: розмір: 4 Fr, стерильний, одноразовий, довжина: 35-40 см; Катетер пупковий: розмір: 5 Fr, стерильний, одноразовий, довжина: 35-40 см",
-   "date": "2026-10-01T08:00:00+03:00",
-   "dateModified": "2026-09-28T21:39:24.082212+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 48060.75,
-   "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013515-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Катетер пупковий: розмір: 4 Fr, стерильний, одноразовий, довжина: 35-40 см",
-     "qty": 150,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Катетер пупковий: розмір: 5 Fr, стерильний, одноразовий, довжина: 35-40 см",
-     "qty": 150,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-09-28-013482-a",
-   "tenderID": "UA-2026-09-28-013482-a",
-   "title": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
-   "date": "2026-10-01T08:00:00+03:00",
-   "dateModified": "2026-09-28T21:29:30.887185+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1432710.28,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013482-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
-     "qty": 2000,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
     }
    ]
   },
