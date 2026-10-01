@@ -1360,8 +1360,14 @@
     padding: 4px 6px;
     line-height: 1;
   }
-  #mic-btn.listening {
+  #mic-btn.listening, #demand-mic-btn.listening {
     animation: micPulse 1s ease-in-out infinite;
+  }
+  #demand-mic-btn {
+    position: absolute; right: 6px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; font-size: 16px;
+    cursor: pointer; padding: 4px 6px; line-height: 1;
   }
   @keyframes micPulse {
     0%, 100% { opacity: 1; transform: translateY(-50%) scale(1); }
@@ -1979,10 +1985,15 @@
         </select>
         <button class="fp-export-btn" onclick="exportDemandExcel()" style="margin-left:auto;">📥 Excel</button>
       </div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button class="filter-btn active" id="demand-mode-name" onclick="setDemandSearchMode('name')" style="font-size:11px;padding:4px 10px;">За назвою</button>
+        <button class="filter-btn" id="demand-mode-mnn" onclick="setDemandSearchMode('mnn')" style="font-size:11px;padding:4px 10px;">За МНН</button>
+      </div>
       <div style="position:relative;margin-bottom:10px;">
-        <input id="demand-search" type="text" placeholder="Пошук препарату..."
-          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);font-size:13px;outline:none;"
+        <input id="demand-search" type="text" placeholder="Введіть назву препарату..."
+          style="width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:9px 40px 9px 14px;color:var(--text);font-size:13px;outline:none;"
           oninput="renderDemand()">
+        <button id="demand-mic-btn" onclick="toggleDemandMic()" title="Голосовий пошук">🎤</button>
       </div>
       <div id="demand-summary" style="font-size:11px;color:var(--muted);margin-bottom:8px;"></div>
       <div id="demand-list"></div>
@@ -2285,7 +2296,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.176";
+const APP_VERSION = "v.178";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2944,6 +2955,20 @@ function isDeptHeader(row, col) {
 const MNN_MAP_KEY = "medsklad_mnn_map_v1";
 function _mnnNormName(s) {
   return String(s || "").toLowerCase().replace(/\s+/g, " ").trim();
+}
+// Скелет назви для пошуку МНН кирилицею/голосом: «габапентин» ↔ «Gabapentinum».
+// Транслітеруємо кирилицю й зводимо латину до спільного «скелета»
+// (c/k, y/i, ph/f, h/g, x/ks, подвоєні літери). Порівняння — входження,
+// тож латинські закінчення -um/-i не заважають.
+const _MNN_TR = {"а":"a","б":"b","в":"v","г":"g","ґ":"g","д":"d","е":"e","є":"e","ж":"z","з":"z","и":"i","і":"i","ї":"i","й":"i","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"k","ч":"ch","ш":"sh","щ":"sh","ь":"","ю":"iu","я":"ia","ы":"i","э":"e","ъ":"","ё":"e"};
+function _mnnSkel(s) {
+  return String(s || "").toLowerCase()
+    .replace(/[а-яёіїєґ]/g, ch => (ch in _MNN_TR ? _MNN_TR[ch] : ch))
+    .replace(/ph/g, "f").replace(/th/g, "t")
+    .replace(/ae|oe/g, "e").replace(/qu/g, "kv").replace(/x/g, "ks")
+    .replace(/ch/g, "h").replace(/[cq]/g, "k").replace(/[yj]/g, "i")
+    .replace(/w/g, "v").replace(/h/g, "g")
+    .replace(/[^a-z]/g, "").replace(/(.)\1+/g, "$1");
 }
 function _mnnMapLoad() {
   try { return JSON.parse(Store.get(MNN_MAP_KEY)) || {}; } catch (_) { return {}; }
@@ -4072,6 +4097,32 @@ function toggleMic() {
     }
   };
   try { _micRec.start(); } catch (e) {}
+}
+
+// Голосовий пошук у «Річній потребі» (ТМО і всередині лікарні — один екран).
+// Окремий розпізнавач, щоб не чіпати логіку головного пошуку.
+let _demandMicRec = null;
+let _demandMicActive = false;
+function toggleDemandMic() {
+  const btn = document.getElementById("demand-mic-btn");
+  if (_demandMicActive) { try { _demandMicRec.stop(); } catch (e) {} return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert("Голосовий ввід не підтримується цим браузером."); return; }
+  _demandMicRec = new SR();
+  _demandMicRec.lang = "uk-UA";
+  _demandMicRec.interimResults = false;
+  _demandMicRec.maxAlternatives = 1;
+  const off = () => { _demandMicActive = false; btn.classList.remove("listening"); };
+  _demandMicRec.onstart = () => { _demandMicActive = true; btn.classList.add("listening"); };
+  _demandMicRec.onend = off;
+  _demandMicRec.onerror = off;
+  _demandMicRec.onresult = (ev) => {
+    const t = ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
+    if (!t) return;
+    document.getElementById("demand-search").value = t.replace(/[.,!?]+$/g, "").trim();
+    renderDemand();
+  };
+  try { _demandMicRec.start(); } catch (e) {}
 }
 
 // ── 🔔 Спостерігач свіжих даних ──────────────────────────────────────────────
@@ -6258,7 +6309,12 @@ function closeDemand() {
 function _demandComputed() {
   // застосовує страховий запас і пошук до _demandRows
   const safety = parseInt(document.getElementById("demand-safety").value, 10) || 0;
-  const q = (document.getElementById("demand-search").value || "").toLowerCase().trim();
+  const q = normalize(document.getElementById("demand-search").value || "")
+    .replace(/[.,!?;:]+$/g, "");
+  // Кожне слово запиту має знайтись у назві, у МНН або в «скелеті» МНН —
+  // так «габапентин» (голосом чи з клавіатури) знаходить «Gabapentinum».
+  const tokens = q ? q.split(/\s+/).filter(Boolean)
+    .map(t => ({ raw: t, skel: _mnnSkel(t) })) : [];
   // Той самий словник Назва→МНН, що живить інфекційний контроль. Читаємо один
   // раз на перерахунок, а не по рядку: JSON.parse на 3000 позицій відчутний.
   const mnnDict = _mnnMapLoad();
@@ -6267,7 +6323,15 @@ function _demandComputed() {
     const mnn = mnnDict[_mnnNormName(r.name)] || "";
     // Пошук працює і за назвою, і за МНН — щоб можна було знайти всі
     // торгові найменування однієї діючої речовини одним запитом.
-    if (q && !r.name.toLowerCase().includes(q) && !mnn.toLowerCase().includes(q)) continue;
+    if (tokens.length) {
+      const nameN = normalize(r.name);
+      const mnnN  = mnn.toLowerCase();
+      const mnnS  = mnn ? _mnnSkel(mnn) : "";
+      const ok = _demandSearchMode === "mnn"
+        ? tokens.every(t => mnnN.includes(t.raw) || (t.skel.length >= 3 && mnnS.includes(t.skel)))
+        : tokens.every(t => nameN.includes(t.raw));
+      if (!ok) continue;
+    }
     const toBuyRaw = Math.max(0, r.annual + safety * r.avgMonthly - r.stockQ);
     // Округлення ВГОРУ: закупити 0,13 упаковки/ампули неможливо, а недозамовити
     // гірше, ніж узяти на одиницю більше. Бюджет рахується вже від цілого
@@ -6305,7 +6369,26 @@ function _demandDirChips(r) {
   return `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;">${chips}</div>`;
 }
 
+// Режим пошуку в потребі: за назвою або лише за МНН (укр/лат).
+let _demandSearchMode = "name";
+function setDemandSearchMode(mode) {
+  _demandSearchMode = mode === "mnn" ? "mnn" : "name";
+  const inp = document.getElementById("demand-search");
+  if (inp) inp.placeholder = _demandSearchMode === "mnn"
+    ? "Введіть МНН (укр або лат)..." : "Введіть назву препарату...";
+  renderDemand();
+}
+function _demandSyncModeBtns() {
+  // Стан кнопок відновлюємо щоразу: setFilter() на інших екранах знімає
+  // .active з усіх .filter-btn у документі, включно з цими.
+  const n = document.getElementById("demand-mode-name");
+  const m = document.getElementById("demand-mode-mnn");
+  if (n) n.classList.toggle("active", _demandSearchMode === "name");
+  if (m) m.classList.toggle("active", _demandSearchMode === "mnn");
+}
+
 function renderDemand() {
+  _demandSyncModeBtns();
   document.getElementById("demand-scope").textContent = _demandScopeLabel;
   const rows = _demandComputed();
   const totalBudget = rows.reduce((s, r) => s + r.budget, 0);
