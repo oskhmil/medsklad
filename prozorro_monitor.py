@@ -461,6 +461,24 @@ def item_codes(t):
 _drop_log = []
 
 
+# Статуси, після яких закупівля вже не змінюється — лише їх беремо з кешу.
+FINAL_TENDER_STATUSES = {"complete", "cancelled", "unsuccessful"}
+
+
+def _same_but_date(a, b):
+    """Чи однакові два знімки закупівлі, якщо не зважати на dateModified
+    і на позначки "resolved", які mark_resolved() додає вже після розбору."""
+    def strip(x):
+        y = {k: v for k, v in x.items() if k not in ("dateModified", "resolved")}
+        y["items"] = [{k: v for k, v in (i or {}).items() if k != "resolved"}
+                      for i in (x.get("items") or [])]
+        return json.dumps(y, ensure_ascii=False, sort_keys=True)
+    try:
+        return strip(a) == strip(b)
+    except Exception:
+        return False
+
+
 def parse_tender(t, meta=None):
     """Плоский опис закупівлі: позиції зі статусами лотів."""
     edr = entity_edrpou(t)
@@ -960,6 +978,7 @@ def main():
     stubs = 0
     archive = state.get("archive") or {}
     archived_skipped = 0
+    refreshed_same = 0
 
     for tid in sorted(known, key=lambda k: known.get(k) or '', reverse=True):
         # Закупівля, яку ми вже відпрацювали й забули: якщо пошук показує ту саму
@@ -970,12 +989,17 @@ def main():
             continue
         newer = discovered.get(tid, "")
         cached = state.get("tenders", {}).get(tid, {}).get("dateModified", "")
-        if newer and cached and newer <= cached and tid in state.get("tenders", {}):
-            snap = state["tenders"][tid].get("snapshot")
-            if snap:
-                parsed.append(snap)
-                skipped += 1
-                continue
+        snap = (state.get("tenders", {}).get(tid) or {}).get("snapshot")
+        # Дата з пошуку НЕ відображає зміни кваліфікації: відхилення переможця
+        # і нова нагорода наступному учаснику її не зсувають. Через це
+        # UA-2026-08-21-008097-a місяць показувала відхилену ОПТІМА-ФАРМ.
+        # Тож кешу віримо лише для завершених закупівель; незавершені
+        # перечитуємо щоразу (їх кілька десятків — це секунди).
+        final = bool(snap) and snap.get("status") in FINAL_TENDER_STATUSES
+        if final and newer and cached and newer <= cached:
+            parsed.append(snap)
+            skipped += 1
+            continue
         resp = fetch_tender(tid)
         if resp is None:
             errors += 1
@@ -1004,10 +1028,17 @@ def main():
         if not (t.get("items") or []) and (t.get("lots") or []):
             probe_items_endpoint(tid)
         p = parse_tender(t, meta)
+        if p and snap and _same_but_date(p, snap):
+            # Нічого по суті не змінилось — лишаємо старий знімок разом зі
+            # старою датою, інакше dateModified, що оновлюється при кожному
+            # читанні, давав би коміт procurement.json щогодини.
+            p = snap
+            refreshed_same += 1
         if p:
             parsed.append(p)
         time.sleep(0.25)
 
+    log(f"  перечитано незавершених без змін: {refreshed_same}")
     log(f"  завантажено: {fetched}, з кешу: {skipped}, з архіву пропущено: {archived_skipped},"
         f" помилок: {errors}, порожніх: {stubs}")
     log(f"  підходять під фільтр: {len(parsed)}")
