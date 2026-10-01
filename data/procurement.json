@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-01T09:53:45.295348+00:00",
+ "generated": "2026-10-01T15:39:39.040922+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-01T09:53:45.295348+00:00",
-  "expected": 1492,
-  "seen": 1492,
-  "tenders": 502,
+  "checked": "2026-10-01T15:39:39.040922+00:00",
+  "expected": 1493,
+  "seen": 1493,
+  "tenders": 503,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,55 +14,96 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-08-007509-a",
-   "tenderID": "UA-2026-09-08-007509-a",
-   "title": "Вироби медичного призначення",
-   "date": "2026-09-28T10:00:00+03:00",
-   "dateModified": "2026-10-01T12:29:50.339080+03:00",
+   "id": "UA-2026-10-01-010008-a",
+   "tenderID": "UA-2026-10-01-010008-a",
+   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
+   "date": "2026-10-17T09:00:00+03:00",
+   "dateModified": "2026-10-01T15:54:00.828194+03:00",
    "method": "aboveThreshold",
-   "status": "active.awarded",
+   "status": "active.tendering",
    "contractEnd": null,
-   "amount": 1122000,
+   "amount": 477102.8,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-01-010008-a",
    "counts": {
     "signed": 0,
-    "progress": 3,
+    "progress": 2,
     "failed": 0
    },
    "items": [
     {
-     "name": "Датчик тиску одноканальний",
-     "qty": 150,
+     "name": "Операційний стіл",
+     "qty": 1,
      "unit": "штука",
-     "status": "Переможець",
-     "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
+     "status": "В процесі",
+     "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "lot": "54f2f25a2f3948948e9af58c11ad611f"
     },
     {
-     "name": "Датчик тиску одноканальний",
-     "qty": 150,
+     "name": "Гідравлічне медичне крісло",
+     "qty": 1,
      "unit": "штука",
-     "status": "Переможець",
-     "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
+     "status": "В процесі",
+     "supplier": null,
      "amount": null,
      "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
-    },
-    {
-     "name": "Латка серцево-судинна",
-     "qty": 40,
-     "unit": "штука",
-     "status": "Переможець",
-     "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "lot": "54f2f25a2f3948948e9af58c11ad611f"
     }
    ]
+  },
+  {
+   "amount": 1122000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
+   "date": "2026-09-28T10:00:00+03:00",
+   "dateModified": "2026-10-01T12:29:50.339080+03:00",
+   "group": "Матеріали",
+   "id": "UA-2026-09-08-007509-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
+     "name": "Датчик тиску одноканальний",
+     "qty": 150,
+     "status": "Переможець",
+     "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
+     "name": "Датчик тиску одноканальний",
+     "qty": 150,
+     "status": "Переможець",
+     "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
+     "name": "Латка серцево-судинна",
+     "qty": 40,
+     "status": "Переможець",
+     "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-08-007509-a",
+   "title": "Вироби медичного призначення",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a"
   },
   {
    "amount": 5400,
@@ -137,66 +178,66 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013482-a"
   },
   {
-   "id": "UA-2026-09-21-015132-a",
-   "tenderID": "UA-2026-09-21-015132-a",
-   "title": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
+   "amount": 792870,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33620000-2",
    "date": "2026-09-30T22:57:30.262166+03:00",
    "dateModified": "2026-09-30T22:57:30.262166+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 792870,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015132-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-21-015132-a",
    "items": [
     {
+     "amount": 792870,
+     "lot": null,
      "name": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
      "qty": 1300,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 792870,
-     "unitPrice": 609.9,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 609.9
     }
-   ]
-  },
-  {
-   "id": "UA-2026-09-21-015184-a",
-   "tenderID": "UA-2026-09-21-015184-a",
-   "title": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
-   "date": "2026-09-30T22:53:06.492787+03:00",
-   "dateModified": "2026-09-30T22:53:06.492787+03:00",
+   ],
    "method": "priceQuotation",
    "status": "complete",
-   "contractEnd": null,
+   "tenderID": "UA-2026-09-21-015132-a",
+   "title": "Еритропоетин альфа, розчин для ін'єкцій, 3000 МО, по 1 мл, шприц",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015132-a"
+  },
+  {
    "amount": 932834.56,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015184-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 1,
+    "failed": 0,
     "progress": 0,
-    "failed": 0
+    "signed": 1
    },
+   "cpv": "33690000-3",
+   "date": "2026-09-30T22:53:06.492787+03:00",
+   "dateModified": "2026-09-30T22:53:06.492787+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-21-015184-a",
    "items": [
     {
+     "amount": 932834.56,
+     "lot": null,
      "name": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
      "qty": 4448,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 932834.56,
-     "unitPrice": 209.72,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 209.72
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-21-015184-a",
+   "title": "Натрію гідрокарбонат розчин для інфузій 42 мг/мл 200 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-21-015184-a"
   },
   {
    "amount": 425416.67,
@@ -240,106 +281,106 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a"
   },
   {
-   "id": "UA-2026-09-07-000966-a",
-   "tenderID": "UA-2026-09-07-000966-a",
-   "title": "Медичне обладнання",
+   "amount": 6460429,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33190000-8",
    "date": "2026-09-25T10:00:00+03:00",
    "dateModified": "2026-09-30T11:52:21.123621+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 6460429,
    "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-000966-a",
-   "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
-   },
+   "id": "UA-2026-09-07-000966-a",
    "items": [
     {
+     "amount": null,
+     "lot": "e10666908827410ea17d3d8ccb6d5901",
      "name": "Монітор пацієнта",
      "qty": 24,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "e10666908827410ea17d3d8ccb6d5901"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "e10666908827410ea17d3d8ccb6d5901",
      "name": "Інфузійна стійка для звичайного догляду",
      "qty": 60,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "e10666908827410ea17d3d8ccb6d5901"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "e10666908827410ea17d3d8ccb6d5901",
      "name": "Стійка інфузійна мобільна для звичайного догляду",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "e10666908827410ea17d3d8ccb6d5901"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "e10666908827410ea17d3d8ccb6d5901",
      "name": "Шприцевий інфузійний насос",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "e10666908827410ea17d3d8ccb6d5901"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-09-11-011784-a",
-   "tenderID": "UA-2026-09-11-011784-a",
-   "title": "Антитіла \nКод за НК 024:2023/031:2024   57515 - Пухлинний білок p53 IVD (діагностика in vitro), антитіла/w0102030124- Пухлинний антиген p16; 62839 - Pms2, білок IVD (діагностика in vitro), антитіла/W0103080103 АНТИТІЛА ДЛЯ ВИЗНАЧЕННЯ ТИПУ ЛІМФОМИ (КРІМ ВИЗНАЧЕННЯ ТИПУ В І Т-КЛІТИН",
-   "date": "2026-09-28T15:24:00+03:00",
-   "dateModified": "2026-09-30T10:01:37.137295+03:00",
+   ],
    "method": "aboveThreshold",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-09-07-000966-a",
+   "title": "Медичне обладнання",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-000966-a"
+  },
+  {
    "amount": 16151.46,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-11-011784-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 2,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33690000-3",
+   "date": "2026-09-28T15:24:00+03:00",
+   "dateModified": "2026-09-30T10:01:37.137295+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-11-011784-a",
    "items": [
     {
+     "amount": null,
+     "lot": "37284b0ab3ca4fe18544cfda9009472e",
      "name": "Антитіло до p53, 7 мл",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ІГХ ДІАГНОСТИКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "37284b0ab3ca4fe18544cfda9009472e"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "37284b0ab3ca4fe18544cfda9009472e",
      "name": "Антитіло до PMS2, 7 мл",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ІГХ ДІАГНОСТИКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "37284b0ab3ca4fe18544cfda9009472e"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-11-011784-a",
+   "title": "Антитіла \nКод за НК 024:2023/031:2024   57515 - Пухлинний білок p53 IVD (діагностика in vitro), антитіла/w0102030124- Пухлинний антиген p16; 62839 - Pms2, білок IVD (діагностика in vitro), антитіла/W0103080103 АНТИТІЛА ДЛЯ ВИЗНАЧЕННЯ ТИПУ ЛІМФОМИ (КРІМ ВИЗНАЧЕННЯ ТИПУ В І Т-КЛІТИН",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-11-011784-a"
   },
   {
    "amount": 500140.19,
@@ -373,126 +414,126 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-25-006204-a"
   },
   {
-   "id": "UA-2026-09-04-013369-a",
-   "tenderID": "UA-2026-09-04-013369-a",
-   "title": "Голки епідуральні, канюлі для аспірації",
+   "amount": 635000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-09-25T09:00:00+03:00",
    "dateModified": "2026-09-29T12:44:02.503766+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 635000,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013369-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
+   "id": "UA-2026-09-04-013369-a",
    "items": [
     {
+     "amount": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807",
      "name": "Голка епідуральна",
      "qty": 850,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФОП \"ГАВРІЛЬЧЕНКО ТЕТЯНА ОЛЕКСАНДРІВНА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807",
      "name": "Канюля для аспірації з повітряним фільтром",
      "qty": 2000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФОП \"ГАВРІЛЬЧЕНКО ТЕТЯНА ОЛЕКСАНДРІВНА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "ab9e2380246b44d1ad4d5d2036ec0807",
      "name": "Канюля для аспірації з повітряним та рідинним фільтрами",
      "qty": 1500,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФОП \"ГАВРІЛЬЧЕНКО ТЕТЯНА ОЛЕКСАНДРІВНА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "ab9e2380246b44d1ad4d5d2036ec0807"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-09-04-010141-a",
-   "tenderID": "UA-2026-09-04-010141-a",
-   "title": "Інфузійні насоси",
-   "date": "2026-09-24T09:00:00+03:00",
-   "dateModified": "2026-09-29T09:57:10.167119+03:00",
+   ],
    "method": "aboveThreshold",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-09-04-013369-a",
+   "title": "Голки епідуральні, канюлі для аспірації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-013369-a"
+  },
+  {
    "amount": 16397338,
-   "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-010141-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 5,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33190000-8",
+   "date": "2026-09-24T09:00:00+03:00",
+   "dateModified": "2026-09-29T09:57:10.167119+03:00",
+   "group": "Матеріали",
+   "id": "UA-2026-09-04-010141-a",
    "items": [
     {
+     "amount": null,
+     "lot": "f5276035f9f34df297459d70be8389ac",
      "name": "шприцева помпа",
      "qty": 20,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"МЕДХОЛДІНГ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "f5276035f9f34df297459d70be8389ac",
      "name": "помпа ентерального харчування",
      "qty": 70,
-     "unit": "комплект",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"МЕДХОЛДІНГ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
+     "unit": "комплект",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "f5276035f9f34df297459d70be8389ac",
      "name": "шприцевий насос",
      "qty": 170,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"МЕДХОЛДІНГ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "f5276035f9f34df297459d70be8389ac",
      "name": "волюметричний насос",
      "qty": 191,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"МЕДХОЛДІНГ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "f5276035f9f34df297459d70be8389ac",
      "name": "шприцевий інфузійний насос",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"МЕДХОЛДІНГ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f5276035f9f34df297459d70be8389ac"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-04-010141-a",
+   "title": "Інфузійні насоси",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-010141-a"
   },
   {
    "amount": 4394775,
@@ -698,176 +739,176 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013684-a"
   },
   {
-   "id": "UA-2026-09-03-014988-a",
-   "tenderID": "UA-2026-09-03-014988-a",
-   "title": "Медичне обладнання \n(Код за ДК 021:2015: 33190000-8 Медичне обладнання та вироби медичного призначення різні, код за НК 031:2024: Y091203 СТІЛЬЦІ, ТУАЛЕТ І ДУШ , V0807 ПРОТИПРОЛЕЖНЕВІ МЕДИЧНІ МАТРАЦИ, V0804 ОБЛАДНАННЯ ДЛЯ ПЕРЕМІЩЕННЯ ПАЦІЄНТІВ, V0899 МЕДИЧНЕ ДОПОМІЖНЕ ОБЛАДНАННЯ – ІНШЕ, V0899 МЕДИЧНЕ ДОПОМІЖНЕ ОБЛАДНАННЯ – ІНШЕ, Z12030202 - ПРИСТРОЇ ДЛЯ ВВЕДЕННЯ, ЗБОРУ Й ЗАГОТІВЛІ - ПРИСТРОЇ ДЛЯ ЗБОРУ РІДИН ПІД ЧАС ОПЕРАЦІЇ – ІНШЕ, код за НК 024:2023: 40539 Крісло-туалет, 47476 Надувний протипролежневий матрац, 31163 Каталка з положенням лежачи адаптаційна, 10531 Приліжкова шафа, 13959 Стіл для хірургічних інструментів, 44809 Вакуумний регулятор для аспірації загального призначення)",
+   "amount": 6240652.39,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 6,
+    "signed": 0
+   },
+   "cpv": "33190000-8",
    "date": "2026-09-23T09:00:00+03:00",
    "dateModified": "2026-09-28T19:55:02.246351+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 6240652.39,
    "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-014988-a",
-   "counts": {
-    "signed": 0,
-    "progress": 6,
-    "failed": 0
-   },
+   "id": "UA-2026-09-03-014988-a",
    "items": [
     {
+     "amount": null,
+     "lot": "514729b6995347cb98333f2dff01220b",
      "name": "Розбірний стілець-туалет",
      "qty": 13,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "514729b6995347cb98333f2dff01220b"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "514729b6995347cb98333f2dff01220b",
      "name": "Протипролежневий матрац",
      "qty": 75,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "514729b6995347cb98333f2dff01220b"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "514729b6995347cb98333f2dff01220b",
      "name": "Багатофункціональна каталка для невідкладних станів",
      "qty": 10,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "514729b6995347cb98333f2dff01220b"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "514729b6995347cb98333f2dff01220b",
      "name": "Приліжкова шафа (тумбочка)",
      "qty": 70,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "514729b6995347cb98333f2dff01220b"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "514729b6995347cb98333f2dff01220b",
      "name": "Стіл медичний маніпуляційний",
      "qty": 7,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "514729b6995347cb98333f2dff01220b"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "514729b6995347cb98333f2dff01220b",
      "name": "Вакуумний регулятор для аспірації загального призначення",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "514729b6995347cb98333f2dff01220b"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-03-014988-a",
+   "title": "Медичне обладнання \n(Код за ДК 021:2015: 33190000-8 Медичне обладнання та вироби медичного призначення різні, код за НК 031:2024: Y091203 СТІЛЬЦІ, ТУАЛЕТ І ДУШ , V0807 ПРОТИПРОЛЕЖНЕВІ МЕДИЧНІ МАТРАЦИ, V0804 ОБЛАДНАННЯ ДЛЯ ПЕРЕМІЩЕННЯ ПАЦІЄНТІВ, V0899 МЕДИЧНЕ ДОПОМІЖНЕ ОБЛАДНАННЯ – ІНШЕ, V0899 МЕДИЧНЕ ДОПОМІЖНЕ ОБЛАДНАННЯ – ІНШЕ, Z12030202 - ПРИСТРОЇ ДЛЯ ВВЕДЕННЯ, ЗБОРУ Й ЗАГОТІВЛІ - ПРИСТРОЇ ДЛЯ ЗБОРУ РІДИН ПІД ЧАС ОПЕРАЦІЇ – ІНШЕ, код за НК 024:2023: 40539 Крісло-туалет, 47476 Надувний протипролежневий матрац, 31163 Каталка з положенням лежачи адаптаційна, 10531 Приліжкова шафа, 13959 Стіл для хірургічних інструментів, 44809 Вакуумний регулятор для аспірації загального призначення)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-014988-a"
   },
   {
-   "id": "UA-2026-09-03-012697-a",
-   "tenderID": "UA-2026-09-03-012697-a",
-   "title": "Медичні матеріали",
+   "amount": 2668500,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 7
+   },
+   "cpv": "33140000-3",
    "date": "2026-09-28T10:21:35.550179+03:00",
    "dateModified": "2026-09-28T10:21:35.550179+03:00",
-   "method": "aboveThreshold",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 2668500,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-012697-a",
-   "counts": {
-    "signed": 7,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-03-012697-a",
    "items": [
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "Комплект для артеріальної катетериза-ції 20 Га (Ga). X 1-3/4’’ (4,45 см (cm))",
      "qty": 300,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "Ендобронхіальний блокатор",
      "qty": 150,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "Плівка хірургічна антимікробна, 56см*45см",
      "qty": 1150,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "Пов'язка неткана  агдезивна на поліуретановій основі  з подушеч-кою 9х15 см",
      "qty": 1000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "ЕКГ електроди одноразові рентгенпрозорі",
      "qty": 600,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "Простирадло з спанбонду в рулоні  0,8 * 100м",
      "qty": 1000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080",
      "name": "Тепловологообмінник для використання з трахеостомічною трубкою",
      "qty": 1000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РІВНЕМЕДТЕХНІКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "aa1ef7db51f84b95a2cc5b99d93b4080"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-09-03-012697-a",
+   "title": "Медичні матеріали",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-012697-a"
   },
   {
    "amount": 2140000,
@@ -921,35 +962,35 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-009019-a"
   },
   {
-   "id": "UA-2026-08-21-008097-a",
-   "tenderID": "UA-2026-08-21-008097-a",
-   "title": "Маніт розчин для інфузій 150 мг/мл 200мл",
+   "amount": 818550,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-25T15:12:38.226862+03:00",
    "dateModified": "2026-09-25T15:12:38.226862+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 818550,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-008097-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-08-21-008097-a",
    "items": [
     {
+     "amount": 818550,
+     "lot": null,
      "name": "Маніт розчин для інфузій 150 мг/мл 200мл",
      "qty": 9000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 818550,
-     "unitPrice": 90.95,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 90.95
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-08-21-008097-a",
+   "title": "Маніт розчин для інфузій 150 мг/мл 200мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-008097-a"
   },
   {
    "amount": 180000,
@@ -983,319 +1024,319 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-23-008060-a"
   },
   {
-   "id": "UA-2026-09-03-013597-a",
-   "tenderID": "UA-2026-09-03-013597-a",
-   "title": "Обладнання для анестезії та реанімації\n(ДК 021:2015: 33170000-2 — Обладнання для анестезії та реанімації, НК 024:2023 – 42411 - Апарат штучної вентиляції легенів для інтенсивної терапії неонатальний / для дорослих, НК 031:2024 - R060202 Системи подачі зволоженого кисню, НК 024:2023 - 36685 Столик реанімації для немовлят, НК 031:2024 - Z12080405 Ліжка неонатальної реанімації)",
+   "amount": 3706600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-22T10:00:00+03:00",
    "dateModified": "2026-09-23T16:39:53.165867+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 3706600,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-013597-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-03-013597-a",
    "items": [
     {
+     "amount": null,
+     "lot": "91995a5ad4ad4681a2de1df152f6ade0",
      "name": "Апарат подачі киснево-повітряної суміші з зволоженням",
      "qty": 7,
-     "unit": "комплект",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"УКР ДІАГНОСТИКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "91995a5ad4ad4681a2de1df152f6ade0"
+     "unit": "комплект",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "91995a5ad4ad4681a2de1df152f6ade0",
      "name": "Реанімаційна система для новонароджених",
      "qty": 3,
-     "unit": "комплект",
      "status": "Переможець",
      "supplier": "Товариство з обмеженою відповідальністю \"УКР ДІАГНОСТИКА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "91995a5ad4ad4681a2de1df152f6ade0"
+     "unit": "комплект",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-03-013597-a",
+   "title": "Обладнання для анестезії та реанімації\n(ДК 021:2015: 33170000-2 — Обладнання для анестезії та реанімації, НК 024:2023 – 42411 - Апарат штучної вентиляції легенів для інтенсивної терапії неонатальний / для дорослих, НК 031:2024 - R060202 Системи подачі зволоженого кисню, НК 024:2023 - 36685 Столик реанімації для немовлят, НК 031:2024 - Z12080405 Ліжка неонатальної реанімації)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-013597-a"
   },
   {
-   "id": "UA-2026-09-09-015410-a",
-   "tenderID": "UA-2026-09-09-015410-a",
-   "title": "Медичні матеріали",
+   "amount": 3870809.7,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 11
+   },
+   "cpv": "33141000-0",
    "date": "2026-09-23T15:08:43.164047+03:00",
    "dateModified": "2026-09-23T15:08:43.164047+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 3870809.7,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-015410-a",
-   "counts": {
-    "signed": 11,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-09-015410-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Для хірургічних операцій, одноразове, стерильне, матеріал виготовлення СМС, без адгезивного операційного поля (отвору), розмір 110-130х70-90 см, щільність матеріалу від 35 г/м²",
      "qty": 10000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Хірургічне для урології, одноразове, стерильне, матеріал виготовлення СМС,з адгезивним операційним полем (отвором), розмір 250-270х150-170 см, щільність матеріалу від 35 г/м²",
      "qty": 500,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Комплект покриття операційного та комплекту одягу для судинної хірургії, к-ть покриттів: 3-4 шт, з адгезив.краєм і отвором, щільність покритя:30-35 г/м2, в комплекті:халат,чохол( 1-2шт), к-ть одягу: 1-2 шт",
      "qty": 1200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Для хірургічних операцій, одноразове, стерильне, матеріал виготовлення СМС, без адгезивного операційного поля (отвору), розмір 250-270х150-170 см, щільність матеріалу від 35 г/м²",
      "qty": 8760,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття хірургічне, одноразове, стерильне, без адгезивного операційного поля (отвору), щільність матеріалу 170-180 г/м², 120 х 80 см",
      "qty": 700,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Комплекти операційного покриття: вид: прямокутне, призначення: комплект хірургічний урологічний, довжина: 250-270см, ширина: 150-170см, матеріал: СММС, адгез. край, комплектація: халат хірургічний, фартух медичний, бахіли, марлеві серветки, стерильно",
      "qty": 100,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Комплекти операційного покриття: вид: прямокутне, призначення:  хірургічний урологічний, довжина: 190-210 см, ширина: 70-90 см, адгез. край, комплектація: чохол, халат хірургічний, адгез. стрічка, стерильно",
      "qty": 100,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття операційне: призначення: хірургічне для лапароскопії, матеріал: СМС, стерильно, довжина: 310-330 см, ширина: 190-210 см, адгезивного операційного поля (отвору), щільність матеріалу: 30-40 г/м², одноразове",
      "qty": 120,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Комплект покриття операційного та комплекту одягу офтальмологічних операцій, к-ть покриттів:2-3шт, щільність покритя:30-35 г/м2, в комплекті: маска,халат, шапочка, к-ть одягу: 1-2 шт, к-ть пар бахіл:1-2",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Комплекти одягу медичного: хірургічний, халат захисний, фартух медичний, розмір: L (50-52), матеріал: СМС+спанбонд ламінований, спанбонд ламінований, маска медична, маска медична з захисним екраном, шапочка-берет, бахіли, нарукавники непромокальні",
      "qty": 50,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Комплект покриття та одягу  нейрохірургічний, покриття (10-14 шт) з адгез. краєм,щільність:30-35г/м2, вкомплекті:халат, маска, шапочка, бічна кишеня( 1-2), адгез.стрічка (1-2), к-ть одягу 3-5 шт, к-ть бахіл 1-3 пари",
      "qty": 500,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ «Фірма «Технокомплекс»",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-09-015410-a",
+   "title": "Медичні матеріали",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-015410-a"
   },
   {
-   "id": "UA-2026-09-10-013519-a",
-   "tenderID": "UA-2026-09-10-013519-a",
-   "title": "Рулон марлевий 0,9 x 1000,00 м.",
+   "amount": 697440,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33141110-4",
    "date": "2026-09-23T14:59:12.403624+03:00",
    "dateModified": "2026-09-23T14:59:12.403624+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 697440,
    "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-013519-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-10-013519-a",
    "items": [
     {
+     "amount": 697440,
+     "lot": null,
      "name": "Рулон марлевий 0,9 x 1000,00 м.",
      "qty": 80,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"СОФІ-МЕД\"",
-     "amount": 697440,
-     "unitPrice": 8718.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 8718.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-10-013519-a",
+   "title": "Рулон марлевий 0,9 x 1000,00 м.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-013519-a"
   },
   {
-   "id": "UA-2026-09-10-012411-a",
-   "tenderID": "UA-2026-09-10-012411-a",
-   "title": "Рукавички медичні хірургічні",
+   "amount": 412067.7,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 6
+   },
+   "cpv": "33141000-0",
    "date": "2026-09-23T14:51:55.280344+03:00",
    "dateModified": "2026-09-23T14:51:55.280344+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 412067.7,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-012411-a",
-   "counts": {
-    "signed": 6,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-10-012411-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 6.0",
      "qty": 500,
-     "unit": "пара",
      "status": "Підписано",
      "supplier": "ТОВ \"ІГАР\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 6.5",
      "qty": 6000,
-     "unit": "пара",
      "status": "Підписано",
      "supplier": "ТОВ \"ІГАР\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 7",
      "qty": 10000,
-     "unit": "пара",
      "status": "Підписано",
      "supplier": "ТОВ \"ІГАР\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 7.5",
      "qty": 18000,
-     "unit": "пара",
      "status": "Підписано",
      "supplier": "ТОВ \"ІГАР\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 8",
      "qty": 10000,
-     "unit": "пара",
      "status": "Підписано",
      "supplier": "ТОВ \"ІГАР\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 8.5",
      "qty": 5000,
-     "unit": "пара",
      "status": "Підписано",
      "supplier": "ТОВ \"ІГАР\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-09-10-011773-a",
-   "tenderID": "UA-2026-09-10-011773-a",
-   "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
-   "date": "2026-09-23T14:25:44.420234+03:00",
-   "dateModified": "2026-09-23T14:25:44.420234+03:00",
+   ],
    "method": "priceQuotation",
    "status": "complete",
-   "contractEnd": null,
+   "tenderID": "UA-2026-09-10-012411-a",
+   "title": "Рукавички медичні хірургічні",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-012411-a"
+  },
+  {
    "amount": 4001800,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 1,
+    "failed": 0,
     "progress": 0,
-    "failed": 0
+    "signed": 1
    },
+   "cpv": "33620000-2",
+   "date": "2026-09-23T14:25:44.420234+03:00",
+   "dateModified": "2026-09-23T14:25:44.420234+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-09-10-011773-a",
    "items": [
     {
+     "amount": 4001800,
+     "lot": null,
      "name": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
      "qty": 4000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "amount": 4001800,
-     "unitPrice": 1000.45,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 1000.45
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-10-011773-a",
+   "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a"
   },
   {
    "amount": 1194140,
@@ -1760,117 +1801,117 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-22-006746-a"
   },
   {
-   "id": "UA-2026-09-03-009277-a",
-   "tenderID": "UA-2026-09-03-009277-a",
-   "title": "Лабораторні реактиви \nКод НК 024:2023 62225 - Ємність для лабораторного аналізатора ІВД",
+   "amount": 12173,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-19T09:00:00+03:00",
    "dateModified": "2026-09-21T12:45:14.587264+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 12173,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-009277-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-09-03-009277-a",
    "items": [
     {
+     "amount": null,
+     "lot": "8f6f21441a9145bfa91d3d6c63477b20",
      "name": "LAB EQUIP, TEST TUBE, 12 х 75 mm, POLYPROPYLENE (250/PK)   Тестові пробірки ЛАБ ЕКВІП, 12 x 75 мм (mm), поліпропілен (250шт/упак)",
      "qty": 7,
-     "unit": "пачка",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": 1739.0,
-     "lot": "8f6f21441a9145bfa91d3d6c63477b20"
+     "unit": "пачка",
+     "unitPrice": 1739.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-03-009277-a",
+   "title": "Лабораторні реактиви \nКод НК 024:2023 62225 - Ємність для лабораторного аналізатора ІВД",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-009277-a"
   },
   {
-   "id": "UA-2026-09-10-014189-a",
-   "tenderID": "UA-2026-09-10-014189-a",
-   "title": "Обладнання для анестезії та реанімації",
+   "amount": 1357000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-15T08:00:00+03:00",
    "dateModified": "2026-09-21T12:29:51.636903+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1357000,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-014189-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-10-014189-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Набір для епідуральної анестезії, одноразовий, для дорослих, стерильний, атравматичний, стандартний тип, без шприца, без додаткових голок, катетер 20G з 6 отворами, голка 18G, з фільтром, стандартний кінчик катетера",
      "qty": 50,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Набір для епідуральної анестезії, для дорослих, катетер з 3 боковими отворами, стандартним кінчиком, голка 18G, катетер 20G",
      "qty": 2000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-10-014189-a",
+   "title": "Обладнання для анестезії та реанімації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-014189-a"
   },
   {
-   "id": "UA-2026-09-08-014375-a",
-   "tenderID": "UA-2026-09-08-014375-a",
-   "title": "Обладнання для анестезії та реанімації",
+   "amount": 948448,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 2
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-21T10:19:30.142274+03:00",
    "dateModified": "2026-09-21T10:19:30.142274+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 948448,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-014375-a",
-   "counts": {
-    "signed": 2,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-08-014375-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Контур дихальний неонатальний, стерильний, одноразовий, тип трубки: гофрована, довжина: 1.6 м, діаметр зовнішній: 15 мм, тип з'єднувача: прямий, з вологозбірником, захисним тест-ковпачоком, додатковим шлангом, проводом обігріву, камерою зволожувача",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Дихальний контур для анестезії, гофрований, поліетилен, 1,6 м, дорослий, одноразовий, Ø22 мм, з вологозбірником, тест-ковпачком, шлангом 0,8 м, прямий з’єднувач, порт Luer Lock, конектори 22F/22М/15F, без мішка, n-CPAP і обігріву",
      "qty": 1000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"АЗАРІС ГРУП\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-08-014375-a",
+   "title": "Обладнання для анестезії та реанімації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-014375-a"
   },
   {
    "amount": 86470.98,
@@ -1934,175 +1975,175 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-015338-a"
   },
   {
-   "id": "UA-2026-09-01-009836-a",
-   "tenderID": "UA-2026-09-01-009836-a",
-   "title": "Лабораторні реагенти",
+   "amount": 1114220,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 15,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-17T09:00:00+03:00",
    "dateModified": "2026-09-21T09:46:23.631962+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1114220,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-009836-a",
-   "counts": {
-    "signed": 0,
-    "progress": 15,
-    "failed": 0
-   },
+   "id": "UA-2026-09-01-009836-a",
    "items": [
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "12-колірний реагент, що містить антитіла проти: Kappa/CD8,\nLambda/CD4, CD19, CD56, CD10, CD34, CD5, CD20, CD3, CD45 (25 визначень)",
      "qty": 2,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів В-лімфоцитів: Kappa, Lambda, CD10, CD5, CD200, CD34, CD38, CD20, CD19, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів Т-лімфоцитів: TCRγδ, CD4, CD2, CD56, CD5, CD34, CD7, CD8, CD3, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD16, CD7, CD10, CD13, CD64, CD34, CD14, HLA-DR, CD11b, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "10-колірний реагент, що містить антитіла проти антигенів мієлоїдних клітин: CD15, CD123, CD117, CD13, CD33, CD34, CD38, HLA-DR, CD19, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "7-колірний реагент, що містить антитіла проти: CD58, CD34, CD10, CD19, CD38, CD20, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "8-колірний реагент, що містить антитіла проти: CD81, CD27, CD19, CD200, CD138, CD56, CD38, CD45 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Контрольний реагент  патологічного рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Контрольний реагент  нормального рівня на 27 параметрів: Kappa, Lambda, CD5, CD200, CD38, CD20, CD19, CD45, TCRγδ, CD4, CD2, CD56, CD3, CD7, CD8, CD16, CD10, CD13, CD64, CD14, HLA-DR, CD11b, CD15, CD33, CD34, CD117 і CD123 (25 визначень)",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Частинки для компенсації сигналів флюоресценції  проточного цитометра",
      "qty": 1,
-     "unit": "паковання",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "паковання",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Фіксуючий розчин",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Лізуючий розчин (100 визначень)",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Лізуючий розчин з активною речовиною NH4Cl (100 визначень)",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Програмний інструмент для проточного цитометра з безстроковою ліцензією",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "88ee3bb728274edba7119e407bfc0b6c",
      "name": "Моноклональне антитіло проти CD45-PC7 (100 визначень)",
      "qty": 1,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ЮВІС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "88ee3bb728274edba7119e407bfc0b6c"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-01-009836-a",
+   "title": "Лабораторні реагенти",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-01-009836-a"
   },
   {
    "amount": 223630,
@@ -2258,65 +2299,65 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-27-005005-a"
   },
   {
-   "id": "UA-2026-09-09-014666-a",
-   "tenderID": "UA-2026-09-09-014666-a",
-   "title": "Обладнання для анестезії та реанімації",
+   "amount": 1578025.3,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 4
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-18T14:15:18.631378+03:00",
    "dateModified": "2026-09-18T14:15:18.631378+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 1578025.3,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-014666-a",
-   "counts": {
-    "signed": 4,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-09-014666-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Контур одноразовий, неонатальний, тип трубки: гофрована, довжина: 1.6 м, діаметр 15 мм, конектора до апарату: 9-11мм, конектора до пацієнта: 15F, з'єднувач: прямий, з портом Luer Lock, довжина додат. шлангу 0,6 м, з проводом обігріву",
      "qty": 80,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТОТАЛ-МЕДІКАЛ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Контури дихальні для анестезії: Гофрована, Поліетилен, Довжина 1.6 м, для дорослих, Діаметр зовнішній 22 мм, Довжина додаткового шлангу 0.8 м, Тип (вид) з'єднувача: Прямий, Порт Luer Lock, Діаметр конектора для під'єднання до апарату: 22F,",
      "qty": 1000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТОТАЛ-МЕДІКАЛ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Вірусо - бактеріальний фільтр дихальний для дорослих, одноразовий, електростатичний, 22F/15M|22M/15F, Luer Lock, Опір потоку см H₂O :1.2, приямий",
      "qty": 3000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТОТАЛ-МЕДІКАЛ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Вірусо - бактеріальний фільтр дихальний педіатричний, одноразовий, електростатичний, 22M/15F|22F/15M, Luer Lock, Опір потоку см H₂O :1.9, приямий",
      "qty": 3000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТОТАЛ-МЕДІКАЛ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-09-014666-a",
+   "title": "Обладнання для анестезії та реанімації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-014666-a"
   },
   {
    "amount": 8667,
@@ -2350,125 +2391,125 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-16-011334-a"
   },
   {
-   "id": "UA-2026-09-07-014377-a",
-   "tenderID": "UA-2026-09-07-014377-a",
-   "title": "Трубка ендотрахеальна",
+   "amount": 72018.49,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 10
+   },
+   "cpv": "33170000-2",
    "date": "2026-09-16T11:16:02.046380+03:00",
    "dateModified": "2026-09-16T11:16:02.046380+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 72018.49,
    "group": "Матеріали",
-   "cpv": "33170000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014377-a",
-   "counts": {
-    "signed": 10,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-07-014377-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 6.50 мм, З манжетою",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 5.00 мм, З манжетою",
      "qty": 300,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 3.00 мм, З манжетою",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Одноразова, Діаметр трубки: 3.50 мм, З манжетою",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Стерильна, Кількість використань: Одноразова, Діаметр трубки: 3.00 мм",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка ендотрахеальна: Стерильна, Кількість використань: Одноразова, Діаметр трубки: 3.50 мм",
      "qty": 200,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:3.5(O.D.:5.3) довжина 47 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 10,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:4(O.D.:5.9) довжина 54 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 20,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:4.5(O.D.:6.5) довжина 54 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 20,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Трубка трахеостомічна, I.D:5(O.D.:7) довжина 57 мм, з ПВХ, рентгеноконтрастна смуга по всій довжині, з рухливим фланцем, конектор для фіксації, стерильна, одноразова, без порту для надманжеточної аспірації, 1 манжета, не армована, без фенестрації",
      "qty": 20,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ІНТЕЛЛА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-09-07-014377-a",
+   "title": "Трубка ендотрахеальна",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-07-014377-a"
   },
   {
    "amount": 26190.22,
@@ -2946,45 +2987,45 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-26-012063-a"
   },
   {
-   "id": "UA-2026-09-09-001031-a",
-   "tenderID": "UA-2026-09-09-001031-a",
-   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "amount": 25600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-09-14T10:00:00+03:00",
    "dateModified": "2026-09-14T11:21:04.850285+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 25600,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-001031-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-09-001031-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер назальний кисневий, високопотоковий, для недоношених, без кисневої магістралі, назальні кінчики вигнуті",
      "qty": 40,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ВОК - Медіка Груп\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер назальний кисневий, високопотоковий, для новонароджених, без кисневої магістралі, назальні кінчики вигнуті",
      "qty": 40,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ВОК - Медіка Груп\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-09-09-001031-a",
+   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-001031-a"
   },
   {
    "amount": 6160761.68,
@@ -3072,16 +3113,16 @@
     }
    ],
    "method": "aboveThreshold",
-   "status": "cancelled",
-   "tenderID": "UA-2026-09-02-014174-a",
-   "title": "Медичне обладнання",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-02-014174-a",
    "resolved": {
     "count": 4,
     "of": 5,
     "d": "2026-09-07",
     "t": "UA-2026-09-07-000966-a"
-   }
+   },
+   "status": "cancelled",
+   "tenderID": "UA-2026-09-02-014174-a",
+   "title": "Медичне обладнання",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-02-014174-a"
   },
   {
    "amount": 3706600,
@@ -3129,16 +3170,16 @@
     }
    ],
    "method": "aboveThreshold",
-   "status": "cancelled",
-   "tenderID": "UA-2026-08-25-013611-a",
-   "title": "Обладнання для анестезії та реанімації",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-25-013611-a",
    "resolved": {
     "count": 2,
     "of": 2,
     "d": "2026-09-03",
     "t": "UA-2026-09-03-013597-a"
-   }
+   },
+   "status": "cancelled",
+   "tenderID": "UA-2026-08-25-013611-a",
+   "title": "Обладнання для анестезії та реанімації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-25-013611-a"
   },
   {
    "amount": 48060.75,
@@ -3643,35 +3684,35 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-04-012817-a"
   },
   {
-   "id": "UA-2026-08-31-011817-a",
-   "tenderID": "UA-2026-08-31-011817-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "amount": 50450,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-08T09:00:00+03:00",
    "dateModified": "2026-09-09T14:31:19.940448+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 50450,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-08-31-011817-a",
    "items": [
     {
+     "amount": null,
+     "lot": "a11c9c5569734b3780aa1089dacde87d",
      "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
      "qty": 1,
-     "unit": "набір",
      "status": "Переможець",
      "supplier": "ТОВ СПЕКТРОЛАБ",
-     "amount": null,
-     "unitPrice": 50450.0,
-     "lot": "a11c9c5569734b3780aa1089dacde87d"
+     "unit": "набір",
+     "unitPrice": 50450.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-08-31-011817-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
   },
   {
    "amount": 1637383.18,
