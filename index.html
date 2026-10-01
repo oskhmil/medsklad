@@ -1360,8 +1360,14 @@
     padding: 4px 6px;
     line-height: 1;
   }
-  #mic-btn.listening, #demand-mic-btn.listening {
+  #mic-btn.listening, #demand-mic-btn.listening, .voice-btn.listening {
     animation: micPulse 1s ease-in-out infinite;
+  }
+  .voice-btn {
+    position: absolute; right: 38px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; font-size: 16px;
+    cursor: pointer; padding: 4px 6px; line-height: 1;
   }
   #demand-mic-btn {
     position: absolute; right: 6px; top: 50%;
@@ -1663,7 +1669,8 @@
           <input id="proc-search" type="text" placeholder="Пошук по позиції або препарату..."
                  oninput="procOnSearch(this.value)"
                  style="width:100%;background:#2a3050;border:1.5px solid #4f8ef7;border-radius:12px;
-                        padding:10px 38px 10px 14px;color:#fff;font-size:14px;outline:none;">
+                        padding:10px 66px 10px 14px;color:#fff;font-size:14px;outline:none;">
+          <button id="proc-mic-btn" class="voice-btn" onclick="toggleProcMic()" title="Голосовий пошук">🎤</button>
           <span class="search-ico">🔍</span>
         </div>
 
@@ -2296,7 +2303,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.178";
+const APP_VERSION = "v.179";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4101,29 +4108,42 @@ function toggleMic() {
 
 // Голосовий пошук у «Річній потребі» (ТМО і всередині лікарні — один екран).
 // Окремий розпізнавач, щоб не чіпати логіку головного пошуку.
-let _demandMicRec = null;
-let _demandMicActive = false;
-function toggleDemandMic() {
-  const btn = document.getElementById("demand-mic-btn");
-  if (_demandMicActive) { try { _demandMicRec.stop(); } catch (e) {} return; }
+// Універсальний голосовий ввід для полів пошуку розділів. Один розпізнавач
+// на всі поля: повторний тап по активній кнопці зупиняє запис.
+let _voiceRec = null;
+let _voiceBtn = null;
+function toggleVoiceFor(inputId, btnId, onText) {
+  const btn = document.getElementById(btnId);
+  if (_voiceRec && _voiceBtn) {
+    const same = _voiceBtn === btn;
+    try { _voiceRec.stop(); } catch (e) {}
+    if (same) return;
+  }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { alert("Голосовий ввід не підтримується цим браузером."); return; }
-  _demandMicRec = new SR();
-  _demandMicRec.lang = "uk-UA";
-  _demandMicRec.interimResults = false;
-  _demandMicRec.maxAlternatives = 1;
-  const off = () => { _demandMicActive = false; btn.classList.remove("listening"); };
-  _demandMicRec.onstart = () => { _demandMicActive = true; btn.classList.add("listening"); };
-  _demandMicRec.onend = off;
-  _demandMicRec.onerror = off;
-  _demandMicRec.onresult = (ev) => {
+  const rec = new SR();
+  rec.lang = "uk-UA";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+  const off = () => {
+    btn.classList.remove("listening");
+    if (_voiceRec === rec) { _voiceRec = null; _voiceBtn = null; }
+  };
+  rec.onstart = () => btn.classList.add("listening");
+  rec.onend = off;
+  rec.onerror = off;
+  rec.onresult = (ev) => {
     const t = ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
     if (!t) return;
-    document.getElementById("demand-search").value = t.replace(/[.,!?]+$/g, "").trim();
-    renderDemand();
+    const v = t.replace(/[.,!?]+$/g, "").trim();
+    document.getElementById(inputId).value = v;
+    onText(v);
   };
-  try { _demandMicRec.start(); } catch (e) {}
+  _voiceRec = rec; _voiceBtn = btn;
+  try { rec.start(); } catch (e) { off(); }
 }
+function toggleDemandMic() { toggleVoiceFor("demand-search", "demand-mic-btn", () => renderDemand()); }
+function toggleProcMic()   { toggleVoiceFor("proc-search", "proc-mic-btn", v => procOnSearch(v)); }
 
 // ── 🔔 Спостерігач свіжих даних ──────────────────────────────────────────────
 // Крихітний Apps Script на Google-акаунті Остапа віддає дати останньої зміни
