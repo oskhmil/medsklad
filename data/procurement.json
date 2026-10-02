@@ -1,18 +1,80 @@
 {
- "generated": "2026-10-02T05:45:44.017545+00:00",
+ "generated": "2026-10-02T11:32:24.988038+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-02T05:45:44.017545+00:00",
-  "expected": 1493,
-  "seen": 1493,
-  "tenders": 503,
+  "checked": "2026-10-02T11:32:24.988038+00:00",
+  "expected": 1495,
+  "seen": 1495,
+  "tenders": 505,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-10-02-006445-a",
+   "tenderID": "UA-2026-10-02-006445-a",
+   "title": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+   "date": "2026-10-07T08:00:00+03:00",
+   "dateModified": "2026-10-02T13:16:09.290830+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1432710.28,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006445-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+     "qty": 2000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-02-006431-a",
+   "tenderID": "UA-2026-10-02-006431-a",
+   "title": "Підігріваюча камера для рідин",
+   "date": "2026-10-19T10:00:00+03:00",
+   "dateModified": "2026-10-02T13:15:25.289475+03:00",
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 2211275,
+   "group": "Матеріали",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006431-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Підігріваюча камера для рідин (НК 031:2024 A030105 - СИСТЕМИ НАГРІВАННЯ РІДИН)",
+     "qty": 11,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": 201025.0,
+     "lot": "b697124621ab4c51956e483330b66f83"
+    }
+   ]
+  },
   {
    "amount": 477102.8,
    "contractEnd": null,
@@ -168,7 +230,12 @@
      "status": "Не відбулось",
      "supplier": null,
      "unit": "штука",
-     "unitPrice": null
+     "unitPrice": null,
+     "resolved": {
+      "d": "2026-10-02",
+      "t": "UA-2026-10-02-006445-a",
+      "k": "pending"
+     }
     }
    ],
    "method": "priceQuotation",
