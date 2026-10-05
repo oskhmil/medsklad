@@ -1,18 +1,161 @@
 {
- "generated": "2026-10-05T07:11:05.092709+00:00",
+ "generated": "2026-10-05T16:08:40.705919+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-05T07:11:05.092709+00:00",
-  "expected": 1506,
-  "seen": 1506,
-  "tenders": 506,
+  "checked": "2026-10-05T16:08:40.705919+00:00",
+  "expected": 1499,
+  "seen": 1499,
+  "tenders": 509,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-10-05-012585-a",
+   "tenderID": "UA-2026-10-05-012585-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+   "date": "2026-10-08T09:00:00+03:00",
+   "dateModified": "2026-10-05T16:43:35.448648+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 2206160,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
+     "qty": 228,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+     "qty": 1960,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-05-011625-a",
+   "tenderID": "UA-2026-10-05-011625-a",
+   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "date": "2026-10-08T09:00:00+03:00",
+   "dateModified": "2026-10-05T16:12:37.848728+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 382874.21,
+   "group": "Ліки",
+   "cpv": "33630000-5",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a",
+   "counts": {
+    "signed": 0,
+    "progress": 4,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Спирт етиловий 96% 1000 мл.",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Спирт етиловий 96% 100 мл.",
+     "qty": 160,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Спирт етиловий 70% 100 мл.",
+     "qty": 10000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Спирт етиловий 96% 5000 мл.",
+     "qty": 20,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-05-010910-a",
+   "tenderID": "UA-2026-10-05-010910-a",
+   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
+   "date": "2026-10-08T08:00:00+03:00",
+   "dateModified": "2026-10-05T15:50:30.574991+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 2647880,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
+     "qty": 13000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
+     "qty": 133,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 1277729.8,
    "contractEnd": null,
