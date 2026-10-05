@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-05T16:08:40.705919+00:00",
+ "generated": "2026-10-05T22:47:57.632082+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-05T16:08:40.705919+00:00",
+  "checked": "2026-10-05T22:47:57.632082+00:00",
   "expected": 1499,
   "seen": 1499,
   "tenders": 509,
@@ -14,147 +14,147 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-05-012585-a",
-   "tenderID": "UA-2026-10-05-012585-a",
-   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+   "amount": 2206160,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-10-08T09:00:00+03:00",
    "dateModified": "2026-10-05T16:43:35.448648+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2206160,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-10-05-012585-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
      "qty": 228,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
      "qty": 1960,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-05-012585-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a"
   },
   {
-   "id": "UA-2026-10-05-011625-a",
-   "tenderID": "UA-2026-10-05-011625-a",
-   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "amount": 382874.21,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-10-08T09:00:00+03:00",
    "dateModified": "2026-10-05T16:12:37.848728+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 382874.21,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a",
-   "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
-   },
+   "id": "UA-2026-10-05-011625-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 1000 мл.",
      "qty": 300,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 100 мл.",
      "qty": 160,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 70% 100 мл.",
      "qty": 10000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 5000 мл.",
      "qty": 20,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-05-010910-a",
-   "tenderID": "UA-2026-10-05-010910-a",
-   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
-   "date": "2026-10-08T08:00:00+03:00",
-   "dateModified": "2026-10-05T15:50:30.574991+03:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
+   "tenderID": "UA-2026-10-05-011625-a",
+   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a"
+  },
+  {
    "amount": 2647880,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 2,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33660000-4",
+   "date": "2026-10-08T08:00:00+03:00",
+   "dateModified": "2026-10-05T15:50:30.574991+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-05-010910-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
      "qty": 13000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
      "qty": 133,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-05-010910-a",
+   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a"
   },
   {
    "amount": 1277729.8,
