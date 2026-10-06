@@ -1,11 +1,11 @@
 {
- "generated": "2026-10-06T16:31:03.472736+00:00",
+ "generated": "2026-10-06T21:28:36.992617+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-06T16:31:03.472736+00:00",
-  "expected": 1509,
-  "seen": 1509,
+  "checked": "2026-10-06T21:28:36.992617+00:00",
+  "expected": 1500,
+  "seen": 1500,
   "tenders": 510,
   "errors": 0,
   "dropped": 0,
@@ -14,95 +14,95 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-06-013493-a",
-   "tenderID": "UA-2026-10-06-013493-a",
-   "title": "Катетер Нелатона",
+   "amount": 33720,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 7,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-10-09T09:00:00+03:00",
    "dateModified": "2026-10-06T17:47:52.751217+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 33720,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-06-013493-a",
-   "counts": {
-    "signed": 0,
-    "progress": 7,
-    "failed": 0
-   },
+   "id": "UA-2026-10-06-013493-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, чоловічий, Fr6",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, чоловічий, Fr8",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, чоловічий, Fr10",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, чоловічий, Fr12",
      "qty": 1400,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, чоловічий, Fr14",
      "qty": 800,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, жіночий, Fr12",
      "qty": 300,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Нелатона, стерильний, одноразовий, жіночий, Fr14",
      "qty": 1600,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-06-013493-a",
+   "title": "Катетер Нелатона",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-06-013493-a"
   },
   {
    "amount": 6240652.39,
