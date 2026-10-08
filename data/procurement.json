@@ -1,11 +1,11 @@
 {
- "generated": "2026-10-08T14:45:35.320224+00:00",
+ "generated": "2026-10-08T20:07:22.030416+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-08T14:45:35.320224+00:00",
-  "expected": 1519,
-  "seen": 1519,
+  "checked": "2026-10-08T20:07:22.030416+00:00",
+  "expected": 1507,
+  "seen": 1507,
   "tenders": 517,
   "errors": 0,
   "dropped": 0,
@@ -14,560 +14,560 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-08-012399-a",
-   "tenderID": "UA-2026-10-08-012399-a",
-   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "amount": 239748,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 22,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-10-13T09:00:00+03:00",
    "dateModified": "2026-10-08T16:57:15.316845+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 239748,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-012399-a",
-   "counts": {
-    "signed": 0,
-    "progress": 22,
-    "failed": 0
-   },
+   "id": "UA-2026-10-08-012399-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона до 1,5 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона до 1,5 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для, L балона 11-20 мм, Ø балона 1,75-2,25 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для, L балона 11-20 мм, Ø балона 1,75-2,25 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для, L балона 11-20 мм, Ø балона 1,75-2,25 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для предилятації стандартних уражень, діамерт: 2.5 мм, довжина: 12 мм, покриття гідрофільне, тиск 6-14 Атм, профіль верхівки 0.016\", система RX, катетер 140 см, шафт 1.9/2.55 F",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для предилятації стандартних уражень, діамерт: 2.5 мм, довжина: 15 мм, покриття гідрофільне, тиск 6-14 Атм, профіль верхівки 0.016\", система RX, катетер 140 см, шафт 1.9/2.55 F",
      "qty": 6,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для предилятації стандартних уражень та хронічних оклюзій, діамерт: 2.5 мм, довжина: 20 мм, покриття гідрофільне, тиск 6-14 Атм, профіль верхівки 0.016\", система RX, катетер 140 см, шафт 1.9/2.55 F",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для предилятації стандартних уражень та хронічних оклюзій, діамерт: 3.0 мм, довжина: 12 мм, покриття гідрофільне, тиск 6-14 Атм, профіль верхівки 0.016\", система RX, катетер 140 см, шафт 1.9/2.55 F",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для предилятації стандартних уражень та хронічних оклюзій, діамерт:3 мм, довжина: 15 мм, покриття гідрофільне, тиск 6-14 Атм, профіль верхівки 0.016\", система RX, катетер 140 см, шафт 1.9/2.55 F",
      "qty": 6,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер для предилятації стандартних уражень, діамерт: 3.0 мм, довжина: 20 мм, покриття гідрофільне, тиск 6-14 Атм, профіль верхівки 0.016\", система RX, катетер 140 см, шафт 1.9/2.55 F",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 3,25-3,75 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 3,25-3,75 мм, профіль верхівки до 0,017'', тиск балону від 6 Атм, тиск розриву балону від 12 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер:для предил. станд. ураж., L бал: 20 мм, Ø бал:3,5 мм, покр. гідроф., проф. верх.:0,016, min|max тиск 6/12 Атм, Ø сум. пр.0,014\", Ø дист. шаф.:2,7F, L кат.:140 см, Ø вх. у стен.0,016\", Ø прох. стен. 0,0217\"",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 2,5-3,0 мм, профіль верхівки до 0,017'', тиск балону від 12 Атм, тиск розриву балону від 18 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 2,5-3,0 мм, профіль верхівки до 0,017'', тиск балону від 12 Атм, тиск розриву балону від 18 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 3,25-3,75 мм, профіль верхівки до 0,017'', тиск балону від 12 Атм, тиск розриву балону від 18 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 3,25-3,75 мм, профіль верхівки до 0,017'', тиск балону від 12 Атм, тиск розриву балону від 18 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 4,0-4,5 мм, профіль верхівки до 0,017'', тиск балону від 12 Атм, тиск розриву балону від 18 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Коронарний балон-катетер, L балона 11-20 мм, Ø балона 4,0-4,5 мм, профіль верхівки до 0,017'', тиск балону від 12 Атм, тиск розриву балону від 18 Атм, Ø проксимального шафту від 1,8 F, Ø дистального шафту від 2,3 F, L від 140 см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер балонний, L балона 12 мм, Ø балона 0,75 мм, профіль верхівки 0.0156'', тиск балону 10 Атм, тиск розриву балону 20 Атм, Ø проксимального шафту від 1,9 F, Ø дистального шафту 2,2 F, L 140см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер балонний, L балона 12 мм, Ø балона 1 мм, профіль верхівки 0.0156'', тиск балону 10 Атм, тиск розриву балону 20 Атм, Ø проксимального шафту від 1,9 F, Ø дистального шафту 2,2 F, L 140см",
      "qty": 3,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-08-012399-a",
+   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-012399-a"
   },
   {
-   "id": "UA-2026-10-08-004156-a",
-   "tenderID": "UA-2026-10-08-004156-a",
-   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "amount": 1570427.68,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 9,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-10-24T09:00:00+03:00",
    "dateModified": "2026-10-08T12:56:25.961573+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1570427.68,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a",
-   "counts": {
-    "signed": 0,
-    "progress": 9,
-    "failed": 0
-   },
+   "id": "UA-2026-10-08-004156-a",
    "items": [
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
      "qty": 600,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кістковий віск, 2,5 г",
      "qty": 960,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові cередньо-великі",
      "qty": 900,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові малі",
      "qty": 36,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові середні",
      "qty": 50,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 80,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 16,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-08-004156-a",
+   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a"
   },
   {
-   "id": "UA-2026-10-08-004450-a",
-   "tenderID": "UA-2026-10-08-004450-a",
-   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 500 мл",
+   "amount": 1782000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-10-13T09:10:00+03:00",
    "dateModified": "2026-10-08T11:39:14.356360+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1782000,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004450-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-08-004450-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 500 мл",
      "qty": 660,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-08-002093-a",
-   "tenderID": "UA-2026-10-08-002093-a",
-   "title": "Приладдя для венепункції та забору крові",
-   "date": "2026-10-13T09:10:00+03:00",
-   "dateModified": "2026-10-08T10:18:08.030306+03:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
+   "tenderID": "UA-2026-10-08-004450-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 500 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004450-a"
+  },
+  {
    "amount": 1469300,
-   "group": "Матеріали",
-   "cpv": "33141300-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-002093-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 5,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33141300-3",
+   "date": "2026-10-13T09:10:00+03:00",
+   "dateModified": "2026-10-08T10:18:08.030306+03:00",
+   "group": "Матеріали",
+   "id": "UA-2026-10-08-002093-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Система ПК (трансфузійна), регулятор швидкості потоку, пластикова (полімерна) з’єднувальна голка, конектор Luer Loсk, без ін'єкційної голки",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Система ПК (трансфузійна), регулятор швидкості потоку, металева з’єднувальна голка, конектор Luer Slip, ін'єкційна голка 18G, довжина від 1500 до 1600",
      "qty": 60000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Система ангіографічна, КТ, з трубкою з'єднувальною та швидкого наповнення, одноразова, із одним шприцем, 200 мл, №1",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Шприц катетерного типу, 3-х компонентний, Об'єм : 200 мл, Одноразовий, з голкою в комплекті, без додаткової голки, Сертифікат на відповідність ДСТУ EN ISO",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Системи для переливання крові та інфузійних розчинів: інфузійна (ПР), Luer Slip, трубка ПВХ 1500–2000 мм, роликовий регулятор потоку, фільтр 0,2 мкм, ін’єкційна голка 21G (метал), пластиковий атравматичний шип, 1 потокова трубка",
      "qty": 60000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-08-002093-a",
+   "title": "Приладдя для венепункції та забору крові",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-002093-a"
   },
   {
-   "id": "UA-2026-10-05-011625-a",
-   "tenderID": "UA-2026-10-05-011625-a",
-   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "amount": 370040,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-10-08T09:00:00+03:00",
    "dateModified": "2026-10-08T10:08:09.954289+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 370040,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a",
-   "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
-   },
+   "id": "UA-2026-10-05-011625-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 1000 мл.",
      "qty": 300,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 100 мл.",
      "qty": 160,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 70% 100 мл.",
      "qty": 10000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 5000 мл.",
      "qty": 20,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-05-012585-a",
-   "tenderID": "UA-2026-10-05-012585-a",
-   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
-   "date": "2026-10-08T09:00:00+03:00",
-   "dateModified": "2026-10-08T10:06:47.243433+03:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-10-05-011625-a",
+   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a"
+  },
+  {
    "amount": 2206160,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 2,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33690000-3",
+   "date": "2026-10-08T09:00:00+03:00",
+   "dateModified": "2026-10-08T10:06:47.243433+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-05-012585-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
      "qty": 228,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
      "qty": 1960,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-05-012585-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a"
   },
   {
    "amount": 2171185,
@@ -5088,93 +5088,6 @@
    "tenderID": "UA-2026-08-31-011817-a",
    "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
-  },
-  {
-   "amount": 1637383.18,
-   "contractEnd": null,
-   "counts": {
-    "failed": 4,
-    "progress": 0,
-    "signed": 0
-   },
-   "cpv": "33170000-2",
-   "date": "2026-09-08T17:25:19.901228+03:00",
-   "dateModified": "2026-09-08T17:25:19.901228+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-09-08-011498-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Контури дихальні для анестезії: Гофрована, Поліетилен, Довжина 1.6 м, для дорослих, Діаметр зовнішній 22 мм, Довжина додаткового шлангу 0.8 м, Тип (вид) з'єднувача: Прямий, Порт Luer Lock, Діаметр конектора для під'єднання до апарату: 22F,",
-     "qty": 1000,
-     "resolved": {
-      "d": "2026-09-09",
-      "t": "UA-2026-09-09-014666-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Контур одноразовий, неонатальний, тип трубки: гофрована, довжина: 1.6 м, діаметр 15 мм, конектора до апарату: 9-11мм, конектора до пацієнта: 15F, з'єднувач: прямий, з портом Luer Lock, довжина додат. шлангу 0,6 м, з проводом обігріву",
-     "qty": 1000,
-     "resolved": {
-      "d": "2026-09-09",
-      "t": "UA-2026-09-09-014666-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Вірусо - бактеріальний фільтр дихальний для дорослих, одноразовий, електростатичний, 22F/15M|22M/15F, Luer Lock, Опір потоку см H₂O :1.2, приямий",
-     "qty": 3000,
-     "resolved": {
-      "d": "2026-09-09",
-      "t": "UA-2026-09-09-014666-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Вірусо - бактеріальний фільтр дихальний педіатричний, одноразовий, електростатичний, 22M/15F|22F/15M, Luer Lock, Опір потоку см H₂O :1.9, приямий",
-     "qty": 3000,
-     "resolved": {
-      "d": "2026-09-09",
-      "t": "UA-2026-09-09-014666-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "resolved": {
-    "count": 4,
-    "of": 4,
-    "d": "2026-09-09",
-    "t": "UA-2026-09-09-014666-a"
-   },
-   "status": "cancelled",
-   "tenderID": "UA-2026-09-08-011498-a",
-   "title": "Обладнання для анестезії та реанімації",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-011498-a"
   }
  ]
 }
