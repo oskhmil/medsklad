@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-08T00:39:54.472805+00:00",
+ "generated": "2026-10-08T06:49:54.765884+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-08T00:39:54.472805+00:00",
+  "checked": "2026-10-08T06:49:54.765884+00:00",
   "expected": 1503,
   "seen": 1503,
   "tenders": 513,
@@ -13,6 +13,500 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-09-22-006746-a",
+   "tenderID": "UA-2026-09-22-006746-a",
+   "title": "Лабораторні реагенти",
+   "date": "2026-10-08T09:00:00+03:00",
+   "dateModified": "2026-10-08T09:00:18.387185+03:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 2171185,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-22-006746-a",
+   "counts": {
+    "signed": 0,
+    "progress": 33,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Аспартатамінотрансфераза 120",
+     "qty": 3,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Аланінамінотрансфераза 120",
+     "qty": 3,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Лужна Фосфатаза 60",
+     "qty": 4,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Тригліцериди 120",
+     "qty": 3,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Креатинін 60",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Сечова кислота 120",
+     "qty": 2,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Холестерин ліпопротеїну високої густини прямий",
+     "qty": 20,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Холестерин ліпопротеїну низької густини прямий",
+     "qty": 20,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Глікозильо-ваний гемоглобін прямий АКЦЕНТ-200 або еквівалент",
+     "qty": 30,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Лужний промивний розчин АКЦЕНТ-200",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Кислотний промивний розчин АКЦЕНТ-200",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Протромбіновий час, рідкий Dia-PT liquid",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Тромбіновий час Dia-TT",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Реагент для промивання Coag Cleaner",
+     "qty": 15,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Реагент для промивання Dia-SORB",
+     "qty": 4,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Д-димер Dia-D-Dimer",
+     "qty": 2,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Ділюент Diatro Dil-DIFF",
+     "qty": 20,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Лізуючий реагент Diatro Lyse-DIFF",
+     "qty": 24,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Промивний розчин Diatro Hypoclean CC",
+     "qty": 4,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Осаджуючий реагент EU-50",
+     "qty": 10,
+     "unit": "паковання",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Набір реагентів для визначення загального вітаміну D(25-OH) методом ІФА",
+     "qty": 20,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Набір реагентів для визначення феритину методом ІФА",
+     "qty": 6,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Набір реагентів для визначення АТТПО методом ІФА",
+     "qty": 10,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Набір реагентів для визначення антитіл до тиреоглобуліну методом ІФА",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Набір реагентів для визначення ТТГ методом ІФА",
+     "qty": 10,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Тест-система для визначення TSH, 100т або еквівалент",
+     "qty": 10,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Тест-система для визначення FT4, 100т",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Тест-система для визначення FT3, 100т",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Тест-система для визначення Anti-TPO, 100т",
+     "qty": 10,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Розчин субстрату (Substrate solution), 4*115 мл",
+     "qty": 5,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Промивний буфер (Wash buffer), 10 Л",
+     "qty": 7,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Кювета для сироватки)",
+     "qty": 1000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    },
+    {
+     "name": "Д-димер, тестовий набір (імунофлуоресценція)",
+     "qty": 3,
+     "unit": "набір",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "68330594b1584b10bbbfadfb526d3f5b"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-05-012585-a",
+   "tenderID": "UA-2026-10-05-012585-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+   "date": "2026-10-08T09:00:00+03:00",
+   "dateModified": "2026-10-08T09:00:04.284016+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 2206160,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
+     "qty": 228,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+     "qty": 1960,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-05-011625-a",
+   "tenderID": "UA-2026-10-05-011625-a",
+   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "date": "2026-10-08T09:00:00+03:00",
+   "dateModified": "2026-10-08T09:00:03.897140+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 382874.21,
+   "group": "Ліки",
+   "cpv": "33630000-5",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a",
+   "counts": {
+    "signed": 0,
+    "progress": 4,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Спирт етиловий 96% 1000 мл.",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Спирт етиловий 96% 100 мл.",
+     "qty": 160,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Спирт етиловий 70% 100 мл.",
+     "qty": 10000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Спирт етиловий 96% 5000 мл.",
+     "qty": 20,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-05-010910-a",
+   "tenderID": "UA-2026-10-05-010910-a",
+   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
+   "date": "2026-10-08T08:00:00+03:00",
+   "dateModified": "2026-10-08T08:30:13.004473+03:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 2647880,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
+     "qty": 13000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "АТ \"ФАРМАК\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
+     "qty": 133,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "АТ \"ФАРМАК\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 281537.38,
    "contractEnd": null,
@@ -1052,149 +1546,6 @@
    "tenderID": "UA-2026-09-03-014988-a",
    "title": "Медичне обладнання \n(Код за ДК 021:2015: 33190000-8 Медичне обладнання та вироби медичного призначення різні, код за НК 031:2024: Y091203 СТІЛЬЦІ, ТУАЛЕТ І ДУШ , V0807 ПРОТИПРОЛЕЖНЕВІ МЕДИЧНІ МАТРАЦИ, V0804 ОБЛАДНАННЯ ДЛЯ ПЕРЕМІЩЕННЯ ПАЦІЄНТІВ, V0899 МЕДИЧНЕ ДОПОМІЖНЕ ОБЛАДНАННЯ – ІНШЕ, V0899 МЕДИЧНЕ ДОПОМІЖНЕ ОБЛАДНАННЯ – ІНШЕ, Z12030202 - ПРИСТРОЇ ДЛЯ ВВЕДЕННЯ, ЗБОРУ Й ЗАГОТІВЛІ - ПРИСТРОЇ ДЛЯ ЗБОРУ РІДИН ПІД ЧАС ОПЕРАЦІЇ – ІНШЕ, код за НК 024:2023: 40539 Крісло-туалет, 47476 Надувний протипролежневий матрац, 31163 Каталка з положенням лежачи адаптаційна, 10531 Приліжкова шафа, 13959 Стіл для хірургічних інструментів, 44809 Вакуумний регулятор для аспірації загального призначення)",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-014988-a"
-  },
-  {
-   "amount": 2206160,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-10-08T09:00:00+03:00",
-   "dateModified": "2026-10-05T16:43:35.448648+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-05-012585-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
-     "qty": 228,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
-     "qty": 1960,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-05-012585-a",
-   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a"
-  },
-  {
-   "amount": 382874.21,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 4,
-    "signed": 0
-   },
-   "cpv": "33630000-5",
-   "date": "2026-10-08T09:00:00+03:00",
-   "dateModified": "2026-10-05T16:12:37.848728+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-05-011625-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Спирт етиловий 96% 1000 мл.",
-     "qty": 300,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Спирт етиловий 96% 100 мл.",
-     "qty": 160,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Спирт етиловий 70% 100 мл.",
-     "qty": 10000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Спирт етиловий 96% 5000 мл.",
-     "qty": 20,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-05-011625-a",
-   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a"
-  },
-  {
-   "amount": 2647880,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-10-08T08:00:00+03:00",
-   "dateModified": "2026-10-05T15:50:30.574991+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-05-010910-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
-     "qty": 13000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
-     "qty": 133,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-05-010910-a",
-   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a"
   },
   {
    "amount": 1277729.8,
@@ -2571,357 +2922,6 @@
    "tenderID": "UA-2026-09-10-011773-a",
    "title": "Еноксапарин натрію, розчин для ін'єкцій, 10000 анти-Ха МО/мл, по 5,0 мл",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-011773-a"
-  },
-  {
-   "amount": 2171185,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 33,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-10-08T09:00:00+03:00",
-   "dateModified": "2026-09-22T12:32:33.773520+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-09-22-006746-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Аспартатамінотрансфераза 120",
-     "qty": 3,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Аланінамінотрансфераза 120",
-     "qty": 3,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Лужна Фосфатаза 60",
-     "qty": 4,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Тригліцериди 120",
-     "qty": 3,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Креатинін 60",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Сечова кислота 120",
-     "qty": 2,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Холестерин ліпопротеїну високої густини прямий",
-     "qty": 20,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Холестерин ліпопротеїну низької густини прямий",
-     "qty": 20,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Глікозильо-ваний гемоглобін прямий АКЦЕНТ-200 або еквівалент",
-     "qty": 30,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Лужний промивний розчин АКЦЕНТ-200",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Кислотний промивний розчин АКЦЕНТ-200",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Протромбіновий час, рідкий Dia-PT liquid",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Тромбіновий час Dia-TT",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Реагент для промивання Coag Cleaner",
-     "qty": 15,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Реагент для промивання Dia-SORB",
-     "qty": 4,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Д-димер Dia-D-Dimer",
-     "qty": 2,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Ділюент Diatro Dil-DIFF",
-     "qty": 20,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Лізуючий реагент Diatro Lyse-DIFF",
-     "qty": 24,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Промивний розчин Diatro Hypoclean CC",
-     "qty": 4,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Осаджуючий реагент EU-50",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "паковання",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Набір реагентів для визначення загального вітаміну D(25-OH) методом ІФА",
-     "qty": 20,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Набір реагентів для визначення феритину методом ІФА",
-     "qty": 6,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Набір реагентів для визначення АТТПО методом ІФА",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Набір реагентів для визначення антитіл до тиреоглобуліну методом ІФА",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Набір реагентів для визначення ТТГ методом ІФА",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Тест-система для визначення TSH, 100т або еквівалент",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Тест-система для визначення FT4, 100т",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Тест-система для визначення FT3, 100т",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Тест-система для визначення Anti-TPO, 100т",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Розчин субстрату (Substrate solution), 4*115 мл",
-     "qty": 5,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Промивний буфер (Wash buffer), 10 Л",
-     "qty": 7,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Кювета для сироватки)",
-     "qty": 1000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "68330594b1584b10bbbfadfb526d3f5b",
-     "name": "Д-димер, тестовий набір (імунофлуоресценція)",
-     "qty": 3,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-09-22-006746-a",
-   "title": "Лабораторні реагенти",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-22-006746-a"
   },
   {
    "amount": 1357000,
