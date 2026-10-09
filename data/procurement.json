@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-09T19:41:44.441600+00:00",
+ "generated": "2026-10-09T23:43:53.754418+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-09T19:41:44.441600+00:00",
+  "checked": "2026-10-09T23:43:53.754418+00:00",
   "expected": 1509,
   "seen": 1509,
-  "tenders": 519,
+  "tenders": 518,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,35 +14,35 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-09-012201-a",
-   "tenderID": "UA-2026-10-09-012201-a",
-   "title": "Мікропровідник для пристрою для реваскуляризації",
+   "amount": 243925.23,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-10-26T09:00:00+02:00",
    "dateModified": "2026-10-09T17:10:49.565382+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 243925.23,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-09-012201-a",
    "items": [
     {
+     "amount": null,
+     "lot": "330a133c151a42a38bb0b32c70e979ab",
      "name": "Мікропровідник для пристрою для реваскуляризації",
      "qty": 10,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": 24392.52,
-     "lot": "330a133c151a42a38bb0b32c70e979ab"
+     "unit": "штука",
+     "unitPrice": 24392.52
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-09-012201-a",
+   "title": "Мікропровідник для пристрою для реваскуляризації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a"
   },
   {
    "amount": 2171185,
