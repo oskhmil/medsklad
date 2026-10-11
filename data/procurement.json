@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-10T23:43:41.917180+00:00",
+ "generated": "2026-10-11T02:22:15.818033+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-10T23:43:41.917180+00:00",
+  "checked": "2026-10-11T02:22:15.818033+00:00",
   "expected": 1509,
   "seen": 1509,
   "tenders": 518,
@@ -14,55 +14,55 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-24-012823-a",
-   "tenderID": "UA-2026-09-24-012823-a",
-   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
+   "amount": 425416.67,
+   "contractEnd": null,
+   "counts": {
+    "failed": 2,
+    "progress": 0,
+    "signed": 0
+   },
+   "cpv": "33192300-5",
    "date": "2026-10-11T00:00:02.743692+03:00",
    "dateModified": "2026-10-11T00:00:02.743692+03:00",
-   "method": "aboveThreshold",
-   "status": "cancelled",
-   "contractEnd": null,
-   "amount": 425416.67,
    "group": "Матеріали",
-   "cpv": "33192300-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a",
-   "counts": {
-    "signed": 0,
-    "progress": 0,
-    "failed": 2
-   },
+   "id": "UA-2026-09-24-012823-a",
    "items": [
     {
+     "amount": null,
+     "lot": "f3ec00bf50da4229aef51e3328d7a92b",
      "name": "Операційний стіл",
      "qty": 1,
-     "unit": "штука",
-     "status": "Скасовано",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f3ec00bf50da4229aef51e3328d7a92b",
      "resolved": {
       "d": "2026-10-01",
       "t": "UA-2026-10-01-010008-a",
       "k": "pending"
-     }
+     },
+     "status": "Скасовано",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "f3ec00bf50da4229aef51e3328d7a92b",
      "name": "Гідравлічне медичне крісло",
      "qty": 1,
-     "unit": "штука",
-     "status": "Скасовано",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "f3ec00bf50da4229aef51e3328d7a92b",
      "resolved": {
       "d": "2026-10-01",
       "t": "UA-2026-10-01-010008-a",
       "k": "pending"
-     }
+     },
+     "status": "Скасовано",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "cancelled",
+   "tenderID": "UA-2026-09-24-012823-a",
+   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a"
   },
   {
    "amount": 243925.23,
