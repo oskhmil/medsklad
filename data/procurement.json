@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-12T15:28:02.627910+00:00",
+ "generated": "2026-10-12T22:50:14.869949+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-12T15:28:02.627910+00:00",
+  "checked": "2026-10-12T22:50:14.869949+00:00",
   "expected": 1509,
   "seen": 1509,
   "tenders": 518,
@@ -14,171 +14,171 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-09-09-001031-a",
-   "tenderID": "UA-2026-09-09-001031-a",
-   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "amount": 25869.16,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-09-14T10:00:00+03:00",
    "dateModified": "2026-10-12T17:54:23.759039+03:00",
-   "method": "priceQuotation",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 25869.16,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-001031-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-09-09-001031-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер назальний кисневий, високопотоковий, для недоношених, без кисневої магістралі, назальні кінчики вигнуті",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер назальний кисневий, високопотоковий, для новонароджених, без кисневої магістралі, назальні кінчики вигнуті",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-09-09-001031-a",
+   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-001031-a"
   },
   {
-   "id": "UA-2026-10-07-001306-a",
-   "tenderID": "UA-2026-10-07-001306-a",
-   "title": "Катетер Фолея",
+   "amount": 67200,
+   "contractEnd": null,
+   "counts": {
+    "failed": 7,
+    "progress": 0,
+    "signed": 0
+   },
+   "cpv": "33141600-6",
    "date": "2026-10-12T09:00:02.333576+03:00",
    "dateModified": "2026-10-12T09:00:02.333576+03:00",
-   "method": "priceQuotation",
-   "status": "unsuccessful",
-   "contractEnd": null,
-   "amount": 67200,
    "group": "Матеріали",
-   "cpv": "33141600-6",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-001306-a",
-   "counts": {
-    "signed": 0,
-    "progress": 0,
-    "failed": 7
-   },
+   "id": "UA-2026-10-07-001306-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 8 Fr, об’єм балона 5 мл, довжина 250–300 мм, матеріал латекс, одноразовий, стерильний",
      "qty": 200,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 6 Fr, об’єм балона 1,5 мл, довжина 310 мм, матеріал силікон, одноразовий, стерильний",
      "qty": 100,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 10 Fr, об’єм балона 5 мл, довжина 310 мм, матеріал силікон, одноразовий, стерильний",
      "qty": 100,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 12 Fr, об’єм балона 30 мл, довжина 400 мм, матеріал силіколатекс, одноразовий, стерильний",
      "qty": 100,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 14 Fr, об’єм балона 30 мл, довжина 400 мм, матеріал латекс, одноразовий, стерильний",
      "qty": 100,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 16 Fr, об’єм балона 30 мл, довжина 400 мм, матеріал латекс, одноразовий, стерильний",
      "qty": 500,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Катетер Фолея: урологічний, двоканальний (2-ходовий), розмір 18 Fr, об’єм балона 30 мл, довжина 400 мм, матеріал латекс, одноразовий, стерильний",
      "qty": 1000,
-     "unit": "штука",
-     "status": "Не відбулось",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null,
      "resolved": {
       "d": "2026-10-08",
       "t": "UA-2026-10-08-012399-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-10-07-001306-a",
+   "title": "Катетер Фолея",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-001306-a"
   },
   {
    "amount": 425416.67,
