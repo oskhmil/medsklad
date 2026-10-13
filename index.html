@@ -2251,6 +2251,12 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.180 — фінплан: напрям і рахунок визначаються за рівнем відступу, а не
+//   регуляркою за назвою. Реагент «25-ОН Вітамін D тест-набір» (жовтень)
+//   сприймався як новий напрям "25-..." — хвіст рахунку 202 (Склади 14, 18,
+//   19, 10, 11, 13, 3, 5, 9, ЛДЦ Сихів — 15 471 154,25 ₴) випадав з підсумку.
+//   Для аркушів без відступів новий напрям приймається лише коли попередній
+//   закритий (сума рахунків = агрегат напряму).
 // v.154 — колонки файлу залишків визначаються за рядком заголовка, а не
 //   жорстко. Файл на Диску змінився з обробленого (назва в M) на сире
 //   вивантаження 1С (назва в H) — парсер шукав M, отримував порожньо і
@@ -2303,7 +2309,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.179";
+const APP_VERSION = "v.180";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -11086,16 +11092,22 @@ function _parseFinplanSheet(ws) {
   // нормалізована через Google Sheets — 2/4/6/8. Хардкод рівнів ламався
   // на одному з двох варіантів, тому виводимо їх із самого аркуша по
   // рядках, які впізнаються за ЗМІСТОМ: напрям ("03-НСЗУ") і рахунок ("202").
+  // Беремо МІНІМАЛЬНИЙ відступ серед рядків, схожих на напрям/рахунок:
+  // товар теж може починатися з "NN-" ("25-ОН Вітамін D тест-набір"), але
+  // він завжди глибше за справжній напрям.
   let dirLvl = null, accLvl = null;
   if (hasIndents) {
     for (let i = 0; i < rows.length; i++) {
       const t = String(rows[i][0] ?? "").trim();
       if (!t) continue;
-      if (dirLvl === null && /^\d{2}\s*-\s*\S/.test(t)) dirLvl = indents[i];
-      if (accLvl === null && /^\d{3,5}$/.test(t))       accLvl = indents[i];
-      if (dirLvl !== null && accLvl !== null) break;
+      if (/^\d{2}\s*-\s*\S/.test(t) && (dirLvl === null || indents[i] < dirLvl)) dirLvl = indents[i];
+      if (/^\d{3,5}$/.test(t)       && (accLvl === null || indents[i] < accLvl)) accLvl = indents[i];
     }
   }
+  // Режим без відступів: напрям визнається лише тоді, коли попередній
+  // напрям "закритий" — сума його рахунків дорівнює агрегату напряму.
+  // Інакше рядок "NN-..." посеред блоку — це товар, а не новий напрям.
+  let dirSum = null, dirAccSum = 0;
 
   // Відступ НАСТУПНОГО непорожнього рядка — основа структурного правила:
   // рядок є групою (МВО) тоді й лише тоді, коли під ним є вкладені рядки.
@@ -11137,12 +11149,24 @@ function _parseFinplanSheet(ws) {
     // почались, за рівнем відступу. Обмеження "після першого напряму"
     // потрібне, щоб шапка файлу ("Параметри:", "Відбір:") не потрапила
     // у напрями — вона лежить на тому ж рівні, що й напрями у сирому 1С.
-    const isDirection = /^\d{2}\s*-\s*\S/.test(aText) ||
-      (dataStarted && hasIndents && dirLvl !== null && indent === dirLvl);
-
-    // Рахунок: bare number (201, 202, 1531...) або рівень рахунку.
-    const isAccount = /^\d{3,5}$/.test(aText) ||
-      (dataStarted && hasIndents && accLvl !== null && indent === accLvl);
+    // v.180: коли відступи є — напрям/рахунок визначає ЛИШЕ рівень
+    // відступу. Регулярка за змістом ловила товар "25-ОН Вітамін D
+    // тест-набір" (реагент, рівень товару) як новий напрям — і весь хвіст
+    // рахунку 202 після нього (15,47 млн ₴ у жовтні) випадав з підсумку.
+    const dirLike = /^\d{2}\s*-\s*\S/.test(aText);
+    const accLike = /^\d{3,5}$/.test(aText);
+    let isDirection, isAccount;
+    if (hasIndents && dirLvl !== null) {
+      isDirection = indent === dirLvl && (dataStarted || dirLike);
+      isAccount   = accLvl !== null
+        ? (indent === accLvl && (dataStarted || accLike))
+        : accLike;
+    } else {
+      const dirClosed = dirSum === null || sum == null ||
+                        Math.abs(dirAccSum - dirSum) <= 1;
+      isDirection = dirLike && dirClosed;
+      isAccount   = accLike;
+    }
 
     if (isDirection) dataStarted = true;
 
@@ -11152,10 +11176,12 @@ function _parseFinplanSheet(ws) {
       currentMvo = null;
       _orphanRun = null;
       inTargetBlock = (currentDirection.toUpperCase().includes("НСЗУ"));
+      dirSum = sum; dirAccSum = 0;
       continue;
     }
 
     if (isAccount && currentDirection) {
+      if (sum != null) dirAccSum += sum;
       currentAccount = aText;
       currentMvo = null;
       _orphanRun = null;
