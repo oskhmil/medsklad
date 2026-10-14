@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-13T23:21:09.825409+00:00",
+ "generated": "2026-10-14T02:05:48.759773+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-13T23:21:09.825409+00:00",
+  "checked": "2026-10-14T02:05:48.759773+00:00",
   "expected": 1509,
   "seen": 1509,
   "tenders": 518,
@@ -4594,103 +4594,6 @@
    "tenderID": "UA-2026-08-26-012063-a",
    "title": "Контролі електролітів Sensa Trilevel Quality Controls (L,N,H)",
    "url": "https://prozorro.gov.ua/tender/UA-2026-08-26-012063-a"
-  },
-  {
-   "amount": 6160761.68,
-   "contractEnd": null,
-   "counts": {
-    "failed": 5,
-    "progress": 0,
-    "signed": 0
-   },
-   "cpv": "33190000-8",
-   "date": "2026-09-14T00:00:03.273495+03:00",
-   "dateModified": "2026-09-14T00:00:03.273495+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-09-02-014174-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
-     "name": "Монітор пацієнта",
-     "qty": 36,
-     "resolved": {
-      "d": "2026-09-07",
-      "t": "UA-2026-09-07-000966-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
-     "name": "Стійка інфузійна",
-     "qty": 40,
-     "resolved": {
-      "d": "2026-09-07",
-      "t": "UA-2026-09-07-000966-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
-     "name": "Медичний аспіратор",
-     "qty": 40,
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
-     "name": "Стійка інфузійна мобільна для звичайного догляду",
-     "qty": 1,
-     "resolved": {
-      "d": "2026-09-07",
-      "t": "UA-2026-09-07-000966-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "50c3702bf8d54d659ae6b2ab532a2aa3",
-     "name": "Шприцевий інфузійний насос",
-     "qty": 1,
-     "resolved": {
-      "d": "2026-09-04",
-      "t": "UA-2026-09-04-010141-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "resolved": {
-    "count": 4,
-    "of": 5,
-    "d": "2026-09-07",
-    "t": "UA-2026-09-07-000966-a"
-   },
-   "status": "cancelled",
-   "tenderID": "UA-2026-09-02-014174-a",
-   "title": "Медичне обладнання",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-02-014174-a"
   },
   {
    "amount": 50450,
