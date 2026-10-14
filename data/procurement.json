@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-14T18:11:31.974749+00:00",
+ "generated": "2026-10-14T21:51:32.058223+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-14T18:11:31.974749+00:00",
+  "checked": "2026-10-14T21:51:32.058223+00:00",
   "expected": 1515,
   "seen": 1515,
   "tenders": 522,
@@ -14,55 +14,55 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-14-013141-a",
-   "tenderID": "UA-2026-10-14-013141-a",
-   "title": "Покриття операційне",
+   "amount": 3341214.95,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-10-19T09:10:00+03:00",
    "dateModified": "2026-10-14T17:19:57.223022+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 3341214.95,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-013141-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
+   "id": "UA-2026-10-14-013141-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття операційне: хірургічне, матеріал виготовлення: СММС, стерильне, довжина: 200-220 см, ширина: 150-170 см, щільність матеріалу: 35-40 г/м², одноразове",
      "qty": 35000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Хірургічне, одноразове, стерильне, матеріал виготовлення Спанбонд, без адгезивного операційного поля (отвору), розмір 70-90х50-70 см, щільність матеріалу від 30 г/м²",
      "qty": 10000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Хірургічне, одноразове, стерильне, матеріал виготовлення Спанбонд ламінований, без адгезивного операційного поля (отвору), розмір 250-270х150-170 см, щільність матеріалу від 45 г/м²",
      "qty": 10000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-14-013141-a",
+   "title": "Покриття операційне",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-013141-a"
   },
   {
    "amount": 1152520,
