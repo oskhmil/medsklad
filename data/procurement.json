@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-14T13:17:08.932416+00:00",
+ "generated": "2026-10-14T18:11:31.974749+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-14T13:17:08.932416+00:00",
-  "expected": 1514,
-  "seen": 1514,
-  "tenders": 521,
+  "checked": "2026-10-14T18:11:31.974749+00:00",
+  "expected": 1515,
+  "seen": 1515,
+  "tenders": 522,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,493 +14,544 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-02-006445-a",
-   "tenderID": "UA-2026-10-02-006445-a",
-   "title": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+   "id": "UA-2026-10-14-013141-a",
+   "tenderID": "UA-2026-10-14-013141-a",
+   "title": "Покриття операційне",
+   "date": "2026-10-19T09:10:00+03:00",
+   "dateModified": "2026-10-14T17:19:57.223022+03:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 3341214.95,
+   "group": "Матеріали",
+   "cpv": "33141000-0",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-013141-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Покриття операційне: хірургічне, матеріал виготовлення: СММС, стерильне, довжина: 200-220 см, ширина: 150-170 см, щільність матеріалу: 35-40 г/м², одноразове",
+     "qty": 35000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Покриття Хірургічне, одноразове, стерильне, матеріал виготовлення Спанбонд, без адгезивного операційного поля (отвору), розмір 70-90х50-70 см, щільність матеріалу від 30 г/м²",
+     "qty": 10000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Покриття Хірургічне, одноразове, стерильне, матеріал виготовлення Спанбонд ламінований, без адгезивного операційного поля (отвору), розмір 250-270х150-170 см, щільність матеріалу від 45 г/м²",
+     "qty": 10000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "amount": 1152520,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33650000-1",
    "date": "2026-10-14T15:46:21.122459+03:00",
    "dateModified": "2026-10-14T15:46:21.122459+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 1152520,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006445-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-10-02-006445-a",
    "items": [
     {
+     "amount": 1152520,
+     "lot": null,
      "name": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
      "qty": 2000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ Аптека №44",
-     "amount": 1152520,
-     "unitPrice": 576.26,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 576.26
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-10-02-006445-a",
+   "title": "Вакцина проти сказу, ліофілізат (порошок), 2,5 МО/доза",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006445-a"
   },
   {
-   "id": "UA-2026-10-14-008757-a",
-   "tenderID": "UA-2026-10-14-008757-a",
-   "title": "Пробірки",
+   "amount": 2165000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 9,
+    "signed": 0
+   },
+   "cpv": "33141600-6",
    "date": "2026-10-19T08:45:00+03:00",
    "dateModified": "2026-10-14T14:41:32.548818+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2165000,
    "group": "Матеріали",
-   "cpv": "33141600-6",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008757-a",
-   "counts": {
-    "signed": 0,
-    "progress": 9,
-    "failed": 0
-   },
+   "id": "UA-2026-10-14-008757-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 3 мл., розмір: 13х75 мм, наповнювач: літій гепарин, колір кришки: Зелений, стерильна",
      "qty": 10000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 10 мл., розмір: 16х100 мм, наповнювач: консервант, колір кришки: Жовтий, стерильна",
      "qty": 100000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 8 мл., розмір: 16х100 мм, наповнювач: консервант, колір кришки: Жовтий, нестерильна",
      "qty": 20000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 3,5 мл., розмір: 13х75 мм, наповнювач: Активатор згортання та гель, колір кришки: Жовтий, стерильна",
      "qty": 100000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 5 мл., розмір: 13х100 мм, наповнювач: К2 ЕДТА, колір кришки: Бузковий, стерильна",
      "qty": 100000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 2 мл., розмір: 13х75 мм, наповнювач: К3 ЕДТА, колір кришки: Бузковий, стерильна",
      "qty": 100000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 6 мл., розмір: 13х100 мм, наповнювач: Активатор згортання, колір кришки: Червоний, стерильна",
      "qty": 100000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 3,6 мл., розмір: 13х75 мм, наповнювач: Натрію цитрат, колір кришки: Блакитний, стерильна",
      "qty": 100000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пробірка вакуумна: Об'єм 1,8 мл., розмір: 13х75 мм, наповнювач: цитрат натрію 3,8%, колір кришки: Блакитний, стерильна",
      "qty": 20000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-14-008757-a",
+   "title": "Пробірки",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008757-a"
   },
   {
-   "id": "UA-2026-10-14-007832-a",
-   "tenderID": "UA-2026-10-14-007832-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "amount": 50450,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-10-30T09:00:00+02:00",
    "dateModified": "2026-10-14T14:32:16.197436+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 50450,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-007832-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-14-007832-a",
    "items": [
     {
+     "amount": null,
+     "lot": "144a2d6e1d5144919094849752fd1740",
      "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
      "qty": 1,
-     "unit": "набір",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": 50450.0,
-     "lot": "144a2d6e1d5144919094849752fd1740"
+     "unit": "набір",
+     "unitPrice": 50450.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-14-007832-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-007832-a"
   },
   {
-   "id": "UA-2026-10-14-008131-a",
-   "tenderID": "UA-2026-10-14-008131-a",
-   "title": "Левофлоксацин розчин для інфузій, 5 мг/мл, 100 мл; Моксифлоксацин розчин для інфузій, 400 мг/250 мл, по 250 мл; Цефтриаксон,порошок для ін'єкцій по 1 г; Тіопентал, порошок/ліофілізат, по 1 г; Декскетопрофен розчин для ін'єкцій 25 мг/ мл по 2 мл; Цефепім,порошок для ін'єкцій 1,0; Пегфілграстим розчин для ін'єкцій 6 мг/0,6 мл; по 0,6 мл",
+   "amount": 860922.71,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 7,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-10-19T09:10:00+03:00",
    "dateModified": "2026-10-14T14:22:43.080700+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 860922.71,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008131-a",
-   "counts": {
-    "signed": 0,
-    "progress": 7,
-    "failed": 0
-   },
+   "id": "UA-2026-10-14-008131-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Левофлоксацин розчин для інфузій, 5 мг/мл, 100 мл",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Моксифлоксацин розчин для інфузій, 400 мг/250 мл, по 250 мл",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Цефтриаксон,порошок для ін'єкцій по 1 г",
      "qty": 2000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Тіопентал, порошок/ліофілізат, по 1 г",
      "qty": 1090,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Декскетопрофен розчин для ін'єкцій 25 мг/ мл по 2 мл",
      "qty": 10248,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Цефепім,порошок для ін'єкцій 1,0",
      "qty": 1520,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пегфілграстим розчин для ін'єкцій 6 мг/0,6 мл; по 0,6 мл",
      "qty": 10,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-14-008131-a",
+   "title": "Левофлоксацин розчин для інфузій, 5 мг/мл, 100 мл; Моксифлоксацин розчин для інфузій, 400 мг/250 мл, по 250 мл; Цефтриаксон,порошок для ін'єкцій по 1 г; Тіопентал, порошок/ліофілізат, по 1 г; Декскетопрофен розчин для ін'єкцій 25 мг/ мл по 2 мл; Цефепім,порошок для ін'єкцій 1,0; Пегфілграстим розчин для ін'єкцій 6 мг/0,6 мл; по 0,6 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008131-a"
   },
   {
-   "id": "UA-2026-10-05-011625-a",
-   "tenderID": "UA-2026-10-05-011625-a",
-   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "amount": 382660,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-10-08T09:00:00+03:00",
    "dateModified": "2026-10-14T13:01:36.635471+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 382660,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a",
-   "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
-   },
+   "id": "UA-2026-10-05-011625-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 1000 мл.",
      "qty": 300,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 100 мл.",
      "qty": 160,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 70% 100 мл.",
      "qty": 10000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Спирт етиловий 96% 5000 мл.",
      "qty": 20,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-05-011625-a",
+   "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a"
   },
   {
-   "id": "UA-2026-08-31-011817-a",
-   "tenderID": "UA-2026-08-31-011817-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "amount": 50450,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-09-08T09:00:00+03:00",
    "dateModified": "2026-10-14T12:25:29.403364+03:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 50450,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-08-31-011817-a",
    "items": [
     {
+     "amount": null,
+     "lot": "a11c9c5569734b3780aa1089dacde87d",
      "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
      "qty": 1,
-     "unit": "набір",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": 50450.0,
-     "lot": "a11c9c5569734b3780aa1089dacde87d"
+     "unit": "набір",
+     "unitPrice": 50450.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-08-31-011817-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
   },
   {
-   "id": "UA-2026-09-08-007509-a",
-   "tenderID": "UA-2026-09-08-007509-a",
-   "title": "Вироби медичного призначення",
+   "amount": 1122000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 3
+   },
+   "cpv": "33140000-3",
    "date": "2026-10-14T11:21:22.656060+03:00",
    "dateModified": "2026-10-14T11:21:22.656060+03:00",
-   "method": "aboveThreshold",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 1122000,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a",
-   "counts": {
-    "signed": 3,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-09-08-007509-a",
    "items": [
     {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
      "name": "Датчик тиску одноканальний",
      "qty": 150,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
      "name": "Датчик тиску одноканальний",
      "qty": 150,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "6a958616a49b4fec99390adcb06d2049",
      "name": "Латка серцево-судинна",
      "qty": 40,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ФІЗИЧНА ОСОБА-ПІДПРИЄМЕЦЬ ГОРКУНОВ ІВАН ВАЛЕРІЙОВИЧ",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "6a958616a49b4fec99390adcb06d2049"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-09-08-007509-a",
+   "title": "Вироби медичного призначення",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-08-007509-a"
   },
   {
-   "id": "UA-2026-10-05-010910-a",
-   "tenderID": "UA-2026-10-05-010910-a",
-   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
+   "amount": 2833231.6,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 2
+   },
+   "cpv": "33660000-4",
    "date": "2026-10-14T11:11:30.810463+03:00",
    "dateModified": "2026-10-14T11:11:30.810463+03:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 2833231.6,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a",
-   "counts": {
-    "signed": 2,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-10-05-010910-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
      "qty": 13000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
      "qty": 133,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-05-012585-a",
-   "tenderID": "UA-2026-10-05-012585-a",
-   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
-   "date": "2026-10-14T10:55:42.531236+03:00",
-   "dateModified": "2026-10-14T10:55:42.531236+03:00",
+   ],
    "method": "priceQuotation",
    "status": "complete",
-   "contractEnd": null,
+   "tenderID": "UA-2026-10-05-010910-a",
+   "title": "Пропофол, емульсія, 10 мг/мл, по 50 мл; Пропофол, емульсія, 20 мг/мл, по 50 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-010910-a"
+  },
+  {
    "amount": 2360591.2,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 2,
+    "failed": 0,
     "progress": 0,
-    "failed": 0
+    "signed": 2
    },
+   "cpv": "33690000-3",
+   "date": "2026-10-14T10:55:42.531236+03:00",
+   "dateModified": "2026-10-14T10:55:42.531236+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-05-012585-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
      "qty": 228,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
      "qty": 1960,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-10-05-012585-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-012585-a"
   },
   {
    "amount": 2041547.16,
@@ -863,135 +914,135 @@
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 3 мл., розмір: 13х75 мм, наповнювач: літій гепарин, колір кришки: Зелений, стерильна",
      "qty": 10000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 10 мл., розмір: 16х100 мм, наповнювач: консервант, колір кришки: Жовтий, стерильна",
      "qty": 100000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 8 мл., розмір: 16х100 мм, наповнювач: консервант, колір кришки: Жовтий, нестерильна",
      "qty": 20000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 3,5 мл., розмір: 13х75 мм, наповнювач: Активатор згортання та гель, колір кришки: Жовтий, стерильна",
      "qty": 100000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 5 мл., розмір: 13х100 мм, наповнювач: К2 ЕДТА, колір кришки: Бузковий, стерильна",
      "qty": 100000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 2 мл., розмір: 13х75 мм, наповнювач: К3 ЕДТА, колір кришки: Бузковий, стерильна",
      "qty": 100000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 6 мл., розмір: 13х100 мм, наповнювач: Активатор згортання, колір кришки: Червоний, стерильна",
      "qty": 1100000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 3,6 мл., розмір: 13х75 мм, наповнювач: Натрію цитрат, колір кришки: Блакитний, стерильна",
      "qty": 100000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     },
     {
      "amount": null,
      "lot": null,
      "name": "Пробірка вакуумна: Об'єм 1,8 мл., розмір: 13х75 мм, наповнювач: цитрат натрію 3,8%, колір кришки: Блакитний, стерильна",
      "qty": 20000,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-10-14",
       "t": "UA-2026-10-14-008757-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     }
    ],
    "method": "priceQuotation",
