@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-19T19:32:40.675251+00:00",
+ "generated": "2026-10-19T23:19:18.400453+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-19T19:32:40.675251+00:00",
+  "checked": "2026-10-19T23:19:18.400453+00:00",
   "expected": 1519,
   "seen": 1519,
   "tenders": 526,
@@ -14,35 +14,71 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-19-011946-a",
-   "tenderID": "UA-2026-10-19-011946-a",
-   "title": "Габапентин капсули по 300 мг",
-   "date": "2026-10-22T11:00:00+03:00",
-   "dateModified": "2026-10-19T16:40:21.710019+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
+   "id": "UA-2026-08-31-011817-a",
+   "tenderID": "UA-2026-08-31-011817-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "date": "2026-10-20T00:00:08.564008+03:00",
+   "dateModified": "2026-10-20T00:00:08.564008+03:00",
+   "method": "aboveThreshold",
+   "status": "unsuccessful",
    "contractEnd": null,
-   "amount": 653205.61,
+   "amount": 50450,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-011946-a",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a",
    "counts": {
     "signed": 0,
-    "progress": 1,
-    "failed": 0
+    "progress": 0,
+    "failed": 1
    },
    "items": [
     {
-     "name": "Габапентин капсули по 300 мг",
-     "qty": 100000,
-     "unit": "штука",
-     "status": "В процесі",
+     "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+     "qty": 1,
+     "unit": "набір",
+     "status": "Не відбулось",
      "supplier": null,
      "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unitPrice": 50450.0,
+     "lot": "a11c9c5569734b3780aa1089dacde87d",
+     "resolved": {
+      "d": "2026-10-14",
+      "t": "UA-2026-10-14-007832-a",
+      "k": "pending"
+     }
     }
    ]
+  },
+  {
+   "amount": 653205.61,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
+   "date": "2026-10-22T11:00:00+03:00",
+   "dateModified": "2026-10-19T16:40:21.710019+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-19-011946-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Габапентин капсули по 300 мг",
+     "qty": 100000,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-19-011946-a",
+   "title": "Габапентин капсули по 300 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-011946-a"
   },
   {
    "amount": 27648,
@@ -1169,37 +1205,6 @@
    "tenderID": "UA-2026-10-05-011625-a",
    "title": "Спирт етиловий 96% 1000 мл.; Спирт етиловий 96% 100 мл.; Спирт етиловий 70% 100 мл.; Спирт етиловий 96% 5000 мл.",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-05-011625-a"
-  },
-  {
-   "amount": 50450,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33690000-3",
-   "date": "2026-09-08T09:00:00+03:00",
-   "dateModified": "2026-10-14T12:25:29.403364+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-08-31-011817-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "a11c9c5569734b3780aa1089dacde87d",
-     "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-     "qty": 1,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "набір",
-     "unitPrice": 50450.0
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-08-31-011817-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
   },
   {
    "amount": 1122000,
