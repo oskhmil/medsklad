@@ -155,6 +155,17 @@
     text-align: center; font-size: 11px; color: var(--muted);
     margin-bottom: 14px;
   }
+  .stale-warn {
+    margin: -6px 0 14px; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid var(--warn); background: rgba(245,158,11,.10);
+    color: var(--warn); font-size: 12px; line-height: 1.45;
+  }
+  .stale-warn .stale-msg { color: var(--text); opacity: .85; margin-top: 4px; }
+  .stale-warn button {
+    margin-top: 8px; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--warn); background: transparent; color: var(--warn);
+    font-size: 12px; font-weight: 600;
+  }
   /* Background-refresh indicator (used in Пошук медикаментів) */
   .refresh-indicator {
     display: none;
@@ -2164,6 +2175,7 @@
 
     <div id="home-screen">
       <div class="last-updated" id="last-updated"></div>
+      <div class="stale-warn" id="stale-warn" style="display:none"></div>
       <div class="refresh-indicator" id="refresh-indicator">
         <span class="spinner">⟳</span>Оновлення даних...
       </div>
@@ -2251,6 +2263,14 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.181 — підміна файлів на Диску більше не ховається:
+//   • Додаток розпізнає, ЩО за файл прийшов (за шапкою 1С). Якщо у
+//     «Залишок по ТМО» лежить фінплан (16.10 так і сталось) або навпаки —
+//     пише про це прямо, а не «жодного рядка не розібрано».
+//   • Фінплан без жодного розібраного складу більше не перезаписує кеш.
+//   • Коли фонове оновлення падає, на екрані з'являється плашка «показано
+//     дані від …, оновити не вдалося» з кнопкою «Повторити». Раніше ПК тихо
+//     показував дані триденної давності.
 // v.180 — фінплан: напрям і рахунок визначаються за рівнем відступу, а не
 //   регуляркою за назвою. Реагент «25-ОН Вітамін D тест-набір» (жовтень)
 //   сприймався як новий напрям "25-..." — хвіст рахунку 202 (Склади 14, 18,
@@ -2309,7 +2329,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.180";
+const APP_VERSION = "v.181";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -2435,6 +2455,9 @@ let selectedDepts = [];
 let currentDeptSuggestions = [];
 let deptItemFilter = "";
 let _cacheFailedThisSession = false;
+// v.181: текст останньої помилки оновлення залишків (null = все гаразд).
+// Поки він не порожній, на головній висить плашка про застарілі дані.
+let _stockRefreshError = null;
 
 const GDRIVE_URL = "https://docs.google.com/spreadsheets/d/1uAByiAlSotEn1Y7fO1_fN72vOZ8lcu1z/export?format=xlsx";
 
@@ -2852,6 +2875,7 @@ async function fetchAndUpdate(showLoader) {
     allItems = newItems;
     _mnnMapMerge(allItems);
     lastLoaded = new Date();
+    _stockRefreshError = null;
     _watchMarkSeen("medsklad");
     const cacheOk = saveCache(newItems);
     if (!cacheOk) {
@@ -2879,12 +2903,17 @@ async function fetchAndUpdate(showLoader) {
     renderHome();
     show("home");
   } catch(err) {
+    // v.181: помилку запам'ятовуємо завжди — якщо є старі дані, над ними
+    // з'являється плашка «показано дані від …». Раніше фоновий збій
+    // ковтався мовчки, і ПК три дні показував дані до підміни файлу.
+    _stockRefreshError = err.message || String(err);
     if (showLoader) {
-      alert("Не вдалось завантажити файл з Google Диску.\nПеревірте інтернет.\n\n" + err.message);
-      show("start");
+      alert("Не вдалось завантажити файл з Google Диску.\n\n" + _stockRefreshError);
+      if (allItems && allItems.length) { renderHome(); show("home"); }
+      else show("start");
+    } else {
+      _renderStockStale();
     }
-    // For silent failures (no internet during background refresh): stay quiet,
-    // user already sees cached data — no need to interrupt them.
   } finally {
     if (!showLoader) setRefreshing(false);
   }
@@ -2913,8 +2942,12 @@ function handleFile(file) {
   reader.onload = (e) => {
     try {
       const newItems = parseWorkbook(e.target.result);
+      if (!newItems.length) {
+        throw new Error("жодного рядка не розібрано — це не схоже на вивантаження залишків.");
+      }
 
       allItems = newItems;
+      _stockRefreshError = null;
       _mnnMapMerge(allItems);
       lastLoaded = new Date();
 
@@ -3065,8 +3098,36 @@ function detectColumns(raw) {
   return Object.assign({}, STOCK_FALLBACK_COLS);
 }
 
+// v.181 — що за файл прийшов, за шапкою 1С (перші рядки першого аркуша).
+// Потрібно, щоб підміна файлів на Диску (фінплан залили в «Залишок по ТМО»,
+// 16.10.2026) давала зрозуміле повідомлення, а не «нуль рядків».
+//   "finplan" — регістр «Закупки», колонка «Реєстратор.Напрям діяльності»
+//   "stock"   — колонки «Поч./Кінц. залишок», «Придатний до»
+//   null      — не впізнано (не блокуємо, парсер вирішить сам)
+function _sniffWorkbookKind(wb) {
+  const ws = wb && wb.Sheets[wb.SheetNames[0]];
+  if (!ws) return null;
+  let txt = "";
+  for (let r = 0; r < 30; r++) {
+    for (let c = 0; c < 25; c++) {
+      const cell = ws[XLSX.utils.encode_cell({ r, c })];
+      if (cell && cell.v != null && cell.v !== "") txt += " " + String(cell.v);
+    }
+  }
+  txt = txt.toLowerCase();
+  if (/реєстратор\.\s*напрям діяльності/.test(txt) ||
+      (/закупки/.test(txt) && /регистрынакопления|регістринакопичення/.test(txt))) return "finplan";
+  if (/відомість по товарах|(кінц|поч)[^\s]*\s*залишок|придатний\s+до/.test(txt)) return "stock";
+  return null;
+}
+
 function parseWorkbook(arrayBuffer) {
   const wb = XLSX.read(arrayBuffer, { type: "array", cellDates: false });
+  if (_sniffWorkbookKind(wb) === "finplan") {
+    throw new Error("Замість залишків прийшов файл ФІНПЛАНУ (регістр «Закупки»). "
+      + "Найімовірніше, у «Залишок по ТМО.xlsx» на Диску залили не той файл — "
+      + "поверніть правильне вивантаження залишків через «Керування версіями».");
+  }
   const ws = wb.Sheets[wb.SheetNames[0]];
   const raw = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
   const items = [];
@@ -3426,7 +3487,24 @@ function renderHome() {
     }
     document.getElementById("last-updated").textContent = txt;
   }
+  _renderStockStale();
   updateNewStat();
+}
+
+// v.181 — плашка «показано старі дані» на головній медпошуку.
+function _renderStockStale() {
+  const el = document.getElementById("stale-warn");
+  if (!el) return;
+  if (!_stockRefreshError || !allItems || !allItems.length) {
+    el.style.display = "none"; el.innerHTML = ""; return;
+  }
+  const when = lastLoaded
+    ? lastLoaded.toLocaleString("uk-UA", {day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"})
+    : "попереднього завантаження";
+  el.innerHTML = `⚠️ Оновити залишки не вдалося — показано дані від ${esc(when)}.`
+    + `<div class="stale-msg">${esc(_stockRefreshError)}</div>`
+    + `<button onclick="fetchAndUpdate(false)">↻ Повторити</button>`;
+  el.style.display = "block";
 }
 
 function setSearchMode(mode, btn) {
@@ -10848,6 +10926,8 @@ const HOSPITALS = [
 ];
 
 let _finplanData = null;
+// v.181: остання помилка оновлення фінплану (null = все гаразд).
+let _finplanRefreshError = null;
 let _finplanCurrentMonth = null;
 let _finplanSort = "sum";
 let _finplanItemSort = "sum";
@@ -10952,6 +11032,7 @@ async function loadFinplan(forceRefresh) {
   try {
     const data = await _fetchFinplan();
     _finplanData = data;
+    _finplanRefreshError = null;
     _saveFinplanCache(data);
     _initFinplanUI();
     loadingEl.style.display = "none";
@@ -10959,8 +11040,15 @@ async function loadFinplan(forceRefresh) {
   } catch (err) {
     console.error("[finplan] load failed:", err);
     loadingEl.style.display = "none";
-    errorEl.style.display = "block";
-    document.getElementById("fp-error-details").textContent = err.message || String(err);
+    _finplanRefreshError = err.message || String(err);
+    if (_finplanData) {
+      // Є попередні дані — лишаємо їх на екрані з плашкою про збій.
+      _initFinplanUI();
+      contentEl.style.display = "block";
+    } else {
+      errorEl.style.display = "block";
+      document.getElementById("fp-error-details").textContent = _finplanRefreshError;
+    }
   }
 }
 
@@ -10968,14 +11056,19 @@ async function _fetchFinplanInBackground() {
   try {
     const data = await _fetchFinplan();
     _finplanData = data;
+    _finplanRefreshError = null;
     _saveFinplanCache(data);
     // Only re-render if user is still on finplan screen
     if (document.getElementById("finplan-screen").style.display === "block") {
       _initFinplanUI();
     }
   } catch (e) {
-    // Silent: cache stays
+    // Кеш лишається, але тепер з плашкою «оновити не вдалося».
     console.warn("[finplan] background refresh failed:", e.message);
+    _finplanRefreshError = e.message || String(e);
+    if (_finplanData && document.getElementById("finplan-screen").style.display === "block") {
+      _initFinplanUI();
+    }
   }
 }
 
@@ -10992,11 +11085,23 @@ async function _fetchFinplan() {
   // back to content heuristics.
   const wb = XLSX.read(buf, { type: "array", cellDates: false, cellStyles: true });
 
+  // v.181: підміна файлу на Диску → зрозуміла помилка замість порожнього
+  // фінплану, який ще й перезаписав би робочий кеш.
+  if (_sniffWorkbookKind(wb) === "stock") {
+    throw new Error("Замість фінплану прийшов файл ЗАЛИШКІВ. Найімовірніше, у "
+      + "«Фнплан.xlsx» на Диску залили не той файл — поверніть правильний через "
+      + "«Керування версіями».");
+  }
+
   const months = {};
   for (const sheetName of wb.SheetNames) {
     const ws = wb.Sheets[sheetName];
     const parsed = _parseFinplanSheet(ws);
     if (parsed) months[sheetName] = parsed;
+  }
+  if (!Object.values(months).some(m => m.mvos && m.mvos.length)) {
+    throw new Error("Файл фінплану завантажився, але жодного складу не розібрано. "
+      + "Схоже, на Диску не той файл або змінився формат вивантаження.");
   }
 
   return {
@@ -11503,6 +11608,7 @@ function renderFinplan() {
     <div class="fp-summary-period">${esc(_finplanCurrentMonth)}${periodStr ? " · " + esc(periodStr) : ""}</div>
     ${Math.abs(monthData.integrityDelta || 0) > 1 ? `<div style="margin-top:6px;font-size:11px;color:var(--warn);">⚠️ Сума не сходиться з файлом на ${fmtFinplanMoney(monthData.integrityDelta)}${(monthData.suspects && monthData.suspects.length) ? ` — ймовірно, не розпізнано як склад: ${monthData.suspects.map(s => `«${esc(s.name)}» (${fmtFinplanMoney(s.sum)}${s.host ? `, сидить у «${esc(s.host)}»` : ""})`).join("; ")}. Скинь цю назву Остапу/Claude — додамо в розпізнавання.` : ` — ймовірно, нерозпізнаний склад`}</div>` : ""}
     ${updatedStr ? `<div class="fp-summary-updated">🔄 Дані оновлено ${esc(updatedStr)}</div>` : ""}
+    ${_finplanRefreshError ? `<div class="stale-warn" style="margin:10px 0 0">⚠️ Оновити не вдалося — показано дані від ${esc(updatedStr || "попереднього завантаження")}.<div class="stale-msg">${esc(_finplanRefreshError)}</div><button onclick="loadFinplan(true)">↻ Повторити</button></div>` : ""}
   `;
 
   // Hospital cards
