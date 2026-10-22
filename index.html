@@ -2263,6 +2263,16 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.183 — аналітика: 1С перейменувала напрям "51 - ПРОТЕЗНА МАЙСТЕРНЯ" на
+//   "51-Протези" (вересень). Фільтр /протезн/ його не ловив — протези
+//   (35 млн ₴) потрапили в Річну потребу й інфекційний контроль, а звірка
+//   з "Разом" розійшлась на −30 052,25 ₴. Тепер відкидається за коренем
+//   "протез" АБО за кодом напряму 51.
+//   Звірка тепер ПО НАПРЯМАХ: кожен напрям, що йде в аналітику, порівнюється
+//   з власним рядком-підсумком. "Разом" для цього не годиться — у протезах
+//   1С сама рахує кінцевий залишок непослідовно (МВО ≠ сума позицій,
+//   "Разом" ≠ сума напрямів на 7 146,46), і звірка вічно б "горіла"
+//   через напрям, який ми все одно відкидаємо.
 // v.182 — фінплан: «Боївка Андрій (СКЛАД ВАКЦИНИ)» → Лікарня св. Пантелеймона
 //   (override по прізвищу+імені; також доданий у явний список складів, бо в
 //   назві немає ні ініціалів, ні "Склад №").
@@ -2332,7 +2342,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.182";
+const APP_VERSION = "v.183";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -5726,7 +5736,9 @@ function _anLooksLikeDirectionName(text) {
 // Напрями, які не стосуються медикаментів і не повинні потрапляти ні в
 // потребу, ні в АМП-звіт, ні в аналітику. Відкидаються ще на етапі розбору —
 // так вони не займають місця в кеші.
-const AN_EXCLUDED_DIRECTION_RE = /протезн/i;
+// Корінь "протез" (а не "протезн") + код 51: у вересні 2026 напрям прийшов
+// як "51-Протези", і старий фільтр /протезн/ його пропустив.
+const AN_EXCLUDED_DIRECTION_RE = /протез|^\s*51\s*[-–—]/i;
 function _anIsExcludedDirection(name) {
   return AN_EXCLUDED_DIRECTION_RE.test(String(name || ""));
 }
@@ -6074,6 +6086,14 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     if (indent === 2) {
       finalizeEmptyDept();
       useDirection(aVal || "(без напряму)");
+      // v.183: підсумок напряму з самого файлу — еталон для звірки. Напрям
+      // з порожньою назвою може трапитись кілька разів → сумуємо.
+      {
+        const t = _anExtractNumbers(cells);
+        const h = (stats.dir_headers = stats.dir_headers || {});
+        const acc = h[currentDirection] || (h[currentDirection] = {});
+        for (const k in t) if (typeof t[k] === "number") acc[k] = (acc[k] || 0) + t[k];
+      }
       currentGroup = null;
       currentDept = null;
       currentDeptTotals = null;
@@ -7589,12 +7609,39 @@ async function parseAnalyticsXlsx(arrayBuffer) {
     // аналітику вдвічі: якщо якийсь агрегатний рядок помилково потрапив у
     // дерево як підрозділ, ця сума розійдеться з підсумком файлу.
     let integrity = null;
-    if (parsed.stats && parsed.stats.file_total && typeof parsed.stats.file_total.cs === "number") {
+    // v.183 — основна звірка ПО НАПРЯМАХ: розібрана сума кожного напряму
+    // проти його рядка-підсумку у файлі. Ловить той самий клас помилок
+    // (агрегатний рядок у дереві, нерозпізнаний рівень) і не залежить від
+    // напрямів, які ми відкидаємо (протези), де 1С сама не сходиться.
+    const _hdr = (parsed.stats && parsed.stats.dir_headers) || null;
+    const _kept = parsed.dirs || [];
+    if (_hdr && _kept.length && _kept.every(d => _hdr[d.name])) {
+      let parsedCs = 0, headerCs = 0;
+      const bad = [];
+      for (const d of _kept) {
+        let p = 0;
+        for (const g of d.groups) p += (g.totals && g.totals.cs) || 0;
+        const h = _hdr[d.name].cs || 0;
+        parsedCs += p; headerCs += h;
+        const dd = Math.round((p - h) * 100) / 100;
+        if (Math.abs(dd) > 1) bad.push({ name: d.name, parsed: Math.round(p * 100) / 100, header: Math.round(h * 100) / 100, diff: dd });
+      }
+      integrity = {
+        mode: "directions",
+        parsed_cs: Math.round(parsedCs * 100) / 100,
+        header_cs: Math.round(headerCs * 100) / 100,
+        diff: Math.round(bad.reduce((a, b) => a + b.diff, 0) * 100) / 100,
+        bad_dirs: bad,
+        excluded: (parsed.stats.skipped_directions || []).slice(),
+      };
+      if (bad.length) console.warn("[analytics] розбіжність по напрямах:", bad);
+    } else if (parsed.stats && parsed.stats.file_total && typeof parsed.stats.file_total.cs === "number") {
       let parsedCs = 0;
       for (const g of _allGroups) parsedCs += (g.totals && g.totals.cs) || 0;
       const exclCs = (parsed.stats.excluded_totals && parsed.stats.excluded_totals.cs) || 0;
       const fileCs = parsed.stats.file_total.cs;
       integrity = {
+        mode: "total",
         file_cs: Math.round(fileCs * 100) / 100,
         parsed_cs: Math.round(parsedCs * 100) / 100,
         excluded_cs: Math.round(exclCs * 100) / 100,
@@ -7948,7 +7995,12 @@ function renderWarnings() {
     // Показуємо лише для реального місяця: агрегат за діапазон складається
     // з кількох файлів і власного "Разом" не має.
     const integ = m._integrity;
-    if (integ && Math.abs(integ.diff) > 1) {
+    if (integ && integ.mode === "directions" && integ.bad_dirs && integ.bad_dirs.length) {
+      warnings.push(integ.bad_dirs.map(b =>
+        `Напрям «${b.name}»: розібрано ${fmtMoney(b.parsed)}, у файлі ${fmtMoney(b.header)} `
+        + `(розбіжність ${fmtMoney(b.diff)}).`).join(" ")
+        + ` Ймовірно, у вивантаженні з'явився новий рівень ієрархії або агрегатний рядок, якого парсер не впізнає.`);
+    } else if (integ && integ.mode !== "directions" && Math.abs(integ.diff) > 1) {
       warnings.push(`Сума розібраних напрямів (${fmtMoney(integ.parsed_cs + integ.excluded_cs)}) `
         + `не збігається з підсумком файлу (${fmtMoney(integ.file_cs)}). `
         + `Розбіжність: ${fmtMoney(integ.diff)}. Ймовірно, у вивантаженні з'явився новий рівень `
