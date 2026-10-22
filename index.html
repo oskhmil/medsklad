@@ -2263,6 +2263,11 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.186 — аналітика без відступів, «Незламні»: рядок лікарні називається
+//   «Реабілітаційний центр "НЕЗЛАМНІ"» (ні "ВП", ні "Лікарня"), а МВО стоїть
+//   одразу під ним, без відділення → нічого не розбиралось, "Дані відсутні".
+//   Тепер структурно: рядок одразу після напряму = лікарня; перший рядок під
+//   лікарнею, під яким одразу позиції, = підрозділ. Кеш аналітики v13 → v14.
 // v.185 — аналітика без відступів (файл з Диску = Google-таблиця, indent
 //   зрізано) — два баґи, через які v.183/v.184 не діяли в продакшені:
 //   • "29 Програми МБ" (без дефіса після номера) не впізнавався як напрям —
@@ -2354,7 +2359,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.185";
+const APP_VERSION = "v.186";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4703,7 +4708,7 @@ function analyticsHospitalCacheKey(id) {
   // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
   // v12 = «51-Протези» відкидається + звірка по напрямах (v.183/v.184).
-  return "medsklad_analytics_cache_v13__" + id;
+  return "medsklad_analytics_cache_v14__" + id;
 }
 
 // Remove analytics caches of OLDER versions (v7 and below) so they don't eat
@@ -4713,7 +4718,7 @@ function analyticsHospitalCacheKey(id) {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v13__")) {
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v14__")) {
         toRemove.push(k);
       }
     }
@@ -4725,7 +4730,7 @@ function analyticsHospitalCacheKey(id) {
     if (IDB.available) {
       try {
         for (const h of ANALYTICS_HOSPITALS) {
-          for (let v = 7; v <= 12; v++) {
+          for (let v = 7; v <= 13; v++) {
             IDB.del("medsklad_analytics_cache_v" + v + "__" + h.id).catch(() => {});
           }
         }
@@ -5946,9 +5951,16 @@ function _anInferNoIndentLevels(rows) {
   }
 
   let haveGroup = false;
+  // v.186: структурні підказки для файлів, де назви не впізнаються:
+  //   prevDir  — попередній значущий рядок був напрямом → цей рядок = лікарня
+  //   deptSeen — у поточній лікарні вже є підрозділ (рівень 6)
+  let prevDir = false;
+  let deptSeen = false;
   for (let i = 0; i < sig.length; i++) {
     const cur = sig[i];
-    if (cur.type === "emptydir") { levels.set(cur.row, 2); continue; }
+    const afterDir = prevDir;
+    prevDir = false;
+    if (cur.type === "emptydir") { levels.set(cur.row, 2); prevDir = true; continue; }
     if (cur.type !== "aonly") continue;
 
     // Напрям діяльності — окремий рівень над лікарнею. Він НЕ скидає
@@ -5958,10 +5970,11 @@ function _anInferNoIndentLevels(rows) {
     // рядок лікарні.
     const nx = sig[i + 1];
     const dirNoDash = /^\d{1,2}\s+\S/.test(cur.name) && nx && nx.type === "aonly" && nx.isGroup;
-    if (cur.isDir || dirNoDash) { levels.set(cur.row, 2); continue; }
-    if (cur.isGroup) {
+    if (cur.isDir || dirNoDash) { levels.set(cur.row, 2); prevDir = true; continue; }
+    if (cur.isGroup || afterDir) {
       levels.set(cur.row, 4);
       haveGroup = true;
+      deptSeen = false;
       continue;
     }
     if (!haveGroup) continue;
@@ -5972,10 +5985,18 @@ function _anInferNoIndentLevels(rows) {
       // In Google Sheets exports indentation is lost. A department row is
       // followed by its МВО row; an МВО row is followed by item rows.
       levels.set(cur.row, 6);
+      deptSeen = true;
     } else if (!next && _anHasAnyNumber(nums)) {
       // Final aggregate-only department (e.g. central sterilization) can have
       // totals but no МВО/details underneath.
       levels.set(cur.row, 6);
+      deptSeen = true;
+    } else if (!deptSeen) {
+      // v.186: під лікарнею ще не було підрозділу, а під цим рядком одразу
+      // позиції (МВО без відділення, як у «Незламних») — це і є підрозділ.
+      // Раніше він ставав МВО без відділення, і всі позиції відкидались.
+      levels.set(cur.row, 6);
+      deptSeen = true;
     } else {
       levels.set(cur.row, 8);
     }
