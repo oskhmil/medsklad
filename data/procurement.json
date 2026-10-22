@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-22T12:35:09.476862+00:00",
+ "generated": "2026-10-22T17:49:39.603118+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-22T12:35:09.476862+00:00",
+  "checked": "2026-10-22T17:49:39.603118+00:00",
   "expected": 1523,
   "seen": 1523,
   "tenders": 529,
@@ -14,280 +14,280 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-19-011946-a",
-   "tenderID": "UA-2026-10-19-011946-a",
-   "title": "Габапентин капсули по 300 мг",
+   "amount": 646000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-10-22T11:00:00+03:00",
    "dateModified": "2026-10-22T14:56:28.602117+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 646000,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-011946-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-19-011946-a",
    "items": [
     {
+     "amount": 646000,
+     "lot": null,
      "name": "Габапентин капсули по 300 мг",
      "qty": 100000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 646000,
-     "unitPrice": 6.46,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 6.46
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-19-011946-a",
+   "title": "Габапентин капсули по 300 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-011946-a"
   },
   {
-   "id": "UA-2026-10-19-009714-a",
-   "tenderID": "UA-2026-10-19-009714-a",
-   "title": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
+   "amount": 10800000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-10-22T09:10:00+03:00",
    "dateModified": "2026-10-22T14:11:36.199713+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 10800000,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-009714-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-19-009714-a",
    "items": [
     {
+     "amount": 10800000,
+     "lot": null,
      "name": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
      "qty": 135000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Аптека №44",
-     "amount": 10800000,
-     "unitPrice": 80.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 80.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-19-009714-a",
+   "title": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-009714-a"
   },
   {
-   "id": "UA-2026-10-08-004156-a",
-   "tenderID": "UA-2026-10-08-004156-a",
-   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "amount": 1570427.68,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 9,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-10-27T08:00:00+02:00",
    "dateModified": "2026-10-22T11:33:23.109811+03:00",
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1570427.68,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a",
-   "counts": {
-    "signed": 0,
-    "progress": 9,
-    "failed": 0
-   },
+   "id": "UA-2026-10-08-004156-a",
    "items": [
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
      "qty": 600,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кістковий віск, 2,5 г",
      "qty": 960,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові cередньо-великі",
      "qty": 900,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові малі",
      "qty": 36,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові середні",
      "qty": 50,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 80,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 40,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 16,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-08-004156-a",
+   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a"
   },
   {
-   "id": "UA-2026-10-22-003844-a",
-   "tenderID": "UA-2026-10-22-003844-a",
-   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
+   "amount": 2343456,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-10-27T10:00:00+02:00",
    "dateModified": "2026-10-22T10:48:41.904787+03:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2343456,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-10-22-003844-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл",
      "qty": 33000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Діазепам таблетки по 5 мг",
      "qty": 240,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-22-003844-a",
+   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a"
   },
   {
-   "id": "UA-2026-10-19-010703-a",
-   "tenderID": "UA-2026-10-19-010703-a",
-   "title": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
+   "amount": 535500,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33610000-9",
    "date": "2026-10-22T09:30:00+03:00",
    "dateModified": "2026-10-22T09:52:21.159350+03:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 535500,
    "group": "Ліки",
-   "cpv": "33610000-9",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010703-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-19-010703-a",
    "items": [
     {
+     "amount": 535500,
+     "lot": null,
      "name": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
      "qty": 85000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 535500,
-     "unitPrice": 6.3,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 6.3
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-19-010224-a",
-   "tenderID": "UA-2026-10-19-010224-a",
-   "title": "Альбумін, розчин для інфузій, 20%, по 100 мл",
-   "date": "2026-10-22T09:15:00+03:00",
-   "dateModified": "2026-10-22T09:51:38.371060+03:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-10-19-010703-a",
+   "title": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010703-a"
+  },
+  {
    "amount": 17637500,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010224-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 1,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33620000-2",
+   "date": "2026-10-22T09:15:00+03:00",
+   "dateModified": "2026-10-22T09:51:38.371060+03:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-19-010224-a",
    "items": [
     {
+     "amount": 17637500,
+     "lot": null,
      "name": "Альбумін, розчин для інфузій, 20%, по 100 мл",
      "qty": 8500,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 17637500,
-     "unitPrice": 2075.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 2075.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-19-010224-a",
+   "title": "Альбумін, розчин для інфузій, 20%, по 100 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010224-a"
   },
   {
    "amount": 2905962.62,
