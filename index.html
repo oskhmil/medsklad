@@ -2263,6 +2263,15 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.185 — аналітика без відступів (файл з Диску = Google-таблиця, indent
+//   зрізано) — два баґи, через які v.183/v.184 не діяли в продакшені:
+//   • "29 Програми МБ" (без дефіса після номера) не впізнавався як напрям —
+//     серпень і вересень: ~17 млн ₴ зливались у "14- МОЗ трансплантація".
+//     Тепер напрям = "NN-…" АБО "NN Назва", за яким одразу йде рядок лікарні.
+//   • Напрям з порожньою назвою (рядок без A і B, але з сумами) не
+//     розпізнавався → звірка по напрямах не мала еталону й падала назад на
+//     "Разом", де 1С сама не сходиться через протези.
+//   Кеш аналітики v12 → v13.
 // v.184 — кеш аналітики v11 → v12. Кеш зберігає ВЖЕ РОЗІБРАНУ структуру
 //   разом із результатом звірки, тож v.183 (протези + звірка по напрямах)
 //   не діяла, доки не минали 12 год — розбіжність −30 052,25 ₴ висіла далі.
@@ -2345,7 +2354,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.184";
+const APP_VERSION = "v.185";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4694,7 +4703,7 @@ function analyticsHospitalCacheKey(id) {
   // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
   // v12 = «51-Протези» відкидається + звірка по напрямах (v.183/v.184).
-  return "medsklad_analytics_cache_v12__" + id;
+  return "medsklad_analytics_cache_v13__" + id;
 }
 
 // Remove analytics caches of OLDER versions (v7 and below) so they don't eat
@@ -4704,7 +4713,7 @@ function analyticsHospitalCacheKey(id) {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v12__")) {
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v13__")) {
         toRemove.push(k);
       }
     }
@@ -4716,7 +4725,7 @@ function analyticsHospitalCacheKey(id) {
     if (IDB.available) {
       try {
         for (const h of ANALYTICS_HOSPITALS) {
-          for (let v = 7; v <= 11; v++) {
+          for (let v = 7; v <= 12; v++) {
             IDB.del("medsklad_analytics_cache_v" + v + "__" + h.id).catch(() => {});
           }
         }
@@ -5928,17 +5937,28 @@ function _anInferNoIndentLevels(rows) {
       });
     } else if (!aVal && bVal) {
       sig.push({ row: rec.row, type: "item" });
+    } else if (!aVal && !bVal && _anHasAnyNumber(_anExtractNumbers(cells))) {
+      // v.185: рядок без A і B, але з сумами — напрям з порожньою назвою
+      // (позиції без проставленого напряму). Перевірено по всіх місяцях:
+      // у вивантаженні такі рядки бувають ЛИШЕ на рівні напряму.
+      sig.push({ row: rec.row, type: "emptydir" });
     }
   }
 
   let haveGroup = false;
   for (let i = 0; i < sig.length; i++) {
     const cur = sig[i];
+    if (cur.type === "emptydir") { levels.set(cur.row, 2); continue; }
     if (cur.type !== "aonly") continue;
 
     // Напрям діяльності — окремий рівень над лікарнею. Він НЕ скидає
     // haveGroup: у файлі кожен напрям має власний рядок лікарні нижче.
-    if (cur.isDir) { levels.set(cur.row, 2); continue; }
+    // v.185: "29 Програми МБ" — без дефіса. Такий варіант ("NN Назва")
+    // приймаємо лише зі структурним підтвердженням: одразу за ним іде
+    // рядок лікарні.
+    const nx = sig[i + 1];
+    const dirNoDash = /^\d{1,2}\s+\S/.test(cur.name) && nx && nx.type === "aonly" && nx.isGroup;
+    if (cur.isDir || dirNoDash) { levels.set(cur.row, 2); continue; }
     if (cur.isGroup) {
       levels.set(cur.row, 4);
       haveGroup = true;
@@ -6075,6 +6095,8 @@ function _anParseSheet(sheetXml, sharedStrings, xfToIndent) {
     // rows come through with indent=0, infer the level from the row shape/name.
     if (indent === 0 && aVal && !bVal && !_anIsDocumentRow(aVal)) {
       indent = inferredLevels.get(row) || _anFallbackLevel(aVal, bVal, currentGroup, currentDept);
+    } else if (indent === 0 && !aVal && !bVal && inferredLevels.get(row) === 2) {
+      indent = 2; // v.185: напрям з порожньою назвою у файлі без відступів
     }
 
     // Підсумковий рядок файлу ("Разом"). Не частина ієрархії — але це єдиний
