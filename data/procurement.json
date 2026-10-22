@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-22T01:40:38.297572+00:00",
+ "generated": "2026-10-22T06:48:35.671486+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-22T01:40:38.297572+00:00",
+  "checked": "2026-10-22T06:48:35.671486+00:00",
   "expected": 1522,
   "seen": 1522,
   "tenders": 528,
@@ -13,6 +13,99 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-10-19-010703-a",
+   "tenderID": "UA-2026-10-19-010703-a",
+   "title": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
+   "date": "2026-10-22T09:30:00+03:00",
+   "dateModified": "2026-10-22T09:30:00.181836+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 953700,
+   "group": "Ліки",
+   "cpv": "33610000-9",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010703-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
+     "qty": 85000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-19-010224-a",
+   "tenderID": "UA-2026-10-19-010224-a",
+   "title": "Альбумін, розчин для інфузій, 20%, по 100 мл",
+   "date": "2026-10-22T09:15:00+03:00",
+   "dateModified": "2026-10-22T09:15:00.102195+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 18878500,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010224-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Альбумін, розчин для інфузій, 20%, по 100 мл",
+     "qty": 8500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-19-009714-a",
+   "tenderID": "UA-2026-10-19-009714-a",
+   "title": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
+   "date": "2026-10-22T09:10:00+03:00",
+   "dateModified": "2026-10-22T09:10:00.119054+03:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 10826500,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-009714-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
+     "qty": 135000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 2905962.62,
    "contractEnd": null,
@@ -343,68 +436,6 @@
    "tenderID": "UA-2026-09-09-001031-a",
    "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-09-001031-a"
-  },
-  {
-   "amount": 953700,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33610000-9",
-   "date": "2026-10-22T09:30:00+03:00",
-   "dateModified": "2026-10-19T15:58:53.306881+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-19-010703-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
-     "qty": 85000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-19-010703-a",
-   "title": "Метоклопрамід, розчин для ін'єкцій, 5 мг/мл, по 2 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010703-a"
-  },
-  {
-   "amount": 18878500,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33620000-2",
-   "date": "2026-10-22T09:15:00+03:00",
-   "dateModified": "2026-10-19T15:44:28.917807+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-19-010224-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Альбумін, розчин для інфузій, 20%, по 100 мл",
-     "qty": 8500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-19-010224-a",
-   "title": "Альбумін, розчин для інфузій, 20%, по 100 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010224-a"
   },
   {
    "amount": 2171185,
@@ -756,37 +787,6 @@
    "tenderID": "UA-2026-09-22-006746-a",
    "title": "Лабораторні реагенти",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-22-006746-a"
-  },
-  {
-   "amount": 10826500,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-10-22T09:10:00+03:00",
-   "dateModified": "2026-10-19T15:30:02.807944+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-19-009714-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
-     "qty": 135000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-19-009714-a",
-   "title": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-009714-a"
   },
   {
    "amount": 16397338,
