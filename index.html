@@ -2263,6 +2263,9 @@
 // App version — bump on each release. Shown next to "Оберіть розділ"
 // in the header so users can verify they're running the latest build.
 // Manual versioning: bump this number for every change deployed.
+// v.184 — кеш аналітики v11 → v12. Кеш зберігає ВЖЕ РОЗІБРАНУ структуру
+//   разом із результатом звірки, тож v.183 (протези + звірка по напрямах)
+//   не діяла, доки не минали 12 год — розбіжність −30 052,25 ₴ висіла далі.
 // v.183 — аналітика: 1С перейменувала напрям "51 - ПРОТЕЗНА МАЙСТЕРНЯ" на
 //   "51-Протези" (вересень). Фільтр /протезн/ його не ловив — протези
 //   (35 млн ₴) потрапили в Річну потребу й інфекційний контроль, а звірка
@@ -2342,7 +2345,7 @@
 //     Sheets) — аналітика роздувалась у рази. Тепер він розпізнається за
 //     змістом і слугує еталоном для звірки.
 //   • Додано інтегріті-звірку: сума напрямів + виключені = рядок "Разом".
-const APP_VERSION = "v.183";
+const APP_VERSION = "v.184";
 
 // Cache schema version — bump ONLY when we need to force-clear all users'
 // localStorage caches (e.g. data format changed, suspect cache corruption,
@@ -4690,7 +4693,8 @@ function analyticsHospitalCacheKey(id) {
   // v8 = items of person-less departments are attached to "(без МВО)" —
   // older caches have those subdivisions with empty item lists.
   // v7 = two-pass Google Sheets hierarchy inference, including aggregate-only departments.
-  return "medsklad_analytics_cache_v11__" + id;
+  // v12 = «51-Протези» відкидається + звірка по напрямах (v.183/v.184).
+  return "medsklad_analytics_cache_v12__" + id;
 }
 
 // Remove analytics caches of OLDER versions (v7 and below) so they don't eat
@@ -4700,7 +4704,7 @@ function analyticsHospitalCacheKey(id) {
     const toRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v11__")) {
+      if (k && /^medsklad_analytics_cache_v\d+__/.test(k) && !k.startsWith("medsklad_analytics_cache_v12__")) {
         toRemove.push(k);
       }
     }
@@ -4712,7 +4716,7 @@ function analyticsHospitalCacheKey(id) {
     if (IDB.available) {
       try {
         for (const h of ANALYTICS_HOSPITALS) {
-          for (let v = 7; v <= 10; v++) {
+          for (let v = 7; v <= 11; v++) {
             IDB.del("medsklad_analytics_cache_v" + v + "__" + h.id).catch(() => {});
           }
         }
