@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-25T14:32:54.768295+00:00",
+ "generated": "2026-10-25T18:04:11.414716+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-25T14:32:54.768295+00:00",
+  "checked": "2026-10-25T18:04:11.414716+00:00",
   "expected": 1525,
   "seen": 1525,
   "tenders": 530,
@@ -4085,37 +4085,6 @@
    "tenderID": "UA-2026-09-03-012697-a",
    "title": "Медичні матеріали",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-03-012697-a"
-  },
-  {
-   "amount": 818550,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 0,
-    "signed": 1
-   },
-   "cpv": "33690000-3",
-   "date": "2026-09-25T15:12:38.226862+03:00",
-   "dateModified": "2026-09-25T15:12:38.226862+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-08-21-008097-a",
-   "items": [
-    {
-     "amount": 818550,
-     "lot": null,
-     "name": "Маніт розчин для інфузій 150 мг/мл 200мл",
-     "qty": 9000,
-     "status": "Підписано",
-     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
-     "unit": "штука",
-     "unitPrice": 90.95
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "complete",
-   "tenderID": "UA-2026-08-21-008097-a",
-   "title": "Маніт розчин для інфузій 150 мг/мл 200мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-21-008097-a"
   }
  ]
 }
