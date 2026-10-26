@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-26T07:12:47.869494+00:00",
+ "generated": "2026-10-26T14:24:29.001118+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-26T07:12:47.869494+00:00",
+  "checked": "2026-10-26T14:24:29.001118+00:00",
   "expected": 1525,
   "seen": 1525,
   "tenders": 530,
@@ -18,11 +18,11 @@
    "tenderID": "UA-2026-10-21-007004-a",
    "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
    "date": "2026-10-26T08:00:00+02:00",
-   "dateModified": "2026-10-26T08:03:40.588906+02:00",
+   "dateModified": "2026-10-26T15:44:50.653223+02:00",
    "method": "priceQuotation",
    "status": "active.awarded",
    "contractEnd": null,
-   "amount": 1822170,
+   "amount": 1830000,
    "group": "Матеріали",
    "cpv": "33141000-0",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-21-007004-a",
@@ -37,7 +37,7 @@
      "qty": 30000,
      "unit": "штука",
      "status": "Переможець",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ЕЛІТКОМПЛЕКТ\"",
+     "supplier": "ТОВ \"ТОРГОВИЙ ДІМ \"РЕЛАКС\"\"",
      "amount": null,
      "unitPrice": null,
      "lot": null
@@ -47,7 +47,7 @@
      "qty": 9000,
      "unit": "штука",
      "status": "Переможець",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ЕЛІТКОМПЛЕКТ\"",
+     "supplier": "ТОВ \"ТОРГОВИЙ ДІМ \"РЕЛАКС\"\"",
      "amount": null,
      "unitPrice": null,
      "lot": null
@@ -57,10 +57,82 @@
      "qty": 9000,
      "unit": "штука",
      "status": "Переможець",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ЕЛІТКОМПЛЕКТ\"",
+     "supplier": "ТОВ \"ТОРГОВИЙ ДІМ \"РЕЛАКС\"\"",
      "amount": null,
      "unitPrice": null,
      "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-07-004789-a",
+   "tenderID": "UA-2026-10-07-004789-a",
+   "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
+   "date": "2026-10-26T10:00:00+02:00",
+   "dateModified": "2026-10-26T10:00:14.985758+02:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 4126800,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Комплект Trima Accel з LRS камерою для колекції тромбоцитів, плазми та еритроцитів",
+     "qty": 400,
+     "unit": "комплект",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1"
+    },
+    {
+     "name": "Розчин антикоагулянту цитрату декстрозу",
+     "qty": 400,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-09-012201-a",
+   "tenderID": "UA-2026-10-09-012201-a",
+   "title": "Мікропровідник для пристрою для реваскуляризації",
+   "date": "2026-10-26T09:00:00+02:00",
+   "dateModified": "2026-10-26T09:01:29.163064+02:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 243925.23,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Мікропровідник для пристрою для реваскуляризації",
+     "qty": 10,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": 24392.52,
+     "lot": "330a133c151a42a38bb0b32c70e979ab"
     }
    ]
   },
@@ -2012,16 +2084,16 @@
     }
    ],
    "method": "priceQuotation",
-   "status": "cancelled",
-   "tenderID": "UA-2026-10-14-013141-a",
-   "title": "Покриття операційне",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-013141-a",
    "resolved": {
     "count": 3,
     "of": 3,
     "d": "2026-10-21",
     "t": "UA-2026-10-21-007004-a"
-   }
+   },
+   "status": "cancelled",
+   "tenderID": "UA-2026-10-14-013141-a",
+   "title": "Покриття операційне",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-013141-a"
   },
   {
    "amount": 1152520,
@@ -2943,37 +3015,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a"
   },
   {
-   "amount": 243925.23,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33140000-3",
-   "date": "2026-10-26T09:00:00+02:00",
-   "dateModified": "2026-10-09T17:10:49.565382+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-09-012201-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "330a133c151a42a38bb0b32c70e979ab",
-     "name": "Мікропровідник для пристрою для реваскуляризації",
-     "qty": 10,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": 24392.52
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-09-012201-a",
-   "title": "Мікропровідник для пристрою для реваскуляризації",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a"
-  },
-  {
    "amount": 635000,
    "contractEnd": null,
    "counts": {
@@ -3207,47 +3248,6 @@
    "tenderID": "UA-2026-09-10-014189-a",
    "title": "Обладнання для анестезії та реанімації",
    "url": "https://prozorro.gov.ua/tender/UA-2026-09-10-014189-a"
-  },
-  {
-   "amount": 4126800,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33140000-3",
-   "date": "2026-10-26T10:00:00+02:00",
-   "dateModified": "2026-10-07T11:57:24.225025+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-07-004789-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1",
-     "name": "Комплект Trima Accel з LRS камерою для колекції тромбоцитів, плазми та еритроцитів",
-     "qty": 400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "комплект",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1",
-     "name": "Розчин антикоагулянту цитрату декстрозу",
-     "qty": 400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-07-004789-a",
-   "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a"
   },
   {
    "amount": 4702409.25,
