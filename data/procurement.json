@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-26T14:24:29.001118+00:00",
+ "generated": "2026-10-26T20:09:42.044912+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-26T14:24:29.001118+00:00",
+  "checked": "2026-10-26T20:09:42.044912+00:00",
   "expected": 1525,
   "seen": 1525,
   "tenders": 530,
@@ -14,127 +14,127 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-21-007004-a",
-   "tenderID": "UA-2026-10-21-007004-a",
-   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "amount": 1830000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-10-26T08:00:00+02:00",
    "dateModified": "2026-10-26T15:44:50.653223+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1830000,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-21-007004-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
+   "id": "UA-2026-10-21-007004-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Для хірургічних операцій, одноразове, стерильне, матеріал виготовлення СМС, без адгезивного операційного поля (отвору), розмір 200-220х150-170 см, щільність матеріалу від 35 г/м²",
      "qty": 30000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТОРГОВИЙ ДІМ \"РЕЛАКС\"\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Хірургічне, одноразове, стерильне, матеріал виготовлення СМС, без адгезивного операційного поля (отвору), розмір 70-90х50-70 см, щільність матеріалу від 35 г/м²",
      "qty": 9000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТОРГОВИЙ ДІМ \"РЕЛАКС\"\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Покриття Для хірургічних операцій, одноразове, стерильне, матеріал виготовлення СМС, без адгезивного операційного поля (отвору), розмір 250-270х150-170 см, щільність матеріалу від 35 г/м²",
      "qty": 9000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТОРГОВИЙ ДІМ \"РЕЛАКС\"\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-21-007004-a",
+   "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-21-007004-a"
   },
   {
-   "id": "UA-2026-10-07-004789-a",
-   "tenderID": "UA-2026-10-07-004789-a",
-   "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
+   "amount": 4126800,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-10-26T10:00:00+02:00",
    "dateModified": "2026-10-26T10:00:14.985758+02:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 4126800,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-10-07-004789-a",
    "items": [
     {
+     "amount": null,
+     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1",
      "name": "Комплект Trima Accel з LRS камерою для колекції тромбоцитів, плазми та еритроцитів",
      "qty": 400,
-     "unit": "комплект",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1"
+     "unit": "комплект",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1",
      "name": "Розчин антикоагулянту цитрату декстрозу",
      "qty": 400,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-09-012201-a",
-   "tenderID": "UA-2026-10-09-012201-a",
-   "title": "Мікропровідник для пристрою для реваскуляризації",
-   "date": "2026-10-26T09:00:00+02:00",
-   "dateModified": "2026-10-26T09:01:29.163064+02:00",
+   ],
    "method": "aboveThreshold",
    "status": "active.qualification",
-   "contractEnd": null,
+   "tenderID": "UA-2026-10-07-004789-a",
+   "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a"
+  },
+  {
    "amount": 243925.23,
-   "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 1,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33140000-3",
+   "date": "2026-10-26T09:00:00+02:00",
+   "dateModified": "2026-10-26T09:01:29.163064+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-10-09-012201-a",
    "items": [
     {
+     "amount": null,
+     "lot": "330a133c151a42a38bb0b32c70e979ab",
      "name": "Мікропровідник для пристрою для реваскуляризації",
      "qty": 10,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": 24392.52,
-     "lot": "330a133c151a42a38bb0b32c70e979ab"
+     "unit": "штука",
+     "unitPrice": 24392.52
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-10-09-012201-a",
+   "title": "Мікропровідник для пристрою для реваскуляризації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a"
   },
   {
    "amount": 13179600,
