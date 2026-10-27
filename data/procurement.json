@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-27T16:17:21.977600+00:00",
+ "generated": "2026-10-27T20:53:33.254894+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-27T16:17:21.977600+00:00",
+  "checked": "2026-10-27T20:53:33.254894+00:00",
   "expected": 1528,
   "seen": 1528,
   "tenders": 533,
@@ -14,107 +14,107 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-27-013695-a",
-   "tenderID": "UA-2026-10-27-013695-a",
-   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "amount": 3738317.76,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-10-30T08:00:00+02:00",
    "dateModified": "2026-10-27T17:37:53.992933+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 3738317.76,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-013695-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-27-013695-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
      "qty": 16,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-27-011942-a",
-   "tenderID": "UA-2026-10-27-011942-a",
-   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-   "date": "2026-10-30T09:00:00+02:00",
-   "dateModified": "2026-10-27T16:23:27.016577+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1595440,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-     "qty": 16478,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
+   "tenderID": "UA-2026-10-27-013695-a",
+   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-013695-a"
   },
   {
-   "id": "UA-2026-10-22-003844-a",
-   "tenderID": "UA-2026-10-22-003844-a",
-   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
-   "date": "2026-10-27T10:00:00+02:00",
-   "dateModified": "2026-10-27T15:24:17.842195+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
+   "amount": 1595440,
    "contractEnd": null,
-   "amount": 2343240,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a",
    "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
    },
+   "cpv": "33620000-2",
+   "date": "2026-10-30T09:00:00+02:00",
+   "dateModified": "2026-10-27T16:23:27.016577+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-27-011942-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
+     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+     "qty": 16478,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-27-011942-a",
+   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a"
+  },
+  {
+   "amount": 2343240,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
+   "date": "2026-10-27T10:00:00+02:00",
+   "dateModified": "2026-10-27T15:24:17.842195+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-22-003844-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
      "name": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл",
      "qty": 33000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Аптека №44",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Діазепам таблетки по 5 мг",
      "qty": 240,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Аптека №44",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-22-003844-a",
+   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a"
   },
   {
    "amount": 4126800,
