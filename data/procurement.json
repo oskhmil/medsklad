@@ -1,18 +1,293 @@
 {
- "generated": "2026-10-27T05:05:01.388706+00:00",
+ "generated": "2026-10-27T10:38:22.940230+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-27T05:05:01.388706+00:00",
-  "expected": 1525,
-  "seen": 1525,
-  "tenders": 530,
+  "checked": "2026-10-27T10:38:22.940230+00:00",
+  "expected": 1526,
+  "seen": 1526,
+  "tenders": 531,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-10-22-003844-a",
+   "tenderID": "UA-2026-10-22-003844-a",
+   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
+   "date": "2026-10-27T10:00:00+02:00",
+   "dateModified": "2026-10-27T11:12:41.169220+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 1353240,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл",
+     "qty": 33000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТЕРНОПІЛЬСЬКЕ ОБЛАСНЕ ВИРОБНИЧО-ТОРГОВЕ АПТЕЧНЕ ОБ'ЄДНАННЯ",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Діазепам таблетки по 5 мг",
+     "qty": 240,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТЕРНОПІЛЬСЬКЕ ОБЛАСНЕ ВИРОБНИЧО-ТОРГОВЕ АПТЕЧНЕ ОБ'ЄДНАННЯ",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-07-004789-a",
+   "tenderID": "UA-2026-10-07-004789-a",
+   "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
+   "date": "2026-10-26T10:00:00+02:00",
+   "dateModified": "2026-10-27T10:52:58.406631+02:00",
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 4126800,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Комплект Trima Accel з LRS камерою для колекції тромбоцитів, плазми та еритроцитів",
+     "qty": 400,
+     "unit": "комплект",
+     "status": "Переможець",
+     "supplier": "ТОВ \"ІНСТАМЕД\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1"
+    },
+    {
+     "name": "Розчин антикоагулянту цитрату декстрозу",
+     "qty": 400,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"ІНСТАМЕД\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-27-002249-a",
+   "tenderID": "UA-2026-10-27-002249-a",
+   "title": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
+   "date": "2026-10-30T08:00:00+02:00",
+   "dateModified": "2026-10-27T10:10:22.645545+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 300744,
+   "group": "Матеріали",
+   "cpv": "33141000-0",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-002249-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм",
+     "qty": 720,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм",
+     "qty": 720,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
+     "qty": 720,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-02-006431-a",
+   "tenderID": "UA-2026-10-02-006431-a",
+   "title": "Підігріваюча камера для рідин",
+   "date": "2026-10-27T08:37:26.695051+02:00",
+   "dateModified": "2026-10-27T08:37:26.695051+02:00",
+   "method": "aboveThreshold",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 2211275,
+   "group": "Матеріали",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006431-a",
+   "counts": {
+    "signed": 1,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Підігріваюча камера для рідин (НК 031:2024 A030105 - СИСТЕМИ НАГРІВАННЯ РІДИН)",
+     "qty": 11,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"ЛОГІКЛАБГРУПА\"",
+     "amount": null,
+     "unitPrice": 241230.0,
+     "lot": "b697124621ab4c51956e483330b66f83"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-08-004156-a",
+   "tenderID": "UA-2026-10-08-004156-a",
+   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "date": "2026-10-27T08:00:00+02:00",
+   "dateModified": "2026-10-27T08:00:28.279582+02:00",
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 1570427.68,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a",
+   "counts": {
+    "signed": 0,
+    "progress": 9,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
+     "qty": 600,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Кістковий віск, 2,5 г",
+     "qty": 960,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Кліпси титанові cередньо-великі",
+     "qty": 900,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Кліпси титанові малі",
+     "qty": 36,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Кліпси титанові середні",
+     "qty": 50,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 80,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 40,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 40,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    },
+    {
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 16,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def"
+    }
+   ]
+  },
   {
    "amount": 1830000,
    "contractEnd": null,
@@ -63,47 +338,6 @@
    "tenderID": "UA-2026-10-21-007004-a",
    "title": "Медичні матеріали нехімічні та гематологічні одноразового застосування",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-21-007004-a"
-  },
-  {
-   "amount": 4126800,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33140000-3",
-   "date": "2026-10-26T10:00:00+02:00",
-   "dateModified": "2026-10-26T10:00:14.985758+02:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-07-004789-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1",
-     "name": "Комплект Trima Accel з LRS камерою для колекції тромбоцитів, плазми та еритроцитів",
-     "qty": 400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "комплект",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "585b6e15c2cc4d16bf77aa4e4b6f32f1",
-     "name": "Розчин антикоагулянту цитрату декстрозу",
-     "qty": 400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "tenderID": "UA-2026-10-07-004789-a",
-   "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a"
   },
   {
    "amount": 243925.23,
@@ -842,158 +1076,6 @@
    "tenderID": "UA-2026-10-19-009714-a",
    "title": "Фентаніл, розчин для ін'єкцій, 0,05 мг/мл, по 2 мл",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-009714-a"
-  },
-  {
-   "amount": 1570427.68,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 9,
-    "signed": 0
-   },
-   "cpv": "33140000-3",
-   "date": "2026-10-27T08:00:00+02:00",
-   "dateModified": "2026-10-22T11:33:23.109811+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-08-004156-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
-     "qty": 600,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Кістковий віск, 2,5 г",
-     "qty": 960,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Кліпси титанові cередньо-великі",
-     "qty": 900,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Кліпси титанові малі",
-     "qty": 36,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Кліпси титанові середні",
-     "qty": 50,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 80,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 40,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 40,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def",
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 16,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-08-004156-a",
-   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a"
-  },
-  {
-   "amount": 2343456,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-10-27T10:00:00+02:00",
-   "dateModified": "2026-10-22T10:48:41.904787+03:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-22-003844-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл",
-     "qty": 33000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Діазепам таблетки по 5 мг",
-     "qty": 240,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-22-003844-a",
-   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a"
   },
   {
    "amount": 535500,
@@ -1758,37 +1840,6 @@
    "tenderID": "UA-2026-10-01-010008-a",
    "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-01-010008-a"
-  },
-  {
-   "amount": 2211275,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33190000-8",
-   "date": "2026-10-19T10:00:00+03:00",
-   "dateModified": "2026-10-19T13:57:44.659615+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-02-006431-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "b697124621ab4c51956e483330b66f83",
-     "name": "Підігріваюча камера для рідин (НК 031:2024 A030105 - СИСТЕМИ НАГРІВАННЯ РІДИН)",
-     "qty": 11,
-     "status": "Переможець",
-     "supplier": "ТОВ \"ЛОГІКЛАБГРУПА\"",
-     "unit": "штука",
-     "unitPrice": 201025.0
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-10-02-006431-a",
-   "title": "Підігріваюча камера для рідин",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006431-a"
   },
   {
    "amount": 1906740,
