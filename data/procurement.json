@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-28T17:34:03.325982+00:00",
+ "generated": "2026-10-28T22:08:40.650460+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-28T17:34:03.325982+00:00",
+  "checked": "2026-10-28T22:08:40.650460+00:00",
   "expected": 1531,
   "seen": 1531,
   "tenders": 536,
@@ -14,107 +14,107 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-28-013460-a",
-   "tenderID": "UA-2026-10-28-013460-a",
-   "title": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
+   "amount": 5435323.3,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-02T09:10:00+02:00",
    "dateModified": "2026-10-28T16:54:21.794285+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 5435323.3,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-013460-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-28-013460-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
      "qty": 1700,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-28-012944-a",
-   "tenderID": "UA-2026-10-28-012944-a",
-   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-   "date": "2026-11-02T09:05:00+02:00",
-   "dateModified": "2026-10-28T16:38:14.763683+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1951080,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-012944-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-     "qty": 710,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
+   "tenderID": "UA-2026-10-28-013460-a",
+   "title": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-013460-a"
   },
   {
-   "id": "UA-2026-10-01-010008-a",
-   "tenderID": "UA-2026-10-01-010008-a",
-   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
-   "date": "2026-10-28T15:41:35.732993+02:00",
-   "dateModified": "2026-10-28T15:41:35.732993+02:00",
-   "method": "aboveThreshold",
-   "status": "complete",
+   "amount": 1951080,
    "contractEnd": null,
-   "amount": 477102.8,
-   "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-01-010008-a",
    "counts": {
-    "signed": 2,
-    "progress": 0,
-    "failed": 0
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
    },
+   "cpv": "33650000-1",
+   "date": "2026-11-02T09:05:00+02:00",
+   "dateModified": "2026-10-28T16:38:14.763683+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-28-012944-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
+     "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+     "qty": 710,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-10-28-012944-a",
+   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-012944-a"
+  },
+  {
+   "amount": 477102.8,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 2
+   },
+   "cpv": "33190000-8",
+   "date": "2026-10-28T15:41:35.732993+02:00",
+   "dateModified": "2026-10-28T15:41:35.732993+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-10-01-010008-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": "54f2f25a2f3948948e9af58c11ad611f",
      "name": "Операційний стіл",
      "qty": 1,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ОПТІ МЕД ТРЕЙД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "54f2f25a2f3948948e9af58c11ad611f"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "54f2f25a2f3948948e9af58c11ad611f",
      "name": "Гідравлічне медичне крісло",
      "qty": 1,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ОПТІ МЕД ТРЕЙД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "54f2f25a2f3948948e9af58c11ad611f"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-10-01-010008-a",
+   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-01-010008-a"
   },
   {
    "amount": 105600,
