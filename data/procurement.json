@@ -1,9 +1,9 @@
 {
- "generated": "2026-10-30T00:28:10.993520+00:00",
+ "generated": "2026-10-30T06:37:27.534091+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-30T00:28:10.993520+00:00",
+  "checked": "2026-10-30T06:37:27.534091+00:00",
   "expected": 1532,
   "seen": 1532,
   "tenders": 537,
@@ -13,6 +13,88 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-10-27-013695-a",
+   "tenderID": "UA-2026-10-27-013695-a",
+   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "date": "2026-10-30T08:00:00+02:00",
+   "dateModified": "2026-10-30T08:21:17.441734+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 3711632,
+   "group": "Ліки",
+   "cpv": "33630000-5",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-013695-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+     "qty": 16,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"Людмила-Фарм\"",
+     "amount": 3711632,
+     "unitPrice": 231977.0,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-27-002249-a",
+   "tenderID": "UA-2026-10-27-002249-a",
+   "title": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
+   "date": "2026-10-30T08:00:00+02:00",
+   "dateModified": "2026-10-30T08:00:06.173366+02:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 300744,
+   "group": "Матеріали",
+   "cpv": "33141000-0",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-002249-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм",
+     "qty": 720,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм",
+     "qty": 720,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
+     "qty": 720,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 917721.88,
    "contractEnd": null,
@@ -554,37 +636,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008757-a"
   },
   {
-   "amount": 3738317.76,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33630000-5",
-   "date": "2026-10-30T08:00:00+02:00",
-   "dateModified": "2026-10-27T17:37:53.992933+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-27-013695-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
-     "qty": 16,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-27-013695-a",
-   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-013695-a"
-  },
-  {
    "amount": 1595440,
    "contractEnd": null,
    "counts": {
@@ -696,57 +747,6 @@
    "tenderID": "UA-2026-10-07-004789-a",
    "title": "Комплект Trima Accel для колекції тромбоцитів, плазми та еритроцитів, \nрозчин антикоагулянту цитрату декстрозу",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-004789-a"
-  },
-  {
-   "amount": 300744,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 3,
-    "signed": 0
-   },
-   "cpv": "33141000-0",
-   "date": "2026-10-30T08:00:00+02:00",
-   "dateModified": "2026-10-27T10:10:22.645545+02:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-27-002249-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм",
-     "qty": 720,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм",
-     "qty": 720,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
-     "qty": 720,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-27-002249-a",
-   "title": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-002249-a"
   },
   {
    "amount": 2211275,
