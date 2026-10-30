@@ -1,12 +1,12 @@
 {
- "generated": "2026-10-30T13:42:16.868372+00:00",
+ "generated": "2026-10-30T19:02:28.008036+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-10-30T13:42:16.868372+00:00",
+  "checked": "2026-10-30T19:02:28.008036+00:00",
   "expected": 1532,
   "seen": 1532,
-  "tenders": 537,
+  "tenders": 536,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,228 +14,228 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-08-004156-a",
-   "tenderID": "UA-2026-10-08-004156-a",
-   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "amount": 1570427.68,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 9,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-10-27T08:00:00+02:00",
    "dateModified": "2026-10-30T13:19:52.298546+02:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1570427.68,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a",
-   "counts": {
-    "signed": 0,
-    "progress": 9,
-    "failed": 0
-   },
+   "id": "UA-2026-10-08-004156-a",
    "items": [
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
      "qty": 600,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кістковий віск, 2,5 г",
      "qty": 960,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові cередньо-великі",
      "qty": 900,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові малі",
      "qty": 36,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Кліпси титанові середні",
      "qty": 50,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 80,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 40,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 40,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
      "name": "Полімерні лігатурні кліпси",
      "qty": 16,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-08-004156-a",
+   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a"
   },
   {
-   "id": "UA-2026-10-27-011942-a",
-   "tenderID": "UA-2026-10-27-011942-a",
-   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+   "amount": 1393050.12,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-10-30T09:00:00+02:00",
    "dateModified": "2026-10-30T09:35:40.217319+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1393050.12,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-27-011942-a",
    "items": [
     {
+     "amount": 1393050.12,
+     "lot": null,
      "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
      "qty": 16478,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"Восток-Фарм\"",
-     "amount": 1393050.12,
-     "unitPrice": 84.54,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 84.54
     }
-   ]
-  },
-  {
-   "id": "UA-2026-10-14-007832-a",
-   "tenderID": "UA-2026-10-14-007832-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-   "date": "2026-10-30T09:00:00+02:00",
-   "dateModified": "2026-10-30T09:00:15.111016+02:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "contractEnd": null,
-   "amount": 50450,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-007832-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-     "qty": 1,
-     "unit": "набір",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": 50450.0,
-     "lot": "144a2d6e1d5144919094849752fd1740"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-10-27-002249-a",
-   "tenderID": "UA-2026-10-27-002249-a",
-   "title": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
-   "date": "2026-10-30T08:00:00+02:00",
-   "dateModified": "2026-10-30T08:26:40.731983+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
+   "tenderID": "UA-2026-10-27-011942-a",
+   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a"
+  },
+  {
+   "amount": 50450,
    "contractEnd": null,
-   "amount": 274968,
-   "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-002249-a",
    "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
    },
+   "cpv": "33690000-3",
+   "date": "2026-10-30T09:00:00+02:00",
+   "dateModified": "2026-10-30T09:00:15.111016+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-14-007832-a",
    "items": [
     {
+     "amount": null,
+     "lot": "144a2d6e1d5144919094849752fd1740",
+     "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+     "qty": 1,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "набір",
+     "unitPrice": 50450.0
+    }
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-10-14-007832-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-007832-a"
+  },
+  {
+   "amount": 274968,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
+   "date": "2026-10-30T08:00:00+02:00",
+   "dateModified": "2026-10-30T08:26:40.731983+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-10-27-002249-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
      "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм",
      "qty": 720,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФОП Петренко Костянтин Миколайович",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм",
      "qty": 720,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФОП Петренко Костянтин Миколайович",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
      "qty": 720,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ФОП Петренко Костянтин Миколайович",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-27-002249-a",
+   "title": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-002249-a"
   },
   {
    "amount": 3711632,
