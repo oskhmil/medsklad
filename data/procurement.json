@@ -1,18 +1,131 @@
 {
- "generated": "2026-11-03T00:57:04.869579+00:00",
+ "generated": "2026-11-03T14:51:41.873571+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-03T00:57:04.869579+00:00",
-  "expected": 1534,
-  "seen": 1534,
-  "tenders": 537,
+  "checked": "2026-11-03T14:51:41.873571+00:00",
+  "expected": 1535,
+  "seen": 1535,
+  "tenders": 538,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-03-011648-a",
+   "tenderID": "UA-2026-11-03-011648-a",
+   "title": "Портативна тринога з кріпленням для рентгенівського детектора. ДК 021:2015: 33190000-8 — Медичне обладнання та вироби медичного призначення різні",
+   "date": "",
+   "dateModified": "2026-11-03T15:51:17.963766+02:00",
+   "method": "negotiation",
+   "status": "active",
+   "contractEnd": null,
+   "amount": 65833.33,
+   "group": "Матеріали",
+   "cpv": "33190000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-03-011648-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Портативна тринога з кріпленням для рентгенівського детектора.",
+     "qty": 1,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ «АЙРІСМЕД»",
+     "amount": null,
+     "unitPrice": 65833.33,
+     "lot": "272645ff361827a2958781c5daa09903"
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-29-005476-a",
+   "tenderID": "UA-2026-10-29-005476-a",
+   "title": "Дексаметазон, розчин для ін'єкцій",
+   "date": "2026-11-03T09:10:00+02:00",
+   "dateModified": "2026-11-03T09:12:56.482557+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 682635,
+   "group": "Ліки",
+   "cpv": "33640000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-29-005476-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Дексаметазон,розчин для ін'єкцій 4мг/мл",
+     "qty": 125030,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "АТ \"ФАРМАК\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Дексаметазон,розчин для ін'єкцій 4мг/мл по 2 мл",
+     "qty": 10000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "АТ \"ФАРМАК\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-22-003844-a",
+   "tenderID": "UA-2026-10-22-003844-a",
+   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
+   "date": "2026-11-03T08:16:38.506643+02:00",
+   "dateModified": "2026-11-03T08:16:38.506643+02:00",
+   "method": "priceQuotation",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 2507266.8,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a",
+   "counts": {
+    "signed": 2,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл",
+     "qty": 33000,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ Аптека №44",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Діазепам таблетки по 5 мг",
+     "qty": 240,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ Аптека №44",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 2257688.8,
    "contractEnd": null,
@@ -877,47 +990,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008131-a"
   },
   {
-   "amount": 682635,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33640000-8",
-   "date": "2026-11-03T09:10:00+02:00",
-   "dateModified": "2026-10-29T12:26:38.457730+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-29-005476-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Дексаметазон,розчин для ін'єкцій 4мг/мл",
-     "qty": 125030,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Дексаметазон,розчин для ін'єкцій 4мг/мл по 2 мл",
-     "qty": 10000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-10-29-005476-a",
-   "title": "Дексаметазон, розчин для ін'єкцій",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-29-005476-a"
-  },
-  {
    "amount": 691220,
    "contractEnd": null,
    "counts": {
@@ -1262,47 +1334,6 @@
    "tenderID": "UA-2026-10-14-008757-a",
    "title": "Пробірки",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008757-a"
-  },
-  {
-   "amount": 2343240,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-10-27T10:00:00+02:00",
-   "dateModified": "2026-10-27T15:24:17.842195+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-22-003844-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл",
-     "qty": 33000,
-     "status": "Переможець",
-     "supplier": "ТОВ Аптека №44",
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Діазепам таблетки по 5 мг",
-     "qty": 240,
-     "status": "Переможець",
-     "supplier": "ТОВ Аптека №44",
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-10-22-003844-a",
-   "title": "Діазепам, розчин для ін`єкцій, 5 мг/мл по 2 мл; Діазепам таблетки по 5 мг",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a"
   },
   {
    "amount": 4126800,
@@ -3425,14 +3456,25 @@
      "status": "Не відбулось",
      "supplier": null,
      "unit": "штука",
-     "unitPrice": 96000.0
+     "unitPrice": 96000.0,
+     "resolved": {
+      "d": "2026-11-03",
+      "t": "UA-2026-11-03-011648-a",
+      "k": "done"
+     }
     }
    ],
    "method": "aboveThreshold",
    "status": "unsuccessful",
    "tenderID": "UA-2026-09-28-013684-a",
    "title": "Портативна тринога з кріпленням для рентгенівського детектора. ДК 021:2015: 33190000-8 — Медичне обладнання та вироби медичного призначення різні",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013684-a"
+   "url": "https://prozorro.gov.ua/tender/UA-2026-09-28-013684-a",
+   "resolved": {
+    "count": 1,
+    "of": 1,
+    "d": "2026-11-03",
+    "t": "UA-2026-11-03-011648-a"
+   }
   },
   {
    "amount": 67200,
