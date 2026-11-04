@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-04T15:58:12.614887+00:00",
+ "generated": "2026-11-04T22:05:23.379883+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-04T15:58:12.614887+00:00",
+  "checked": "2026-11-04T22:05:23.379883+00:00",
   "expected": 1536,
   "seen": 1536,
   "tenders": 539,
@@ -14,97 +14,97 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-09-012201-a",
-   "tenderID": "UA-2026-10-09-012201-a",
-   "title": "Мікропровідник для пристрою для реваскуляризації",
+   "amount": 243925.23,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33140000-3",
    "date": "2026-11-04T15:45:45.631073+02:00",
    "dateModified": "2026-11-04T15:45:45.631073+02:00",
-   "method": "aboveThreshold",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 243925.23,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-10-09-012201-a",
    "items": [
     {
+     "amount": null,
+     "lot": "330a133c151a42a38bb0b32c70e979ab",
      "name": "Мікропровідник для пристрою для реваскуляризації",
      "qty": 10,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"РАДІН\"",
-     "amount": null,
-     "unitPrice": 26100.0,
-     "lot": "330a133c151a42a38bb0b32c70e979ab"
+     "unit": "штука",
+     "unitPrice": 26100.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-10-09-012201-a",
+   "title": "Мікропровідник для пристрою для реваскуляризації",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-09-012201-a"
   },
   {
-   "id": "UA-2026-10-27-013695-a",
-   "tenderID": "UA-2026-10-27-013695-a",
-   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "amount": 3971446.24,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33630000-5",
    "date": "2026-11-04T14:09:35.558207+02:00",
    "dateModified": "2026-11-04T14:09:35.558207+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 3971446.24,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-013695-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-10-27-013695-a",
    "items": [
     {
+     "amount": 3971446.24,
+     "lot": null,
      "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
      "qty": 16,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"Людмила-Фарм\"",
-     "amount": 3971446.24,
-     "unitPrice": 248215.39,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 248215.39
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-10-27-013695-a",
+   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-013695-a"
   },
   {
-   "id": "UA-2026-11-04-003520-a",
-   "tenderID": "UA-2026-11-04-003520-a",
-   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+   "amount": 1951080,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-09T10:00:00+02:00",
    "dateModified": "2026-11-04T10:51:28.204110+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1951080,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-04-003520-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
      "qty": 710,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-04-003520-a",
+   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a"
   },
   {
    "amount": 65833.33,
@@ -755,15 +755,15 @@
      "lot": null,
      "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
      "qty": 710,
-     "status": "Не відбулось",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null,
      "resolved": {
       "d": "2026-11-04",
       "t": "UA-2026-11-04-003520-a",
       "k": "pending"
-     }
+     },
+     "status": "Не відбулось",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
     }
    ],
    "method": "priceQuotation",
