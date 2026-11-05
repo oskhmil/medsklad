@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-05T18:11:56.572615+00:00",
+ "generated": "2026-11-05T23:49:46.377798+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-05T18:11:56.572615+00:00",
+  "checked": "2026-11-05T23:49:46.377798+00:00",
   "expected": 1539,
   "seen": 1539,
   "tenders": 542,
@@ -14,298 +14,298 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-05-014530-a",
-   "tenderID": "UA-2026-11-05-014530-a",
-   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
+   "amount": 723790,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-10T10:00:00+02:00",
    "dateModified": "2026-11-05T16:53:05.695230+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 723790,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014530-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-11-05-014530-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл",
      "qty": 20,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
      "qty": 50,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-05-014291-a",
-   "tenderID": "UA-2026-11-05-014291-a",
-   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
-   "date": "2026-11-10T09:00:00+02:00",
-   "dateModified": "2026-11-05T16:43:23.832083+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-05-014530-a",
+   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014530-a"
+  },
+  {
    "amount": 12484845,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014291-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 2,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33650000-1",
+   "date": "2026-11-10T09:00:00+02:00",
+   "dateModified": "2026-11-05T16:43:23.832083+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-05-014291-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл",
      "qty": 360,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
      "qty": 315,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-05-014291-a",
+   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014291-a"
   },
   {
-   "id": "UA-2026-10-14-007832-a",
-   "tenderID": "UA-2026-10-14-007832-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "amount": 50450,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-10-30T09:00:00+02:00",
    "dateModified": "2026-11-05T16:28:14.986169+02:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 50450,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-007832-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-14-007832-a",
    "items": [
     {
+     "amount": null,
+     "lot": "144a2d6e1d5144919094849752fd1740",
      "name": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
      "qty": 1,
-     "unit": "набір",
      "status": "Переможець",
      "supplier": "ТОВ СПЕКТРОЛАБ",
-     "amount": null,
-     "unitPrice": 50450.0,
-     "lot": "144a2d6e1d5144919094849752fd1740"
+     "unit": "набір",
+     "unitPrice": 50450.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-14-007832-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-007832-a"
   },
   {
-   "id": "UA-2026-10-07-012798-a",
-   "tenderID": "UA-2026-10-07-012798-a",
-   "title": "Екстемпоральні лікарські засоби",
+   "amount": 281537.38,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 16
+   },
+   "cpv": "33600000-6",
    "date": "2026-11-05T12:11:18.800171+02:00",
    "dateModified": "2026-11-05T12:11:18.800171+02:00",
-   "method": "aboveThreshold",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 281537.38,
    "group": "Ліки",
-   "cpv": "33600000-6",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-012798-a",
-   "counts": {
-    "signed": 16,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-10-07-012798-a",
    "items": [
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Азопірам спиртовий 1% 25,0",
      "qty": 250,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Фенолфталеїн спиртовий 1%25,0",
      "qty": 250,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Гліцерин стер. 100,0",
      "qty": 150,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Калію хлорид 7,5% 100,0",
      "qty": 720,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Натрій хлорид 10 % 200 мл",
      "qty": 130,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Натрію цитрат 50% 50,0",
      "qty": 120,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Новокаїн 1% 100,0",
      "qty": 100,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Перекис водню 3% 200 мл",
      "qty": 500,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Перекис водню 3% 400 мл",
      "qty": 1000,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Перекис водню 6% 400 мл",
      "qty": 500,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Перекис водню 6% 5кг каніст. №1",
      "qty": 100,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Р-н формаліну 10% 100,0",
      "qty": 30,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Р-н формаліну 10% 200,0",
      "qty": 30,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Формалін 37% 1кг",
      "qty": 100,
-     "unit": "кілограм",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "кілограм",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Фурацилін ст. 0,02% 200,0",
      "qty": 200,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "86a2bd0334ac433483eef65c9b2f290c",
      "name": "Фурацилін стер. 0,02% 400,0",
      "qty": 100,
-     "unit": "флакон",
      "status": "Підписано",
      "supplier": "КП Львівської обласної ради \"Міжлікарняна аптека № 272\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "86a2bd0334ac433483eef65c9b2f290c"
+     "unit": "флакон",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-10-07-012798-a",
+   "title": "Екстемпоральні лікарські засоби",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-012798-a"
   },
   {
    "amount": 4126800,
@@ -2263,16 +2263,16 @@
     }
    ],
    "method": "aboveThreshold",
-   "status": "unsuccessful",
-   "tenderID": "UA-2026-08-31-011817-a",
-   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a",
    "resolved": {
     "count": 1,
     "of": 1,
     "d": "2026-10-14",
     "t": "UA-2026-10-14-007832-a"
-   }
+   },
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-08-31-011817-a",
+   "title": "Бактеріальний калібрувальний стандарт для калібрування MALDI-TOF-MS при ідентифікації мікроорганізмів (IVD Bacterial Test Standart",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-08-31-011817-a"
   },
   {
    "amount": 27648,
