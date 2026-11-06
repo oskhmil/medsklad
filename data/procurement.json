@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-06T11:45:40.769384+00:00",
+ "generated": "2026-11-06T18:38:30.644520+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-06T11:45:40.769384+00:00",
+  "checked": "2026-11-06T18:38:30.644520+00:00",
   "expected": 1541,
   "seen": 1541,
   "tenders": 544,
@@ -14,66 +14,66 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-06-001893-a",
-   "tenderID": "UA-2026-11-06-001893-a",
-   "title": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
+   "amount": 21241440,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-11T09:00:00+02:00",
    "dateModified": "2026-11-06T09:46:26.591578+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 21241440,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-001893-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-06-001893-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
      "qty": 1200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-05-001159-a",
-   "tenderID": "UA-2026-11-05-001159-a",
-   "title": "Мідазолам розчин для ін'єкцій, 5 мг/мл по 3 мл",
-   "date": "2026-11-11T09:10:00+02:00",
-   "dateModified": "2026-11-06T09:03:23.365948+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-06-001893-a",
+   "title": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-001893-a"
+  },
+  {
    "amount": 1750000,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001159-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 1,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33660000-4",
+   "date": "2026-11-11T09:10:00+02:00",
+   "dateModified": "2026-11-06T09:03:23.365948+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-05-001159-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Мідазолам розчин для ін'єкцій, 5 мг/мл по 3 мл",
      "qty": 7000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-05-001159-a",
+   "title": "Мідазолам розчин для ін'єкцій, 5 мг/мл по 3 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001159-a"
   },
   {
    "amount": 723790,
