@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-09T10:31:46.430083+00:00",
+ "generated": "2026-11-09T21:18:13.644532+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-09T10:31:46.430083+00:00",
-  "expected": 1542,
-  "seen": 1542,
-  "tenders": 545,
+  "checked": "2026-11-09T21:18:13.644532+00:00",
+  "expected": 1544,
+  "seen": 1544,
+  "tenders": 547,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,160 +14,18 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-08-004156-a",
-   "tenderID": "UA-2026-10-08-004156-a",
-   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
-   "date": "2026-11-09T12:12:52.428311+02:00",
-   "dateModified": "2026-11-09T12:12:52.428311+02:00",
-   "method": "aboveThreshold",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 1570427.68,
-   "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a",
-   "counts": {
-    "signed": 9,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
-     "qty": 600,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Кістковий віск, 2,5 г",
-     "qty": 960,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Кліпси титанові cередньо-великі",
-     "qty": 900,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Кліпси титанові малі",
-     "qty": 36,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Кліпси титанові середні",
-     "qty": 50,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 80,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 40,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 40,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    },
-    {
-     "name": "Полімерні лігатурні кліпси",
-     "qty": 16,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ Ей БІ ГРУП",
-     "amount": null,
-     "unitPrice": null,
-     "lot": "b4455168dfd34821a89e0c550d6c5def"
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-10-28-013460-a",
-   "tenderID": "UA-2026-10-28-013460-a",
-   "title": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
-   "date": "2026-11-09T11:49:42.084004+02:00",
-   "dateModified": "2026-11-09T11:49:42.084004+02:00",
+   "id": "UA-2026-11-09-010685-a",
+   "tenderID": "UA-2026-11-09-010685-a",
+   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+   "date": "2026-11-12T08:00:00+02:00",
+   "dateModified": "2026-11-09T15:02:15.457852+02:00",
    "method": "priceQuotation",
-   "status": "complete",
+   "status": "active.tendering",
    "contractEnd": null,
-   "amount": 5730395.7,
+   "amount": 135036,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-013460-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
-     "qty": 1700,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ \"СТМ-Фарм\"",
-     "amount": 5730395.7,
-     "unitPrice": 3370.82,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-04-003520-a",
-   "tenderID": "UA-2026-11-04-003520-a",
-   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-   "date": "2026-11-09T10:00:00+02:00",
-   "dateModified": "2026-11-09T10:37:25.011309+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1951080,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a",
    "counts": {
     "signed": 0,
     "progress": 1,
@@ -175,30 +33,71 @@
    },
    "items": [
     {
-     "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-     "qty": 710,
+     "name": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+     "qty": 7260,
      "unit": "штука",
-     "status": "Переможець",
-     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "amount": 1951080,
-     "unitPrice": 2748.0,
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
      "lot": null
     }
    ]
   },
   {
-   "id": "UA-2026-11-06-012939-a",
-   "tenderID": "UA-2026-11-06-012939-a",
-   "title": "Хлоргексидин розчин д/зовн. заст. 2 % по 100 мл у флак. (ДК 021:2015: 33600000-6 — Фармацевтична продукція)",
-   "date": "2026-11-09T09:20:21.830568+02:00",
-   "dateModified": "2026-11-09T09:20:21.830568+02:00",
-   "method": "reporting",
+   "id": "UA-2026-11-09-009984-a",
+   "tenderID": "UA-2026-11-09-009984-a",
+   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+   "date": "2026-11-12T08:45:00+02:00",
+   "dateModified": "2026-11-09T14:40:24.869360+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 156103.2,
+   "group": "Ліки",
+   "cpv": "33640000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
+     "qty": 6600,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+     "qty": 80,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-27-011942-a",
+   "tenderID": "UA-2026-10-27-011942-a",
+   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+   "date": "2026-11-09T14:17:43.790865+02:00",
+   "dateModified": "2026-11-09T14:17:43.790865+02:00",
+   "method": "priceQuotation",
    "status": "complete",
    "contractEnd": null,
-   "amount": 3600,
+   "amount": 1657357.24,
    "group": "Ліки",
-   "cpv": "33600000-6",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-012939-a",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a",
    "counts": {
     "signed": 1,
     "progress": 0,
@@ -206,77 +105,281 @@
    },
    "items": [
     {
-     "name": "Хлоргексидин розчин д/зовн. заст. 2 % по 100 мл у флак.",
-     "qty": 300,
-     "unit": "флакон",
+     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+     "qty": 16478,
+     "unit": "штука",
      "status": "Підписано",
-     "supplier": "КОМУНАЛЬНЕ ПІДПРИЄМСТВО ЛЬВІВСЬКОЇ ОБЛАСНОЇ РАДИ \"МІЖЛІКАРНЯНА АПТЕКА № 272\"",
-     "amount": 3600,
-     "unitPrice": 12.0,
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "amount": 1657357.24,
+     "unitPrice": 100.58,
      "lot": null
     }
    ]
   },
   {
-   "id": "UA-2026-10-23-013493-a",
-   "tenderID": "UA-2026-10-23-013493-a",
-   "title": "Перев’язувальні матеріали",
-   "date": "2026-11-09T09:00:00+02:00",
-   "dateModified": "2026-11-09T09:00:31.245630+02:00",
-   "method": "aboveThreshold",
-   "status": "active.qualification",
+   "amount": 1570427.68,
    "contractEnd": null,
-   "amount": 13179600,
-   "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-23-013493-a",
    "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
+    "failed": 0,
+    "progress": 0,
+    "signed": 9
    },
+   "cpv": "33140000-3",
+   "date": "2026-11-09T12:12:52.428311+02:00",
+   "dateModified": "2026-11-09T12:12:52.428311+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-10-08-004156-a",
    "items": [
     {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Матеріал гемостатичний, плетений, що розсмоктується (окислена регенерована целюлоза), розмір 5,1х35,6 см, бактерицидний. (або еквівалент)",
+     "qty": 600,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Кістковий віск, 2,5 г",
+     "qty": 960,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Кліпси титанові cередньо-великі",
+     "qty": 900,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Кліпси титанові малі",
+     "qty": 36,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Кліпси титанові середні",
+     "qty": 50,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 80,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 40,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 40,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": "b4455168dfd34821a89e0c550d6c5def",
+     "name": "Полімерні лігатурні кліпси",
+     "qty": 16,
+     "status": "Підписано",
+     "supplier": "ТОВ Ей БІ ГРУП",
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "aboveThreshold",
+   "status": "complete",
+   "tenderID": "UA-2026-10-08-004156-a",
+   "title": "Матеріал гемостатичний, кістковий віск, кліпси титанові, полімерні лігатурні кліпси",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-08-004156-a"
+  },
+  {
+   "amount": 5730395.7,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33650000-1",
+   "date": "2026-11-09T11:49:42.084004+02:00",
+   "dateModified": "2026-11-09T11:49:42.084004+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-28-013460-a",
+   "items": [
+    {
+     "amount": 5730395.7,
+     "lot": null,
+     "name": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
+     "qty": 1700,
+     "status": "Підписано",
+     "supplier": "ТОВ \"СТМ-Фарм\"",
+     "unit": "штука",
+     "unitPrice": 3370.82
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-10-28-013460-a",
+   "title": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-013460-a"
+  },
+  {
+   "amount": 1951080,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
+   "date": "2026-11-09T10:00:00+02:00",
+   "dateModified": "2026-11-09T10:37:25.011309+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-04-003520-a",
+   "items": [
+    {
+     "amount": 1951080,
+     "lot": null,
+     "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+     "qty": 710,
+     "status": "Переможець",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "unit": "штука",
+     "unitPrice": 2748.0
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-04-003520-a",
+   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a"
+  },
+  {
+   "amount": 3600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33600000-6",
+   "date": "2026-11-09T09:20:21.830568+02:00",
+   "dateModified": "2026-11-09T09:20:21.830568+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-06-012939-a",
+   "items": [
+    {
+     "amount": 3600,
+     "lot": null,
+     "name": "Хлоргексидин розчин д/зовн. заст. 2 % по 100 мл у флак.",
+     "qty": 300,
+     "status": "Підписано",
+     "supplier": "КОМУНАЛЬНЕ ПІДПРИЄМСТВО ЛЬВІВСЬКОЇ ОБЛАСНОЇ РАДИ \"МІЖЛІКАРНЯНА АПТЕКА № 272\"",
+     "unit": "флакон",
+     "unitPrice": 12.0
+    }
+   ],
+   "method": "reporting",
+   "status": "complete",
+   "tenderID": "UA-2026-11-06-012939-a",
+   "title": "Хлоргексидин розчин д/зовн. заст. 2 % по 100 мл у флак. (ДК 021:2015: 33600000-6 — Фармацевтична продукція)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-012939-a"
+  },
+  {
+   "amount": 13179600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
+   "date": "2026-11-09T09:00:00+02:00",
+   "dateModified": "2026-11-09T09:00:31.245630+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-10-23-013493-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb",
      "name": "Набір перев'язного матерiалу з піни, малий",
      "qty": 720,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb",
      "name": "Набір перев'язного матерiалу з піни, середній, одноразовий",
      "qty": 2400,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb",
      "name": "Набір перев'язного матерiалу з піни, великий, одноразовий",
      "qty": 1200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb",
      "name": "Ємність для ексудату 600мл, одноразова",
      "qty": 480,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.qualification",
+   "tenderID": "UA-2026-10-23-013493-a",
+   "title": "Перев’язувальні матеріали",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-23-013493-a"
   },
   {
    "amount": 21241440,
@@ -1356,37 +1459,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-22-003844-a"
   },
   {
-   "amount": 1548932,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33620000-2",
-   "date": "2026-10-30T09:00:00+02:00",
-   "dateModified": "2026-11-02T14:06:14.247736+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-10-27-011942-a",
-   "items": [
-    {
-     "amount": 1548932,
-     "lot": null,
-     "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-     "qty": 16478,
-     "status": "Переможець",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "unit": "штука",
-     "unitPrice": 94.0
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-10-27-011942-a",
-   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a"
-  },
-  {
    "amount": 953700,
    "contractEnd": null,
    "counts": {
@@ -1510,16 +1582,16 @@
     }
    ],
    "method": "priceQuotation",
-   "status": "unsuccessful",
-   "tenderID": "UA-2026-10-28-012944-a",
-   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-012944-a",
    "resolved": {
     "count": 1,
     "of": 1,
     "d": "2026-11-04",
     "t": "UA-2026-11-04-003520-a"
-   }
+   },
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-10-28-012944-a",
+   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-012944-a"
   },
   {
    "amount": 917721.88,
