@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-10T03:41:16.404032+00:00",
+ "generated": "2026-11-10T11:56:32.319919+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-10T03:41:16.404032+00:00",
+  "checked": "2026-11-10T11:56:32.319919+00:00",
   "expected": 1544,
   "seen": 1544,
   "tenders": 547,
@@ -13,6 +13,190 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-05-014530-a",
+   "tenderID": "UA-2026-11-05-014530-a",
+   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
+   "date": "2026-11-10T10:00:00+02:00",
+   "dateModified": "2026-11-10T10:04:11.464641+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 723790,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014530-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл",
+     "qty": 20,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
+     "qty": 50,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-05-001518-a",
+   "tenderID": "UA-2026-11-05-001518-a",
+   "title": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл; Морфін, таблетки по 10 мг",
+   "date": "2026-11-10T09:30:00+02:00",
+   "dateModified": "2026-11-10T09:33:45.183955+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 670300,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001518-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл",
+     "qty": 8160,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Морфін, таблетки по 10 мг",
+     "qty": 200,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-05-014291-a",
+   "tenderID": "UA-2026-11-05-014291-a",
+   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
+   "date": "2026-11-10T09:00:00+02:00",
+   "dateModified": "2026-11-10T09:02:49.268813+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 12484845,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014291-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл",
+     "qty": 360,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
+     "qty": 315,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-10-23-013493-a",
+   "tenderID": "UA-2026-10-23-013493-a",
+   "title": "Перев’язувальні матеріали",
+   "date": "2026-11-09T09:00:00+02:00",
+   "dateModified": "2026-11-10T08:44:18.337954+02:00",
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 13179600,
+   "group": "Матеріали",
+   "cpv": "33140000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-23-013493-a",
+   "counts": {
+    "signed": 0,
+    "progress": 4,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Набір перев'язного матерiалу з піни, малий",
+     "qty": 720,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"НОВОМЕДІКА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+    },
+    {
+     "name": "Набір перев'язного матерiалу з піни, середній, одноразовий",
+     "qty": 2400,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"НОВОМЕДІКА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+    },
+    {
+     "name": "Набір перев'язного матерiалу з піни, великий, одноразовий",
+     "qty": 1200,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"НОВОМЕДІКА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+    },
+    {
+     "name": "Ємність для ексудату 600мл, одноразова",
+     "qty": 480,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"НОВОМЕДІКА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": "482e30cba7ca49608e4c24efc40a28bb"
+    }
+   ]
+  },
   {
    "amount": 135036,
    "contractEnd": null,
@@ -321,67 +505,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-012939-a"
   },
   {
-   "amount": 13179600,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 4,
-    "signed": 0
-   },
-   "cpv": "33140000-3",
-   "date": "2026-11-09T09:00:00+02:00",
-   "dateModified": "2026-11-09T09:00:31.245630+02:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-23-013493-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb",
-     "name": "Набір перев'язного матерiалу з піни, малий",
-     "qty": 720,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb",
-     "name": "Набір перев'язного матерiалу з піни, середній, одноразовий",
-     "qty": 2400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb",
-     "name": "Набір перев'язного матерiалу з піни, великий, одноразовий",
-     "qty": 1200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "482e30cba7ca49608e4c24efc40a28bb",
-     "name": "Ємність для ексудату 600мл, одноразова",
-     "qty": 480,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "active.qualification",
-   "tenderID": "UA-2026-10-23-013493-a",
-   "title": "Перев’язувальні матеріали",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-23-013493-a"
-  },
-  {
    "amount": 21241440,
    "contractEnd": null,
    "counts": {
@@ -442,88 +565,6 @@
    "tenderID": "UA-2026-11-05-001159-a",
    "title": "Мідазолам розчин для ін'єкцій, 5 мг/мл по 3 мл",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001159-a"
-  },
-  {
-   "amount": 723790,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-10T10:00:00+02:00",
-   "dateModified": "2026-11-05T16:53:05.695230+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-05-014530-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл",
-     "qty": 20,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
-     "qty": 50,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-05-014530-a",
-   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014530-a"
-  },
-  {
-   "amount": 12484845,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-10T09:00:00+02:00",
-   "dateModified": "2026-11-05T16:43:23.832083+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-05-014291-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл",
-     "qty": 360,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
-     "qty": 315,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-05-014291-a",
-   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014291-a"
   },
   {
    "amount": 50450,
@@ -828,47 +869,6 @@
    "tenderID": "UA-2026-10-27-002249-a",
    "title": "Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 35 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 28 мм; Уропрезерватив для чоловіків, без Латексу, тип кріплення Липка пластина, діаметр 30 мм",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-002249-a"
-  },
-  {
-   "amount": 674400,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-11-10T09:30:00+02:00",
-   "dateModified": "2026-11-05T09:42:14.404030+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-05-001518-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл",
-     "qty": 8160,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Морфін, таблетки по 10 мг",
-     "qty": 200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-05-001518-a",
-   "title": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл; Морфін, таблетки по 10 мг",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001518-a"
   },
   {
    "amount": 2175855,
