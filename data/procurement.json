@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-09T21:18:13.644532+00:00",
+ "generated": "2026-11-10T03:41:16.404032+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-09T21:18:13.644532+00:00",
+  "checked": "2026-11-10T03:41:16.404032+00:00",
   "expected": 1544,
   "seen": 1544,
   "tenders": 547,
@@ -14,107 +14,107 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-09-010685-a",
-   "tenderID": "UA-2026-11-09-010685-a",
-   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+   "amount": 135036,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-12T08:00:00+02:00",
    "dateModified": "2026-11-09T15:02:15.457852+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 135036,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-09-010685-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
      "qty": 7260,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-09-009984-a",
-   "tenderID": "UA-2026-11-09-009984-a",
-   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
-   "date": "2026-11-12T08:45:00+02:00",
-   "dateModified": "2026-11-09T14:40:24.869360+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 156103.2,
-   "group": "Ліки",
-   "cpv": "33640000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
-     "qty": 6600,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
-     "qty": 80,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
+   "tenderID": "UA-2026-11-09-010685-a",
+   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a"
   },
   {
-   "id": "UA-2026-10-27-011942-a",
-   "tenderID": "UA-2026-10-27-011942-a",
-   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
-   "date": "2026-11-09T14:17:43.790865+02:00",
-   "dateModified": "2026-11-09T14:17:43.790865+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
+   "amount": 156103.2,
    "contractEnd": null,
-   "amount": 1657357.24,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a",
    "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
    },
+   "cpv": "33640000-8",
+   "date": "2026-11-12T08:45:00+02:00",
+   "dateModified": "2026-11-09T14:40:24.869360+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-09-009984-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
+     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
+     "qty": 6600,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+     "qty": 80,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-09-009984-a",
+   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a"
+  },
+  {
+   "amount": 1657357.24,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33620000-2",
+   "date": "2026-11-09T14:17:43.790865+02:00",
+   "dateModified": "2026-11-09T14:17:43.790865+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-10-27-011942-a",
+   "items": [
+    {
+     "amount": 1657357.24,
+     "lot": null,
      "name": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
      "qty": 16478,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 1657357.24,
-     "unitPrice": 100.58,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 100.58
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-10-27-011942-a",
+   "title": "Гепарин натрію, розчин для ін'єкцій, 5000 МО/мл, по 5 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-27-011942-a"
   },
   {
    "amount": 1570427.68,
@@ -3943,63 +3943,6 @@
    "tenderID": "UA-2026-10-07-001306-a",
    "title": "Катетер Фолея",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-07-001306-a"
-  },
-  {
-   "amount": 425416.67,
-   "contractEnd": null,
-   "counts": {
-    "failed": 2,
-    "progress": 0,
-    "signed": 0
-   },
-   "cpv": "33192300-5",
-   "date": "2026-10-11T00:00:02.743692+03:00",
-   "dateModified": "2026-10-11T00:00:02.743692+03:00",
-   "group": "Матеріали",
-   "id": "UA-2026-09-24-012823-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "f3ec00bf50da4229aef51e3328d7a92b",
-     "name": "Операційний стіл",
-     "qty": 1,
-     "resolved": {
-      "d": "2026-10-01",
-      "t": "UA-2026-10-01-010008-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": "f3ec00bf50da4229aef51e3328d7a92b",
-     "name": "Гідравлічне медичне крісло",
-     "qty": 1,
-     "resolved": {
-      "d": "2026-10-01",
-      "t": "UA-2026-10-01-010008-a",
-      "k": "done"
-     },
-     "status": "Скасовано",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "aboveThreshold",
-   "resolved": {
-    "count": 2,
-    "of": 2,
-    "d": "2026-10-01",
-    "t": "UA-2026-10-01-010008-a"
-   },
-   "status": "cancelled",
-   "tenderID": "UA-2026-09-24-012823-a",
-   "title": "Медичне обладнання (Операційний стіл; Гідравлічне медичне крісло)",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-09-24-012823-a"
   }
  ]
 }
