@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-11T00:51:43.451030+00:00",
+ "generated": "2026-11-11T07:15:28.234890+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-11T00:51:43.451030+00:00",
+  "checked": "2026-11-11T07:15:28.234890+00:00",
   "expected": 1551,
   "seen": 1551,
   "tenders": 554,
@@ -13,6 +13,37 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-06-001893-a",
+   "tenderID": "UA-2026-11-06-001893-a",
+   "title": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
+   "date": "2026-11-11T09:00:00+02:00",
+   "dateModified": "2026-11-11T09:00:05.006477+02:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 21241440,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-001893-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
+     "qty": 1200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 2762317.76,
    "contractEnd": null,
@@ -831,37 +862,6 @@
    "tenderID": "UA-2026-11-06-012939-a",
    "title": "Хлоргексидин розчин д/зовн. заст. 2 % по 100 мл у флак. (ДК 021:2015: 33600000-6 — Фармацевтична продукція)",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-012939-a"
-  },
-  {
-   "amount": 21241440,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33620000-2",
-   "date": "2026-11-11T09:00:00+02:00",
-   "dateModified": "2026-11-06T09:46:26.591578+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-06-001893-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
-     "qty": 1200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-06-001893-a",
-   "title": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-001893-a"
   },
   {
    "amount": 1750000,
