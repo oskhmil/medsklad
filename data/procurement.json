@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-10T19:55:33.948774+00:00",
+ "generated": "2026-11-11T00:51:43.451030+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-10T19:55:33.948774+00:00",
+  "checked": "2026-11-11T00:51:43.451030+00:00",
   "expected": 1551,
   "seen": 1551,
   "tenders": 554,
@@ -14,332 +14,332 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-10-017292-a",
-   "tenderID": "UA-2026-11-10-017292-a",
-   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "amount": 2762317.76,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-13T09:50:00+02:00",
    "dateModified": "2026-11-10T20:41:15.474504+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2762317.76,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017292-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017292-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
      "qty": 23200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-017292-a",
+   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017292-a"
   },
   {
-   "id": "UA-2026-11-10-017252-a",
-   "tenderID": "UA-2026-11-10-017252-a",
-   "title": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
+   "amount": 257600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-13T10:00:00+02:00",
    "dateModified": "2026-11-10T20:28:28.550727+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 257600,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017252-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017252-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
      "qty": 3500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-017252-a",
+   "title": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017252-a"
   },
   {
-   "id": "UA-2026-11-10-017222-a",
-   "tenderID": "UA-2026-11-10-017222-a",
-   "title": "Омнопон, розчин для ін'єкцій по 1 мл",
+   "amount": 229200,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-13T09:45:00+02:00",
    "dateModified": "2026-11-10T20:22:30.158150+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 229200,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017222-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Омнопон, розчин для ін'єкцій по 1 мл",
      "qty": 1200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-017222-a",
+   "title": "Омнопон, розчин для ін'єкцій по 1 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a"
   },
   {
-   "id": "UA-2026-11-10-017185-a",
-   "tenderID": "UA-2026-11-10-017185-a",
-   "title": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
+   "amount": 1883555,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-13T10:00:00+02:00",
    "dateModified": "2026-11-10T20:13:32.119613+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1883555,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017185-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017185-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
      "qty": 8390,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-017185-a",
+   "title": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017185-a"
   },
   {
-   "id": "UA-2026-11-10-017004-a",
-   "tenderID": "UA-2026-11-10-017004-a",
-   "title": "Меропенем,порошок для ін'єкцій по 0,5 г; Меропенем, порошок для ін'єкцій/інфузій, по 1 г; Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
+   "amount": 8921817.76,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-13T08:40:00+02:00",
    "dateModified": "2026-11-10T19:46:51.210977+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 8921817.76,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017004-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017004-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем,порошок для ін'єкцій по 0,5 г",
      "qty": 1500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем, порошок для ін'єкцій/інфузій, по 1 г",
      "qty": 36400,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
      "qty": 3000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-017004-a",
+   "title": "Меропенем,порошок для ін'єкцій по 0,5 г; Меропенем, порошок для ін'єкцій/інфузій, по 1 г; Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017004-a"
   },
   {
-   "id": "UA-2026-11-10-014724-a",
-   "tenderID": "UA-2026-11-10-014724-a",
-   "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
+   "amount": 1352324,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33141110-4",
    "date": "2026-11-13T09:10:00+02:00",
    "dateModified": "2026-11-10T16:20:14.595901+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1352324,
    "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a",
-   "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-014724-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%",
      "qty": 4000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17",
      "qty": 96750,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17",
      "qty": 6500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
      "qty": 31800,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-03-011648-a",
-   "tenderID": "UA-2026-11-03-011648-a",
-   "title": "Портативна тринога з кріпленням для рентгенівського детектора. ДК 021:2015: 33190000-8 — Медичне обладнання та вироби медичного призначення різні",
-   "date": "2026-11-10T15:57:19.156674+02:00",
-   "dateModified": "2026-11-10T15:57:19.156674+02:00",
-   "method": "negotiation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 65833.33,
-   "group": "Матеріали",
-   "cpv": "33190000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-03-011648-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Портативна тринога з кріпленням для рентгенівського детектора.",
-     "qty": 1,
      "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ «АЙРІСМЕД»",
-     "amount": null,
-     "unitPrice": 79000.0,
-     "lot": "272645ff361827a2958781c5daa09903"
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-10-013856-a",
-   "tenderID": "UA-2026-11-10-013856-a",
-   "title": "Вата медична нестерильна 100 г.; Відріз марлевий 0,9 x 10 м; Відріз марлевий 0,9 x 5 м.; Рулон марлевий 0,9 x 1000,00 м.",
-   "date": "2026-11-13T09:10:00+02:00",
-   "dateModified": "2026-11-10T15:56:33.532822+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-014724-a",
+   "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a"
+  },
+  {
+   "amount": 65833.33,
    "contractEnd": null,
-   "amount": 3948750,
-   "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a",
    "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
    },
+   "cpv": "33190000-8",
+   "date": "2026-11-10T15:57:19.156674+02:00",
+   "dateModified": "2026-11-10T15:57:19.156674+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-11-03-011648-a",
    "items": [
     {
+     "amount": null,
+     "lot": "272645ff361827a2958781c5daa09903",
+     "name": "Портативна тринога з кріпленням для рентгенівського детектора.",
+     "qty": 1,
+     "status": "Підписано",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ «АЙРІСМЕД»",
+     "unit": "штука",
+     "unitPrice": 79000.0
+    }
+   ],
+   "method": "negotiation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-03-011648-a",
+   "title": "Портативна тринога з кріпленням для рентгенівського детектора. ДК 021:2015: 33190000-8 — Медичне обладнання та вироби медичного призначення різні",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-03-011648-a"
+  },
+  {
+   "amount": 3948750,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33141110-4",
+   "date": "2026-11-13T09:10:00+02:00",
+   "dateModified": "2026-11-10T15:56:33.532822+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-11-10-013856-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
      "name": "Вата медична нестерильна 100 г.",
      "qty": 14600,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Відріз марлевий 0,9 x 10 м",
      "qty": 17200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Відріз марлевий 0,9 x 5 м.",
      "qty": 15000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рулон марлевий 0,9 x 1000,00 м.",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-10-013856-a",
+   "title": "Вата медична нестерильна 100 г.; Відріз марлевий 0,9 x 10 м; Відріз марлевий 0,9 x 5 м.; Рулон марлевий 0,9 x 1000,00 м.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a"
   },
   {
    "amount": 723790,
