@@ -1,18 +1,172 @@
 {
- "generated": "2026-11-12T03:05:43.952729+00:00",
+ "generated": "2026-11-12T11:12:30.600157+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-12T03:05:43.952729+00:00",
-  "expected": 1551,
-  "seen": 1551,
-  "tenders": 553,
+  "checked": "2026-11-12T11:12:30.600157+00:00",
+  "expected": 1553,
+  "seen": 1553,
+  "tenders": 555,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-12-002660-a",
+   "tenderID": "UA-2026-11-12-002660-a",
+   "title": "Пропофол",
+   "date": "2026-11-17T09:10:00+02:00",
+   "dateModified": "2026-11-12T11:27:12.528176+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 11350825,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-002660-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
+     "qty": 50135,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
+     "qty": 2435,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пропофол, емульсія, 10 мг/мл, по 20 мл",
+     "qty": 6675,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-12-005090-a",
+   "tenderID": "UA-2026-11-12-005090-a",
+   "title": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
+   "date": "2026-11-17T09:15:00+02:00",
+   "dateModified": "2026-11-12T11:25:08.045839+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 93150,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-005090-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
+     "qty": 675,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-09-009984-a",
+   "tenderID": "UA-2026-11-09-009984-a",
+   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+   "date": "2026-11-12T08:45:00+02:00",
+   "dateModified": "2026-11-12T08:48:10.487168+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 147040,
+   "group": "Ліки",
+   "cpv": "33640000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
+     "qty": 6600,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+     "qty": 80,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-09-010685-a",
+   "tenderID": "UA-2026-11-09-010685-a",
+   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+   "date": "2026-11-12T08:00:00+02:00",
+   "dateModified": "2026-11-12T08:15:49.189045+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 134310,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+     "qty": 7260,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "amount": 134310,
+     "unitPrice": 18.5,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 2175855,
    "contractEnd": null,
@@ -800,78 +954,6 @@
    "tenderID": "UA-2026-10-23-013493-a",
    "title": "Перев’язувальні матеріали",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-23-013493-a"
-  },
-  {
-   "amount": 135036,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-11-12T08:00:00+02:00",
-   "dateModified": "2026-11-09T15:02:15.457852+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-09-010685-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
-     "qty": 7260,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-09-010685-a",
-   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a"
-  },
-  {
-   "amount": 156103.2,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33640000-8",
-   "date": "2026-11-12T08:45:00+02:00",
-   "dateModified": "2026-11-09T14:40:24.869360+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-09-009984-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
-     "qty": 6600,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
-     "qty": 80,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-09-009984-a",
-   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a"
   },
   {
    "amount": 1657357.24,
