@@ -1,12 +1,12 @@
 {
- "generated": "2026-11-13T15:57:17.897292+00:00",
+ "generated": "2026-11-13T22:14:08.353513+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-13T15:57:17.897292+00:00",
+  "checked": "2026-11-13T22:14:08.353513+00:00",
   "expected": 1553,
   "seen": 1553,
-  "tenders": 555,
+  "tenders": 553,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
@@ -14,583 +14,583 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-10-28-005410-a",
-   "tenderID": "UA-2026-10-28-005410-a",
-   "title": "Катетер урологічний. Код за ДК 021:2015: 33140000-3 — Медичні матеріали (Код за НК 024:2023: 45603 — Уретральний катетер для дренування одноразового використання, за НК 031:2024: U01010502 — Катетери Нелатона)",
+   "amount": 105600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33140000-3",
    "date": "2026-11-13T08:00:00+02:00",
    "dateModified": "2026-11-13T16:23:34.477378+02:00",
-   "method": "aboveThreshold",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 105600,
    "group": "Матеріали",
-   "cpv": "33140000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-005410-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-10-28-005410-a",
    "items": [
     {
+     "amount": null,
+     "lot": "1c3befe00d4fc26b3c018dad6f4b3bc4",
      "name": "Катетер урологічний",
      "qty": 720,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Фізична особа підприємець Ступінська Оксана Йосифівна",
-     "amount": null,
-     "unitPrice": 145.0,
-     "lot": "1c3befe00d4fc26b3c018dad6f4b3bc4"
+     "unit": "штука",
+     "unitPrice": 145.0
     }
-   ]
+   ],
+   "method": "aboveThreshold",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-10-28-005410-a",
+   "title": "Катетер урологічний. Код за ДК 021:2015: 33140000-3 — Медичні матеріали (Код за НК 024:2023: 45603 — Уретральний катетер для дренування одноразового використання, за НК 031:2024: U01010502 — Катетери Нелатона)",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-005410-a"
   },
   {
-   "id": "UA-2026-11-02-002083-a",
-   "tenderID": "UA-2026-11-02-002083-a",
-   "title": "Рукавички медичні хірургічні",
+   "amount": 10841650,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 23,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
    "date": "2026-11-05T09:10:00+02:00",
    "dateModified": "2026-11-13T13:52:55.445149+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 10841650,
    "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-02-002083-a",
-   "counts": {
-    "signed": 0,
-    "progress": 23,
-    "failed": 0
-   },
+   "id": "UA-2026-11-02-002083-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 6.0",
      "qty": 1700,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 6.5, міцність на розрив: 10-15 Н",
      "qty": 14300,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 7, міцність на розрив: 10-15 Н",
      "qty": 28150,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 7.5, міцність на розрив: 10-15 Н",
      "qty": 65800,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 8, міцність на розрив: 10-15 Н",
      "qty": 26650,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 8.5",
      "qty": 14000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал: латекс, без пудри, з валиком на манжеті, розмір: 7, міцність на розрив до прискореного старіння: від 9Н, товщина на пальці: від 0.29мм, на долоні: від 0.26мм, на манжеті: від 0.21мм",
      "qty": 2000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал: латекс, без пудри, з валиком на манжеті, розмір: 7.5, міцність на розрив до прискореного старіння: від 9Н, товщина на пальці: від 0.29мм, на долоні: від 0.26мм, на манжеті: від 0.21мм",
      "qty": 5200,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, з валиком на манжеті, розмір (ДСТУ EN 455-2:2015): 8, міцність на розрив: від 12Н, товщина на пальці: від 0.18мм, на долоні: від 0.16мм, на манжеті: від 0.14мм",
      "qty": 4000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, з валиком на манжеті, розмір (ДСТУ EN 455-2:2015): 8.5, міцність на розрив: від 12Н, товщина на пальці: від 0.18мм, на долоні: від 0.16мм, на манжеті: від 0.14мм",
      "qty": 2000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): S",
      "qty": 290000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): M",
      "qty": 417500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): L",
      "qty": 297500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): XL",
      "qty": 17500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): S",
      "qty": 282000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): M",
      "qty": 256000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): L",
      "qty": 216000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): XL",
      "qty": 12500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, з латексу, з валиком на манжеті, розмір: M, міцність на розрив до прискореного старіння: від 12 Н, товщина на пальці: від 0,15 мм, на долоні: від 0,15 мм, на манжеті: від 0,15 мм, довжина манжети: 280–800 мм",
      "qty": 5000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: неопрен, без пудри, без валика, з клейкою смугою, розмір (ДСТУ EN 455-2:2015): 7.5",
      "qty": 2500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, без валика, з клейкою смугою, з антимікробним внутрішнім покриттям, розмір (ДСТУ EN 455-2:2015): 7.5",
      "qty": 1000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, без валика, з клейкою смугою, з антимікробним внутрішнім покриттям, розмір (ДСТУ EN 455-2:2015): 7",
      "qty": 1000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: неопрен, без пудри, без валика, з клейкою смугою, розмір (ДСТУ EN 455-2:2015): 8",
      "qty": 2500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"МЕДПРОФІЛЬ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-02-002083-a",
+   "title": "Рукавички медичні хірургічні",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-02-002083-a"
   },
   {
-   "id": "UA-2026-11-10-017292-a",
-   "tenderID": "UA-2026-11-10-017292-a",
-   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "amount": 1976176,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-13T09:50:00+02:00",
    "dateModified": "2026-11-13T11:08:57.896422+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1976176,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017292-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017292-a",
    "items": [
     {
+     "amount": 1976176,
+     "lot": null,
      "name": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
      "qty": 23200,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АКЦІОНЕРНЕ ТОВАРИСТВО \"КИЇВМЕДПРЕПАРАТ\"",
-     "amount": 1976176,
-     "unitPrice": 85.18,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 85.18
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-10-017292-a",
+   "title": "Ампіцилін/сульбактам порошок для розчину для ін'єкцій 1000 мг/500 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017292-a"
   },
   {
-   "id": "UA-2026-11-10-017252-a",
-   "tenderID": "UA-2026-11-10-017252-a",
-   "title": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
+   "amount": 257250,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-13T10:00:00+02:00",
    "dateModified": "2026-11-13T11:07:38.036223+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 257250,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017252-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017252-a",
    "items": [
     {
+     "amount": 257250,
+     "lot": null,
      "name": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
      "qty": 3500,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 257250,
-     "unitPrice": 73.5,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 73.5
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-10-017252-a",
+   "title": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017252-a"
   },
   {
-   "id": "UA-2026-11-10-017222-a",
-   "tenderID": "UA-2026-11-10-017222-a",
-   "title": "Омнопон, розчин для ін'єкцій по 1 мл",
+   "amount": 228000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-13T09:45:00+02:00",
    "dateModified": "2026-11-13T11:06:35.175349+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 228000,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017222-a",
    "items": [
     {
+     "amount": 228000,
+     "lot": null,
      "name": "Омнопон, розчин для ін'єкцій по 1 мл",
      "qty": 1200,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 228000,
-     "unitPrice": 190.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 190.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-10-017222-a",
+   "title": "Омнопон, розчин для ін'єкцій по 1 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a"
   },
   {
-   "id": "UA-2026-11-10-017185-a",
-   "tenderID": "UA-2026-11-10-017185-a",
-   "title": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
+   "amount": 1882716,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-13T10:00:00+02:00",
    "dateModified": "2026-11-13T11:05:27.977212+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1882716,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017185-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017185-a",
    "items": [
     {
+     "amount": 1882716,
+     "lot": null,
      "name": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
      "qty": 8390,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 1882716,
-     "unitPrice": 224.4,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 224.4
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-10-017185-a",
+   "title": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017185-a"
   },
   {
-   "id": "UA-2026-11-10-017004-a",
-   "tenderID": "UA-2026-11-10-017004-a",
-   "title": "Меропенем,порошок для ін'єкцій по 0,5 г; Меропенем, порошок для ін'єкцій/інфузій, по 1 г; Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
+   "amount": 8895600,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-13T08:40:00+02:00",
    "dateModified": "2026-11-13T11:04:16.474817+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 8895600,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017004-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-017004-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем,порошок для ін'єкцій по 0,5 г",
      "qty": 1500,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем, порошок для ін'єкцій/інфузій, по 1 г",
      "qty": 36400,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
      "qty": 3000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АТ-ФАРМА\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-10-017004-a",
+   "title": "Меропенем,порошок для ін'єкцій по 0,5 г; Меропенем, порошок для ін'єкцій/інфузій, по 1 г; Меропенем, порошок для розчину для ін'єкцій, по 2000 мг у флаконах",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017004-a"
   },
   {
-   "id": "UA-2026-11-10-014724-a",
-   "tenderID": "UA-2026-11-10-014724-a",
-   "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
+   "amount": 1174270,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 4,
+    "signed": 0
+   },
+   "cpv": "33141110-4",
    "date": "2026-11-13T09:10:00+02:00",
    "dateModified": "2026-11-13T11:03:10.961160+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1174270,
    "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a",
-   "counts": {
-    "signed": 0,
-    "progress": 4,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-014724-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%",
      "qty": 4000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17",
      "qty": 96750,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17",
      "qty": 6500,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
      "qty": 31800,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-10-013856-a",
-   "tenderID": "UA-2026-11-10-013856-a",
-   "title": "Вата медична нестерильна 100 г.; Відріз марлевий 0,9 x 10 м; Відріз марлевий 0,9 x 5 м.; Рулон марлевий 0,9 x 1000,00 м.",
-   "date": "2026-11-13T09:10:00+02:00",
-   "dateModified": "2026-11-13T11:01:45.808187+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-10-014724-a",
+   "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a"
+  },
+  {
    "amount": 3904780,
-   "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 4,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33141110-4",
+   "date": "2026-11-13T09:10:00+02:00",
+   "dateModified": "2026-11-13T11:01:45.808187+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-11-10-013856-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Вата медична нестерильна 100 г.",
      "qty": 14600,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Відріз марлевий 0,9 x 10 м",
      "qty": 17200,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Відріз марлевий 0,9 x 5 м.",
      "qty": 15000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рулон марлевий 0,9 x 1000,00 м.",
      "qty": 200,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-10-013856-a",
+   "title": "Вата медична нестерильна 100 г.; Відріз марлевий 0,9 x 10 м; Відріз марлевий 0,9 x 5 м.; Рулон марлевий 0,9 x 1000,00 м.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a"
   },
   {
    "amount": 11350825,
