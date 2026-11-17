@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-16T17:38:14.545915+00:00",
+ "generated": "2026-11-17T01:18:28.958286+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-16T17:38:14.545915+00:00",
+  "checked": "2026-11-17T01:18:28.958286+00:00",
   "expected": 1560,
   "seen": 1560,
   "tenders": 556,
@@ -14,508 +14,508 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-16-015708-a",
-   "tenderID": "UA-2026-11-16-015708-a",
-   "title": "Лікарські засоби",
+   "amount": 974207.2,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 17,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-19T09:10:00+02:00",
    "dateModified": "2026-11-16T17:33:35.906729+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 974207.2,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015708-a",
-   "counts": {
-    "signed": 0,
-    "progress": 17,
-    "failed": 0
-   },
+   "id": "UA-2026-11-16-015708-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Епінефрин 1.82 мг/мл, розчин для ін'єкцій, ампула",
      "qty": 12520,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Лідокаїн, розчин для ін`єкцій, 20 мг/мл, по 2 мл",
      "qty": 35000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Преднізолон, розчин для ін'єкцій, 30 мг/мл, по 1 мл",
      "qty": 5100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Мізопростол таблетки по 0,2 мг",
      "qty": 1820,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Кальцію глюконат розчин для ін'єкцій 100 мг/мл по 5 мл",
      "qty": 7450,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Кальцію глюконат розчин для ін'єкцій 100 мг/мл по 10 мл",
      "qty": 3330,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Карбамазепін таблетки по 200 мг",
      "qty": 12900,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Прокаїн розчин для ін'єкцій 20 мг/мл в ампулі 2 мл",
      "qty": 980,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Папаверин, розчин для ін'єкцій, 20 мг/мл, по 2 мл",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Аскорбінова кислота розчин для ін'єкцій, 50 мг/мл по 2 мл",
      "qty": 540,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Тіаміну хлорид (вітамін В1), розчин для ін'єкцій, 50 мг/мл, по 1 мл",
      "qty": 2090,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Піридоксин (вітамін В6), розчин для ін'єкцій, 50 мг/мл, по 1 мл",
      "qty": 990,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Ксилометазолін краплі назальні 1 мг/мл по 10 мл",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Атропіну сульфат розчин для ін'єкцій 1 мг/1 мл, в ампулі 1 мл",
      "qty": 14700,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пентоксифілін, розчин для ін`єкцій, 20 мг/мл, по 5 мл",
      "qty": 300,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Оксиметазолін спрей назальний 0,5мг/мл по 10 мл",
      "qty": 400,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пароксетин таблетки, 20 мг в блістері",
      "qty": 1500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-16-015708-a",
+   "title": "Лікарські засоби",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015708-a"
   },
   {
-   "id": "UA-2026-11-16-015480-a",
-   "tenderID": "UA-2026-11-16-015480-a",
-   "title": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
+   "amount": 3068,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-19T10:00:00+02:00",
    "dateModified": "2026-11-16T17:29:18.656699+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 3068,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015480-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-16-015480-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-16-015184-a",
-   "tenderID": "UA-2026-11-16-015184-a",
-   "title": "Преднізолон, таблетки, 5 мг",
-   "date": "2026-11-19T09:00:00+02:00",
-   "dateModified": "2026-11-16T17:04:28.786344+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 589.2,
-   "group": "Ліки",
-   "cpv": "33640000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015184-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Преднізолон, таблетки, 5 мг",
-     "qty": 160,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
+   "tenderID": "UA-2026-11-16-015480-a",
+   "title": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015480-a"
   },
   {
-   "id": "UA-2026-11-02-002083-a",
-   "tenderID": "UA-2026-11-02-002083-a",
-   "title": "Рукавички медичні хірургічні",
-   "date": "2026-11-05T09:10:00+02:00",
-   "dateModified": "2026-11-16T11:46:08.363055+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
+   "amount": 589.2,
    "contractEnd": null,
-   "amount": 11979797,
-   "group": "Матеріали",
-   "cpv": "33141000-0",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-02-002083-a",
    "counts": {
-    "signed": 0,
-    "progress": 23,
-    "failed": 0
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
    },
+   "cpv": "33640000-8",
+   "date": "2026-11-19T09:00:00+02:00",
+   "dateModified": "2026-11-16T17:04:28.786344+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-16-015184-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
+     "name": "Преднізолон, таблетки, 5 мг",
+     "qty": 160,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-16-015184-a",
+   "title": "Преднізолон, таблетки, 5 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015184-a"
+  },
+  {
+   "amount": 11979797,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 23,
+    "signed": 0
+   },
+   "cpv": "33141000-0",
+   "date": "2026-11-05T09:10:00+02:00",
+   "dateModified": "2026-11-16T11:46:08.363055+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-11-02-002083-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 6.0",
      "qty": 1700,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 6.5, міцність на розрив: 10-15 Н",
      "qty": 14300,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 7, міцність на розрив: 10-15 Н",
      "qty": 28150,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 7.5, міцність на розрив: 10-15 Н",
      "qty": 65800,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 8, міцність на розрив: 10-15 Н",
      "qty": 26650,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): 8.5",
      "qty": 14000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал: латекс, без пудри, з валиком на манжеті, розмір: 7, міцність на розрив до прискореного старіння: від 9Н, товщина на пальці: від 0.29мм, на долоні: від 0.26мм, на манжеті: від 0.21мм",
      "qty": 2000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал: латекс, без пудри, з валиком на манжеті, розмір: 7.5, міцність на розрив до прискореного старіння: від 9Н, товщина на пальці: від 0.29мм, на долоні: від 0.26мм, на манжеті: від 0.21мм",
      "qty": 5200,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, з валиком на манжеті, розмір (ДСТУ EN 455-2:2015): 8, міцність на розрив: від 12Н, товщина на пальці: від 0.18мм, на долоні: від 0.16мм, на манжеті: від 0.14мм",
      "qty": 4000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, з валиком на манжеті, розмір (ДСТУ EN 455-2:2015): 8.5, міцність на розрив: від 12Н, товщина на пальці: від 0.18мм, на долоні: від 0.16мм, на манжеті: від 0.14мм",
      "qty": 2000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): S",
      "qty": 290000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): M",
      "qty": 417500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): L",
      "qty": 297500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: нітрил, без пудри, розмір (ДСТУ EN 455-2:2015): XL",
      "qty": 17500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): S",
      "qty": 282000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): M",
      "qty": 256000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): L",
      "qty": 216000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, матеріал виготовлення: латекс, без пудри, розмір (ДСТУ EN 455-2:2015): XL",
      "qty": 12500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні оглядові: нестерильні, з латексу, з валиком на манжеті, розмір: M, міцність на розрив до прискореного старіння: від 12 Н, товщина на пальці: від 0,15 мм, на долоні: від 0,15 мм, на манжеті: від 0,15 мм, довжина манжети: 280–800 мм",
      "qty": 5000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: неопрен, без пудри, без валика, з клейкою смугою, розмір (ДСТУ EN 455-2:2015): 7.5",
      "qty": 2500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, без валика, з клейкою смугою, з антимікробним внутрішнім покриттям, розмір (ДСТУ EN 455-2:2015): 7.5",
      "qty": 1000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: латекс, без пудри, без валика, з клейкою смугою, з антимікробним внутрішнім покриттям, розмір (ДСТУ EN 455-2:2015): 7",
      "qty": 1000,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рукавички медичні хірургічні: стерильні, матеріал виготовлення: неопрен, без пудри, без валика, з клейкою смугою, розмір (ДСТУ EN 455-2:2015): 8",
      "qty": 2500,
-     "unit": "пара",
      "status": "Переможець",
      "supplier": "ПП \"МЕДОС\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "пара",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-02-002083-a",
+   "title": "Рукавички медичні хірургічні",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-02-002083-a"
   },
   {
    "amount": 105600,
