@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-17T01:18:28.958286+00:00",
+ "generated": "2026-11-17T09:17:56.057897+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-17T01:18:28.958286+00:00",
+  "checked": "2026-11-17T09:17:56.057897+00:00",
   "expected": 1560,
   "seen": 1560,
   "tenders": 556,
@@ -13,6 +13,232 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-06-001893-a",
+   "tenderID": "UA-2026-11-06-001893-a",
+   "title": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
+   "date": "2026-11-17T10:59:26.513998+02:00",
+   "dateModified": "2026-11-17T10:59:26.513998+02:00",
+   "method": "priceQuotation",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 19795376.64,
+   "group": "Ліки",
+   "cpv": "33620000-2",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-001893-a",
+   "counts": {
+    "signed": 1,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
+     "qty": 1200,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"СТМ-Фарм\"",
+     "amount": 19795376.64,
+     "unitPrice": 16496.15,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-05-014530-a",
+   "tenderID": "UA-2026-11-05-014530-a",
+   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
+   "date": "2026-11-17T10:38:50.252637+02:00",
+   "dateModified": "2026-11-17T10:38:50.252637+02:00",
+   "method": "priceQuotation",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 774455.3,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014530-a",
+   "counts": {
+    "signed": 2,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл",
+     "qty": 20,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
+     "qty": 50,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-05-014291-a",
+   "tenderID": "UA-2026-11-05-014291-a",
+   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
+   "date": "2026-11-17T10:28:37.894515+02:00",
+   "dateModified": "2026-11-17T10:28:37.894515+02:00",
+   "method": "priceQuotation",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 13358784.15,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014291-a",
+   "counts": {
+    "signed": 2,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл",
+     "qty": 360,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
+     "qty": 315,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-04-003520-a",
+   "tenderID": "UA-2026-11-04-003520-a",
+   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+   "date": "2026-11-17T10:02:54.192918+02:00",
+   "dateModified": "2026-11-17T10:02:54.192918+02:00",
+   "method": "priceQuotation",
+   "status": "complete",
+   "contractEnd": null,
+   "amount": 2087655.6,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a",
+   "counts": {
+    "signed": 1,
+    "progress": 0,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
+     "qty": 710,
+     "unit": "штука",
+     "status": "Підписано",
+     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
+     "amount": 2087655.6,
+     "unitPrice": 2940.36,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-12-005090-a",
+   "tenderID": "UA-2026-11-12-005090-a",
+   "title": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
+   "date": "2026-11-17T09:15:00+02:00",
+   "dateModified": "2026-11-17T09:15:00.159523+02:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 93150,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-005090-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
+     "qty": 675,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-12-002660-a",
+   "tenderID": "UA-2026-11-12-002660-a",
+   "title": "Пропофол",
+   "date": "2026-11-17T09:10:00+02:00",
+   "dateModified": "2026-11-17T09:10:00.147349+02:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 11350825,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-002660-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
+     "qty": 50135,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
+     "qty": 2435,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пропофол, емульсія, 10 мг/мл, по 20 мл",
+     "qty": 6675,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 974207.2,
    "contractEnd": null,
@@ -846,88 +1072,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a"
   },
   {
-   "amount": 11350825,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 3,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-11-17T09:10:00+02:00",
-   "dateModified": "2026-11-12T11:27:12.528176+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-12-002660-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
-     "qty": 50135,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
-     "qty": 2435,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пропофол, емульсія, 10 мг/мл, по 20 мл",
-     "qty": 6675,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-12-002660-a",
-   "title": "Пропофол",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-002660-a"
-  },
-  {
-   "amount": 93150,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-11-17T09:15:00+02:00",
-   "dateModified": "2026-11-12T11:25:08.045839+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-12-005090-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
-     "qty": 675,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-12-005090-a",
-   "title": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-005090-a"
-  },
-  {
    "amount": 147040,
    "contractEnd": null,
    "counts": {
@@ -1214,37 +1358,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-19-010703-a"
   },
   {
-   "amount": 18500352,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33620000-2",
-   "date": "2026-11-11T09:00:00+02:00",
-   "dateModified": "2026-11-11T09:43:15.818814+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-06-001893-a",
-   "items": [
-    {
-     "amount": 18500352,
-     "lot": null,
-     "name": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
-     "qty": 1200,
-     "status": "Переможець",
-     "supplier": "ТОВ \"СТМ-Фарм\"",
-     "unit": "штука",
-     "unitPrice": 15416.96
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-11-06-001893-a",
-   "title": "Альтеплаза ліофілізат для розчину для інфузій по 50 мг флакон",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-06-001893-a"
-  },
-  {
    "amount": 1736000,
    "contractEnd": null,
    "counts": {
@@ -1307,47 +1420,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-03-011648-a"
   },
   {
-   "amount": 723790,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-10T10:00:00+02:00",
-   "dateModified": "2026-11-10T10:04:11.464641+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-05-014530-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл",
-     "qty": 20,
-     "status": "Переможець",
-     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
-     "qty": 50,
-     "status": "Переможець",
-     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-11-05-014530-a",
-   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 50 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 50 мг/мл, по 100 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014530-a"
-  },
-  {
    "amount": 670300,
    "contractEnd": null,
    "counts": {
@@ -1387,47 +1459,6 @@
    "tenderID": "UA-2026-11-05-001518-a",
    "title": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл; Морфін, таблетки по 10 мг",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001518-a"
-  },
-  {
-   "amount": 12484845,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-10T09:00:00+02:00",
-   "dateModified": "2026-11-10T09:02:49.268813+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-05-014291-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл",
-     "qty": 360,
-     "status": "Переможець",
-     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
-     "qty": 315,
-     "status": "Переможець",
-     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-11-05-014291-a",
-   "title": "Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 100 мл; Імуноглобулін, людини нормальний, розчин для інфузій, 100 мг/мл, по 50 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-014291-a"
   },
   {
    "amount": 13179600,
@@ -1662,37 +1693,6 @@
    "tenderID": "UA-2026-10-28-013460-a",
    "title": "Цефтазидим та авібактам порошок для концентрату для розчину для інфузій по 2000 мг/500 мг",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-28-013460-a"
-  },
-  {
-   "amount": 1951080,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-09T10:00:00+02:00",
-   "dateModified": "2026-11-09T10:37:25.011309+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-04-003520-a",
-   "items": [
-    {
-     "amount": 1951080,
-     "lot": null,
-     "name": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-     "qty": 710,
-     "status": "Переможець",
-     "supplier": "ТОВ \"БІОФАРМА ПЛАЗМА\"",
-     "unit": "штука",
-     "unitPrice": 2748.0
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "tenderID": "UA-2026-11-04-003520-a",
-   "title": "Анти-D імуноглобулін людини, розчин для ін'єкцій, 300 мкг (1500 МО)/2 мл, по 2 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a"
   },
   {
    "amount": 3600,
