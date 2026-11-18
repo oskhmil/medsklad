@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-17T18:44:44.940025+00:00",
+ "generated": "2026-11-18T01:31:56.027524+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-17T18:44:44.940025+00:00",
+  "checked": "2026-11-18T01:31:56.027524+00:00",
   "expected": 1565,
   "seen": 1565,
   "tenders": 561,
@@ -14,251 +14,251 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-17-012216-a",
-   "tenderID": "UA-2026-11-17-012216-a",
-   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "amount": 467289.72,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-11-20T09:00:00+02:00",
    "dateModified": "2026-11-17T15:07:00.223693+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 467289.72,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-012216-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
      "qty": 2,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-17-012216-a",
+   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a"
   },
   {
-   "id": "UA-2026-11-17-009274-a",
-   "tenderID": "UA-2026-11-17-009274-a",
-   "title": "Диклофенак розчин для ін`єкцій 25 мг/мл",
+   "amount": 1734000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-11-20T10:00:00+02:00",
    "dateModified": "2026-11-17T13:50:19.567599+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1734000,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-009274-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-009274-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Диклофенак розчин для ін`єкцій 25 мг/мл",
      "qty": 150000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-17-009274-a",
+   "title": "Диклофенак розчин для ін`єкцій 25 мг/мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-009274-a"
   },
   {
-   "id": "UA-2026-11-17-008985-a",
-   "tenderID": "UA-2026-11-17-008985-a",
-   "title": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
+   "amount": 58760,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-20T09:15:00+02:00",
    "dateModified": "2026-11-17T13:41:53.608946+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 58760,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008985-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-008985-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
      "qty": 800,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-17-008985-a",
+   "title": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008985-a"
   },
   {
-   "id": "UA-2026-11-17-008800-a",
-   "tenderID": "UA-2026-11-17-008800-a",
-   "title": "Фуросемід, розчин для ін'єкцій, 10мг/мл, по 2 мл",
+   "amount": 424951.8,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-20T09:30:00+02:00",
    "dateModified": "2026-11-17T13:35:20.880643+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 424951.8,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008800-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-008800-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Фуросемід, розчин для ін'єкцій, 10мг/мл, по 2 мл",
      "qty": 76020,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-17-007655-a",
-   "tenderID": "UA-2026-11-17-007655-a",
-   "title": "Повідон-йод",
-   "date": "2026-11-20T09:10:00+02:00",
-   "dateModified": "2026-11-17T12:58:12.901336+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-17-008800-a",
+   "title": "Фуросемід, розчин для ін'єкцій, 10мг/мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008800-a"
+  },
+  {
    "amount": 2074501.2,
-   "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-007655-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 2,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33630000-5",
+   "date": "2026-11-20T09:10:00+02:00",
+   "dateModified": "2026-11-17T12:58:12.901336+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-17-007655-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Повідон-йод, розчин для зовнішнього застосування, 10 %, по 1000 мл",
      "qty": 2500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Повідон-йод, розчин для зовнішнього застосування, 10 %, по 100 мл",
      "qty": 6130,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-17-007655-a",
+   "title": "Повідон-йод",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-007655-a"
   },
   {
-   "id": "UA-2026-11-12-005090-a",
-   "tenderID": "UA-2026-11-12-005090-a",
-   "title": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
+   "amount": 93150,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-17T09:15:00+02:00",
    "dateModified": "2026-11-17T11:26:31.348925+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 93150,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-005090-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-12-005090-a",
    "items": [
     {
+     "amount": 93150,
+     "lot": null,
      "name": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
      "qty": 675,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": 93150,
-     "unitPrice": 138.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 138.0
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-12-002660-a",
-   "tenderID": "UA-2026-11-12-002660-a",
-   "title": "Пропофол",
-   "date": "2026-11-17T09:10:00+02:00",
-   "dateModified": "2026-11-17T11:25:36.630264+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-12-005090-a",
+   "title": "Пропофол емульсія для інфузій 20 мг/мл по 20 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-005090-a"
+  },
+  {
    "amount": 11350825,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-002660-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 3,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33660000-4",
+   "date": "2026-11-17T09:10:00+02:00",
+   "dateModified": "2026-11-17T11:25:36.630264+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-12-002660-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 10 мг/мл, по 50 мл",
      "qty": 50135,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 20 мг/мл, по 50 мл",
      "qty": 2435,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Пропофол, емульсія, 10 мг/мл, по 20 мл",
      "qty": 6675,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "АТ \"ФАРМАК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-12-002660-a",
+   "title": "Пропофол",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-12-002660-a"
   },
   {
    "amount": 19795376.64,
