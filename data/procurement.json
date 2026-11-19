@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-19T00:30:43.417239+00:00",
+ "generated": "2026-11-19T08:08:46.209459+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-19T00:30:43.417239+00:00",
+  "checked": "2026-11-19T08:08:46.209459+00:00",
   "expected": 1565,
   "seen": 1565,
   "tenders": 561,
@@ -13,6 +13,228 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-16-015708-a",
+   "tenderID": "UA-2026-11-16-015708-a",
+   "title": "Лікарські засоби",
+   "date": "2026-11-19T09:10:00+02:00",
+   "dateModified": "2026-11-19T09:25:38.883050+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 974176.4,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015708-a",
+   "counts": {
+    "signed": 0,
+    "progress": 17,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Епінефрин 1.82 мг/мл, розчин для ін'єкцій, ампула",
+     "qty": 12520,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Лідокаїн, розчин для ін`єкцій, 20 мг/мл, по 2 мл",
+     "qty": 35000,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Преднізолон, розчин для ін'єкцій, 30 мг/мл, по 1 мл",
+     "qty": 5100,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Мізопростол таблетки по 0,2 мг",
+     "qty": 1820,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Кальцію глюконат розчин для ін'єкцій 100 мг/мл по 5 мл",
+     "qty": 7450,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Кальцію глюконат розчин для ін'єкцій 100 мг/мл по 10 мл",
+     "qty": 3330,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Карбамазепін таблетки по 200 мг",
+     "qty": 12900,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Прокаїн розчин для ін'єкцій 20 мг/мл в ампулі 2 мл",
+     "qty": 980,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Папаверин, розчин для ін'єкцій, 20 мг/мл, по 2 мл",
+     "qty": 100,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Аскорбінова кислота розчин для ін'єкцій, 50 мг/мл по 2 мл",
+     "qty": 540,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Тіаміну хлорид (вітамін В1), розчин для ін'єкцій, 50 мг/мл, по 1 мл",
+     "qty": 2090,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Піридоксин (вітамін В6), розчин для ін'єкцій, 50 мг/мл, по 1 мл",
+     "qty": 990,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Ксилометазолін краплі назальні 1 мг/мл по 10 мл",
+     "qty": 200,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Атропіну сульфат розчин для ін'єкцій 1 мг/1 мл, в ампулі 1 мл",
+     "qty": 14700,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пентоксифілін, розчин для ін`єкцій, 20 мг/мл, по 5 мл",
+     "qty": 300,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Оксиметазолін спрей назальний 0,5мг/мл по 10 мл",
+     "qty": 400,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Пароксетин таблетки, 20 мг в блістері",
+     "qty": 1500,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-16-015184-a",
+   "tenderID": "UA-2026-11-16-015184-a",
+   "title": "Преднізолон, таблетки, 5 мг",
+   "date": "2026-11-19T09:00:17.378258+02:00",
+   "dateModified": "2026-11-19T09:00:17.378258+02:00",
+   "method": "priceQuotation",
+   "status": "unsuccessful",
+   "contractEnd": null,
+   "amount": 589.2,
+   "group": "Ліки",
+   "cpv": "33640000-8",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015184-a",
+   "counts": {
+    "signed": 0,
+    "progress": 0,
+    "failed": 1
+   },
+   "items": [
+    {
+     "name": "Преднізолон, таблетки, 5 мг",
+     "qty": 160,
+     "unit": "штука",
+     "status": "Не відбулось",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 467289.72,
    "contractEnd": null,
@@ -405,197 +627,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-04-003520-a"
   },
   {
-   "amount": 974207.2,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 17,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-11-19T09:10:00+02:00",
-   "dateModified": "2026-11-16T17:33:35.906729+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-16-015708-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Епінефрин 1.82 мг/мл, розчин для ін'єкцій, ампула",
-     "qty": 12520,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Лідокаїн, розчин для ін`єкцій, 20 мг/мл, по 2 мл",
-     "qty": 35000,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Преднізолон, розчин для ін'єкцій, 30 мг/мл, по 1 мл",
-     "qty": 5100,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Мізопростол таблетки по 0,2 мг",
-     "qty": 1820,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Кальцію глюконат розчин для ін'єкцій 100 мг/мл по 5 мл",
-     "qty": 7450,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Кальцію глюконат розчин для ін'єкцій 100 мг/мл по 10 мл",
-     "qty": 3330,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Карбамазепін таблетки по 200 мг",
-     "qty": 12900,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Прокаїн розчин для ін'єкцій 20 мг/мл в ампулі 2 мл",
-     "qty": 980,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Папаверин, розчин для ін'єкцій, 20 мг/мл, по 2 мл",
-     "qty": 100,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Аскорбінова кислота розчин для ін'єкцій, 50 мг/мл по 2 мл",
-     "qty": 540,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Тіаміну хлорид (вітамін В1), розчин для ін'єкцій, 50 мг/мл, по 1 мл",
-     "qty": 2090,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Піридоксин (вітамін В6), розчин для ін'єкцій, 50 мг/мл, по 1 мл",
-     "qty": 990,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Ксилометазолін краплі назальні 1 мг/мл по 10 мл",
-     "qty": 200,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Атропіну сульфат розчин для ін'єкцій 1 мг/1 мл, в ампулі 1 мл",
-     "qty": 14700,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пентоксифілін, розчин для ін`єкцій, 20 мг/мл, по 5 мл",
-     "qty": 300,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Оксиметазолін спрей назальний 0,5мг/мл по 10 мл",
-     "qty": 400,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Пароксетин таблетки, 20 мг в блістері",
-     "qty": 1500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-16-015708-a",
-   "title": "Лікарські засоби",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015708-a"
-  },
-  {
    "amount": 3068,
    "contractEnd": null,
    "counts": {
@@ -625,37 +656,6 @@
    "tenderID": "UA-2026-11-16-015480-a",
    "title": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015480-a"
-  },
-  {
-   "amount": 589.2,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33640000-8",
-   "date": "2026-11-19T09:00:00+02:00",
-   "dateModified": "2026-11-16T17:04:28.786344+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-16-015184-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Преднізолон, таблетки, 5 мг",
-     "qty": 160,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-16-015184-a",
-   "title": "Преднізолон, таблетки, 5 мг",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015184-a"
   },
   {
    "amount": 11979797,
