@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-20T16:17:43.018831+00:00",
+ "generated": "2026-11-20T22:55:41.456790+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-20T16:17:43.018831+00:00",
+  "checked": "2026-11-20T22:55:41.456790+00:00",
   "expected": 1576,
   "seen": 1576,
   "tenders": 572,
@@ -14,545 +14,545 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-20-015593-a",
-   "tenderID": "UA-2026-11-20-015593-a",
-   "title": "Флуконазол",
+   "amount": 726800,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-25T10:00:00+02:00",
    "dateModified": "2026-11-20T17:41:41.180807+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 726800,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015593-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-11-20-015593-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Флуконазол, розчин для інфузій, 2 мг/мл, по 100 мл",
      "qty": 4360,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Флуконазол, розчин для інфузій, 2 мг/мл, по 50 мл",
      "qty": 2000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-20-015593-a",
+   "title": "Флуконазол",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015593-a"
   },
   {
-   "id": "UA-2026-11-20-015551-a",
-   "tenderID": "UA-2026-11-20-015551-a",
-   "title": "Рінгера Лактат розчин для інфузій по 200 мл; Рінгера Лактат розчин для інфузій по 400 мл; Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
+   "amount": 10280750,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 5,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-11-25T08:00:00+02:00",
    "dateModified": "2026-11-20T17:35:58.703143+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 10280750,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015551-a",
-   "counts": {
-    "signed": 0,
-    "progress": 5,
-    "failed": 0
-   },
+   "id": "UA-2026-11-20-015551-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Рінгера Лактат розчин для інфузій по 200 мл",
      "qty": 3210,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рінгера Лактат розчин для інфузій по 400 мл",
      "qty": 2000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рінгера розчин для інфузій по 200 мл",
      "qty": 89470,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Рінгера розчин для інфузій по 400 мл",
      "qty": 96450,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Електроліти та комбінації розчин для інфузій, по 500 мл",
      "qty": 10675,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-20-015551-a",
+   "title": "Рінгера Лактат розчин для інфузій по 200 мл; Рінгера Лактат розчин для інфузій по 400 мл; Електроліти та комбінації розчин для інфузій, по 500 мл; Рінгера розчин для інфузій по 200 мл; Рінгера розчин для інфузій по 400 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015551-a"
   },
   {
-   "id": "UA-2026-11-20-015500-a",
-   "tenderID": "UA-2026-11-20-015500-a",
-   "title": "Калію хлорид концентрат для розчину для інфузій",
+   "amount": 2222900,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-25T09:30:00+02:00",
    "dateModified": "2026-11-20T17:28:41.725783+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2222900,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015500-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-11-20-015500-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Калію хлорид концентрат для розчину для інфузій, 75 мг/мл по 10 мл",
      "qty": 13670,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Калію хлорид розчин для інфузій/концентрат для розчину для інфузій 75 мг/мл по 20 мл",
      "qty": 12660,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-20-015500-a",
+   "title": "Калію хлорид концентрат для розчину для інфузій",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015500-a"
   },
   {
-   "id": "UA-2026-11-20-015435-a",
-   "tenderID": "UA-2026-11-20-015435-a",
-   "title": "Ондансетрон",
+   "amount": 1294090,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 3,
+    "signed": 0
+   },
+   "cpv": "33610000-9",
    "date": "2026-11-25T09:10:00+02:00",
    "dateModified": "2026-11-20T17:20:05.938167+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 1294090,
    "group": "Ліки",
-   "cpv": "33610000-9",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015435-a",
-   "counts": {
-    "signed": 0,
-    "progress": 3,
-    "failed": 0
-   },
+   "id": "UA-2026-11-20-015435-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Ондансетрон розчин для ін'єкцій 2 мг/мл по 2 мл",
      "qty": 10330,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Ондансетрон розчин для ін'єкцій 2 мг/мл по 4 мл",
      "qty": 24820,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Ондансетрон сироп, 4,0 мг/5 мл, по 50 мл",
      "qty": 400,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-20-015435-a",
+   "title": "Ондансетрон",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015435-a"
   },
   {
-   "id": "UA-2026-11-20-015359-a",
-   "tenderID": "UA-2026-11-20-015359-a",
-   "title": "Глюкози розчин для інфузій",
+   "amount": 2299680,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 5,
+    "signed": 0
+   },
+   "cpv": "33690000-3",
    "date": "2026-11-25T08:50:00+02:00",
    "dateModified": "2026-11-20T17:13:26.834171+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2299680,
    "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015359-a",
-   "counts": {
-    "signed": 0,
-    "progress": 5,
-    "failed": 0
-   },
+   "id": "UA-2026-11-20-015359-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Глюкози розчин для інфузій 10 % по 200 мл",
      "qty": 9500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Глюкози розчин для інфузій 5 % по 250 мл",
      "qty": 2000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Глюкози розчин для інфузій 5 % по 200 мл",
      "qty": 40140,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Глюкози розчин для інфузій 5 % по 400 мл",
      "qty": 6000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Глюкози розчин для інфузій 5 % по 500 мл (контейнер/пляшка ПЕ)",
      "qty": 1850,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-20-015159-a",
-   "tenderID": "UA-2026-11-20-015159-a",
-   "title": "Натрію хлорид",
-   "date": "2026-11-25T08:40:00+02:00",
-   "dateModified": "2026-11-20T16:55:04.967701+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-20-015359-a",
+   "title": "Глюкози розчин для інфузій",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015359-a"
+  },
+  {
    "amount": 18444287,
-   "group": "Ліки",
-   "cpv": "33690000-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015159-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 8,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33690000-3",
+   "date": "2026-11-25T08:40:00+02:00",
+   "dateModified": "2026-11-20T16:55:04.967701+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-20-015159-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для ін'єкцій, 9 мг/мл, по 5 мл",
      "qty": 2815,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 100 мл",
      "qty": 170742,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 200 мл",
      "qty": 225233,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 250 мл",
      "qty": 10000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 400 мл",
      "qty": 95122,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 500 мл",
      "qty": 35799,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 1000 мл",
      "qty": 8205,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Натрію хлорид, розчин для інфузій, 9 мг/мл 3000 мл",
      "qty": 6944,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-20-015159-a",
+   "title": "Натрію хлорид",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-20-015159-a"
   },
   {
-   "id": "UA-2026-11-17-009274-a",
-   "tenderID": "UA-2026-11-17-009274-a",
-   "title": "Диклофенак розчин для ін`єкцій 25 мг/мл",
+   "amount": 630000,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-11-20T10:00:00+02:00",
    "dateModified": "2026-11-20T10:56:56.504782+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 630000,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-009274-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-009274-a",
    "items": [
     {
+     "amount": 630000,
+     "lot": null,
      "name": "Диклофенак розчин для ін`єкцій 25 мг/мл",
      "qty": 150000,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"НІКОФАРМ ГРУП\"",
-     "amount": 630000,
-     "unitPrice": 4.2,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 4.2
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-17-009274-a",
+   "title": "Диклофенак розчин для ін`єкцій 25 мг/мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-009274-a"
   },
   {
-   "id": "UA-2026-11-17-008800-a",
-   "tenderID": "UA-2026-11-17-008800-a",
-   "title": "Фуросемід, розчин для ін'єкцій, 10мг/мл, по 2 мл",
+   "amount": 260748.6,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-20T09:30:00+02:00",
    "dateModified": "2026-11-20T10:48:50.397738+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 260748.6,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008800-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-008800-a",
    "items": [
     {
+     "amount": 260748.6,
+     "lot": null,
      "name": "Фуросемід, розчин для ін'єкцій, 10мг/мл, по 2 мл",
      "qty": 76020,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 260748.6,
-     "unitPrice": 3.43,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 3.43
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-17-008800-a",
+   "title": "Фуросемід, розчин для ін'єкцій, 10мг/мл, по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008800-a"
   },
   {
-   "id": "UA-2026-11-17-008985-a",
-   "tenderID": "UA-2026-11-17-008985-a",
-   "title": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
+   "amount": 58760,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-20T09:15:00+02:00",
    "dateModified": "2026-11-20T09:30:43.602741+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 58760,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008985-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-008985-a",
    "items": [
     {
+     "amount": 58760,
+     "lot": null,
      "name": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
      "qty": 800,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 58760,
-     "unitPrice": 73.45,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 73.45
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-17-008985-a",
+   "title": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008985-a"
   },
   {
-   "id": "UA-2026-11-17-007655-a",
-   "tenderID": "UA-2026-11-17-007655-a",
-   "title": "Повідон-йод",
+   "amount": 1388790,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33630000-5",
    "date": "2026-11-20T09:10:00+02:00",
    "dateModified": "2026-11-20T09:19:21.546920+02:00",
-   "method": "priceQuotation",
-   "status": "active.awarded",
-   "contractEnd": null,
-   "amount": 1388790,
    "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-007655-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-007655-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Повідон-йод, розчин для зовнішнього застосування, 10 %, по 1000 мл",
      "qty": 2500,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АМЕТРІН ФК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Повідон-йод, розчин для зовнішнього застосування, 10 %, по 100 мл",
      "qty": 6130,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"АМЕТРІН ФК\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-17-012216-a",
-   "tenderID": "UA-2026-11-17-012216-a",
-   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
-   "date": "2026-11-20T09:00:00+02:00",
-   "dateModified": "2026-11-20T09:13:02.771431+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.awarded",
-   "contractEnd": null,
+   "tenderID": "UA-2026-11-17-007655-a",
+   "title": "Повідон-йод",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-007655-a"
+  },
+  {
    "amount": 464200,
-   "group": "Ліки",
-   "cpv": "33630000-5",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a",
+   "contractEnd": null,
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 1,
-    "failed": 0
+    "signed": 0
    },
+   "cpv": "33630000-5",
+   "date": "2026-11-20T09:00:00+02:00",
+   "dateModified": "2026-11-20T09:13:02.771431+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-17-012216-a",
    "items": [
     {
+     "amount": 464200,
+     "lot": null,
      "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
      "qty": 2,
-     "unit": "штука",
      "status": "Переможець",
      "supplier": "СПІЛЬНЕ УКРАЇНСЬКО-ЕСТОНСЬКЕ ПІДПРИЄМСТВО У ФОРМІ ТОВАРИСТВА З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ОПТІМА-ФАРМ, ЛТД\"",
-     "amount": 464200,
-     "unitPrice": 232100.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 232100.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "tenderID": "UA-2026-11-17-012216-a",
+   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a"
   },
   {
    "amount": 618261,
