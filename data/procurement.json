@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-19T17:34:17.592454+00:00",
+ "generated": "2026-11-20T00:04:52.280000+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-19T17:34:17.592454+00:00",
-  "expected": 1570,
-  "seen": 1570,
+  "checked": "2026-11-20T00:04:52.280000+00:00",
+  "expected": 1579,
+  "seen": 1579,
   "tenders": 566,
   "errors": 0,
   "dropped": 0,
@@ -14,528 +14,528 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-19-016578-a",
-   "tenderID": "UA-2026-11-19-016578-a",
-   "title": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
+   "amount": 618261,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-24T09:15:00+02:00",
    "dateModified": "2026-11-19T16:59:56.567313+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 618261,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016578-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-19-016578-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
      "qty": 74850,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-19-016578-a",
+   "title": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016578-a"
   },
   {
-   "id": "UA-2026-11-19-016342-a",
-   "tenderID": "UA-2026-11-19-016342-a",
-   "title": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
+   "amount": 399076,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33610000-9",
    "date": "2026-11-24T09:10:00+02:00",
    "dateModified": "2026-11-19T16:50:20.021896+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 399076,
    "group": "Ліки",
-   "cpv": "33610000-9",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016342-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-19-016342-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
      "qty": 17800,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-19-016342-a",
+   "title": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016342-a"
   },
   {
-   "id": "UA-2026-11-19-008515-a",
-   "tenderID": "UA-2026-11-19-008515-a",
-   "title": "Абсорбент СО2 для анестезіології",
+   "amount": 459252.34,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33171000-9",
    "date": "2026-11-24T09:30:00+02:00",
    "dateModified": "2026-11-19T14:15:32.468534+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 459252.34,
    "group": "Матеріали",
-   "cpv": "33171000-9",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-008515-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
+   "id": "UA-2026-11-19-008515-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Абсорбент СО2 для анестезіології",
      "qty": 300,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-19-008515-a",
+   "title": "Абсорбент СО2 для анестезіології",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-008515-a"
   },
   {
-   "id": "UA-2026-11-10-014724-a",
-   "tenderID": "UA-2026-11-10-014724-a",
-   "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
+   "amount": 1256468.9,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 4
+   },
+   "cpv": "33141110-4",
    "date": "2026-11-19T14:13:58.273872+02:00",
    "dateModified": "2026-11-19T14:13:58.273872+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 1256468.9,
    "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a",
-   "counts": {
-    "signed": 4,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-11-10-014724-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%",
      "qty": 4000,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17",
      "qty": 96750,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17",
      "qty": 6500,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
      "qty": 31800,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-10-014724-a",
+   "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a"
   },
   {
-   "id": "UA-2026-11-19-007828-a",
-   "tenderID": "UA-2026-11-19-007828-a",
-   "title": "Цефуроксим",
+   "amount": 2639368.8,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 2,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-24T09:10:00+02:00",
    "dateModified": "2026-11-19T12:45:10.222767+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 2639368.8,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-007828-a",
-   "counts": {
-    "signed": 0,
-    "progress": 2,
-    "failed": 0
-   },
+   "id": "UA-2026-11-19-007828-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Цефуроксим, порошок для ін'єкцій по 750 мг",
      "qty": 4500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Цефуроксим,порошок для ін'єкцій 1500 мг",
      "qty": 47820,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
-  },
-  {
-   "id": "UA-2026-11-09-009984-a",
-   "tenderID": "UA-2026-11-09-009984-a",
-   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
-   "date": "2026-11-19T12:35:15.415375+02:00",
-   "dateModified": "2026-11-19T12:35:15.415375+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 157332.8,
-   "group": "Ліки",
-   "cpv": "33640000-8",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a",
-   "counts": {
-    "signed": 2,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
-     "qty": 6600,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
-     "qty": 80,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-10-013856-a",
-   "tenderID": "UA-2026-11-10-013856-a",
-   "title": "Вата медична нестерильна 100 г.; Відріз марлевий 0,9 x 10 м; Відріз марлевий 0,9 x 5 м.; Рулон марлевий 0,9 x 1000,00 м.",
-   "date": "2026-11-19T12:26:43.384308+02:00",
-   "dateModified": "2026-11-19T12:26:43.384308+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 4378314.6,
-   "group": "Матеріали",
-   "cpv": "33141110-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a",
-   "counts": {
-    "signed": 4,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Вата медична нестерильна 100 г.",
-     "qty": 14600,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Відріз марлевий 0,9 x 10 м",
-     "qty": 17200,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Відріз марлевий 0,9 x 5 м.",
-     "qty": 15000,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Рулон марлевий 0,9 x 1000,00 м.",
-     "qty": 200,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "ТОВ \"ТЕТАФАРМ\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-09-010685-a",
-   "tenderID": "UA-2026-11-09-010685-a",
-   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
-   "date": "2026-11-19T12:23:26.844782+02:00",
-   "dateModified": "2026-11-19T12:23:26.844782+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 143711.7,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
-     "qty": 7260,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 143711.7,
-     "unitPrice": 19.8,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-10-017252-a",
-   "tenderID": "UA-2026-11-10-017252-a",
-   "title": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
-   "date": "2026-11-19T12:13:19.109109+02:00",
-   "dateModified": "2026-11-19T12:13:19.109109+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 275257.5,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017252-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
-     "qty": 3500,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 275257.5,
-     "unitPrice": 78.64,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-10-017185-a",
-   "tenderID": "UA-2026-11-10-017185-a",
-   "title": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
-   "date": "2026-11-19T12:01:42.083096+02:00",
-   "dateModified": "2026-11-19T12:01:42.083096+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 2014506.12,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017185-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
-     "qty": 8390,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 2014506.12,
-     "unitPrice": 240.11,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-05-001518-a",
-   "tenderID": "UA-2026-11-05-001518-a",
-   "title": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл; Морфін, таблетки по 10 мг",
-   "date": "2026-11-19T11:50:52.014573+02:00",
-   "dateModified": "2026-11-19T11:50:52.014573+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 717221,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001518-a",
-   "counts": {
-    "signed": 2,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл",
-     "qty": 8160,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    },
-    {
-     "name": "Морфін, таблетки по 10 мг",
-     "qty": 200,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-10-017222-a",
-   "tenderID": "UA-2026-11-10-017222-a",
-   "title": "Омнопон, розчин для ін'єкцій по 1 мл",
-   "date": "2026-11-19T11:35:38.886418+02:00",
-   "dateModified": "2026-11-19T11:35:38.886418+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 243960,
-   "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Омнопон, розчин для ін'єкцій по 1 мл",
-     "qty": 1200,
-     "unit": "штука",
-     "status": "Підписано",
-     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
-     "amount": 243960,
-     "unitPrice": 203.3,
-     "lot": null
-    }
-   ]
-  },
-  {
-   "id": "UA-2026-11-19-003578-a",
-   "tenderID": "UA-2026-11-19-003578-a",
-   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-   "date": "2026-11-24T09:00:00+02:00",
-   "dateModified": "2026-11-19T10:55:23.750714+02:00",
+   ],
    "method": "priceQuotation",
    "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 250070,
-   "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-003578-a",
-   "counts": {
-    "signed": 0,
-    "progress": 1,
-    "failed": 0
-   },
-   "items": [
-    {
-     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-     "qty": 500,
-     "unit": "штука",
-     "status": "В процесі",
-     "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
-    }
-   ]
+   "tenderID": "UA-2026-11-19-007828-a",
+   "title": "Цефуроксим",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-007828-a"
   },
   {
-   "id": "UA-2026-11-16-015480-a",
-   "tenderID": "UA-2026-11-16-015480-a",
-   "title": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
-   "date": "2026-11-19T10:00:16.180784+02:00",
-   "dateModified": "2026-11-19T10:00:16.180784+02:00",
-   "method": "priceQuotation",
-   "status": "unsuccessful",
+   "amount": 157332.8,
    "contractEnd": null,
-   "amount": 3068,
-   "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015480-a",
    "counts": {
-    "signed": 0,
+    "failed": 0,
     "progress": 0,
-    "failed": 1
+    "signed": 2
    },
+   "cpv": "33640000-8",
+   "date": "2026-11-19T12:35:15.415375+02:00",
+   "dateModified": "2026-11-19T12:35:15.415375+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-09-009984-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
+     "name": "Окситоцин,розчин для ін'єкцій 5 МО/мл",
+     "qty": 6600,
+     "status": "Підписано",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+     "qty": 80,
+     "status": "Підписано",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-09-009984-a",
+   "title": "Окситоцин,розчин для ін'єкцій 5 МО/мл; Карбетоцин розчин для ін'єкцій, 100 мкг/мл, по 1 мл, шприц",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-009984-a"
+  },
+  {
+   "amount": 4378314.6,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 4
+   },
+   "cpv": "33141110-4",
+   "date": "2026-11-19T12:26:43.384308+02:00",
+   "dateModified": "2026-11-19T12:26:43.384308+02:00",
+   "group": "Матеріали",
+   "id": "UA-2026-11-10-013856-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Вата медична нестерильна 100 г.",
+     "qty": 14600,
+     "status": "Підписано",
+     "supplier": "ТОВ \"ТЕТАФАРМ\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Відріз марлевий 0,9 x 10 м",
+     "qty": 17200,
+     "status": "Підписано",
+     "supplier": "ТОВ \"ТЕТАФАРМ\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Відріз марлевий 0,9 x 5 м.",
+     "qty": 15000,
+     "status": "Підписано",
+     "supplier": "ТОВ \"ТЕТАФАРМ\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Рулон марлевий 0,9 x 1000,00 м.",
+     "qty": 200,
+     "status": "Підписано",
+     "supplier": "ТОВ \"ТЕТАФАРМ\"",
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-10-013856-a",
+   "title": "Вата медична нестерильна 100 г.; Відріз марлевий 0,9 x 10 м; Відріз марлевий 0,9 x 5 м.; Рулон марлевий 0,9 x 1000,00 м.",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-013856-a"
+  },
+  {
+   "amount": 143711.7,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33660000-4",
+   "date": "2026-11-19T12:23:26.844782+02:00",
+   "dateModified": "2026-11-19T12:23:26.844782+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-09-010685-a",
+   "items": [
+    {
+     "amount": 143711.7,
+     "lot": null,
+     "name": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+     "qty": 7260,
+     "status": "Підписано",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "unit": "штука",
+     "unitPrice": 19.8
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-09-010685-a",
+   "title": "Кетамін, розчин для ін'єкцій, 50 мг/мл по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-09-010685-a"
+  },
+  {
+   "amount": 275257.5,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33660000-4",
+   "date": "2026-11-19T12:13:19.109109+02:00",
+   "dateModified": "2026-11-19T12:13:19.109109+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-10-017252-a",
+   "items": [
+    {
+     "amount": 275257.5,
+     "lot": null,
+     "name": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
+     "qty": 3500,
+     "status": "Підписано",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "unit": "штука",
+     "unitPrice": 78.64
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-10-017252-a",
+   "title": "Натрію оксибутират, розчин для ін'єкцій, 200мг/мл, по 10 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017252-a"
+  },
+  {
+   "amount": 2014506.12,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33660000-4",
+   "date": "2026-11-19T12:01:42.083096+02:00",
+   "dateModified": "2026-11-19T12:01:42.083096+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-10-017185-a",
+   "items": [
+    {
+     "amount": 2014506.12,
+     "lot": null,
+     "name": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
+     "qty": 8390,
+     "status": "Підписано",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "unit": "штука",
+     "unitPrice": 240.11
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-10-017185-a",
+   "title": "Промедол розчин для ін'єкцій, 20 мг/мл по 1 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017185-a"
+  },
+  {
+   "amount": 717221,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 2
+   },
+   "cpv": "33660000-4",
+   "date": "2026-11-19T11:50:52.014573+02:00",
+   "dateModified": "2026-11-19T11:50:52.014573+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-05-001518-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл",
+     "qty": 8160,
+     "status": "Підписано",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "unit": "штука",
+     "unitPrice": null
+    },
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Морфін, таблетки по 10 мг",
+     "qty": 200,
+     "status": "Підписано",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-05-001518-a",
+   "title": "Морфін, розчин для ін`єкцій, 10 мг/мл по 1 мл; Морфін, таблетки по 10 мг",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-05-001518-a"
+  },
+  {
+   "amount": 243960,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33660000-4",
+   "date": "2026-11-19T11:35:38.886418+02:00",
+   "dateModified": "2026-11-19T11:35:38.886418+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-10-017222-a",
+   "items": [
+    {
+     "amount": 243960,
+     "lot": null,
+     "name": "Омнопон, розчин для ін'єкцій по 1 мл",
+     "qty": 1200,
+     "status": "Підписано",
+     "supplier": "Приватне підприємство виробничо-комерційна фірма \"Скайінвест\"",
+     "unit": "штука",
+     "unitPrice": 203.3
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-10-017222-a",
+   "title": "Омнопон, розчин для ін'єкцій по 1 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a"
+  },
+  {
+   "amount": 250070,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 1,
+    "signed": 0
+   },
+   "cpv": "33650000-1",
+   "date": "2026-11-24T09:00:00+02:00",
+   "dateModified": "2026-11-19T10:55:23.750714+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-19-003578-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
+     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+     "qty": 500,
+     "status": "В процесі",
+     "supplier": null,
+     "unit": "штука",
+     "unitPrice": null
+    }
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-19-003578-a",
+   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-003578-a"
+  },
+  {
+   "amount": 3068,
+   "contractEnd": null,
+   "counts": {
+    "failed": 1,
+    "progress": 0,
+    "signed": 0
+   },
+   "cpv": "33620000-2",
+   "date": "2026-11-19T10:00:16.180784+02:00",
+   "dateModified": "2026-11-19T10:00:16.180784+02:00",
+   "group": "Ліки",
+   "id": "UA-2026-11-16-015480-a",
+   "items": [
+    {
+     "amount": null,
+     "lot": null,
      "name": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
      "qty": 200,
-     "unit": "штука",
      "status": "Не відбулось",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "unsuccessful",
+   "tenderID": "UA-2026-11-16-015480-a",
+   "title": "Верапаміл розчин для ін'єкцій, 2,5 мг/мл по 2 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015480-a"
   },
   {
    "amount": 974176.4,
