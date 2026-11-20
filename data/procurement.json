@@ -1,11 +1,11 @@
 {
- "generated": "2026-11-20T00:04:52.280000+00:00",
+ "generated": "2026-11-20T07:18:30.189231+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-20T00:04:52.280000+00:00",
-  "expected": 1579,
-  "seen": 1579,
+  "checked": "2026-11-20T07:18:30.189231+00:00",
+  "expected": 1570,
+  "seen": 1570,
   "tenders": 566,
   "errors": 0,
   "dropped": 0,
@@ -13,6 +13,37 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-17-012216-a",
+   "tenderID": "UA-2026-11-17-012216-a",
+   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+   "date": "2026-11-20T09:00:00+02:00",
+   "dateModified": "2026-11-20T09:00:15.822829+02:00",
+   "method": "priceQuotation",
+   "status": "active.qualification",
+   "contractEnd": null,
+   "amount": 467289.72,
+   "group": "Ліки",
+   "cpv": "33630000-5",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
+     "qty": 2,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 618261,
    "contractEnd": null,
@@ -758,37 +789,6 @@
    "tenderID": "UA-2026-11-16-015184-a",
    "title": "Преднізолон, таблетки, 5 мг",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-16-015184-a"
-  },
-  {
-   "amount": 467289.72,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33630000-5",
-   "date": "2026-11-20T09:00:00+02:00",
-   "dateModified": "2026-11-17T15:07:00.223693+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-17-012216-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
-     "qty": 2,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-17-012216-a",
-   "title": "Рисдиплам порошок для орального розчину 0,75 мг/мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a"
   },
   {
    "amount": 1734000,
