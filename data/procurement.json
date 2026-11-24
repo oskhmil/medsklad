@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-24T06:09:29.766927+00:00",
+ "generated": "2026-11-24T17:44:56.517287+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-24T06:09:29.766927+00:00",
+  "checked": "2026-11-24T17:44:56.517287+00:00",
   "expected": 1576,
   "seen": 1576,
   "tenders": 574,
@@ -13,6 +13,171 @@
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-19-008515-a",
+   "tenderID": "UA-2026-11-19-008515-a",
+   "title": "Абсорбент СО2 для анестезіології",
+   "date": "2026-11-24T09:30:00+02:00",
+   "dateModified": "2026-11-24T10:15:11.285647+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 367500,
+   "group": "Матеріали",
+   "cpv": "33171000-9",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-008515-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Абсорбент СО2 для анестезіології",
+     "qty": 300,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВ \"АЗАРІС ГРУП\"",
+     "amount": 367500,
+     "unitPrice": 1225.0,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-19-016342-a",
+   "tenderID": "UA-2026-11-19-016342-a",
+   "title": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
+   "date": "2026-11-24T09:10:00+02:00",
+   "dateModified": "2026-11-24T09:24:49.862510+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 399076,
+   "group": "Ліки",
+   "cpv": "33610000-9",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016342-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
+     "qty": 17800,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
+     "amount": 399076,
+     "unitPrice": 22.42,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-19-016578-a",
+   "tenderID": "UA-2026-11-19-016578-a",
+   "title": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
+   "date": "2026-11-24T09:15:00+02:00",
+   "dateModified": "2026-11-24T09:23:37.430517+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 583830,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016578-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
+     "qty": 74850,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "Товариство з обмеженою відповідальністю \"Юрія-фарм\"",
+     "amount": 583830,
+     "unitPrice": 7.8,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-19-007828-a",
+   "tenderID": "UA-2026-11-19-007828-a",
+   "title": "Цефуроксим",
+   "date": "2026-11-24T09:10:00+02:00",
+   "dateModified": "2026-11-24T09:17:22.209892+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 2407860,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-007828-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Цефуроксим, порошок для ін'єкцій по 750 мг",
+     "qty": 4500,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Цефуроксим,порошок для ін'єкцій 1500 мг",
+     "qty": 47820,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-19-003578-a",
+   "tenderID": "UA-2026-11-19-003578-a",
+   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+   "date": "2026-11-24T09:00:00+02:00",
+   "dateModified": "2026-11-24T09:11:28.782064+02:00",
+   "method": "priceQuotation",
+   "status": "active.awarded",
+   "contractEnd": null,
+   "amount": 250000,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-003578-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+     "qty": 500,
+     "unit": "штука",
+     "status": "Переможець",
+     "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
+     "amount": 250000,
+     "unitPrice": 500.0,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 105600,
    "contractEnd": null,
@@ -1093,99 +1258,6 @@
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-012216-a"
   },
   {
-   "amount": 618261,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33660000-4",
-   "date": "2026-11-24T09:15:00+02:00",
-   "dateModified": "2026-11-19T16:59:56.567313+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-19-016578-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
-     "qty": 74850,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-19-016578-a",
-   "title": "Метамізол натрію, розчин для ін`єкцій, 500 мг/мл, 2 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016578-a"
-  },
-  {
-   "amount": 399076,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33610000-9",
-   "date": "2026-11-24T09:10:00+02:00",
-   "dateModified": "2026-11-19T16:50:20.021896+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-19-016342-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
-     "qty": 17800,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-19-016342-a",
-   "title": "Дротаверин розчин для ін'єкцій 20 мг/мл, по 2 мл в ампулі",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-016342-a"
-  },
-  {
-   "amount": 459252.34,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33171000-9",
-   "date": "2026-11-24T09:30:00+02:00",
-   "dateModified": "2026-11-19T14:15:32.468534+02:00",
-   "group": "Матеріали",
-   "id": "UA-2026-11-19-008515-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Абсорбент СО2 для анестезіології",
-     "qty": 300,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-19-008515-a",
-   "title": "Абсорбент СО2 для анестезіології",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-008515-a"
-  },
-  {
    "amount": 1256468.9,
    "contractEnd": null,
    "counts": {
@@ -1245,47 +1317,6 @@
    "tenderID": "UA-2026-11-10-014724-a",
    "title": "Бинт марлевий (100% бавовна) стерильний, 7м х 14см, білизна 70%; Бинт марлевий (100% бавовна) нестерильний, 7м х 14см, тип 17; Бинт марлевий (100% бавовна) стерильний, 5м х 10см, тип 17; Бинт марлевий (100% бавовна) нестерильний, 5м х 10см, білизна 70%",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-014724-a"
-  },
-  {
-   "amount": 2639368.8,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 2,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-24T09:10:00+02:00",
-   "dateModified": "2026-11-19T12:45:10.222767+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-19-007828-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Цефуроксим, порошок для ін'єкцій по 750 мг",
-     "qty": 4500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    },
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Цефуроксим,порошок для ін'єкцій 1500 мг",
-     "qty": 47820,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-19-007828-a",
-   "title": "Цефуроксим",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-007828-a"
   },
   {
    "amount": 157332.8,
@@ -1553,37 +1584,6 @@
    "tenderID": "UA-2026-11-10-017222-a",
    "title": "Омнопон, розчин для ін'єкцій по 1 мл",
    "url": "https://prozorro.gov.ua/tender/UA-2026-11-10-017222-a"
-  },
-  {
-   "amount": 250070,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 1,
-    "signed": 0
-   },
-   "cpv": "33650000-1",
-   "date": "2026-11-24T09:00:00+02:00",
-   "dateModified": "2026-11-19T10:55:23.750714+02:00",
-   "group": "Ліки",
-   "id": "UA-2026-11-19-003578-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": null,
-     "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-     "qty": 500,
-     "status": "В процесі",
-     "supplier": null,
-     "unit": "штука",
-     "unitPrice": null
-    }
-   ],
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "tenderID": "UA-2026-11-19-003578-a",
-   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-003578-a"
   },
   {
    "amount": 3068,
