@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-25T20:26:43.322651+00:00",
+ "generated": "2026-11-26T03:03:11.808703+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-25T20:26:43.322651+00:00",
+  "checked": "2026-11-26T03:03:11.808703+00:00",
   "expected": 1579,
   "seen": 1579,
   "tenders": 577,
@@ -14,155 +14,155 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-25-010354-a",
-   "tenderID": "UA-2026-11-25-010354-a",
-   "title": "Приладдя для венепункції та забору крові",
+   "amount": 6052700,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 13,
+    "signed": 0
+   },
+   "cpv": "33141300-3",
    "date": "2026-11-30T08:30:00+02:00",
    "dateModified": "2026-11-25T13:59:28.224780+02:00",
-   "method": "priceQuotation",
-   "status": "active.tendering",
-   "contractEnd": null,
-   "amount": 6052700,
    "group": "Матеріали",
-   "cpv": "33141300-3",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-25-010354-a",
-   "counts": {
-    "signed": 0,
-    "progress": 13,
-    "failed": 0
-   },
+   "id": "UA-2026-11-25-010354-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувачі інфузійні: Тип: Для шприцевих насосів, Стерильні, Матеріал: ПВХ, Тип конектора: Luer Lock, Довжина трубки: 150-170 см., Тиск: Низький",
      "qty": 40000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузійний, Для шприцевих насосів, довжина 150 см, низького тиску, примий",
      "qty": 1300,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузвйний для шприцевих насосів, прямий, тип конектора: Luer Lock, довжина трубки: 200 см., тиск: низький, внутрішній діаметр: 1.0 мм, зовнішній діаметр: 2.0 мм",
      "qty": 500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузійний, Для шприцевих насосів, довжина 300 см, низького тиску, примий",
      "qty": 500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузвйний для шприцевих насосів, прямий, тип конектора: Luer Lock, довжина трубки: 150 см., тиск: низький, внутрішній діаметр: 1.0 мм, зовнішній діаметр: 2.0 мм",
      "qty": 1000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Система ПК (трансфузійна), регулятор швидкості потоку, пластикова (полімерна) з’єднувальна голка, конектор Luer Loсk, без ін'єкційної голки",
      "qty": 1000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Система ПР (інфузійна), регулятор швидкості потоку, пластикова (полімерна) з’єднувальна голка, конектор Luer Loсk, без ін'єкційної голки, 1800 мм, без додаткового ін'єкційного порту",
      "qty": 500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Системи ПР (інфузійна), Полімер, Тип з'єднання трубки з голкою: Luer Loсk, без ін'єкційної голки, Голка:Пластиковий атравматичний шип, Довжина трубки: 1500 мм, Матеріал трубки: Поліуретан, Кількість потокових трубок: 1",
      "qty": 500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузійний, Для інфузійних насосів, довжина 250-270 см, низького тиску, приямий",
      "qty": 100,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувачі інфузійні: для інфузійних насосів, стерильний, прямий, конектор Luer Lock, довжина 250 см, низький тиск, без зворотних клапанів, зі світлозахистом, Øвнутр. 3 мм",
      "qty": 500,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузійний, Для інфузійних насосів, довжина 220-240 см, низького тиску, приямий",
      "qty": 1000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувачі інфузійні: Для інфузійних насосів, Стерильні, з Поліетилену, конектор: Luer Lock, Довжина трубки: 240-250 сантиметр, Тиск: Низький, Кількість зворотніх клапанів: 0, Вид: Y",
      "qty": 2000,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Подовжувач інфузійний: Для інфузійних насосів, Прямий, без зворотніх клапанів, Тиск: Низький, Довжина трубки: 250 см., Тип конектора: Luer Lok",
      "qty": 200,
-     "unit": "штука",
      "status": "В процесі",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "tenderID": "UA-2026-11-25-010354-a",
+   "title": "Приладдя для венепункції та забору крові",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-25-010354-a"
   },
   {
    "amount": 5059500,
