@@ -1,18 +1,284 @@
 {
- "generated": "2026-11-26T03:03:11.808703+00:00",
+ "generated": "2026-11-26T12:30:51.992835+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-26T03:03:11.808703+00:00",
-  "expected": 1579,
-  "seen": 1579,
-  "tenders": 577,
+  "checked": "2026-11-26T12:30:51.992835+00:00",
+  "expected": 1585,
+  "seen": 1585,
+  "tenders": 583,
   "errors": 0,
   "dropped": 0,
   "status": "ok",
   "problems": []
  },
  "tenders": [
+  {
+   "id": "UA-2026-11-26-002605-a",
+   "tenderID": "UA-2026-11-26-002605-a",
+   "title": "Колістин",
+   "date": "2026-12-01T10:10:00+02:00",
+   "dateModified": "2026-11-26T10:11:07.372222+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1774340.19,
+   "group": "Ліки",
+   "cpv": "33650000-1",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-002605-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Колістин порошок для розчину для ін'єкцій або інфузій 1 000 000 МО",
+     "qty": 3000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Колістин порошок для розчину для ін'єкцій або інфузій 2 000 000 МО",
+     "qty": 2100,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-26-002399-a",
+   "tenderID": "UA-2026-11-26-002399-a",
+   "title": "Омепразол",
+   "date": "2026-12-01T10:00:00+02:00",
+   "dateModified": "2026-11-26T10:03:57.271960+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 4215090.65,
+   "group": "Ліки",
+   "cpv": "33610000-9",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-002399-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Омепразол 40 мг флакон",
+     "qty": 45000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Омепразол капсули по 20 мг",
+     "qty": 33460,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Омепразол капсули по 40 мг",
+     "qty": 34300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-26-002054-a",
+   "tenderID": "UA-2026-11-26-002054-a",
+   "title": "Ібупрофен розчин для інфузій 100 мг/мл по 4 мл; Ібупрофен розчин для інфузій 100 мг/мл по 8 мл",
+   "date": "2026-12-01T10:00:00+02:00",
+   "dateModified": "2026-11-26T09:52:42.454995+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1112149.53,
+   "group": "Ліки",
+   "cpv": "33630000-5",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-002054-a",
+   "counts": {
+    "signed": 0,
+    "progress": 2,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Ібупрофен розчин для інфузій 100 мг/мл по 4 мл",
+     "qty": 9000,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Ібупрофен розчин для інфузій 100 мг/мл по 8 мл",
+     "qty": 500,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-26-000645-a",
+   "tenderID": "UA-2026-11-26-000645-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл; Йогексол, розчин для ін'єкцій, 350 мг/мл, по 50 мл",
+   "date": "2026-12-01T08:45:00+02:00",
+   "dateModified": "2026-11-26T09:31:05.999361+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 8822400,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-000645-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 100 мл",
+     "qty": 7680,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 20 мл",
+     "qty": 200,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 50 мл",
+     "qty": 590,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-26-000877-a",
+   "tenderID": "UA-2026-11-26-000877-a",
+   "title": "Суфентаніл, Реміфентаніл",
+   "date": "2026-12-01T09:10:00+02:00",
+   "dateModified": "2026-11-26T09:30:11.959598+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 1266720.56,
+   "group": "Ліки",
+   "cpv": "33660000-4",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-000877-a",
+   "counts": {
+    "signed": 0,
+    "progress": 3,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Суфентаніл розчин для ін'єкцій 5 мкг/мл",
+     "qty": 300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Суфентаніл розчин для ін'єкцій 50 мкг/мл",
+     "qty": 400,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    },
+    {
+     "name": "Реміфентаніл: Класифікація згідно МНН: Remifentanil, Класифікація згідно АТХ: N01AH06, Форма випуску: Порошок для концентрату для розчину для ін'єкцій або інфузій",
+     "qty": 1300,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
+  {
+   "id": "UA-2026-11-26-001232-a",
+   "tenderID": "UA-2026-11-26-001232-a",
+   "title": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 500 мл",
+   "date": "2026-12-01T09:15:00+02:00",
+   "dateModified": "2026-11-26T09:24:21.689070+02:00",
+   "method": "priceQuotation",
+   "status": "active.tendering",
+   "contractEnd": null,
+   "amount": 8559000,
+   "group": "Ліки",
+   "cpv": "33690000-3",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-001232-a",
+   "counts": {
+    "signed": 0,
+    "progress": 1,
+    "failed": 0
+   },
+   "items": [
+    {
+     "name": "Йогексол, розчин для ін'єкцій, 350 мг/мл, по 500 мл",
+     "qty": 3170,
+     "unit": "штука",
+     "status": "В процесі",
+     "supplier": null,
+     "amount": null,
+     "unitPrice": null,
+     "lot": null
+    }
+   ]
+  },
   {
    "amount": 6052700,
    "contractEnd": null,
@@ -3849,37 +4115,6 @@
    "tenderID": "UA-2026-10-14-008757-a",
    "title": "Пробірки",
    "url": "https://prozorro.gov.ua/tender/UA-2026-10-14-008757-a"
-  },
-  {
-   "amount": 2211275,
-   "contractEnd": null,
-   "counts": {
-    "failed": 0,
-    "progress": 0,
-    "signed": 1
-   },
-   "cpv": "33190000-8",
-   "date": "2026-10-27T08:37:26.695051+02:00",
-   "dateModified": "2026-10-27T08:37:26.695051+02:00",
-   "group": "Матеріали",
-   "id": "UA-2026-10-02-006431-a",
-   "items": [
-    {
-     "amount": null,
-     "lot": "b697124621ab4c51956e483330b66f83",
-     "name": "Підігріваюча камера для рідин (НК 031:2024 A030105 - СИСТЕМИ НАГРІВАННЯ РІДИН)",
-     "qty": 11,
-     "status": "Підписано",
-     "supplier": "ТОВ \"ЛОГІКЛАБГРУПА\"",
-     "unit": "штука",
-     "unitPrice": 241230.0
-    }
-   ],
-   "method": "aboveThreshold",
-   "status": "complete",
-   "tenderID": "UA-2026-10-02-006431-a",
-   "title": "Підігріваюча камера для рідин",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-10-02-006431-a"
   }
  ]
 }
