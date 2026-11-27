@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-26T22:07:56.644638+00:00",
+ "generated": "2026-11-27T04:22:50.567705+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-26T22:07:56.644638+00:00",
+  "checked": "2026-11-27T04:22:50.567705+00:00",
   "expected": 1585,
   "seen": 1585,
   "tenders": 583,
@@ -14,86 +14,86 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-26-000877-a",
-   "tenderID": "UA-2026-11-26-000877-a",
-   "title": "Суфентаніл, Реміфентаніл",
+   "amount": 1266720.56,
+   "contractEnd": null,
+   "counts": {
+    "failed": 3,
+    "progress": 0,
+    "signed": 0
+   },
+   "cpv": "33660000-4",
    "date": "2026-11-26T17:16:55.854630+02:00",
    "dateModified": "2026-11-26T17:16:55.854630+02:00",
-   "method": "priceQuotation",
-   "status": "cancelled",
-   "contractEnd": null,
-   "amount": 1266720.56,
    "group": "Ліки",
-   "cpv": "33660000-4",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-000877-a",
-   "counts": {
-    "signed": 0,
-    "progress": 0,
-    "failed": 3
-   },
+   "id": "UA-2026-11-26-000877-a",
    "items": [
     {
+     "amount": null,
+     "lot": null,
      "name": "Суфентаніл розчин для ін'єкцій 5 мкг/мл",
      "qty": 300,
-     "unit": "штука",
      "status": "Скасовано",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Суфентаніл розчин для ін'єкцій 50 мкг/мл",
      "qty": 400,
-     "unit": "штука",
      "status": "Скасовано",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     },
     {
+     "amount": null,
+     "lot": null,
      "name": "Реміфентаніл: Класифікація згідно МНН: Remifentanil, Класифікація згідно АТХ: N01AH06, Форма випуску: Порошок для концентрату для розчину для ін'єкцій або інфузій",
      "qty": 1300,
-     "unit": "штука",
      "status": "Скасовано",
      "supplier": null,
-     "amount": null,
-     "unitPrice": null,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": null
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "cancelled",
+   "tenderID": "UA-2026-11-26-000877-a",
+   "title": "Суфентаніл, Реміфентаніл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-26-000877-a"
   },
   {
-   "id": "UA-2026-11-19-003578-a",
-   "tenderID": "UA-2026-11-19-003578-a",
-   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+   "amount": 267500,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33650000-1",
    "date": "2026-11-26T16:17:29.592885+02:00",
    "dateModified": "2026-11-26T16:17:29.592885+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 267500,
    "group": "Ліки",
-   "cpv": "33650000-1",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-003578-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-11-19-003578-a",
    "items": [
     {
+     "amount": 267500,
+     "lot": null,
      "name": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
      "qty": 500,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ \"ГАЛИЧ-ПОЛІМЕД\"",
-     "amount": 267500,
-     "unitPrice": 535.0,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 535.0
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-19-003578-a",
+   "title": "Вакцина для профілактики грипу суспензія для ін'єкцій по 0.5 мл",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-19-003578-a"
   },
   {
    "amount": 1774340.19,
