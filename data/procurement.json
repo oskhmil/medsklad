@@ -1,9 +1,9 @@
 {
- "generated": "2026-11-27T22:53:39.988214+00:00",
+ "generated": "2026-11-28T04:59:00.358083+00:00",
  "edrpou": "44496574",
  "source": "prozorro.gov.ua",
  "health": {
-  "checked": "2026-11-27T22:53:39.988214+00:00",
+  "checked": "2026-11-28T04:59:00.358083+00:00",
   "expected": 1588,
   "seen": 1588,
   "tenders": 586,
@@ -14,35 +14,35 @@
  },
  "tenders": [
   {
-   "id": "UA-2026-11-17-008985-a",
-   "tenderID": "UA-2026-11-17-008985-a",
-   "title": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
+   "amount": 62873.2,
+   "contractEnd": null,
+   "counts": {
+    "failed": 0,
+    "progress": 0,
+    "signed": 1
+   },
+   "cpv": "33620000-2",
    "date": "2026-11-27T16:07:49.013355+02:00",
    "dateModified": "2026-11-27T16:07:49.013355+02:00",
-   "method": "priceQuotation",
-   "status": "complete",
-   "contractEnd": null,
-   "amount": 62873.2,
    "group": "Ліки",
-   "cpv": "33620000-2",
-   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008985-a",
-   "counts": {
-    "signed": 1,
-    "progress": 0,
-    "failed": 0
-   },
+   "id": "UA-2026-11-17-008985-a",
    "items": [
     {
+     "amount": 62873.2,
+     "lot": null,
      "name": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
      "qty": 800,
-     "unit": "штука",
      "status": "Підписано",
      "supplier": "ПРИВАТНЕ АКЦІОНЕРНЕ ТОВАРИСТВО \"ФАРМАЦЕВТИЧНА ФІРМА \"ДАРНИЦЯ\"",
-     "amount": 62873.2,
-     "unitPrice": 78.59,
-     "lot": null
+     "unit": "штука",
+     "unitPrice": 78.59
     }
-   ]
+   ],
+   "method": "priceQuotation",
+   "status": "complete",
+   "tenderID": "UA-2026-11-17-008985-a",
+   "title": "Допамін концентрат для приготування розчину для інфузій 40 мг/мл, по 5 мл в ампулі",
+   "url": "https://prozorro.gov.ua/tender/UA-2026-11-17-008985-a"
   },
   {
    "amount": 1042368.75,
